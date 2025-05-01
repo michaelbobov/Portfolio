@@ -1,3 +1,4 @@
 {
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/work/pdf-penguin/page": "app/work/pdf-penguin/page.js"
 }

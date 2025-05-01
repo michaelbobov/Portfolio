@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Dancing_Script } from 'next/font/google'
 import './globals.css'
-import FontProvider from './components/FontProvider'
 
 const inter = Inter({ subsets: ['latin'] })
+const dancingScript = Dancing_Script({ 
+  subsets: ['latin'],
+  weight: ['400', '700']
+})
 
 export const metadata: Metadata = {
   title: 'Michael Bobov - Product Designer',
@@ -18,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <FontProvider />
         {children}
       </body>
     </html>
