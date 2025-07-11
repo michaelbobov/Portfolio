@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
 import Link from 'next/link';
@@ -12,7 +12,75 @@ const dancingScript = Dancing_Script({
   weight: ['400', '700']
 });
 
+// Project data with platform information
+const projects = [
+  {
+    id: 'pdf-penguin',
+    title: 'PDF Penguin',
+    description: 'AI-powered PDF to JSON conversion for structured, usable data.',
+    tags: ['AI INTEGRATION', 'DATA PROCESSING'],
+    image: '/pdf-penguin.png',
+    link: '/work/pdf-penguin',
+    bgColor: 'bg-[#E3F2FF]',
+    buttonColor: 'bg-[#0088E0] hover:bg-[#0070B8]',
+    platforms: ['web'] // Web-based tool
+  },
+  {
+    id: 'spotify-loop',
+    title: 'Spotify Loop',
+    description: 'Adding micro looping to music listening - a feature addition case study for Spotify that enhances how users interact with their favorite parts of songs.',
+    tags: ['UX DESIGN', 'FEATURE DESIGN'],
+    image: '/spotify-loop.png',
+    link: '/work/spotify-loop',
+    bgColor: 'bg-[#E8F5E8]',
+    buttonColor: 'bg-[#1DB954] hover:bg-[#1AA34A]',
+    platforms: ['mobile'] // Mobile app feature
+  },
+  {
+    id: 'ez-recipe',
+    title: 'EZ Recipe',
+    description: 'Smart cooking with what you have - a comprehensive recipe and meal planning solution.',
+    tags: ['RECIPE APP', 'MEAL PLANNING'],
+    image: '/ezrecipeappinterface.png',
+    link: '/work/ez-recipe',
+    bgColor: 'bg-[#FFF3D6]',
+    buttonColor: 'bg-[#FFB800] hover:bg-[#E6A600]',
+    platforms: ['web'] // Web-based application
+  }
+];
+
 export default function Home() {
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (window.location.hash === '#work') {
+      const el = document.getElementById('work');
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 100); // slight delay to ensure DOM is ready
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeFilter === 'all') {
+      setFilteredProjects(projects);
+    } else {
+      setFilteredProjects(projects.filter(project => 
+        project.platforms.includes(activeFilter)
+      ));
+    }
+  }, [activeFilter]);
+
+  const filterOptions = [
+    { id: 'all', label: 'All Projects' },
+    { id: 'mobile', label: 'Mobile' },
+    { id: 'web', label: 'Web' }
+  ];
+
   return (
     <main className="min-h-screen relative">
       <WavyBackground />
@@ -39,28 +107,40 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="mb-8">
-            <motion.h2 
-              className="text-[48px] md:text-[54px] lg:text-[60px] font-semibold tracking-[0.5px] mb-6 text-white"
+          <div className="mb-8 relative">
+            <motion.div 
+              className="mb-6 -mt-32"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{
                 opacity: { duration: 0.5, delay: 0.2 }
               }}
             >
-              michael bobov
-            </motion.h2>
+              <div className="h-[360px] md:h-[405px] lg:h-[450px] relative">
+                <img 
+                  src="/name.png" 
+                  alt="Name" 
+                  className="max-w-screen w-full h-[360px] md:h-[405px] lg:h-[450px] object-contain mx-auto ml-8"
+                />
+              </div>
+            </motion.div>
             <motion.p 
-              className="text-xl text-white/80 max-w-2xl mx-auto leading-relaxed mb-12"
+              className="text-xl text-white/80 max-w-2xl mx-auto leading-relaxed mb-12 -mt-36"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               Turning ideas into intuitive products through AI, design, and fast iteration.
             </motion.p>
-            <Link 
-              href="#work"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg group"
+            <button
+              onClick={() => {
+                const el = document.getElementById('work');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="inline-flex items-center gap-2 px-8 py-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg group -mt-36"
+              type="button"
             >
               View Work
               <motion.svg 
@@ -94,7 +174,7 @@ export default function Home() {
                   d="M19 14l-7 7m0 0l-7-7m7 7V3" 
                 />
               </motion.svg>
-            </Link>
+            </button>
           </div>
         </motion.div>
 
@@ -117,8 +197,8 @@ export default function Home() {
       </div>
 
       {/* Projects Section */}
-      <section className="relative mt-32">
-        <div className="absolute inset-x-0 top-0 bg-white w-full h-[150%] -z-10">
+      <section id="work" className="relative mt-32 scroll-mt-24">
+        <div className="absolute inset-x-0 top-0 bg-white w-full h-[150%] -z-10 -mt-24">
           <div className="h-40 bg-gradient-to-b from-transparent to-white" />
         </div>
         <div className="container mx-auto px-4 pt-20">
@@ -128,7 +208,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="max-w-6xl mx-auto"
           >
-            <div className="text-center mb-20">
+            <div className="text-center mb-20 -mt-28">
               <motion.h2 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -141,73 +221,109 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-xl text-gray-600 max-w-2xl mx-auto"
+                className="text-xl text-gray-600 max-w-2xl mx-auto mb-12"
               >
                 A collection of projects showcasing my approach to product design and problem-solving
               </motion.p>
-            </div>
-            
-            {/* PDF Penguin Project */}
-            <div className="relative">
-              <motion.div 
+              
+              {/* Filter Buttons */}
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="bg-[#E3F2FF] rounded-[32px] p-12 mb-12 shadow-xl"
+                className="flex flex-wrap justify-center gap-3 mb-8"
               >
-                <div className="flex flex-col md:flex-row gap-12 items-center">
-                  <div className="w-full md:w-1/2">
-                    <img 
-                      src="/pdf-penguin.png" 
-                      alt="PDF Penguin Application Interface" 
-                      className="w-full h-auto rounded-2xl"
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2">
-                    <h3 className="text-4xl font-semibold mb-4">PDF Penguin</h3>
-                    <p className="text-gray-600 uppercase tracking-wider text-sm mb-6">AI INTEGRATION • DATA PROCESSING</p>
-                    <p className="text-gray-700 text-lg mb-8 leading-relaxed">
-                      AI-powered PDF to JSON conversion for structured, usable data.
-                    </p>
-                    <Link 
-                      href="/work/pdf-penguin"
-                      className="inline-block bg-[#0088E0] text-white px-8 py-3 rounded-xl hover:bg-[#0070B8] transition-colors text-lg"
-                    >
-                      Read Case Study
-                    </Link>
-                  </div>
-                </div>
+                {filterOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => setActiveFilter(option.id)}
+                    className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                      activeFilter === option.id
+                        ? 'bg-[#4A3F8C] text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </motion.div>
             </div>
-
-            {/* EmotionWell Project */}
-            <div className="bg-[#FFF3D6] rounded-[32px] p-12">
-              <div className="flex flex-col md:flex-row gap-12 items-center">
-                <div className="w-full md:w-1/2">
-                  <img 
-                    src="/emotionwell.png" 
-                    alt="EmotionWell App Screenshots" 
-                    className="w-full h-auto rounded-2xl"
-                  />
-                </div>
-                <div className="w-full md:w-1/2">
-                  <h3 className="text-4xl font-semibold mb-4">EmotionWell</h3>
-                  <p className="text-gray-600 uppercase tracking-wider text-sm mb-6">UX DESIGN</p>
-                  <p className="text-gray-700 text-lg mb-8 leading-relaxed">
-                    A mobile app that improves emotional wellbeing through a personalized lesson plan and educational materials on emotional wellness.
-                  </p>
-                  <Link 
-                    href="/work/emotionwell"
-                    className="inline-block bg-[#FFB800] text-white px-8 py-3 rounded-xl hover:bg-[#E6A600] transition-colors text-lg"
-                  >
-                    Read Case Study
-                  </Link>
-                </div>
-              </div>
+            
+            {/* Dynamic Projects */}
+            <div className="space-y-12">
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
+                  className={`${project.bgColor} rounded-[32px] p-12 shadow-xl`}
+                >
+                  <div className="flex flex-col md:flex-row gap-12 items-center">
+                    <div className="w-full md:w-1/2">
+                      <img 
+                        src={project.image} 
+                        alt={`${project.title} Application Interface`} 
+                        className="w-full h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => setSelectedImage(project.image)}
+                      />
+                    </div>
+                    <div className="w-full md:w-1/2">
+                      <h3 className="text-4xl font-semibold mb-4">{project.title}</h3>
+                      <p className="text-gray-600 uppercase tracking-wider text-sm mb-6">
+                        {project.tags.join(' • ')}
+                      </p>
+                      <p className="text-gray-700 text-lg mb-8 leading-relaxed">
+                        {project.description}
+                      </p>
+                      <Link 
+                        href={project.link}
+                        className={`inline-block ${project.buttonColor} text-white px-8 py-3 rounded-xl transition-colors text-lg`}
+                      >
+                        Read Case Study
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
       </section>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative max-w-4xl max-h-[90vh] w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img
+              src={selectedImage}
+              alt="Enlarged project preview"
+              className="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl"
+            />
+          </motion.div>
+        </motion.div>
+      )}
     </main>
   );
 } 
