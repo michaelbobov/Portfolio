@@ -30,9 +30,9 @@ const projects = [
     title: 'Spotify Loop',
     description: 'Adding micro looping to music listening - a feature addition case study for Spotify that enhances how users interact with their favorite parts of songs.',
     tags: ['UX DESIGN', 'FEATURE DESIGN'],
-    image: '/spotify-loop.png',
+    image: '/spotifyloopmockup.png',
     link: '/work/spotify-loop',
-    bgColor: 'bg-[#E8F5E8]',
+    bgColor: 'bg-green-100',
     buttonColor: 'bg-[#1DB954] hover:bg-[#1AA34A]',
     platforms: ['mobile'] // Mobile app feature
   },
@@ -41,9 +41,9 @@ const projects = [
     title: 'EZ Recipe',
     description: 'Smart cooking with what you have - a comprehensive recipe and meal planning solution.',
     tags: ['RECIPE APP', 'MEAL PLANNING'],
-    image: '/ezrecipeappinterface.png',
+    image: '/ezrecipepreview.png',
     link: '/work/ez-recipe',
-    bgColor: 'bg-[#FFF3D6]',
+    bgColor: 'bg-[#eaf3cf]',
     buttonColor: 'bg-[#FFB800] hover:bg-[#E6A600]',
     platforms: ['web'] // Web-based application
   }
@@ -206,7 +206,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="max-w-6xl mx-auto"
+            className="max-w-7xl mx-auto"
           >
             <div className="text-center mb-20 -mt-28">
               <motion.h2 
@@ -260,15 +260,15 @@ export default function Home() {
                   className={`${project.bgColor} rounded-[32px] p-12 shadow-xl`}
                 >
                   <div className="flex flex-col md:flex-row gap-12 items-center">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-full md:w-2/3 flex justify-center">
                       <img 
                         src={project.image} 
                         alt={`${project.title} Application Interface`} 
-                        className="w-full h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity"
+                        className={`${project.id === 'pdf-penguin' ? 'w-3/4' : 'w-full'} h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity`}
                         onClick={() => setSelectedImage(project.image)}
                       />
                     </div>
-                    <div className="w-full md:w-1/2">
+                    <div className="w-full md:w-1/3">
                       <h3 className="text-4xl font-semibold mb-4">{project.title}</h3>
                       <p className="text-gray-600 uppercase tracking-wider text-sm mb-6">
                         {project.tags.join(' • ')}
