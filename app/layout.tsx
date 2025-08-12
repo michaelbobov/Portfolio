@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Dancing_Script } from 'next/font/google'
 import './globals.css'
+import SocialLinks from './components/SocialLinks'
 
 const inter = Inter({ subsets: ['latin'] })
 const dancingScript = Dancing_Script({ 
@@ -9,8 +10,8 @@ const dancingScript = Dancing_Script({
 })
 
 export const metadata: Metadata = {
-  title: 'Michael Bobov - Product Designer',
-  description: 'Portfolio of Michael Bobov, Product Designer',
+  title: 'name.png - Product Designer',
+  description: 'A portfolio showcasing product design work',
 }
 
 export default function RootLayout({
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {children}
+        <SocialLinks />
       </body>
     </html>
   )
