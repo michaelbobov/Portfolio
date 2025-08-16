@@ -10,8 +10,8 @@ const dancingScript = Dancing_Script({
 })
 
 export const metadata: Metadata = {
-  title: 'name.png - Product Designer',
-  description: 'A portfolio showcasing product design work',
+  title: 'Michael Bobov — Product Designer',
+  description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
 }
 
 export default function RootLayout({

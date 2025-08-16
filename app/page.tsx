@@ -6,6 +6,7 @@ import Navigation from '@/app/components/Navigation';
 import Link from 'next/link';
 import { Dancing_Script } from 'next/font/google';
 import WavyBackground from './components/WavyBackground';
+import Image from 'next/image';
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -41,7 +42,7 @@ const projects = [
     title: 'EZ Recipe',
     description: 'Smart cooking with what you have - a comprehensive recipe and meal planning solution.',
     tags: ['RECIPE APP', 'MEAL PLANNING'],
-    image: '/ezrecipepreview.png',
+    image: '/ezrecipelaptop.png',
     link: '/work/ez-recipe',
     bgColor: 'bg-[#eaf3cf]',
     buttonColor: 'bg-[#FFB800] hover:bg-[#E6A600]',
@@ -87,6 +88,7 @@ export default function Home() {
       
       {/* Hero Section */}
       <div className="container mx-auto px-4 pt-20 pb-32">
+        <h1 className="sr-only">Michael Bobov — Product Designer</h1>
         <div className="flex justify-between items-center mb-32">
           <motion.h1 
             className={`text-4xl font-light ${dancingScript.className} text-white`}
@@ -96,7 +98,7 @@ export default function Home() {
               opacity: { duration: 0.5 }
             }}
           >
-            mb.
+            MB
           </motion.h1>
           <Navigation />
         </div>
@@ -119,7 +121,7 @@ export default function Home() {
               <div className="h-[360px] md:h-[405px] lg:h-[450px] relative">
                 <img 
                   src="/name.png" 
-                  alt="Name" 
+                  alt="Michael Bobov — Product Designer" 
                   className="max-w-screen w-full h-[360px] md:h-[405px] lg:h-[450px] object-contain mx-auto ml-8"
                 />
               </div>
@@ -250,23 +252,53 @@ export default function Home() {
             </div>
             
             {/* Dynamic Projects */}
-            <div className="space-y-12">
+            <div className="space-y-16">
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-                  className={`${project.bgColor} rounded-[32px] p-12 shadow-xl`}
+                  className={`bg-transparent rounded-[32px] p-12 shadow-xl ${project.id === 'ez-recipe' ? 'min-h-[560px]' : 'min-h-[480px]'}`}
                 >
                   <div className="flex flex-col md:flex-row gap-12 items-center">
-                    <div className="w-full md:w-2/3 flex justify-center">
-                      <img 
-                        src={project.image} 
-                        alt={`${project.title} Application Interface`} 
-                        className={`${project.id === 'pdf-penguin' ? 'w-3/4' : 'w-full'} h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity`}
-                        onClick={() => setSelectedImage(project.image)}
-                      />
+                    <div className={`w-full md:w-2/3 flex ${project.id === 'ez-recipe' ? 'justify-start' : 'justify-center'}`}>
+                      {project.id === 'ez-recipe' ? (
+                        <div className="w-full pt-16 pb-6">
+                          <div className="relative w-full h-80">
+                            <Image 
+                              src="/ezrecipephone.png" 
+                              alt="EZ Recipe Mobile Interface" 
+                              width={360}
+                              height={720}
+                              className="w-2/5 h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute -left-2 top-0"
+                              onClick={() => setSelectedImage('/ezrecipephone.png')}
+                              priority
+                            />
+                            <Image 
+                              src="/ezrecipelaptop.png" 
+                              alt="EZ Recipe Laptop Interface" 
+                              width={1200}
+                              height={800}
+                              className="w-full h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute left-8 -top-36"
+                              onClick={() => setSelectedImage('/ezrecipelaptop.png')}
+                              priority
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative w-full max-w-3xl aspect-[16/10] flex items-center justify-center">
+                          <Image
+                            src={project.image}
+                            alt={`${project.title} Application Interface`}
+                            width={1200}
+                            height={750}
+                            className={`${project.id === 'pdf-penguin' ? 'max-w-[75%]' : project.id === 'spotify-loop' ? 'max-w-[92%]' : 'max-w-full'} max-h-full object-contain rounded-2xl cursor-pointer hover:opacity-90 transition-opacity`}
+                            onClick={() => setSelectedImage(project.image)}
+                            priority={project.id === 'pdf-penguin'}
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className="w-full md:w-1/3">
                       <h3 className="text-4xl font-semibold mb-4">{project.title}</h3>
@@ -316,9 +348,11 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <img
+            <Image
               src={selectedImage}
               alt="Enlarged project preview"
+              width={1600}
+              height={900}
               className="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl"
             />
           </motion.div>

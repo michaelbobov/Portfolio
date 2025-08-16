@@ -13,6 +13,8 @@ const dancingScript = Dancing_Script({
   weight: ['400', '700']
 });
 
+export const dynamic = 'force-dynamic';
+
 export default function SpotifyLoopCaseStudy() {
   const [activeSection, setActiveSection] = useState('overview');
   const sections = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -82,13 +84,13 @@ export default function SpotifyLoopCaseStudy() {
   return (
     <main className="min-h-screen bg-white">
       {/* Navigation */}
-      <div className="container mx-auto px-4 pt-20">
-        <div className="flex justify-between items-center mb-16">
-          <Link href="/" className={`text-4xl font-light ${dancingScript.className} text-black hover:text-black/90 transition-colors`}>
-            mb.
+        <div className="container mx-auto px-4 pt-20">
+          <div className="flex justify-between items-center mb-16">
+                      <Link href="/" className={`text-4xl font-light ${dancingScript.className} text-black hover:text-black/90 transition-colors`}>
+            MB
           </Link>
-          <Navigation />
-        </div>
+            <Navigation />
+          </div>
 
         {/* Title */}
         <motion.h1 
@@ -116,6 +118,13 @@ export default function SpotifyLoopCaseStudy() {
           A feature addition case study for Spotify that enhances how users interact with their favorite parts of songs.
         </motion.p>
 
+        {/* Disclaimer */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-md p-3">
+            Conceptual exploration. This project is not affiliated with, endorsed by, or sponsored by Spotify. Logos and brand references are used solely for design critique and education.
+          </div>
+        </div>
+
         {/* Hero Image */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -142,7 +151,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto mb-24"
         >
-          <h2 className="text-2xl font-medium mb-8 uppercase tracking-wide text-gray-900">
+          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             🎯 Project Summary
           </h2>
           <div className="space-y-8">
@@ -152,6 +161,26 @@ export default function SpotifyLoopCaseStudy() {
               <p className="text-gray-600 leading-relaxed">
                 Spotify doesn’t let users loop a specific song segment. Spotify Loop adds a minimal, native interaction to set start/end points and replay that moment. It improves practice, study, and enjoyment without cluttering the player. Next: validate discoverability, speed to loop, and satisfaction.
               </p>
+            </div>
+
+            {/* Constraints & Collaboration */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <h4 className="text-gray-900 font-medium mb-2">Constraints</h4>
+                <ul className="text-gray-700 space-y-2 list-disc list-inside">
+                  <li>Must preserve Spotify’s minimal player UI; no clutter.</li>
+                  <li>Mobile‑first gesture design; accessible touch targets.</li>
+                  <li>API feasibility and performance assumptions noted for concept.</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <h4 className="text-gray-900 font-medium mb-2">Collaboration & Feedback</h4>
+                <ul className="text-gray-700 space-y-2 list-disc list-inside">
+                  <li>Feedback from music learners/guitar communities on precision vs. speed.</li>
+                  <li>Peer critique led to surfacing controls in a swipe‑up drawer.</li>
+                  <li>Planned usability tasks informed success metrics (time‑to‑loop, task success).</li>
+                </ul>
+              </div>
             </div>
 
             {/* Problem (moved up) */}
@@ -222,7 +251,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto mb-24"
         >
-          <h2 className="text-2xl font-medium mb-8 uppercase tracking-wide text-gray-900">
+          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             🔍 Design Process
           </h2>
           
@@ -475,11 +504,12 @@ export default function SpotifyLoopCaseStudy() {
                   alt="Spotify Loop Low-Fi Prototype showing wireframes of loop interaction flow and timeline controls"
                   width={1200}
                   height={900}
-                  className="w-full h-auto"
+                  className="w-full h-auto rounded-lg shadow-lg"
                   priority
-                  quality={95}
+                  quality={100}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                 />
               </div>
 
@@ -631,6 +661,22 @@ export default function SpotifyLoopCaseStudy() {
                   Your browser does not support the video tag.
                 </video>
               </div>
+              
+              {/* Figma Prototype Link */}
+              <div className="text-center mt-8">
+                <p className="text-gray-600 mb-4">Try the interactive prototype:</p>
+                <a 
+                  href="https://www.figma.com/proto/APV5Da77NcsnpvY3mE6jV5/Spotify-Loop?node-id=25-1004&t=CqXXYuWbfhTKuK1r-1" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-[#1DB954] hover:bg-[#1ed760] text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg hover:shadow-xl"
+                >
+                  Open Figma Prototype
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
             </div>
 
             <div>
@@ -643,32 +689,53 @@ export default function SpotifyLoopCaseStudy() {
 
           {/* Step 5: Test */}
           <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">5. Test (Planned)</h3>
+            <h3 className="text-xl font-semibold text-gray-900">5. Test & Validation</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
-              To test viability and usability, I plan to create a clickable Figma prototype and run 1:1 usability sessions with five Spotify users covering tasks like setting a loop, turning it off, and adjusting loop points.
+              With the Figma prototype complete, I'm ready to validate the loop interaction design through comprehensive user testing and technical feasibility assessment.
             </p>
-            <h4 className="text-lg font-medium mb-4 text-gray-900">What I'll Measure</h4>
-            <p className="text-gray-600 leading-relaxed">
-              Primary metrics will include time to discover loop controls, accuracy of setting the desired loop, and qualitative satisfaction with the interaction.
-            </p>
-          </div>
-        </motion.section>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
+                <h4 className="text-lg font-medium mb-3 text-gray-900">Success Metrics</h4>
+                <ul className="space-y-2 text-gray-700 list-disc list-inside">
+                  <li>Task completion rate &gt; 90% for loop creation</li>
+                  <li>Time to set first loop &lt; 15 seconds</li>
+                  <li>User satisfaction score &gt; 4/5</li>
+                  <li>Zero critical usability issues</li>
+                </ul>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
+                <h4 className="text-lg font-medium mb-3 text-gray-900">Technical Considerations</h4>
+                <ul className="space-y-2 text-gray-700 list-disc list-inside">
+                  <li>Integration with existing Spotify player API</li>
+                  <li>Loop state persistence across track changes</li>
+                  <li>Performance impact on playback engine</li>
+                  <li>Cross-platform consistency (iOS/Android)</li>
+                </ul>
+              </div>
+            </div>
 
-        {/* Interaction Preview */}
-        <motion.section
-          ref={setSectionRef('interaction')}
-          id="interaction"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
-        >
-          <h2 className="text-2xl font-medium mb-8 uppercase tracking-wide text-gray-900">
-            🔄 Interaction Preview
-          </h2>
-          <div className="bg-gray-100 rounded-lg p-12 text-center">
-            <p className="text-gray-500 text-lg">[Insert short prototype video showing user setting and looping a segment of a song]</p>
+            <div>
+              <h4 className="text-lg font-medium mb-4 text-gray-900">Implementation Strategy</h4>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                The feature would be implemented as a phased rollout: first to Premium users as a beta feature, then gradually expanded based on usage data and feedback. This approach allows for iterative improvement and risk mitigation.
+              </p>
+              <div className="bg-[#1DB954]/5 rounded-lg p-4 border border-[#1DB954]/20">
+                <h5 className="font-medium text-[#1DB954] mb-2">Business Impact</h5>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Implementing a native segment‐looping feature could significantly boost Spotify's key metrics. Highly engaged listeners – such as musicians and active learners – would spend more time in-app repeating favorite parts of songs. This deeper engagement has been linked to better business outcomes: Spotify research shows that users with more diverse listening habits are ~25% more likely to convert from Free to Premium <a href="https://research.atspotify.com/2020/12/algorithmic-effects-on-the-diversity-of-consumption-on-spotify" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(research.atspotify.com)</a>, and similarly have 10–20% lower churn <a href="https://research.atspotify.com/2020/12/algorithmic-effects-on-the-diversity-of-consumption-on-spotify" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(research.atspotify.com)</a>. By keeping practice-minded users engaged in Spotify (instead of using external tools), the loop feature helps drive these positive trends. In practice, real users already seek this functionality; for example, one musician built a third-party app to loop Spotify segments "to alleviate my own pain point" <a href="https://www.reddit.com/r/LearnGuitar/comments/t4pb15/practaid_aids_music_practice_by_ab_looping/#:~:text=I%20created%20PractAid%20to%20alleviate,it%20in%20Audacity%20for%20looping" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(reddit.com)</a>, illustrating clear demand.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  <strong>Higher user engagement and retention:</strong> Allowing loops lets users linger on beloved song moments, increasing session time. More engaged listening correlates with higher retention and satisfaction <a href="https://research.atspotify.com/2020/12/algorithmic-effects-on-the-diversity-of-consumption-on-spotify#:~:text=The%20above%20plot%20shows%20how,diversity%20in%20their%20music%20consumption" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(research.atspotify.com)</a> <a href="https://research.atspotify.com/2020/12/algorithmic-effects-on-the-diversity-of-consumption-on-spotify" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(research.atspotify.com)</a>. This means users are likely to stay in the app longer and return more often, reducing drop-off. As one Reddit user noted, musicians "literally listen to [a song] on loop the entire day" when they love a part, indicating that built-in looping would capitalize on this behavior.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  <strong>Increased Premium conversion:</strong> Adding a sought-after feature enhances Premium's value proposition. Many practice-oriented users already need Spotify Premium to use external loop tools (e.g. PractAid requires Premium <a href="https://www.reddit.com/r/LearnGuitar/comments/t4pb15/practaid_aids_music_practice_by_ab_looping/#:~:text=I%20created%20PractAid%20to%20alleviate,it%20in%20Audacity%20for%20looping" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(reddit.com)</a>). By natively providing looping (initially to Premium users), Spotify could encourage free users in this niche to upgrade. With 626M monthly users and 246M paid subscribers (≈39% conversion) <a href="https://newsroom.spotify.com/2024-07-23/spotify-reports-second-quarter-2024-earnings/#:~:text=,Y%2FY%20to%20%E2%82%AC3.8%20billion" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(newsroom.spotify.com)</a>, even a small bump in conversion rate among engaged users would translate to millions in additional subscription revenue.
+                </p>
+                <p className="text-gray-700 leading-relaxed">
+                  <strong>Market demand validation:</strong> The huge adoption of third-party loop and practice apps shows broad user interest. For example, Moises.ai (an AI practice app with looping) boasts over 60 million users worldwide <a href="https://www.prnewswire.com/news-releases/moises-gets-behind-musics-most-authentic-moments-by-supporting-nprs-tiny-desk-302495992.html#:~:text=Selected%20by%20Apple%20as%20the,currently%20available%20in%2033%20languages" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(prnewswire.com)</a>, and Looper for YouTube has ~400K users <a href="https://chrome.google.com/webstore/detail/looper-for-youtube/iggpfpnahkgpnindfkdncknoldgnccdg" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(chrome.google.com)</a>. These figures illustrate that many people rely on looping tools for learning and enjoyment. A native Spotify loop taps directly into this proven market, reducing friction and potentially drawing users from these external solutions back into Spotify.
+                </p>
+              </div>
+            </div>
           </div>
         </motion.section>
 
@@ -682,7 +749,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto mb-24"
         >
-          <h2 className="text-2xl font-medium mb-8 uppercase tracking-wide text-gray-900">
+          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             🧠 Reflections & Takeaways
           </h2>
           <div className="space-y-6">
@@ -708,7 +775,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto mb-24"
         >
-          <h2 className="text-2xl font-medium mb-8 uppercase tracking-wide text-gray-900">
+          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             📈 Future Enhancements
           </h2>
           <p className="text-gray-600 leading-relaxed">
@@ -726,7 +793,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto mb-24"
         >
-          <h2 className="text-2xl font-medium mb-8 uppercase tracking-wide text-gray-900">
+          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             📍 Final Thoughts
           </h2>
           <p className="text-gray-600 leading-relaxed">

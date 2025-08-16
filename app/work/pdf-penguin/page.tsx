@@ -12,6 +12,8 @@ const dancingScript = Dancing_Script({
   weight: ['400', '700']
 });
 
+export const dynamic = 'force-dynamic';
+
 export default function PDFPenguinCaseStudy() {
   const [activeSection, setActiveSection] = useState('overview');
   const sections = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -103,7 +105,7 @@ export default function PDFPenguinCaseStudy() {
       <div className="container mx-auto px-4 pt-20">
         <div className="flex justify-between items-center mb-16">
           <Link href="/" className={`text-4xl font-light ${dancingScript.className} text-black hover:text-black/90 transition-colors`}>
-            mb.
+            MB
           </Link>
           <Navigation />
         </div>
@@ -164,6 +166,33 @@ export default function PDFPenguinCaseStudy() {
             Overview
           </h2>
           <div className="space-y-8">
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-100 border-l-4 border-l-[#4A90E2]">
+              <h3 className="text-lg font-medium mb-2 text-gray-900">TL;DR</h3>
+              <ul className="text-gray-700 space-y-2 list-disc list-inside">
+                <li>Problem: Non‑technical users struggle to extract structured data from PDFs quickly.</li>
+                <li>Solution: Drag‑drop PDF → prompt desired structure → instant JSON output.</li>
+                <li>Success criteria: time‑to‑first‑output ≤ 10s, ≥ 90% parse success for common docs, clear fallback for scans.</li>
+              </ul>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <h4 className="text-gray-900 font-medium mb-2">Constraints</h4>
+                <ul className="text-gray-700 space-y-2 list-disc list-inside">
+                  <li>Solo project; limited time box for v1.</li>
+                  <li>Mixed‑quality inputs (scans vs. digital PDFs).</li>
+                  <li>Model/OCR variability; must guide user prompts.</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <h4 className="text-gray-900 font-medium mb-2">Collaboration & Feedback</h4>
+                <ul className="text-gray-700 space-y-2 list-disc list-inside">
+                  <li>Peer dev feedback on output schema clarity → added copy and examples.</li>
+                  <li>Early testers (friends/Discord) struggled with vague prompts → added placeholder guidance.</li>
+                  <li>Iterated UX on empty/error states after scan failures.</li>
+                </ul>
+              </div>
+            </div>
             <div>
               <p className="text-gray-600 leading-relaxed">
                 While developing my cooking assistant app, Chefie, I needed a way to extract structured ingredient and nutrition data from USDA PDFs. The datasets were available, but they were formatted as complex, unstructured PDFs that were difficult to work with programmatically. Existing tools were unreliable or too technical, so I built a clean, AI-powered tool for parsing and exporting PDF data into usable JSON.
