@@ -467,7 +467,7 @@ export default function EZRecipeCaseStudy() {
             </div>
           </div>
 
-          {/* Step 5: Test */}
+          {/* Step 5: Test & Iterate */}
           <div className="space-y-8 mb-12">
             <h3 className="text-xl font-semibold text-gray-900">5. Test & Iterate</h3>
             {/* Goals */}

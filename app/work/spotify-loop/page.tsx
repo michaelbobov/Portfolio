@@ -753,9 +753,9 @@ export default function SpotifyLoopCaseStudy() {
             </div>
           </div>
 
-          {/* Step 5: Test */}
+          {/* Step 5: Test & Iterate */}
           <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">5. Test & Validation</h3>
+            <h3 className="text-xl font-semibold text-gray-900">5. Test & Iterate</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
               With the Figma prototype complete, I'm ready to validate the loop interaction design through comprehensive user testing and technical feasibility assessment.
             </p>

@@ -303,7 +303,7 @@ export default function PDFPenguinCaseStudy() {
           </h2>
           <div className="space-y-8">
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 1: Research</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 1: Empathize & Research</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 I explored a range of existing PDF parsing tools including Tabula, Adobe Acrobat's OCR export, and DocParser. While all three were technically capable, they presented significant barriers for non-technical users — requiring either installation, rule-building, or an understanding of export settings and schemas. I tested each one by attempting to extract structured data without relying on documentation or setup guides, simulating the experience of a first-time user with minimal technical background.
               </p>
@@ -332,7 +332,7 @@ export default function PDFPenguinCaseStudy() {
             </div>
 
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 3: Ideation</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 3: Ideate</h3>
               <div className="mb-4">
                 <Image 
                   src="/sketchpdfpenguin.png"
@@ -348,21 +348,17 @@ export default function PDFPenguinCaseStudy() {
             </div>
 
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 4: Design</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 4: Prototype & Design</h3>
               <p className="text-gray-600 leading-relaxed">
                 With a clear layout already in mind, I moved directly into high-fidelity interface development using Vercel. Rather than spending time on static design tools, I focused on live iteration — adjusting spacing, labels, and user flows in context. This allowed me to make real-time decisions based on how the interface behaved, rather than just how it looked. Cursor supported this process by helping structure responsive components and quickly refine interactive behaviors.
               </p>
             </div>
 
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 5: Testing & Iteration</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 5: Test & Iterate</h3>
+              <p className="text-gray-600 leading-relaxed mb-4">
                 Each time I implemented a new UI or prompt behavior, I tested it by uploading different document types — invoices, receipts, reports — and refining the prompt UX to guide the AI parser. After discovering poor output from vague prompts, I added a customizable instruction field and clarified the placeholder text to guide user input.
               </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 6: Development & Launch</h3>
               <p className="text-gray-600 leading-relaxed">
                 Once the interface flow and AI behavior were reliable, I built the full app in Cursor with a React + TailwindCSS frontend, integrated OCR and OpenAI APIs, and deployed it via Vercel. The result is a working product with real users, capable of turning even messy PDFs into structured data in seconds.
               </p>
