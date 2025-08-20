@@ -343,7 +343,8 @@ export default function SpotifyLoopCaseStudy() {
                 To understand how others solve segment looping, I reviewed popular tools in the music learning and listening space. The goal was to identify common interaction patterns, friction points, and opportunities to create a simpler, more native experience for Spotify users.
               </p>
               
-              <div className="overflow-x-auto mb-6">
+              {/* Desktop Table View */}
+              <div className="hidden md:block overflow-x-auto mb-6">
                 <table className="w-full border-collapse border-2 border-gray-300">
                   <thead>
                     <tr className="bg-gray-50">
@@ -386,6 +387,104 @@ export default function SpotifyLoopCaseStudy() {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-4 mb-6">
+                {/* Moises.ai Card */}
+                <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-900 mb-3">Moises.ai</h5>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-700">Method:</span>
+                      <span className="text-gray-600 ml-2">Drag start/end markers on waveform</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Strengths:</span>
+                      <span className="text-gray-600 ml-2">Visual clarity, precise selection</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Weaknesses:</span>
+                      <span className="text-gray-600 ml-2">Requires leaving Spotify; heavier UI; learning curve for casual users</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AudioStretch Card */}
+                <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-900 mb-3">AudioStretch</h5>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-700">Method:</span>
+                      <span className="text-gray-600 ml-2">Drag handles along a waveform timeline</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Strengths:</span>
+                      <span className="text-gray-600 ml-2">Fine control over playback speed and loop points</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Weaknesses:</span>
+                      <span className="text-gray-600 ml-2">App-switching disrupts flow; not integrated with streaming</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* YouTube Looper Plugins Card */}
+                <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-900 mb-3">YouTube Looper Plugins</h5>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-700">Method:</span>
+                      <span className="text-gray-600 ml-2">Enter timestamps or click "Loop" button on video</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Strengths:</span>
+                      <span className="text-gray-600 ml-2">Simple; works in browser</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Weaknesses:</span>
+                      <span className="text-gray-600 ml-2">Lacks tactile mobile gesture control; not native to music streaming</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PractAid Card */}
+                <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-900 mb-3">PractAid (Spotify API)</h5>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-700">Method:</span>
+                      <span className="text-gray-600 ml-2">Drag to set A/B points in separate app</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Strengths:</span>
+                      <span className="text-gray-600 ml-2">Designed for practice use</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Weaknesses:</span>
+                      <span className="text-gray-600 ml-2">Relies on Spotify Premium; UX feels external and segmented</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* GarageBand / DAWs Card */}
+                <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-900 mb-3">GarageBand / DAWs</h5>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-700">Method:</span>
+                      <span className="text-gray-600 ml-2">Drag region selection in editing timeline</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Strengths:</span>
+                      <span className="text-gray-600 ml-2">Extremely precise</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Weaknesses:</span>
+                      <span className="text-gray-600 ml-2">Overkill for casual listening; high cognitive load</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
