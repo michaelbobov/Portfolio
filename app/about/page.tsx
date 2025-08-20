@@ -88,14 +88,6 @@ export default function AboutPage() {
             >
               Connect on LinkedIn
             </a>
-            <a
-              href="https://cal.com/mbobov/intro"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-gray-800 border border-gray-300 hover:bg-gray-50 px-6 py-3 rounded-lg transition-colors"
-            >
-              Book a call
-            </a>
           </div>
         </section>
       </div>

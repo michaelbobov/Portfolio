@@ -94,30 +94,6 @@ export default function ContactPage() {
             )}
           </main>
         </div>
-
-        {/* Book a Call Section */}
-        <div className="max-w-4xl mx-auto mt-16">
-          <div className="bg-white/80 rounded-xl shadow-xl p-8 backdrop-blur-md">
-            <h2 className="text-3xl font-bold mb-6 text-center">Book a Call</h2>
-            <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
-              Prefer to chat? I'm available for portfolio reviews, design discussions, or just to connect. 
-              Let's find a time that works for both of us.
-            </p>
-            <div className="text-center">
-              <a
-                href="https://cal.com/mbobov/intro"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#FF5500] via-[#9747FF] to-[#5CE1E6] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:opacity-90 transition-all duration-300"
-              >
-                Schedule a Call
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );

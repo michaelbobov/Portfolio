@@ -37,8 +37,7 @@ export default function Navigation() {
         { href: '/resume.pdf', label: 'Resume' }
       ]
     },
-    { href: '/contact', label: 'Contact' },
-    { href: 'https://cal.com/mbobov/intro', label: 'Book a call' }
+    { href: '/contact', label: 'Contact' }
   ];
 
   const NavLink = ({ link }: { link: typeof navLinks[0] }) => {
