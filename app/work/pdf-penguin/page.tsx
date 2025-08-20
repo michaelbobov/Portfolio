@@ -151,8 +151,42 @@ export default function PDFPenguinCaseStudy() {
             className="w-full"
           />
         </motion.div>
+      </div>
 
-        {/* Project Overview Section */}
+      {/* Main Content Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
+        {/* Sidebar Navigation */}
+        <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
+            <div className="flex flex-col gap-2">
+              {['overview', 'problem', 'design', 'flow', 'build', 'challenges', 'future', 'impact'].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                    activeSection === section 
+                      ? 'bg-blue-50 text-[#4A90E2] font-medium border-l-2 border-[#4A90E2]' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  {section === 'overview' && 'Overview'}
+                  {section === 'problem' && 'Problem Statement'}
+                  {section === 'design' && 'Design Process'}
+                  {section === 'flow' && 'User Flow'}
+                  {section === 'build' && 'Build Process'}
+                  {section === 'challenges' && 'Challenges & Lessons'}
+                  {section === 'future' && 'Future Enhancements'}
+                  {section === 'impact' && 'Impact & Results'}
+                </button>
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        {/* Content Area */}
+        <div className="order-1 lg:order-2">
+          {/* Project Overview Section */}
         <motion.section
           ref={setSectionRef('overview')}
           id="overview"
@@ -160,7 +194,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Overview
@@ -236,7 +270,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Problem & Goal
@@ -262,7 +296,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Design Process
@@ -354,7 +388,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Key User Flow
@@ -392,7 +426,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Build Process
@@ -420,7 +454,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Challenges & Lessons Learned
@@ -455,7 +489,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Future Improvements
@@ -488,7 +522,7 @@ export default function PDFPenguinCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Impact
@@ -526,26 +560,8 @@ export default function PDFPenguinCaseStudy() {
             Back to Top
           </button>
         </motion.div>
-      </div>
-
-      {/* Sidebar Navigation */}
-      <nav className="fixed left-0 top-1/2 -translate-y-1/2 h-auto w-64 hidden md:block">
-        <div className="flex flex-col gap-4 py-8 pr-8 pl-4 border-r border-gray-200">
-          {['overview', 'problem', 'design', 'flow', 'build', 'challenges', 'future', 'impact'].map((section) => (
-            <button
-              key={section}
-              onClick={() => scrollToSection(section)}
-              className={`text-left px-4 py-2 rounded-lg transition-colors ${
-                activeSection === section 
-                  ? 'bg-blue-50 text-blue-600 font-medium border-l-4 border-blue-600' 
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
-            </button>
-          ))}
         </div>
-      </nav>
+      </div>
     </main>
   );
 } 

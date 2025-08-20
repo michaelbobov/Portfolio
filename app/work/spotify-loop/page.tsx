@@ -82,15 +82,15 @@ export default function SpotifyLoopCaseStudy() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Navigation */}
-        <div className="container mx-auto px-4 pt-20">
-          <div className="flex justify-between items-center mb-16">
-                      <Link href="/" className={`text-4xl font-light ${dancingScript.className} text-black hover:text-black/90 transition-colors`}>
+        <main className="min-h-screen bg-white">
+      {/* Top Navigation */}
+      <div className="container mx-auto px-4 pt-20">
+        <div className="flex justify-between items-center mb-16">
+          <Link href="/" className={`text-4xl font-light ${dancingScript.className} text-black hover:text-black/90 transition-colors`}>
             MB
           </Link>
-            <Navigation />
-          </div>
+          <Navigation />
+        </div>
 
         {/* Title */}
         <motion.h1 
@@ -140,6 +140,41 @@ export default function SpotifyLoopCaseStudy() {
             className="w-full rounded-2xl"
           />
         </motion.div>
+      </div>
+
+      {/* Main Content Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
+        {/* Sidebar Navigation */}
+        <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
+            <div className="flex flex-col gap-2">
+              {['overview', 'design', 'ideate', 'prototype', 'test', 'reflections', 'future', 'final'].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                    activeSection === section 
+                      ? 'bg-green-50 text-[#1DB954] font-medium border-l-2 border-[#1DB954]' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  {section === 'overview' && 'Project Summary'}
+                  {section === 'design' && 'Design Process'}
+                  {section === 'ideate' && 'Ideate'}
+                  {section === 'prototype' && 'Prototype & Design'}
+                  {section === 'test' && 'Test & Validation'}
+                  {section === 'reflections' && 'Reflections & Takeaways'}
+                  {section === 'future' && 'Future Enhancements'}
+                  {section === 'final' && 'Final Thoughts'}
+                </button>
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        {/* Content Area */}
+        <div className="order-1 lg:order-2">
 
         {/* Project Overview Section */}
         <motion.section
@@ -464,6 +499,35 @@ export default function SpotifyLoopCaseStudy() {
                 The final concept is a tap-to-loop interaction: tap once to set the start, tap again to set the end, and a loop icon appears when active. Tapping the icon disables the loop. On mobile, loop controls live in a swipe-up drawer under the progress bar to keep the main player clean while making the feature easy to reach.
               </p>
             </div>
+
+            {/* User Flow Chart */}
+            <div className="mt-8">
+              <h4 className="text-lg font-medium mb-4 text-gray-900">User Flow Mapping</h4>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                To ensure the interaction felt intuitive, I mapped out the complete user journey from discovering the loop feature to successfully creating and managing loops. This flow chart helped identify potential friction points and validate the tap-to-set interaction pattern.
+              </p>
+              <div className="flex justify-center">
+                <a 
+                  href="/SpotifyFlowchart.png" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block hover:scale-110 transition-transform duration-300"
+                >
+                  <Image 
+                    src="/SpotifyFlowchart.png"
+                    alt="Spotify Loop User Flow Chart showing the step-by-step process of creating and managing loops"
+                    width={1200}
+                    height={1400}
+                    className="w-full max-w-5xl rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                    quality={100}
+                    priority
+                  />
+                </a>
+              </div>
+              <p className="text-sm text-gray-500 text-center mt-3 italic">
+                💡 Click image to open in full size for better readability
+              </p>
+            </div>
           </div>
 
           {/* Step 4: Prototype & Design */}
@@ -662,6 +726,8 @@ export default function SpotifyLoopCaseStudy() {
                 </video>
               </div>
               
+
+              
               {/* Figma Prototype Link */}
               <div className="text-center mt-8">
                 <p className="text-gray-600 mb-4">Try the interactive prototype:</p>
@@ -800,6 +866,7 @@ export default function SpotifyLoopCaseStudy() {
             This case study pushed me to think deeply about micro-interactions and user emotion. Spotify is about more than streaming — it's about how music fits into life. Looping gives users more expressive power in how they listen, learn, and love their favorite tracks.
           </p>
         </motion.section>
+        </div>
       </div>
     </main>
   );

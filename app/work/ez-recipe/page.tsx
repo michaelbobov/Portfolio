@@ -139,7 +139,7 @@ export default function EZRecipeCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <div className="bg-gradient-to-r from-[#FFB800]/10 to-[#FFB800]/5 rounded-2xl p-8 border border-[#FFB800]/20">
             <div className="text-center">
@@ -163,17 +163,50 @@ export default function EZRecipeCaseStudy() {
             </div>
           </div>
         </motion.section>
+      </div>
 
-        {/* Project Overview Section */}
-        <motion.section
-          ref={setSectionRef('overview')}
-          id="overview"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
-        >
+      {/* Main Content Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
+        {/* Sidebar Navigation */}
+        <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
+            <div className="flex flex-col gap-2">
+              {['overview', 'design', 'build', 'challenges', 'future', 'impact', 'reflection'].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                    activeSection === section 
+                      ? 'bg-yellow-50 text-[#FFB800] font-medium border-l-2 border-[#FFB800]' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  {section === 'overview' && 'Project Summary'}
+                  {section === 'design' && 'Design Process'}
+                  {section === 'build' && 'Build Process'}
+                  {section === 'challenges' && 'Challenges & Lessons Learned'}
+                  {section === 'future' && 'Future Enhancements'}
+                  {section === 'impact' && 'Impact (So Far)'}
+                  {section === 'reflection' && 'Reflection'}
+                </button>
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        {/* Content Area */}
+        <div className="order-1 lg:order-2">
+          {/* Project Overview Section */}
+          <motion.section
+            ref={setSectionRef('overview')}
+            id="overview"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mb-24"
+          >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             🎯 Project Summary
           </h2>
@@ -254,7 +287,7 @@ export default function EZRecipeCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             🔍 Design Process
@@ -554,7 +587,7 @@ export default function EZRecipeCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             Build Process
@@ -580,7 +613,7 @@ export default function EZRecipeCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             Challenges & Lessons Learned
@@ -627,7 +660,7 @@ export default function EZRecipeCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             Impact & Results
@@ -695,7 +728,7 @@ export default function EZRecipeCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             Reflection
@@ -716,7 +749,7 @@ export default function EZRecipeCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             📈 Future Enhancements
@@ -740,34 +773,8 @@ export default function EZRecipeCaseStudy() {
             </li>
           </ul>
         </motion.section>
-
-        
         </div>
-
-        {/* Sidebar Navigation */}
-        <nav className="fixed left-0 top-1/2 -translate-y-1/2 h-auto w-64 hidden md:block">
-          <div className="flex flex-col gap-4 py-8 pr-8 pl-4 border-r border-gray-200">
-            {['overview', 'design', 'build', 'challenges', 'future', 'impact', 'reflection'].map((section) => (
-              <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className={`text-left px-4 py-2 rounded-lg transition-colors ${
-                  activeSection === section 
-                    ? 'bg-yellow-50 text-[#FFB800] font-medium border-l-4 border-[#FFB800]' 
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                {section === 'overview' && 'Overview'}
-                {section === 'design' && 'Design Process'}
-                {section === 'build' && 'Build Process'}
-                {section === 'challenges' && 'Challenges & Lessons Learned'}
-                {section === 'future' && 'Future Enhancements'}
-                {section === 'impact' && 'Impact (So Far)'}
-                {section === 'reflection' && 'Reflection'}
-              </button>
-            ))}
-          </div>
-        </nav>
-      </main>
-    );
+      </div>
+    </main>
+  );
 } 
