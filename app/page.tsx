@@ -90,16 +90,22 @@ export default function Home() {
       <div className="container mx-auto px-4 pt-20 pb-32">
         <h1 className="sr-only">Michael Bobov — Product Designer</h1>
         <div className="flex justify-between items-center mb-32">
-          <motion.h1 
-            className={`text-4xl font-light ${dancingScript.className} text-white`}
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{
               opacity: { duration: 0.5 }
             }}
           >
-            MB
-          </motion.h1>
+            <Image 
+              src="/whiteinitals.png"
+              alt="MB - Michael Bobov"
+              width={80}
+              height={80}
+              className="w-16 h-16"
+              priority
+            />
+          </motion.div>
           <Navigation />
         </div>
 

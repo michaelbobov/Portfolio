@@ -6,6 +6,7 @@ import Navigation from '@/app/components/Navigation';
 import { Dancing_Script } from 'next/font/google';
 import WavyBackground from '../components/WavyBackground';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -20,14 +21,21 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 pt-20 pb-24">
         <div className="flex justify-between items-center mb-16">
           <Link href="/">
-            <motion.h1 
-              className={`text-4xl font-light ${dancingScript.className} text-white hover:text-white/90 transition-colors`}
+            <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ opacity: { duration: 0.5 } }}
+              className="hover:opacity-90 transition-opacity"
             >
-              MB
-            </motion.h1>
+              <Image 
+                src="/whiteinitals.png"
+                alt="MB - Michael Bobov"
+                width={80}
+                height={80}
+                className="w-16 h-16"
+                priority
+              />
+            </motion.div>
           </Link>
           <Navigation />
         </div>

@@ -85,8 +85,15 @@ export default function EZRecipeCaseStudy() {
       {/* Navigation */}
       <div className="container mx-auto px-4 pt-20">
         <div className="flex justify-between items-center mb-16">
-          <Link href="/" className={`text-4xl font-light ${dancingScript.className} text-black hover:text-black/90 transition-colors`}>
-            MB
+          <Link href="/" className="hover:opacity-90 transition-opacity">
+            <Image 
+              src="/blackinitals.png"
+              alt="MB - Michael Bobov"
+              width={80}
+              height={80}
+              className="w-16 h-16"
+              priority
+            />
           </Link>
           <Navigation />
         </div>
