@@ -184,7 +184,7 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             🎯 Project Summary
@@ -284,7 +284,7 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             🔍 Design Process
@@ -813,7 +813,7 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             🧠 Reflections & Takeaways
@@ -839,7 +839,7 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             📈 Future Enhancements
@@ -857,7 +857,7 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-24"
+          className="mb-24"
         >
           <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
             📍 Final Thoughts

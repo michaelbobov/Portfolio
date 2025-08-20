@@ -255,23 +255,23 @@ export default function EZRecipeCaseStudy() {
               </p>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
                   Product Designer (UX/UI)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
                   UX Researcher
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
                   Frontend Developer (HTML/CSS)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
                   AI Integrator (OpenAI API)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
                   Founder & Vision Owner
                 </li>
               </ul>

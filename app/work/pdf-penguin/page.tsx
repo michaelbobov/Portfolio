@@ -242,19 +242,19 @@ export default function PDFPenguinCaseStudy() {
               </p>
               <ul className="mt-4 space-y-2">
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
                   Founder
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
                   Product Designer (UX & UI)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
                   Frontend Developer (React, TailwindCSS)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
                   AI Integration (Vision Models)
                 </li>
               </ul>
@@ -496,19 +496,19 @@ export default function PDFPenguinCaseStudy() {
           </h2>
           <ul className="space-y-2 text-gray-600">
             <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
               Add user authentication and upload history saving
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
               Allow exports to CSV and XML formats
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
               Improve support for low-quality scanned PDFs
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
               Mobile-responsive improvements
             </li>
           </ul>
