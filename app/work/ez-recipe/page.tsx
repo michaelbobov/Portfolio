@@ -437,6 +437,58 @@ export default function EZRecipeCaseStudy() {
             </p>
           </div>
 
+          {/* Initial Wireframes */}
+          <div className="space-y-8 mb-12">
+            <h3 className="text-xl font-semibold text-gray-900">Initial Hand-Drawn Wireframes</h3>
+            <p className="text-gray-600 leading-relaxed mb-6">
+              Before diving into digital design, I started with pen and paper to quickly explore different layout concepts and user flows. These initial sketches helped me think through the core interaction patterns and identify potential usability issues early in the process.
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h4 className="text-lg font-medium text-gray-900">Wireframe 1: Main Flow</h4>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <Image 
+                    src="/ezrecipedraw0.jpeg"
+                    alt="EZ Recipe Initial Hand-Drawn Wireframe - Main User Flow"
+                    width={300}
+                    height={450}
+                    className="w-72 h-[28rem] object-cover rounded-lg shadow-sm mx-auto"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 text-center">
+                  Initial concept for the main user flow and ingredient input interface
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="text-lg font-medium text-gray-900">Wireframe 2: Saved Recipe</h4>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <Image 
+                    src="/ezrecipedraw1.jpeg"
+                    alt="EZ Recipe Initial Hand-Drawn Wireframe - Saved Recipe Interface"
+                    width={300}
+                    height={450}
+                    className="w-72 h-[28rem] object-cover rounded-lg shadow-sm mx-auto"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 text-center">
+                  Early exploration of the saved recipe and display interface
+                </p>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+              <h4 className="text-lg font-medium text-blue-900 mb-3">Key Insights from Wireframing</h4>
+              <ul className="space-y-2 text-blue-800 list-disc list-inside">
+                <li>The ingredient input needed to be as simple as possible - no complex forms</li>
+                <li>Dropdown preferences were crucial - users should only choose what's important to them</li>
+                <li>Side-by-side layout wouldn't work on mobile - generated recipes needed to appear below preferences</li>
+                <li>Visual hierarchy needed to guide users through the 6-question flow (not 4 as initially planned)</li>
+              </ul>
+            </div>
+          </div>
+
           {/* Step 4: Prototype & Design */}
           <div className="space-y-8 mb-12">
             <h3 className="text-xl font-semibold text-gray-900">4. Prototype & Design</h3>

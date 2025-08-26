@@ -36,8 +36,7 @@ export default function Navigation() {
       dropdownItems: [
         { href: '/resume.pdf', label: 'Resume' }
       ]
-    },
-    { href: '/contact', label: 'Contact' }
+    }
   ];
 
   const NavLink = ({ link }: { link: typeof navLinks[0] }) => {
