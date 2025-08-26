@@ -81,7 +81,7 @@ export default function EZRecipeCaseStudy() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="bg-white">
       {/* Navigation */}
       <div className="container mx-auto px-4 pt-20">
         <div className="flex justify-between items-center mb-16">
@@ -170,8 +170,8 @@ export default function EZRecipeCaseStudy() {
             </div>
           </div>
         </motion.section>
-      </div>
-
+              </div>
+              
       {/* Main Content Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
         {/* Sidebar Navigation */}
@@ -204,16 +204,16 @@ export default function EZRecipeCaseStudy() {
 
         {/* Content Area */}
         <div className="order-1 lg:order-2">
-          {/* Project Overview Section */}
-          <motion.section
-            ref={setSectionRef('overview')}
-            id="overview"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+        {/* Project Overview Section */}
+        <motion.section
+          ref={setSectionRef('overview')}
+          id="overview"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
             className="mb-24"
-          >
+        >
           <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
             🎯 Project Summary
           </h2>
@@ -704,19 +704,19 @@ export default function EZRecipeCaseStudy() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Active Users</span>
-                  <span className="font-semibold text-gray-900">2,000+</span>
+                  <span className="font-semibold text-gray-900">20+</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Recipes Generated</span>
-                  <span className="font-semibold text-gray-900">500+</span>
+                  <span className="font-semibold text-gray-900">400+</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">User Rating</span>
-                  <span className="font-semibold text-gray-900">4.8/5</span>
+                  <span className="font-semibold text-gray-900">4.5/5</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Success Rate</span>
-                  <span className="font-semibold text-gray-900">98%</span>
+                  <span className="font-semibold text-gray-900">85%</span>
                 </div>
               </div>
             </div>
@@ -781,7 +781,7 @@ export default function EZRecipeCaseStudy() {
           </ul>
         </motion.section>
         </div>
-      </div>
-    </main>
-  );
+          </div>
+      </main>
+    );
 } 

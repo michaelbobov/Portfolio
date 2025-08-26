@@ -83,11 +83,11 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen relative">
+    <main className="relative min-h-screen flex flex-col">
       <WavyBackground />
       
       {/* Hero Section */}
-      <div className="container mx-auto px-4 pt-20 pb-32">
+      <div className="container mx-auto px-4 pt-20 pb-32 flex-1">
         <h1 className="sr-only">Michael Bobov — Product Designer</h1>
         <div className="flex justify-between items-center mb-32">
           <motion.div 
@@ -186,22 +186,7 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Featured Projects Preview */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="absolute left-0 right-0 -bottom-12 bg-white/10 backdrop-blur-lg"
-        >
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-medium text-white">Featured Projects</h3>
-              <Link href="#work" className="text-white hover:opacity-80 transition-opacity">
-                View All →
-              </Link>
-            </div>
-          </div>
-        </motion.div>
+
       </div>
 
       {/* Projects Section */}
@@ -209,7 +194,7 @@ export default function Home() {
         <div className="absolute inset-x-0 top-0 bg-white w-full h-[150%] -z-10 -mt-24">
           <div className="h-40 bg-gradient-to-b from-transparent to-white" />
         </div>
-        <div className="container mx-auto px-4 pt-20">
+        <div className="container mx-auto px-4 pt-20 pb-32">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -327,6 +312,13 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* Footer */}
+      <section className="mt-auto">
+        <p className="text-white text-xl font-medium text-center">
+          Let's connect and build something meaningful together.
+        </p>
       </section>
 
       {/* Image Modal */}

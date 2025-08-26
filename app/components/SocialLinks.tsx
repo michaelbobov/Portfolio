@@ -9,7 +9,7 @@ export default function SocialLinks() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 flex flex-row gap-2 z-50">
+    <div className="fixed bottom-4 right-4 flex flex-row gap-2 z-40">
       <a
         href="#"
         onClick={handleEmailClick}

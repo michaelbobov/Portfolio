@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Dancing_Script } from 'next/font/google'
 import './globals.css'
 import SocialLinks from './components/SocialLinks'
+import Footer from './components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 const dancingScript = Dancing_Script({ 
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {children}
         <SocialLinks />
+        <Footer />
       </body>
     </html>
   )

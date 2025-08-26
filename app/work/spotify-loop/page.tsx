@@ -82,7 +82,7 @@ export default function SpotifyLoopCaseStudy() {
   };
 
   return (
-        <main className="min-h-screen bg-white">
+        <main className="bg-white">
       {/* Top Navigation */}
       <div className="container mx-auto px-4 pt-20">
         <div className="flex justify-between items-center mb-16">

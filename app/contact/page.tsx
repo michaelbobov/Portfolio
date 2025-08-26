@@ -28,7 +28,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen relative">
+    <main className="relative">
       <WavyBackground />
       
       {/* Hero Section */}

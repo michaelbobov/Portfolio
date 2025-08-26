@@ -85,15 +85,31 @@ export default function Navigation() {
               transition={{ duration: 0.2 }}
               className="bg-white/10 backdrop-blur-lg rounded-xl py-2"
             >
-              {link.dropdownItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block px-4 py-2 ${isWorkPage ? 'text-black/80 hover:text-black' : 'text-white/80 hover:text-white'} hover:bg-white/10 transition-colors`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {link.dropdownItems.map((item) => {
+                // Special handling for resume to open in new tab
+                if (item.href === '/resume.pdf') {
+                  return (
+                    <a
+                      key={item.href}
+                      href="/Michael Bobov - Product Designer.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`block px-4 py-2 ${isWorkPage ? 'text-black/80 hover:text-black' : 'text-white/80 hover:text-white'} hover:bg-white/10 transition-colors`}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block px-4 py-2 ${isWorkPage ? 'text-black/80 hover:text-black' : 'text-white/80 hover:text-white'} hover:bg-white/10 transition-colors`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </motion.div>
           </div>
         )}

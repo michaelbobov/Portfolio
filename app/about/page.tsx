@@ -1,94 +1,110 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
-import { Dancing_Script } from 'next/font/google';
 import WavyBackground from '../components/WavyBackground';
 import Link from 'next/link';
-import Image from 'next/image';
-
-const dancingScript = Dancing_Script({ 
-  subsets: ['latin'],
-  weight: ['400', '700']
-});
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen relative">
+    <main className="relative">
       <WavyBackground />
 
       <div className="container mx-auto px-4 pt-20 pb-24">
         <div className="flex justify-between items-center mb-16">
           <Link href="/">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ opacity: { duration: 0.5 } }}
-              className="hover:opacity-90 transition-opacity"
-            >
-              <Image 
+            <div className="hover:opacity-90 transition-opacity">
+              <img 
                 src="/whiteinitals.png"
                 alt="MB - Michael Bobov"
-                width={80}
-                height={80}
                 className="w-16 h-16"
-                priority
               />
-            </motion.div>
+            </div>
           </Link>
           <Navigation />
         </div>
 
-        <section className="mx-auto max-w-3xl bg-white/85 rounded-2xl shadow-xl p-8 backdrop-blur-md">
-          <h2 className="text-3xl font-semibold mb-4 text-gray-900">About</h2>
-          <p className="text-gray-700 leading-relaxed mb-6">
-            I’m a product designer focused on AI‑powered consumer experiences. I move fast from concept to clarity—framing the problem, validating the approach, and iterating with working prototypes. My work spans UX research, interaction design, and front‑end implementation when needed.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-gray-50 rounded-xl p-5">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Strengths</h3>
-              <ul className="text-gray-700 space-y-2">
-                <li>Problem framing & opportunity mapping</li>
-                <li>Low‑to‑high fidelity prototyping</li>
-                <li>Data‑informed iteration & metrics</li>
-                <li>AI feature design & prompt UX</li>
-              </ul>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-5">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Tools</h3>
-              <ul className="text-gray-700 space-y-2">
-                <li>Figma, Framer Motion</li>
-                <li>React, TailwindCSS</li>
-                <li>OpenAI APIs, OCR pipelines</li>
-                <li>Vercel, Next.js</li>
-              </ul>
-            </div>
-          </div>
+                {/* Hero Section */}
+        <section className="mb-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col lg:flex-row items-center gap-16">
+              {/* Left Side - Text */}
+              <div className="flex-1">
+                                                  <h1 className="text-5xl font-bold mb-6 text-white">
+                   About Me
+                 </h1>
+                 <p className="text-xl text-white/90 leading-relaxed max-w-2xl">
+                   Hi! My name is Michael. I'm a Product Designer with a focus on creating not just concepts, but real, functioning products. My process goes beyond Figma — I design, build, and iterate quickly by leveraging AI as both a creative partner and a development accelerator. This allows me to move from idea to working prototype faster than traditional design cycles, giving me the freedom to test, refine, and push boundaries in real time.
+                 </p>
+                 <p className="text-xl text-white/90 leading-relaxed max-w-2xl mt-4">
+                   My goal as a product designer is to help shape the future of how humans interact with technology. Just like the first mobile apps set the standard for how people learned to navigate phones, I want to design the next generation of experiences—whether that's through ai agents living on our phones, augmented reality, wearables, or technologies we haven't fully imagined yet. I see design not just as making interfaces usable, but as creating the bridges that make new technology feel natural and intuitive.
+                 </p>
 
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="mailto:michaelbobov@gmail.com?subject=Portfolio — Let’s talk"
-              className="bg-[#4A3F8C] hover:bg-[#3c3270] text-white px-6 py-3 rounded-lg transition-colors"
-            >
-              Email me
-            </a>
-            <a
-              href="/resume.pdf"
-              className="bg-white text-gray-800 border border-gray-300 hover:bg-gray-50 px-6 py-3 rounded-lg transition-colors"
-              download
-            >
-              Download resume
-            </a>
-            <a
-              href="https://www.linkedin.com/in/michael-bobov-94b61b202/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-gray-800 border border-gray-300 hover:bg-gray-50 px-6 py-3 rounded-lg transition-colors"
-            >
-              Connect on LinkedIn
-            </a>
+              </div>
+              
+                             {/* Right Side - Michael Bobov Image */}
+               <div className="flex-shrink-0 -mt-32">
+                 <img 
+                   src="/IMG_8226.jpg"
+                   alt="Michael Bobov"
+                   className="w-[350px] h-[350px] object-cover border-4 border-white rounded-full shadow-2xl"
+                 />
+               </div>
+            </div>
           </div>
+        </section>
+
+
+
+        {/* Bringing Ideas to Life Section */}
+        <section className="mb-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-12">
+              <div className="flex flex-col lg:flex-row items-center gap-16">
+                {/* Left Side - Bulb Image */}
+                <div className="flex-1 flex justify-center">
+                  <img 
+                    src="/bulb.png"
+                    alt="Lightbulb representing ideas"
+                    className="w-96 h-96 object-contain"
+                  />
+                </div>
+                
+                {/* Right Side - Content */}
+                <div className="flex-1">
+                  <h2 className="text-4xl font-bold text-[#4A3F8C] mb-8">
+                    Bringing ideas to life
+                  </h2>
+                  
+                  <ul className="space-y-4 text-gray-700 text-lg">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-[#4A3F8C] rounded-full mt-3 mr-4 flex-shrink-0"></span>
+                      Crafting user journeys and clean interfaces
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-[#4A3F8C] rounded-full mt-3 mr-4 flex-shrink-0"></span>
+                      Fast iteration and prototyping
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-[#4A3F8C] rounded-full mt-3 mr-4 flex-shrink-0"></span>
+                      Integrating AI into human-first design
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-[#4A3F8C] rounded-full mt-3 mr-4 flex-shrink-0"></span>
+                      Building products that are both functional and delightful
+                    </li>
+              </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <section>
+          <p className="text-white text-xl font-medium text-center">
+            Let's connect and build something meaningful together.
+          </p>
         </section>
       </div>
     </main>
