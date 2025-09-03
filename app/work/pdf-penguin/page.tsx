@@ -340,13 +340,13 @@ export default function PDFPenguinCaseStudy() {
 
             <div>
               <h3 className="text-lg font-medium mb-4 text-gray-900">Step 3: Ideate</h3>
-              <div className="mb-4">
+              <div className="mb-4 flex justify-center">
                 <Image 
                   src="/sketchpdfpenguin.png"
                   alt="PDF Penguin Initial Sketches"
-                  width={800}
-                  height={600}
-                  className="w-full rounded-lg"
+                  width={600}
+                  height={450}
+                  className="w-full max-w-2xl rounded-lg"
                 />
               </div>
               <p className="text-gray-600 leading-relaxed">
@@ -357,8 +357,98 @@ export default function PDFPenguinCaseStudy() {
             <div>
               <h3 className="text-lg font-medium mb-4 text-gray-900">Step 4: Prototype & Design</h3>
               <p className="text-gray-600 leading-relaxed">
-                With a clear layout already in mind, I moved directly into high-fidelity interface development using Vercel. Rather than spending time on static design tools, I focused on live iteration — adjusting spacing, labels, and user flows in context. This allowed me to make real-time decisions based on how the interface behaved, rather than just how it looked. Cursor supported this process by helping structure responsive components and quickly refine interactive behaviors.
+                With a clear layout concept from the ideation phase, I began prototyping to test the interface flow and validate the user experience. I started with low-fidelity wireframes to quickly iterate on the core interaction patterns before moving into high-fidelity development.
               </p>
+            </div>
+
+            {/* Lo-Fi Prototype */}
+            <div className="mt-12">
+              <h4 className="text-lg font-medium mb-6 text-gray-900">Lo-Fi Prototype</h4>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                With the concept validated through research, I moved into rapid prototyping to test the interface flow. The low-fi wireframes focused on three key aspects: the upload process, prompt customization, and JSON output display within the clean, minimal interface.
+              </p>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/pengu1lowfi.png"
+                      alt="PDF Penguin Low-Fi Prototype 1 - Upload Interface"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">1. Upload Interface</h6>
+                  <p className="text-gray-600">Clean drag-and-drop area with clear visual feedback for file uploads.</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/pengu2lowfi.png"
+                      alt="PDF Penguin Low-Fi Prototype 2 - JSON Output"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">2. JSON Output</h6>
+                  <p className="text-gray-600">Structured data display with syntax highlighting and copy functionality.</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/pengu3lowfi.png"
+                      alt="PDF Penguin Low-Fi Prototype 3 - Library View"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">3. Library</h6>
+                  <p className="text-gray-600">Saved documents and parsed data organized in a clean library interface.</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/pengu4lowfi.png"
+                      alt="PDF Penguin Low-Fi Prototype 4 - Library Document View"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">4. Library Document View</h6>
+                  <p className="text-gray-600">Viewing and managing individual documents from the library with parsed data.</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 text-gray-600">
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-2">Key Insights from Lo-Fi Testing:</h5>
+                  <p className="text-gray-600 leading-relaxed">
+                    Users preferred a two-panel layout for immediate visual feedback, the prompt field needed clear placeholder text to guide effective AI instructions, and error states required helpful messaging to guide users toward successful parsing.
+                  </p>
+                </div>
+
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-2">Refinements Made:</h5>
+                  <p className="text-gray-600 leading-relaxed">
+                    I simplified the upload process to drag-and-drop only, added contextual placeholder text with examples, and integrated clear error messaging with actionable next steps for users.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div>

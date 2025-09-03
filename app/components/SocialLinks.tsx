@@ -6,11 +6,18 @@ export default function SocialLinks() {
   const handleEmailClick = (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Direct Gmail compose URL that goes straight to email composition
-    const gmailComposeUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=michaelbobov@gmail.com';
+    // Try to open Gmail compose with email pre-filled in a proper tab
+    // Use compose URL but with minimal parameters to avoid redirect issues
+    const gmailComposeUrl = 'https://mail.google.com/mail/?view=cm&to=michaelbobov@gmail.com';
     
-    // Open Gmail compose in a new tab
-    window.open(gmailComposeUrl, '_blank');
+    // Open in new tab
+    const newTab = window.open(gmailComposeUrl, '_blank', 'noopener,noreferrer');
+    
+    // If popup is blocked, try alternative approach
+    if (!newTab) {
+      // Fallback: open Gmail main interface
+      window.open('https://mail.google.com/mail/u/0/', '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleEmailRightClick = (e: React.MouseEvent) => {
