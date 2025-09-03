@@ -167,7 +167,7 @@ export default function PDFPenguinCaseStudy() {
           <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
             <div className="flex flex-col gap-2">
-              {['overview', 'design', 'ideate', 'prototype', 'test', 'reflections', 'future', 'final'].map((section) => (
+              {['overview', 'problem', 'design', 'build', 'challenges', 'reflections', 'future', 'final'].map((section) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
@@ -178,10 +178,10 @@ export default function PDFPenguinCaseStudy() {
                   }`}
                 >
                   {section === 'overview' && 'Project Summary'}
+                  {section === 'problem' && 'Problem Statement'}
                   {section === 'design' && 'Design Process'}
-                  {section === 'ideate' && 'Ideate'}
-                  {section === 'prototype' && 'Prototype & Design'}
-                  {section === 'test' && 'Test & Validation'}
+                  {section === 'build' && 'Build Process'}
+                  {section === 'challenges' && 'Challenges & Lessons'}
                   {section === 'reflections' && 'Reflections & Takeaways'}
                   {section === 'future' && 'Future Enhancements'}
                   {section === 'final' && 'Final Thoughts'}
@@ -234,50 +234,12 @@ export default function PDFPenguinCaseStudy() {
                 </ul>
               </div>
             </div>
-            {/* Problem (moved up) */}
             <div>
-              <h4 className="text-lg font-medium mb-4 text-[#4A90E2]">Problem</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                While developing my cooking assistant app, Chefie, I needed a way to extract structured ingredient and nutrition data from USDA PDFs. The datasets were available, but they were formatted as complex, unstructured PDFs that were difficult to work with programmatically. Existing tools were unreliable or too technical, requiring specialized setup, manual formatting, command-line usage, or developer-only integrations.
-              </p>
-              <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                <h5 className="font-medium text-[#4A90E2] mb-3">Success Metrics</h5>
-                <ul className="text-gray-700 divide-y divide-gray-200 rounded-md overflow-hidden">
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>Time-to-first-output ≤ 10 seconds</span>
-                  </li>
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>≥ 90% parse success for common document types</span>
-                  </li>
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>Clear fallback guidance for scanned documents</span>
-                  </li>
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>Zero technical setup required for first-time users</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div className="p-5 rounded-lg border border-gray-100 border-l-4 border-l-gray-300 bg-white">
-                  <h5 className="font-medium text-gray-900 mb-2">Before (Existing Tools)</h5>
-                  <p className="text-gray-600 leading-relaxed">Users struggled with complex setup, technical interfaces, and inconsistent results. Tools like Tabula and Adobe's OCR exports were powerful but inaccessible to non-technical users.</p>
-                </div>
-                <div className="p-5 rounded-lg border border-gray-100 border-l-4 border-l-[#4A90E2] bg-[#4A90E2]/5">
-                  <h5 className="font-medium text-[#4A90E2] mb-2">After (PDF Penguin)</h5>
-                  <p className="text-gray-700 leading-relaxed">Drag, drop, describe what you want in plain language, and get structured JSON instantly—no setup, no learning curve, just results.</p>
-                </div>
-              </div>
-              <div className="h-px bg-gray-200 my-8" />
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-4 text-gray-900">PDF Penguin</h3>
               <p className="text-gray-600 leading-relaxed">
-                An AI-powered document processing tool that transforms unstructured PDF data into clean, structured JSON for developers and data analysts. PDF Penguin has evolved from a personal solution into a standalone product with broader application across document-heavy industries.
+                While developing my cooking assistant app, Chefie, I needed a way to extract structured ingredient and nutrition data from USDA PDFs. The datasets were available, but they were formatted as complex, unstructured PDFs that were difficult to work with programmatically. Existing tools were unreliable or too technical, so I built a clean, AI-powered tool for parsing and exporting PDF data into usable JSON.
+              </p>
+              <p className="text-gray-600 leading-relaxed mt-4">
+                PDF Penguin has since evolved into a standalone product with broader application across document-heavy industries.
               </p>
             </div>
             <div>
@@ -307,7 +269,31 @@ export default function PDFPenguinCaseStudy() {
           </div>
         </motion.section>
 
-
+        {/* Problem & Goal Section */}
+        <motion.section
+          ref={setSectionRef('problem')}
+          id="problem"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mb-24"
+        >
+          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
+            Problem & Goal
+          </h2>
+          <div className="space-y-4">
+            <p className="text-gray-600 leading-relaxed">
+              The biggest issue with existing PDF parsers was that they were overly technical — requiring specialized setup, manual formatting, command-line usage, or developer-only integrations. Tools like Tabula and Adobe's OCR exports were powerful but inaccessible to non-technical users. Many required users to predefine table structures or fiddle with JSON schemas before seeing results, which added friction for those just trying to extract usable information from documents.
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              Additionally, tools often failed with scanned documents or image-based PDFs, offering inconsistent or incomplete results. Even when they worked, the interfaces were cluttered and required unnecessary steps or downloads.
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              I set out to design a tool that required zero onboarding: drag, drop, type what you want — and get clean JSON instantly. No setup. No training. Just output.
+            </p>
+          </div>
+        </motion.section>
 
         {/* Design Process Section */}
         <motion.section
@@ -320,7 +306,7 @@ export default function PDFPenguinCaseStudy() {
           className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            🔍 Design Process
+            Design Process
           </h2>
           <div className="space-y-8">
             <div>
@@ -354,48 +340,8 @@ export default function PDFPenguinCaseStudy() {
 
             <div>
               <h3 className="text-lg font-medium mb-4 text-gray-900">Step 3: Ideate</h3>
-              <p className="text-gray-600 leading-relaxed">
-                I brainstormed multiple UI approaches, including <strong>single-page processing</strong> (streamlined but potentially overwhelming), <strong>wizard-style multi-step</strong> (guided but slow), and <strong>two-panel layout</strong> (immediate feedback, familiar pattern).
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 4: Prototype & Design</h3>
-              <p className="text-gray-600 leading-relaxed">
-                With a clear layout concept from the ideation phase, I began prototyping to test the interface flow and validate the user experience. I started with low-fidelity wireframes to quickly iterate on the core interaction patterns before moving into high-fidelity development.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 5: Test & Iterate</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Each time I implemented a new UI or prompt behavior, I tested it by uploading different document types — invoices, receipts, reports — and refining the prompt UX to guide the AI parser. After discovering poor output from vague prompts, I added a customizable instruction field and clarified the placeholder text to guide user input.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                Once the interface flow and AI behavior were reliable, I built the full app in Cursor with a React + TailwindCSS frontend, integrated OCR and OpenAI APIs, and deployed it via Vercel. The result is a working product with real users, capable of turning even messy PDFs into structured data in seconds.
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Ideate Section */}
-        <motion.section
-          ref={setSectionRef('ideate')}
-          id="ideate"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            💡 Ideate
-          </h2>
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">Final Concept: Two-Panel Layout</h3>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                The final concept is a two-panel layout: Upload (left) → Output (right), supported by a flexible prompt box to direct the AI. The goal was instant clarity, minimal onboarding, and the ability to adjust the output on the fly.
+                I brainstormed multiple UI approaches, including <strong>single-page processing</strong> (streamlined but potentially overwhelming), <strong>wizard-style multi-step</strong> (guided but slow), and <strong>two-panel layout</strong> (immediate feedback, familiar pattern).
               </p>
               
               <div className="mb-6 flex justify-center">
@@ -408,64 +354,35 @@ export default function PDFPenguinCaseStudy() {
                 />
               </div>
               
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="text-lg font-medium mb-4 text-gray-900">Design Philosophy</h4>
-                <p className="text-gray-600 leading-relaxed mb-4">
-                  PDF Penguin is built around one core principle: <strong>zero friction, maximum clarity</strong>. Instead of complex setup or technical configuration, users describe what they want in plain language and get structured results instantly.
+              <p className="text-gray-600 leading-relaxed mb-6">
+                I had a clear mental model of how the product should behave, so I quickly sketched a basic 2-panel layout idea: Upload (left) → Output (right), supported by a flexible prompt box to direct the AI. The goal was instant clarity, minimal onboarding, and the ability to adjust the output on the fly.
+              </p>
+
+              {/* User Flow Chart */}
+              <div className="mt-8">
+                <h4 className="text-lg font-medium mb-4 text-gray-900">User Flow Mapping</h4>
+                <p className="text-gray-600 leading-relaxed mb-6">
+                  To ensure the interaction felt intuitive, I mapped out the complete user journey from uploading a PDF to receiving structured JSON output. This flow chart helped identify potential friction points and validate the drag-and-drop interaction pattern.
                 </p>
-            <p className="text-gray-600 leading-relaxed">
-                  We framed this around two beliefs: <strong>respect the user's time</strong> so they never have to learn complex interfaces or wait through lengthy processes, and <strong>empower data extraction</strong> so anyone can turn messy documents into usable structured data.
+                <div className="flex justify-center">
+                  <Image 
+                    src="/pdfpenguinflow.png"
+                    alt="PDF Penguin User Flow Chart showing the step-by-step process of uploading, processing, and extracting data from PDFs"
+                    width={600}
+                    height={300}
+                    className="w-full max-w-xl border border-gray-200 shadow-lg rounded-xl"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 text-center mt-3 italic">
+                  💡 The flow shows the complete user journey from upload to structured output
                 </p>
               </div>
             </div>
 
-            {/* User Flow Chart */}
-            <div className="mt-8">
-              <h4 className="text-lg font-medium mb-4 text-gray-900">User Flow Mapping</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                To ensure the interaction felt intuitive, I mapped out the complete user journey from uploading a PDF to receiving structured JSON output. This flow chart helped identify potential friction points and validate the drag-and-drop interaction pattern.
-              </p>
-              <div className="flex justify-center">
-              <Image 
-                  src="/pdfpenguinflow.png"
-                  alt="PDF Penguin User Flow Chart showing the step-by-step process of uploading, processing, and extracting data from PDFs"
-                width={900}
-                height={400}
-                className="w-full max-w-2xl border border-gray-200 shadow-lg rounded-xl"
-              />
-            </div>
-              <p className="text-sm text-gray-500 text-center mt-3 italic">
-                💡 The flow shows the complete user journey from upload to structured output
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Prototype & Design Section */}
-        <motion.section
-          ref={setSectionRef('prototype')}
-          id="prototype"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            🎨 Prototype & Design
-          </h2>
-          <div className="space-y-8">
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Design Goals</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 4: Prototype & Design</h3>
               <p className="text-gray-600 leading-relaxed">
-                The design aims to provide immediate visual feedback, show clear processing states, and ensure the interface feels intuitive for both technical and non-technical users.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">How PDF Penguin Works</h3>
-              <p className="text-gray-600 leading-relaxed">
-                PDF Penguin works through a simple three-step process: users drag and drop a PDF, describe what data they want to extract in plain language, and receive structured JSON output instantly. The AI interprets user instructions and uses document layout detection to output structured key-value data, even from unstructured or scanned documents.
+                With a clear layout concept from the ideation phase, I began prototyping to test the interface flow and validate the user experience. I started with low-fidelity wireframes to quickly iterate on the core interaction patterns before moving into high-fidelity development.
               </p>
             </div>
 
@@ -559,49 +476,34 @@ export default function PDFPenguinCaseStudy() {
               </div>
             </div>
 
-            {/* Hi-Fi Prototype */}
-            <div className="mt-12">
-              <h4 className="text-lg font-medium mb-6 text-gray-900">Hi-Fi Prototype</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                PDF Penguin is a tool that allows users to extract structured data from any PDF document. Users can upload a PDF, describe what data they want to extract in plain language, and receive clean JSON output instantly. This feature is perfect for data analysts, developers, and anyone who needs to work with document data.
+            <div>
+              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 5: Test & Iterate</h3>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Each time I implemented a new UI or prompt behavior, I tested it by uploading different document types — invoices, receipts, reports — and refining the prompt UX to guide the AI parser. After discovering poor output from vague prompts, I added a customizable instruction field and clarified the placeholder text to guide user input.
               </p>
-              
-              {/* Final Product Screenshot */}
-              <div className="my-8 flex justify-center">
-                <Image 
-                  src="/pdf-penguin.png"
-                  alt="PDF Penguin Final Product Screenshot"
-                  width={1200}
-                  height={600}
-                  className="w-full max-w-3xl rounded-xl"
-                />
-              </div>
-
-              <div className="space-y-4 text-gray-600">
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">Design System Integration:</h5>
-            <p className="text-gray-600 leading-relaxed">
-                    We used a clean, minimal design system with clear visual hierarchy, applied consistent spacing and typography for readability, and designed the interface to feel familiar and approachable for non-technical users.
-                  </p>
-                </div>
-
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">Micro-Interactions & Polish:</h5>
-            <p className="text-gray-600 leading-relaxed">
-                    The experience includes smooth animations for file upload and processing states, clear visual feedback during AI processing, and helpful error states that guide users toward successful outcomes.
-            </p>
-                </div>
-              </div>
+              <p className="text-gray-600 leading-relaxed">
+                Once the interface flow and AI behavior were reliable, I built the full app in Cursor with a React + TailwindCSS frontend, integrated OCR and OpenAI APIs, and deployed it via Vercel. The result is a working product with real users, capable of turning even messy PDFs into structured data in seconds.
+              </p>
             </div>
-
-
+            {/* Final Product Screenshot */}
+            <div className="my-8 flex justify-center">
+              <Image 
+                src="/pdf-penguin.png"
+                alt="PDF Penguin Final Product Screenshot"
+                width={1200}
+                height={600}
+                className="w-full max-w-3xl rounded-xl"
+              />
+            </div>
           </div>
         </motion.section>
 
-        {/* Test & Validation Section */}
+
+
+        {/* Build Process Section */}
         <motion.section
-          ref={setSectionRef('test')}
-          id="test"
+          ref={setSectionRef('build')}
+          id="build"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -609,64 +511,54 @@ export default function PDFPenguinCaseStudy() {
           className="mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            🧪 Test & Validation
+            Build Process
           </h2>
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Build Process</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                This project was coded entirely using Cursor, an AI-native coding environment. I leveraged its inline generation, autocompletion, and iterative coding features to build and refine the full frontend and backend without switching tools. Cursor's fluid AI-assisted workflow allowed me to move quickly from concept to implementation, especially in structuring the prompt logic and dynamic output panel.
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-600">
-                <li>Frontend: React + TailwindCSS</li>
-                <li>Backend: AI pipeline integrating OCR and OpenAI API for document parsing</li>
-                <li>Deployment: Vercel</li>
-              </ul>
-            </div>
+          <div className="space-y-4">
+            <p className="text-gray-600 leading-relaxed">
+              This project was coded entirely using Cursor, an AI-native coding environment. I leveraged its inline generation, autocompletion, and iterative coding features to build and refine the full frontend and backend without switching tools. Cursor's fluid AI-assisted workflow allowed me to move quickly from concept to implementation, especially in structuring the prompt logic and dynamic output panel.
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-gray-600">
+              <li>Frontend: React + TailwindCSS</li>
+              <li>Backend: AI pipeline integrating OCR and OpenAI API for document parsing</li>
+              <li>Deployment: Vercel</li>
+            </ul>
+            <p className="text-gray-600 leading-relaxed">
+              The AI interprets user instructions from a prompt field and uses document layout detection to output structured key-value JSON data, even from unstructured or scanned documents.
+            </p>
+          </div>
+        </motion.section>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-                <h4 className="text-lg font-medium mb-3 text-gray-900">Success Metrics</h4>
-                <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                  <li>Time-to-first-output ≤ 10 seconds</li>
-                  <li>≥ 90% parse success for common document types</li>
-                  <li>User satisfaction score ≥ 4/5</li>
-                  <li>Zero technical setup required</li>
-                </ul>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-                <h4 className="text-lg font-medium mb-3 text-gray-900">Technical Considerations</h4>
-                <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                  <li>Integration with OpenAI Vision API</li>
-                  <li>OCR processing for scanned documents</li>
-                  <li>Performance optimization for large files</li>
-                  <li>Error handling and user guidance</li>
-                </ul>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Challenges & Solutions</h4>
+        {/* Challenges & Lessons Section */}
+        <motion.section
+          ref={setSectionRef('challenges')}
+          id="challenges"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mb-24"
+        >
+          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
+            Challenges & Lessons Learned
+          </h2>
           <div className="space-y-4">
             <div className="bg-gray-50 p-6 rounded-lg">
-                  <h5 className="text-lg font-medium mb-2 text-gray-900">Challenge</h5>
+              <h3 className="text-lg font-medium mb-2 text-gray-900">Challenge</h3>
               <p className="text-gray-600">
                 Users were uploading low-resolution or scanned PDFs that caused inconsistent parsing and frustrating results.
               </p>
             </div>
             <div className="bg-gray-50 p-6 rounded-lg">
-                  <h5 className="text-lg font-medium mb-2 text-gray-900">Solution</h5>
+              <h3 className="text-lg font-medium mb-2 text-gray-900">Solution</h3>
               <p className="text-gray-600">
                 I added a prompt customization field to guide the AI, and included light UX copy to educate users on how to phrase good instructions or prepare better PDFs.
               </p>
             </div>
             <div className="bg-gray-50 p-6 rounded-lg">
-                  <h5 className="text-lg font-medium mb-2 text-gray-900">Lesson</h5>
+              <h3 className="text-lg font-medium mb-2 text-gray-900">Lesson</h3>
               <p className="text-gray-600">
                 AI isn't magic — but good UX can make it feel like it is. The best tools support both ideal and messy inputs, and guide users through uncertainty.
               </p>
-                </div>
-              </div>
             </div>
           </div>
         </motion.section>
@@ -714,7 +606,7 @@ export default function PDFPenguinCaseStudy() {
           </div>
         </motion.section>
 
-        {/* Future Enhancements Section */}
+        {/* Future Improvements Section */}
         <motion.section
           ref={setSectionRef('future')}
           id="future"
@@ -727,47 +619,24 @@ export default function PDFPenguinCaseStudy() {
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             📈 Future Enhancements
           </h2>
-          <div className="space-y-6">
-            <p className="text-gray-600 leading-relaxed">
-              Planned enhancements include user authentication and upload history saving, support for additional export formats (CSV, XML), improved handling of low-quality scanned documents, and mobile-responsive improvements for on-the-go document processing.
-            </p>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="text-lg font-medium mb-3 text-gray-900">Short-term Roadmap</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                    <span>User accounts and document history</span>
-                  </li>
+          <ul className="space-y-2 text-gray-600">
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                    <span>CSV and XML export options</span>
+              Add user authentication and upload history saving
             </li>
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                    <span>Batch processing capabilities</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="text-lg font-medium mb-3 text-gray-900">Long-term Vision</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                    <span>API access for developers</span>
+              Allow exports to CSV and XML formats
             </li>
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                    <span>Advanced OCR for complex layouts</span>
+              Improve support for low-quality scanned PDFs
             </li>
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                    <span>Integration with popular tools (Slack, Notion)</span>
+              Mobile-responsive improvements
             </li>
           </ul>
-              </div>
-            </div>
-          </div>
         </motion.section>
 
         {/* Final Thoughts Section */}
@@ -787,9 +656,9 @@ export default function PDFPenguinCaseStudy() {
             <p className="text-gray-600 leading-relaxed">
               This case study pushed me to think deeply about the intersection of AI capabilities and user experience design. PDF Penguin is about more than document processing — it's about making powerful technology accessible to everyone, regardless of their technical background.
             </p>
-          <p className="text-gray-600 leading-relaxed">
-            Since building PDF Penguin, I've used it to power real-time parsing for multiple EZ Recipe recipes and shared it with other developers who've since used it in document-heavy workflows. It's now a core part of my toolset and continues to inspire ideas for standalone API-based parsing services.
-          </p>
+            <p className="text-gray-600 leading-relaxed">
+              Since building PDF Penguin, I've used it to power real-time parsing for multiple EZ Recipe recipes and shared it with other developers who've since used it in document-heavy workflows. It's now a core part of my toolset and continues to inspire ideas for standalone API-based parsing services.
+            </p>
             <div className="bg-[#4A90E2]/5 rounded-lg p-6 border border-[#4A90E2]/20">
               <h4 className="text-lg font-medium mb-3 text-[#4A90E2]">Impact & Results</h4>
               <p className="text-gray-700 leading-relaxed">
