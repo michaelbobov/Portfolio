@@ -493,7 +493,7 @@ export default function PDFPenguinCaseStudy() {
             {/* User Flow Diagram */}
             <div className="my-8 flex justify-center">
               <Image 
-                src="/userflow.png"
+                src="/pdfpenguinflow.png"
                 alt="PDF Penguin User Flow Diagram"
                 width={900}
                 height={400}
