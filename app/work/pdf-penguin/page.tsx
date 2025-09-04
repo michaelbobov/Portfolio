@@ -188,6 +188,29 @@ export default function PDFPenguinCaseStudy() {
                 </button>
               ))}
             </div>
+            
+            {/* Back to Top Button */}
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="w-full bg-[#4A90E2] hover:bg-[#3A7BC8] text-white px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group"
+              >
+                <svg 
+                  className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M5 10l7-7m0 0l7 7m-7-7v18" 
+                  />
+                </svg>
+                Back to Top
+              </button>
+            </div>
           </div>
         </nav>
 
@@ -216,32 +239,15 @@ export default function PDFPenguinCaseStudy() {
               </ul>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <h4 className="text-gray-900 font-medium mb-2">Constraints</h4>
-                <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                  <li>Solo project; limited time box for v1.</li>
-                  <li>Mixed‑quality inputs (scans vs. digital PDFs).</li>
-                  <li>Model/OCR variability; must guide user prompts.</li>
-                </ul>
-              </div>
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <h4 className="text-gray-900 font-medium mb-2">Collaboration & Feedback</h4>
-                <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                  <li>Peer dev feedback on output schema clarity → added copy and examples.</li>
-                  <li>Early testers (friends/Discord) struggled with vague prompts → added placeholder guidance.</li>
-                  <li>Iterated UX on empty/error states after scan failures.</li>
-                </ul>
-              </div>
-            </div>
             <div>
               <p className="text-gray-600 leading-relaxed">
-                While developing my cooking assistant app, Chefie, I needed a way to extract structured ingredient and nutrition data from USDA PDFs. The datasets were available, but they were formatted as complex, unstructured PDFs that were difficult to work with programmatically. Existing tools were unreliable or too technical, so I built a clean, AI-powered tool for parsing and exporting PDF data into usable JSON.
+                While developing my recipe generator app, EZ Recipe, I needed a way to extract structured ingredient and nutrition data from USDA PDFs. The datasets were available, but they were formatted as complex, unstructured PDFs that were difficult to work with programmatically. Existing tools were unreliable or too technical, so I built a clean, AI-powered tool for parsing and exporting PDF data into usable JSON.
               </p>
               <p className="text-gray-600 leading-relaxed mt-4">
                 PDF Penguin has since evolved into a standalone product with broader application across document-heavy industries.
               </p>
             </div>
+
             <div>
               <h3 className="text-lg font-medium mb-2 text-gray-900">My Role</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -476,6 +482,96 @@ export default function PDFPenguinCaseStudy() {
               </div>
             </div>
 
+            {/* High-Fidelity Prototypes */}
+            <div className="mt-12">
+              <h4 className="text-xl font-medium mb-6 text-gray-900">High-Fidelity Prototypes</h4>
+              <p className="text-gray-600 leading-relaxed mb-8">
+                Based on the low-fidelity testing insights, I created polished high-fidelity prototypes that refined the visual design, improved the user experience, and prepared for final development.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/highfipengu1.png"
+                      alt="PDF Penguin High-Fi Prototype 1 - Upload Interface"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">1. Upload Interface</h6>
+                  <p className="text-gray-600">Clean, modern upload experience with drag-and-drop functionality, output format dropdown selection, and clear visual feedback.</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/highfipengu2.png"
+                      alt="PDF Penguin High-Fi Prototype 2 - JSON Output"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">2. JSON Output</h6>
+                  <p className="text-gray-600">Structured data display with syntax highlighting and copy functionality.</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/highfipengu3.png"
+                      alt="PDF Penguin High-Fi Prototype 3 - Library View"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">3. Library</h6>
+                  <p className="text-gray-600">Saved documents and parsed data organized in a clean library interface with color-coded file categories in the top left.</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-6">
+                    <Image
+                      src="/highfipengu4.png"
+                      alt="PDF Penguin High-Fi Prototype 4 - Library Document View"
+                      width={1200}
+                      height={1400}
+                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
+                      priority
+                      quality={100}
+                    />
+                  </div>
+                  <h6 className="text-lg font-medium text-gray-900 mb-2">4. Library Document View</h6>
+                  <p className="text-gray-600">Specific document view showing detailed information with download and copy functionality for parsed data.</p>
+                </div>
+              </div>
+              
+              {/* Figma Prototype Link */}
+              <div className="text-center mt-8">
+                <p className="text-gray-600 mb-4">Try the interactive prototype:</p>
+                <a 
+                  href="https://www.figma.com/proto/6gUB6gR6ATucf890UPjQO6/Pdf-Pengu?node-id=14-418&t=O1XBikXg0ng6HNMv-1" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg hover:shadow-xl"
+                >
+                  Open Figma Prototype
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
             <div>
               <h3 className="text-lg font-medium mb-4 text-gray-900">Step 5: Test & Iterate</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
@@ -541,24 +637,44 @@ export default function PDFPenguinCaseStudy() {
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Challenges & Lessons Learned
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Challenge</h3>
-              <p className="text-gray-600">
-                Users were uploading low-resolution or scanned PDFs that caused inconsistent parsing and frustrating results.
+              <h3 className="text-lg font-medium mb-3 text-gray-900">Challenge: Designing a Two-Click PDF Converter</h3>
+              <p className="text-gray-600 mb-3">
+                The main challenge was keeping the experience as minimal as possible. Many converters overload users with extra steps — multiple menus, settings, or upsells — which slows them down. The goal for PDF Penguin was clear: users should be able to upload their file and get the converted result in just two clicks.
               </p>
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <h4 className="font-medium text-blue-900 mb-2">Lesson Learned</h4>
+                <p className="text-blue-800">
+                  Stripping down features is harder than adding them. I had to carefully decide what was essential (upload → convert → download) and what could be excluded or postponed. This exercise taught me that simplicity isn't about doing less work — it's about making tough design choices to keep the user's path frictionless.
+                </p>
+              </div>
             </div>
+
             <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Solution</h3>
-              <p className="text-gray-600">
-                I added a prompt customization field to guide the AI, and included light UX copy to educate users on how to phrase good instructions or prepare better PDFs.
+              <h3 className="text-lg font-medium mb-3 text-gray-900">Challenge: Guiding Without Overwhelming</h3>
+              <p className="text-gray-600 mb-3">
+                Even with a simple flow, users still need a sense of control (e.g., naming the file or choosing output format). Adding these options without cluttering the interface was a balancing act.
               </p>
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <h4 className="font-medium text-blue-900 mb-2">Lesson Learned</h4>
+                <p className="text-blue-800">
+                  Clear defaults and progressive disclosure are key. By setting smart defaults, users can complete their task quickly, while still having the option to customize if needed.
+                </p>
+              </div>
             </div>
+
             <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Lesson</h3>
-              <p className="text-gray-600">
-                AI isn't magic — but good UX can make it feel like it is. The best tools support both ideal and messy inputs, and guide users through uncertainty.
+              <h3 className="text-lg font-medium mb-3 text-gray-900">Challenge: Maintaining Trust and Reliability</h3>
+              <p className="text-gray-600 mb-3">
+                Because file conversion involves sensitive documents, users need to trust the process. Any hiccup — like unclear status indicators or unexpected results — could break that trust.
               </p>
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <h4 className="font-medium text-blue-900 mb-2">Lesson Learned</h4>
+                <p className="text-blue-800">
+                  Feedback and transparency build confidence. Simple loading indicators, confirmation messages, and a visible "library" of past conversions reassured users that their files were safe and the process worked as expected.
+                </p>
+              </div>
             </div>
           </div>
         </motion.section>
@@ -667,35 +783,6 @@ export default function PDFPenguinCaseStudy() {
             </div>
           </div>
         </motion.section>
-
-        {/* Scroll to Top Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="flex justify-center mb-16"
-        >
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#4A90E2] hover:bg-[#3A7BC8] text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg group"
-          >
-            <svg 
-              className="w-4 h-4 transition-transform duration-300 group-hover:-translate-y-1" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M5 10l7-7m0 0l7 7m-7-7v18" 
-              />
-            </svg>
-            Back to Top
-          </button>
-        </motion.div>
         </div>
       </div>
     </main>

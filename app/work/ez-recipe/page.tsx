@@ -199,6 +199,29 @@ export default function EZRecipeCaseStudy() {
                 </button>
               ))}
             </div>
+            
+            {/* Back to Top Button */}
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="w-full bg-[#FFB800] hover:bg-[#E6A600] text-white px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group"
+              >
+                <svg 
+                  className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M5 10l7-7m0 0l7 7m-7-7v18" 
+                  />
+                </svg>
+                Back to Top
+              </button>
+            </div>
           </div>
         </nav>
 
