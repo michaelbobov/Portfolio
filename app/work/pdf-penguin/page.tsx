@@ -288,16 +288,55 @@ export default function PDFPenguinCaseStudy() {
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
             Problem & Goal
           </h2>
-          <div className="space-y-4">
-            <p className="text-gray-600 leading-relaxed">
+          <div className="space-y-8">
+            <div>
+              <h4 className="text-lg font-medium mb-4 text-[#4A90E2]">Problem</h4>
+              <p className="text-gray-600 leading-relaxed mb-4">
               The biggest issue with existing PDF parsers was that they were overly technical — requiring specialized setup, manual formatting, command-line usage, or developer-only integrations. Tools like Tabula and Adobe's OCR exports were powerful but inaccessible to non-technical users. Many required users to predefine table structures or fiddle with JSON schemas before seeing results, which added friction for those just trying to extract usable information from documents.
             </p>
-            <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed mb-4">
               Additionally, tools often failed with scanned documents or image-based PDFs, offering inconsistent or incomplete results. Even when they worked, the interfaces were cluttered and required unnecessary steps or downloads.
             </p>
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
+                <h5 className="font-medium text-[#4A90E2] mb-3">Success Metrics</h5>
+                <ul className="text-gray-700 divide-y divide-gray-200 rounded-md overflow-hidden">
+                  <li className="flex items-start gap-2 p-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                    <span>≤ 10s time-to-first-output</span>
+                  </li>
+                  <li className="flex items-start gap-2 p-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                    <span>90%+ parse success rate for common documents</span>
+                  </li>
+                  <li className="flex items-start gap-2 p-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                    <span>Clear fallback guidance for scanned PDFs</span>
+                  </li>
+                  <li className="flex items-start gap-2 p-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
+                    <span>Zero setup required for first use</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div className="p-5 rounded-lg border border-gray-100 border-l-4 border-l-gray-300 bg-white">
+                  <h5 className="font-medium text-gray-900 mb-2">Before (Current Tools)</h5>
+                  <p className="text-gray-600 leading-relaxed">Users spend 15+ minutes manually copying data from PDFs, dealing with complex setup, or getting inconsistent results from existing parsers.</p>
+                </div>
+                <div className="p-5 rounded-lg border border-gray-100 border-l-4 border-l-[#4A90E2] bg-[#4A90E2]/5">
+                  <h5 className="font-medium text-[#4A90E2] mb-2">After (PDF Penguin)</h5>
+                  <p className="text-gray-700 leading-relaxed">Drag, drop, type what you want — and get clean JSON in 10 seconds. No setup. No training. Just output.</p>
+                </div>
+              </div>
+              <div className="h-px bg-gray-200 my-8" />
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-gray-900">PDF Penguin</h3>
             <p className="text-gray-600 leading-relaxed">
               I set out to design a tool that required zero onboarding: drag, drop, type what you want — and get clean JSON instantly. No setup. No training. Just output.
             </p>
+            </div>
           </div>
         </motion.section>
 
@@ -327,21 +366,99 @@ export default function PDFPenguinCaseStudy() {
                 The table below summarizes how PDF Penguin compares to these tools, based on that usability-first evaluation.
               </p>
               <div className="my-6 flex justify-center">
-                <Image
-                  src="/featurecomparison.png"
-                  alt="Feature Comparison of PDF Tools"
-                  width={1200}
-                  height={600}
-                  className="w-full max-w-3xl border border-gray-200 shadow-lg rounded-xl"
-                />
+                <div className="w-full overflow-x-auto">
+                  <table className="w-full border-collapse border-2 border-gray-500">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">Category</th>
+                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">Tabula (Open Source)</th>
+                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">Adobe Acrobat Export</th>
+                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">DocParser</th>
+                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-[#4A90E2]">PDF Penguin</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-sm">
+                      <tr>
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">How to Use</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Install app → select table area → export</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Open PDF → Export To (Excel/Word) → fix formatting</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Create parser → define rules/schema → run</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Drag & drop PDF → describe output in plain language → copy JSON</td>
+                      </tr>
+                      <tr className="bg-gray-50">
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Ease of Use</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Manual area selection every time — long PDFs are painful</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Export menus are cluttered; results vary per doc</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Requires technical rule-building</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Zero setup — natural prompts, instant results</td>
+                      </tr>
+                      <tr>
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Learning Curve</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Steep — geared to developers</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Moderate — still need guides/tutorials</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">High — requires schema expertise</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">None — works instantly</td>
+                      </tr>
+                      <tr className="bg-gray-50">
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Setup Time</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">10–15 mins for first export; longer for large PDFs</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">5–10 mins per document, plus fixing errors</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">15–30 mins upfront per parser</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">&lt;10s to first output</td>
+                      </tr>
+                      <tr>
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Output Quality</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Raw, messy tables — struggles with multi-page PDFs</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Exports often break formatting; images/tables distort</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Accurate only if rules are perfect; brittle if format changes</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Clean, structured JSON every time</td>
+                      </tr>
+                      <tr className="bg-gray-50">
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Falls Short On…</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Tedious with long/multi-page PDFs; messy copy-paste cleanup</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Time wasted fixing Excel/Word errors; inconsistent exports</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">High upfront effort, breaks when PDF layout changes</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Designed to handle any PDF instantly</td>
+                      </tr>
+                      <tr>
+                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Target Audience</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Developers tinkering on small files</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Business users with patience for cleanup</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Technical ops/data teams</td>
+                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Anyone — including non-technical users</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p className="text-gray-600 text-sm mt-3">
+                    <strong className="text-gray-900">Findings:</strong> Competing tools work well but expect users to know setup, schemas, and exports. PDF Penguin is the fastest and simplest to operate: drag & drop, describe the structure, copy clean JSON.
+                  </p>
+                </div>
               </div>
             </div>
 
             <div>
               <h3 className="text-lg font-medium mb-4 text-gray-900">Step 2: Define</h3>
-              <p className="text-gray-600 leading-relaxed">
-                The research made one thing clear: the biggest barrier wasn't technical capability — it was usability. Most tools assumed the user had experience with templates, schemas, or parsing rules. I defined the core product need as creating a parsing tool that eliminated setup entirely. PDF Penguin would focus on a single principle: let users describe what they want in plain language, and deliver results instantly — simple to use, with no learning curve.
+              <p className="text-gray-600 leading-relaxed mb-4">
+                PDFs are the universal standard for sharing information, but they weren’t designed for easy data extraction. From our research, one theme was clear: the biggest barrier with existing tools wasn’t raw technical capability — it was usability.
               </p>
+              <p className="text-gray-600 leading-relaxed mb-2">
+                <span className="font-medium text-gray-900">Tabula</span> required manually drawing boxes around tables, a painful process on long or multi-page PDFs.
+              </p>
+              <p className="text-gray-600 leading-relaxed mb-2">
+                <span className="font-medium text-gray-900">Adobe Acrobat</span> exported to Word or Excel, but the formatting often broke, leaving users to waste time fixing errors.
+              </p>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                <span className="font-medium text-gray-900">DocParser</span> offered accuracy, but only after heavy upfront investment in parser setup, schema design, and ongoing maintenance whenever the PDF layout changed.
+              </p>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Across all of these, the “define” step was the bottleneck: users were forced to either manually mark up data, accept inaccurate exports, or engineer schemas. None of these approaches fit the needs of non-technical users who just want structured data quickly.
+              </p>
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
+                <h4 className="text-gray-900 font-medium mb-2">Problem Statement</h4>
+                <p className="text-gray-700 leading-relaxed">
+                  Extracting structured data from PDFs today is slow, technical, and inconsistent. Users need a solution that requires no setup, no manual definition, and no technical expertise — while still delivering clean, structured outputs instantly.
+                </p>
+              </div>
             </div>
 
             <div>
@@ -361,22 +478,22 @@ export default function PDFPenguinCaseStudy() {
               </div>
               
               <p className="text-gray-600 leading-relaxed mb-6">
-                I had a clear mental model of how the product should behave, so I quickly sketched a basic 2-panel layout idea: Upload (left) → Output (right), supported by a flexible prompt box to direct the AI. The goal was instant clarity, minimal onboarding, and the ability to adjust the output on the fly.
+                I decided to move forward with a two-panel layout. This structure offered the clearest balance of simplicity and control: users could upload a PDF on the left while immediately seeing the structured output on the right. Unlike a single-page or wizard flow, the two-panel model provided instant feedback without overwhelming users with steps or clutter.
               </p>
 
               {/* User Flow Chart */}
               <div className="mt-8">
                 <h4 className="text-lg font-medium mb-4 text-gray-900">User Flow Mapping</h4>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  To ensure the interaction felt intuitive, I mapped out the complete user journey from uploading a PDF to receiving structured JSON output. This flow chart helped identify potential friction points and validate the drag-and-drop interaction pattern.
+                  With this direction in place, the next step was to validate how users would actually move through the product. To do this, I mapped out the complete user flow — from uploading a file, to defining the output, to copying the final JSON. This flow chart helped surface potential friction points and confirm that the two-panel design supported a smooth, low-effort experience.
                 </p>
                 <div className="flex justify-center">
                   <Image 
                     src="/pdfpenguinflow.png"
                     alt="PDF Penguin User Flow Chart showing the step-by-step process of uploading, processing, and extracting data from PDFs"
-                    width={600}
-                    height={300}
-                    className="w-full max-w-xl border border-gray-200 shadow-lg rounded-xl"
+                    width={400}
+                    height={200}
+                    className="w-full max-w-md border border-gray-200 shadow-lg rounded-xl"
                   />
                 </div>
                 <p className="text-sm text-gray-500 text-center mt-3 italic">
