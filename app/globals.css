@@ -57,7 +57,6 @@
     @apply bg-background text-foreground;
   }
   html, body {
-    height: auto;
-    min-height: auto;
+    height: 100%;
   }
 } 

@@ -13,6 +13,43 @@ const dancingScript = Dancing_Script({
 export const metadata: Metadata = {
   title: 'Michael Bobov — Product Designer',
   description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
+  openGraph: {
+    title: 'Michael Bobov — Product Designer',
+    description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
+    url: 'https://michaelbobov.com',
+    siteName: 'Michael Bobov Portfolio',
+    images: [
+      {
+        url: '/name.png',
+        width: 1200,
+        height: 630,
+        alt: 'Michael Bobov — Product Designer',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Michael Bobov — Product Designer',
+    description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
+    images: ['/name.png'],
+    creator: '@michaelbobov',
+  },
+  alternates: {
+    canonical: 'https://michaelbobov.com',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
@@ -21,9 +58,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {children}
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} h-full flex flex-col`}>
+        <main className="flex-1">
+          {children}
+        </main>
         <SocialLinks />
         <Footer />
       </body>

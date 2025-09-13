@@ -83,11 +83,11 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative min-h-screen flex flex-col">
+    <main className="relative flex flex-col">
       <WavyBackground />
       
       {/* Hero Section */}
-      <div className="container mx-auto px-4 pt-20 pb-32 flex-1">
+      <div className="relative container mx-auto px-4 pt-20 pb-32 flex-1">
         <h1 className="sr-only">Michael Bobov — Product Designer</h1>
         <div className="flex justify-between items-center mb-32">
           <motion.div 
@@ -191,8 +191,7 @@ export default function Home() {
 
       {/* Projects Section */}
       <section id="work" className="relative mt-32 scroll-mt-24">
-        <div className="absolute inset-x-0 top-0 bg-white w-full h-[150%] -z-10 -mt-24">
-          <div className="h-40 bg-gradient-to-b from-transparent to-white" />
+        <div className="absolute inset-x-0 top-0 bg-white w-full h-full -z-10 -mt-24">
         </div>
         <div className="container mx-auto px-4 pt-20 pb-32">
           <motion.div 
@@ -314,12 +313,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="mt-auto">
-        <p className="text-white text-xl font-medium text-center">
-          Let's connect and build something meaningful together.
-        </p>
-      </section>
+      {/* Removed faux footer section; real Footer is in root layout */}
 
       {/* Image Modal */}
       {selectedImage && (

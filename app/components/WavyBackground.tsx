@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function WavyBackground() {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
+    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
       {/* Base gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#FF5500] via-[#9747FF] to-[#5CE1E6]">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#3B82F6] to-[#5CE1E6] opacity-50" />
