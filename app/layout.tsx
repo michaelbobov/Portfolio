@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: 'Michael Bobov Portfolio',
     images: [
       {
-        url: '/name.png',
+        url: '/metadata.png',
         width: 1200,
         height: 630,
         alt: 'Michael Bobov — Product Designer',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Michael Bobov — Product Designer',
     description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
-    images: ['/name.png'],
+    images: ['/metadata.png'],
     creator: '@michaelbobov',
   },
   alternates: {
