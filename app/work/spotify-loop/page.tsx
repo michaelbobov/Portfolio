@@ -144,6 +144,7 @@ export default function SpotifyLoopCaseStudy() {
             alt="Spotify Loop Interface Mockup"
             width={1200}
             height={675}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
             className="w-full rounded-2xl"
           />
         </motion.div>

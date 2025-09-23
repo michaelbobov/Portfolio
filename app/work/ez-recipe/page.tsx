@@ -137,6 +137,7 @@ export default function EZRecipeCaseStudy() {
             alt="EZ Recipe App Interface"
             width={1200}
             height={675}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
             className="w-full rounded-2xl"
           />
         </motion.div>
