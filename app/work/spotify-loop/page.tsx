@@ -85,7 +85,7 @@ export default function SpotifyLoopCaseStudy() {
         <main className="bg-white">
       {/* Top Navigation */}
       <div className="container mx-auto px-4 pt-20">
-        <div className="flex justify-between items-center mb-16">
+        <div className="flex justify-between items-center mb-8 md:mb-12 lg:mb-16">
           <Link href="/" className="hover:opacity-90 transition-opacity">
             <Image 
               src="/blackinitals.png"
@@ -104,7 +104,7 @@ export default function SpotifyLoopCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl md:text-6xl font-normal text-center mb-8 tracking-tight text-gray-900"
+          className="text-3xl md:text-5xl lg:text-6xl font-normal text-center mb-8 tracking-tight text-gray-900"
         >
           Spotify Loop
         </motion.h1>
@@ -112,7 +112,7 @@ export default function SpotifyLoopCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-xl md:text-2xl text-center mb-16 text-gray-600 font-light"
+          className="text-lg md:text-xl lg:text-2xl text-center mb-16 text-gray-600 font-light"
         >
           Adding Micro Looping to Music Listening
         </motion.p>
@@ -120,14 +120,14 @@ export default function SpotifyLoopCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-lg text-center mb-24 text-gray-500 italic"
+          className="text-base md:text-lg text-center mb-8 md:mb-12 lg:mb-16 text-gray-500 italic"
         >
           A feature addition case study for Spotify that enhances how users interact with their favorite parts of songs.
         </motion.p>
 
         {/* Disclaimer */}
-        <div className="max-w-3xl mx-auto mb-10">
-          <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-md p-3">
+        <div className="max-w-2xl md:max-w-3xl mx-auto mb-6 md:mb-8 lg:mb-10">
+          <div className="text-xs md:text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-md p-3 md:p-4">
             Conceptual exploration. This project is not affiliated with, endorsed by, or sponsored by Spotify. Logos and brand references are used solely for design critique and education.
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function SpotifyLoopCaseStudy() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="overflow-hidden mb-24 max-w-5xl mx-auto"
+          className="overflow-hidden mb-8 md:mb-12 lg:mb-16 xl:mb-20 max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto"
         >
           <Image 
             src="/spotifyloopmockup.png"
@@ -150,17 +150,17 @@ export default function SpotifyLoopCaseStudy() {
       </div>
 
       {/* Main Content Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 md:gap-6 lg:gap-8 container mx-auto px-4">
         {/* Sidebar Navigation */}
         <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
+          <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 shadow-sm">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
             <div className="flex flex-col gap-2">
               {['overview', 'design', 'ideate', 'prototype', 'test', 'reflections', 'future', 'final'].map((section) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
-                  className={`text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                  className={`text-left px-3 py-4 rounded-md text-sm transition-colors min-h-[44px] flex items-center ${
                     activeSection === section 
                       ? 'bg-green-50 text-[#1DB954] font-medium border-l-2 border-[#1DB954]' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -182,7 +182,7 @@ export default function SpotifyLoopCaseStudy() {
             <div className="mt-6 pt-4 border-t border-gray-200">
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="w-full bg-[#1DB954] hover:bg-[#1ed760] text-white px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group"
+                className="w-full bg-[#1DB954] hover:bg-[#1ed760] text-white px-4 py-4 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-h-[44px]"
               >
                 <svg 
                   className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" 
@@ -214,9 +214,9 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="mb-16 md:mb-20 lg:mb-24"
         >
-          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
+          <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
             🎯 Project Summary
           </h2>
           <div className="space-y-8">
@@ -314,9 +314,9 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="mb-16 md:mb-20 lg:mb-24"
         >
-          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
+          <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
             🔍 Design Process
           </h2>
           
@@ -374,7 +374,7 @@ export default function SpotifyLoopCaseStudy() {
               </p>
               
               {/* Desktop Table View */}
-              <div className="hidden md:block overflow-x-auto mb-6">
+              <div className="hidden lg:block overflow-x-auto mb-6">
                 <table className="w-full border-collapse border-2 border-gray-300">
                   <thead>
                     <tr className="bg-gray-50">
@@ -420,7 +420,7 @@ export default function SpotifyLoopCaseStudy() {
               </div>
 
               {/* Mobile Card View */}
-              <div className="md:hidden space-y-4 mb-6">
+              <div className="lg:hidden space-y-4 mb-6">
                 {/* Moises.ai Card */}
                 <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
                   <h5 className="font-medium text-gray-900 mb-3">Moises.ai</h5>
@@ -553,7 +553,7 @@ export default function SpotifyLoopCaseStudy() {
                 To visualize the user experience with segment looping before and after Spotify Loop, I created a journey map to identify emotional pain points and moments of opportunity in the current workflow.
               </p>
               
-              <div className="overflow-hidden rounded-lg mb-6 max-w-2xl mx-auto">
+              <div className="overflow-hidden rounded-lg mb-6 max-w-xl md:max-w-2xl mx-auto">
                 <Image 
                   src="/spotifyloopjourney.png"
                   alt="Spotify Loop User Journey Map"
@@ -647,7 +647,7 @@ export default function SpotifyLoopCaseStudy() {
                     alt="Spotify Loop User Flow Chart showing the step-by-step process of creating and managing loops"
                     width={1200}
                     height={1400}
-                    className="w-full max-w-5xl rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                    className="w-full max-w-3xl md:max-w-4xl lg:max-w-5xl rounded-lg shadow-lg hover:shadow-xl transition-shadow"
                     quality={100}
                     priority
                   />
@@ -844,7 +844,7 @@ export default function SpotifyLoopCaseStudy() {
                 <video 
                   src="/demospotifyloop.mp4"
                   controls
-                  className="w-full max-w-4xl rounded-2xl shadow-lg"
+                  className="w-full max-w-2xl md:max-w-3xl lg:max-w-4xl rounded-2xl shadow-lg"
                   preload="metadata"
                   onLoadedMetadata={(e) => {
                     const video = e.target as HTMLVideoElement;
@@ -942,9 +942,9 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="mb-16 md:mb-20 lg:mb-24"
         >
-          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
+          <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
             🧠 Reflections & Takeaways
           </h2>
           <div className="space-y-6">
@@ -968,9 +968,9 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="mb-16 md:mb-20 lg:mb-24"
         >
-          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
+          <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
             📈 Future Enhancements
           </h2>
           <p className="text-gray-600 leading-relaxed">
@@ -986,9 +986,9 @@ export default function SpotifyLoopCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="mb-16 md:mb-20 lg:mb-24"
         >
-          <h2 className="text-2xl text-[#1DB954] font-medium mb-8 uppercase tracking-wide">
+          <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
             📍 Final Thoughts
           </h2>
           <p className="text-gray-600 leading-relaxed">

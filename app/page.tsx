@@ -89,7 +89,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="relative container mx-auto px-4 pt-20 pb-32 flex-1">
         <h1 className="sr-only">Michael Bobov — Product Designer</h1>
-        <div className="flex justify-between items-center mb-32">
+        <div className="flex justify-between items-center mb-16 md:mb-24 lg:mb-32">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -124,16 +124,16 @@ export default function Home() {
                 opacity: { duration: 0.5, delay: 0.2 }
               }}
             >
-              <div className="h-[360px] md:h-[405px] lg:h-[450px] relative">
+              <div className="h-[280px] md:h-[360px] lg:h-[405px] xl:h-[450px] relative">
                 <img 
                   src="/name.png" 
                   alt="Michael Bobov — Product Designer" 
-                  className="max-w-screen w-full h-[360px] md:h-[405px] lg:h-[450px] object-contain mx-auto ml-8"
+                  className="max-w-screen w-full h-[280px] md:h-[360px] lg:h-[405px] xl:h-[450px] object-contain mx-auto ml-2 md:ml-4 lg:ml-8"
                 />
               </div>
             </motion.div>
             <motion.p 
-              className="text-xl text-white/80 max-w-2xl mx-auto leading-relaxed mb-12 -mt-36"
+              className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed mb-8 md:mb-12 -mt-24 md:-mt-32 lg:-mt-36"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
@@ -147,7 +147,7 @@ export default function Home() {
                   el.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg group -mt-36"
+              className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg group -mt-24 md:-mt-32 lg:-mt-36"
               type="button"
             >
               View Work
@@ -200,12 +200,12 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="max-w-7xl mx-auto"
           >
-            <div className="text-center mb-20 -mt-28">
+            <div className="text-center mb-12 md:mb-16 lg:mb-20 -mt-16 md:-mt-20 lg:-mt-28">
               <motion.h2 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="text-5xl font-semibold text-[#4A3F8C] mb-4"
+                className="text-3xl md:text-4xl lg:text-5xl font-semibold text-[#4A3F8C] mb-4"
               >
                 Some of my work
               </motion.h2>
@@ -213,7 +213,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-xl text-gray-600 max-w-2xl mx-auto mb-12"
+                className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-12"
               >
                 A collection of projects showcasing my approach to product design and problem-solving
               </motion.p>
@@ -249,19 +249,19 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-                  className={`bg-transparent rounded-[32px] p-12 shadow-xl ${project.id === 'ez-recipe' ? 'min-h-[560px]' : 'min-h-[480px]'}`}
+                  className={`bg-transparent rounded-[32px] p-6 md:p-8 lg:p-12 shadow-xl ${project.id === 'ez-recipe' ? 'min-h-[350px] md:min-h-[480px] lg:min-h-[560px]' : 'min-h-[350px] md:min-h-[400px] lg:min-h-[480px]'}`}
                 >
-                  <div className="flex flex-col md:flex-row gap-12 items-center">
+                  <div className="flex flex-col md:flex-row gap-6 md:gap-8 lg:gap-12 items-center">
                     <div className={`w-full md:w-2/3 flex ${project.id === 'ez-recipe' ? 'justify-start' : 'justify-center'}`}>
                       {project.id === 'ez-recipe' ? (
-                        <div className="w-full pt-16 pb-6">
-                          <div className="relative w-full h-80">
+                        <div className="w-full pt-4 md:pt-16 pb-0 -mb-6">
+                          <div className="relative w-full h-60 md:h-80">
                             <Image 
                               src="/ezrecipephone.png" 
                               alt="EZ Recipe Mobile Interface" 
                               width={360}
                               height={720}
-                              className="w-2/5 h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute -left-2 top-0"
+                              className="w-2/5 h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute -left-2 top-0 md:top-0"
                               onClick={() => setSelectedImage('/ezrecipephone.png')}
                               priority
                             />
@@ -270,7 +270,7 @@ export default function Home() {
                               alt="EZ Recipe Laptop Interface" 
                               width={1200}
                               height={800}
-                              className="w-full h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute left-8 -top-36"
+                              className="w-full h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute left-8 -top-24 md:-top-36"
                               onClick={() => setSelectedImage('/ezrecipelaptop.png')}
                               priority
                             />
@@ -290,17 +290,17 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                    <div className="w-full md:w-1/3">
-                      <h3 className="text-4xl font-semibold mb-4">{project.title}</h3>
-                      <p className="text-gray-600 uppercase tracking-wider text-sm mb-6">
+                    <div className={`w-full md:w-1/3 ${project.id === 'ez-recipe' ? '-mt-12 md:mt-0' : ''}`}>
+                      <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-4">{project.title}</h3>
+                      <p className="text-gray-600 uppercase tracking-wider text-xs md:text-sm mb-6">
                         {project.tags.join(' • ')}
                       </p>
-                      <p className="text-gray-700 text-lg mb-8 leading-relaxed">
+                      <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed">
                         {project.description}
                       </p>
                       <Link 
                         href={project.link}
-                        className={`inline-block ${project.buttonColor} text-white px-8 py-3 rounded-xl transition-colors text-lg`}
+                        className={`inline-block ${project.buttonColor} text-white px-6 md:px-8 py-3 rounded-xl transition-colors text-base md:text-lg`}
                       >
                         Read Case Study
                       </Link>
