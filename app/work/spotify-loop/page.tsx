@@ -218,7 +218,7 @@ export default function SpotifyLoopCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            🎯 Project Summary
+            Project Summary
           </h2>
           <div className="space-y-8">
             {/* TL;DR */}
@@ -318,7 +318,7 @@ export default function SpotifyLoopCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            🔍 Design Process
+            Design Process
           </h2>
           
           {/* Step 1: Empathize & Research */}
@@ -946,7 +946,7 @@ export default function SpotifyLoopCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            🧠 Reflections & Takeaways
+            Reflections & Takeaways
           </h2>
           <div className="space-y-6">
             <p className="text-gray-600 leading-relaxed">
@@ -972,7 +972,7 @@ export default function SpotifyLoopCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            📈 Future Enhancements
+            Future Enhancements
           </h2>
           <p className="text-gray-600 leading-relaxed">
             Planned enhancements include saving loops as mini-bookmarks tied to tracks, sharing loops with visual/audio snippets, creating playlists of favorite segments, and adding loop insights to Wrapped (e.g., “Your most-looped moments”).
@@ -990,7 +990,7 @@ export default function SpotifyLoopCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-xl md:text-2xl text-[#1DB954] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            📍 Final Thoughts
+            Final Thoughts
           </h2>
           <p className="text-gray-600 leading-relaxed">
             This case study pushed me to think deeply about micro-interactions and user emotion. Spotify is about more than streaming — it's about how music fits into life. Looping gives users more expressive power in how they listen, learn, and love their favorite tracks.

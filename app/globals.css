@@ -59,4 +59,27 @@
   html, body {
     height: 100%;
   }
+}
+
+/* 3D Flip Card Styles */
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  
+  .group-hover\:rotate-y-180:hover {
+    transform: rotateY(180deg);
+  }
 } 

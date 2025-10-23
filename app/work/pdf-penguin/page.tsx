@@ -228,7 +228,7 @@ export default function PDFPenguinCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            🎯 Project Summary
+            Project Summary
           </h2>
           <div className="space-y-8">
             <div className="p-6 bg-gray-50 rounded-lg border border-gray-100 border-l-4 border-l-[#4A90E2]">
@@ -856,7 +856,7 @@ export default function PDFPenguinCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            🧠 Reflections & Takeaways
+            Reflections & Takeaways
           </h2>
           <div className="space-y-6">
             <p className="text-gray-600 leading-relaxed">
@@ -899,7 +899,7 @@ export default function PDFPenguinCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            📈 Future Enhancements
+            Future Enhancements
           </h2>
           <ul className="space-y-2 text-gray-600">
             <li className="flex items-center gap-2">
@@ -932,7 +932,7 @@ export default function PDFPenguinCaseStudy() {
           className="mb-16 md:mb-20 lg:mb-24"
         >
           <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            📍 Final Thoughts
+            Final Thoughts
           </h2>
           <div className="space-y-6">
             <p className="text-gray-600 leading-relaxed">

@@ -151,8 +151,8 @@ export default function EZRecipeCaseStudy() {
         >
           <div className="bg-gradient-to-r from-[#FFB800]/10 to-[#FFB800]/5 rounded-2xl p-8 border border-[#FFB800]/20">
             <div className="text-center">
-              <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-                🚀 Live Product
+          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+                Live Product
               </h2>
               <p className="text-lg text-gray-600 mb-8">
                 This case study evolved into a real, working product. Try it yourself!

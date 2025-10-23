@@ -21,6 +21,7 @@ const projects = [
     description: 'AI-powered PDF to JSON conversion for structured, usable data.',
     tags: ['AI INTEGRATION', 'DATA PROCESSING'],
     image: '/pdf-penguin.png',
+    heroImage: '/pdfpenguinhero.png', // Using the new hero image
     link: '/work/pdf-penguin',
     bgColor: 'bg-[#E3F2FF]',
     buttonColor: 'bg-[#0088E0] hover:bg-[#0070B8]',
@@ -32,6 +33,7 @@ const projects = [
     description: 'Adding micro looping to music listening - a feature addition case study for Spotify that enhances how users interact with their favorite parts of songs.',
     tags: ['UX DESIGN', 'FEATURE DESIGN'],
     image: '/spotifyloopmockup.png',
+    heroImage: '/spotifyloophero.png', // Using the new hero image
     link: '/work/spotify-loop',
     bgColor: 'bg-green-100',
     buttonColor: 'bg-[#1DB954] hover:bg-[#1AA34A]',
@@ -43,10 +45,25 @@ const projects = [
     description: 'Smart cooking with what you have - a comprehensive recipe and meal planning solution.',
     tags: ['RECIPE APP', 'MEAL PLANNING'],
     image: '/ezrecipelaptop.png',
+    heroImage: '/ezrecipehero.png', // Hero image for EZ Recipe
     link: '/work/ez-recipe',
     bgColor: 'bg-[#eaf3cf]',
     buttonColor: 'bg-[#FFB800] hover:bg-[#E6A600]',
     platforms: ['web'] // Web-based application
+  },
+  {
+    id: 'versum',
+    title: 'Versum Health',
+    description: 'Connecting uninsured patients with supervised dental students for accessible care.',
+    tags: ['HEALTHCARE', 'MARKETPLACE'],
+    image: '/mockuuups-macknook-air.png',
+    heroImage: '/versumhero.png', // Using the new hero image
+    link: '/work/versum',
+    bgColor: 'bg-purple-100',
+    buttonColor: 'bg-[#4A3F8C] hover:bg-[#3C3274]',
+    platforms: ['web'],
+    passwordProtected: true,
+    password: 'versum2026' // Updated password
   }
 ];
 
@@ -54,6 +71,8 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [filteredProjects, setFilteredProjects] = useState(projects);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [passwordModal, setPasswordModal] = useState<{isOpen: boolean, projectId: string | null}>({isOpen: false, projectId: null});
+  const [passwordInput, setPasswordInput] = useState('');
 
   useEffect(() => {
     if (window.location.hash === '#work') {
@@ -75,6 +94,30 @@ export default function Home() {
       ));
     }
   }, [activeFilter]);
+
+  const handleProjectClick = (project: any) => {
+    if (project.passwordProtected) {
+      setPasswordModal({isOpen: true, projectId: project.id});
+    } else {
+      window.location.href = project.link;
+    }
+  };
+
+  const handlePasswordSubmit = () => {
+    const project = projects.find(p => p.id === passwordModal.projectId);
+    if (project && passwordInput === project.password) {
+      setPasswordModal({isOpen: false, projectId: null});
+      setPasswordInput('');
+      window.location.href = project.link;
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
+  const closePasswordModal = () => {
+    setPasswordModal({isOpen: false, projectId: null});
+    setPasswordInput('');
+  };
 
   const filterOptions = [
     { id: 'all', label: 'All Projects' },
@@ -241,69 +284,71 @@ export default function Home() {
               </motion.div>
             </div>
             
-            {/* Dynamic Projects */}
-            <div className="space-y-16">
+            {/* Dynamic Projects - 2x2 Grid with Flip Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-                  className={`bg-transparent rounded-[32px] p-6 md:p-8 lg:p-12 shadow-xl ${project.id === 'ez-recipe' ? 'min-h-[350px] md:min-h-[480px] lg:min-h-[560px]' : 'min-h-[350px] md:min-h-[400px] lg:min-h-[480px]'}`}
+                  className="group perspective-1000 cursor-pointer"
+                  onClick={() => handleProjectClick(project)}
                 >
-                  <div className="flex flex-col md:flex-row gap-6 md:gap-8 lg:gap-12 items-center">
-                    <div className={`w-full md:w-2/3 flex ${project.id === 'ez-recipe' ? 'justify-start' : 'justify-center'}`}>
-                      {project.id === 'ez-recipe' ? (
-                        <div className="w-full pt-4 md:pt-16 pb-0 -mb-6">
-                          <div className="relative w-full h-60 md:h-80">
-                            <Image 
-                              src="/ezrecipephone.png" 
-                              alt="EZ Recipe Mobile Interface" 
-                              width={360}
-                              height={720}
-                              className="w-2/5 h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute -left-2 top-0 md:top-0"
-                              onClick={() => setSelectedImage('/ezrecipephone.png')}
-                              priority
-                            />
-                            <Image 
-                              src="/ezrecipelaptop.png" 
-                              alt="EZ Recipe Laptop Interface" 
-                              width={1200}
-                              height={800}
-                              className="w-full h-auto rounded-2xl cursor-pointer hover:opacity-90 transition-opacity absolute left-8 -top-24 md:-top-36"
-                              onClick={() => setSelectedImage('/ezrecipelaptop.png')}
-                              priority
-                            />
+                  <div className="relative w-full h-96 md:h-[28rem] lg:h-[32rem] transform-style-preserve-3d transition-transform duration-700 group-hover:rotate-y-180">
+                    {/* Front of card - Hero Image with Project Info Overlay */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden">
+                      <div className="relative rounded-3xl h-full overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                        <Image
+                          src={project.heroImage}
+                          alt={`${project.title} Hero`}
+                          fill
+                          className="object-cover"
+                          priority={index < 2}
+                        />
+                        {/* Subtle hover hint */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-black/20 backdrop-blur-sm rounded-full px-4 py-2">
+                            <div className="text-white text-sm font-medium">
+                              Hover to explore
+                            </div>
                           </div>
                         </div>
-                      ) : (
-                        <div className="relative w-full max-w-3xl aspect-[16/10] flex items-center justify-center">
+                      </div>
+                    </div>
+                    
+                    {/* Back of card - Screenshot with overlay */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                      <div className="relative rounded-3xl h-full overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                        {/* Screenshot as background */}
+                        {project.id === 'ez-recipe' ? (
+                          <Image
+                            src="/ezrecipelaptop.png"
+                            alt="EZ Recipe Laptop Interface"
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
                           <Image
                             src={project.image}
-                            alt={`${project.title} Application Interface`}
-                            width={1200}
-                            height={750}
-                            className={`${project.id === 'pdf-penguin' ? 'max-w-[75%]' : project.id === 'spotify-loop' ? 'max-w-[92%]' : 'max-w-full'} max-h-full object-contain rounded-2xl cursor-pointer hover:opacity-90 transition-opacity`}
-                            onClick={() => setSelectedImage(project.image)}
-                            priority={project.id === 'pdf-penguin'}
+                            alt={`${project.title} Interface`}
+                            fill
+                            className={project.id === 'pdf-penguin' ? 'object-contain' : 'object-cover'}
                           />
+                        )}
+                        {/* Dark overlay with content */}
+                        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-8">
+                          <div className="text-center">
+                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{project.title}</h3>
+                            <p className="text-white/90 uppercase tracking-wider text-sm md:text-base mb-4">
+                              {project.tags.join(' • ')}
+                            </p>
+                            <div className={`inline-block ${project.buttonColor} text-white px-6 py-3 rounded-xl transition-colors text-base font-medium`}>
+                              {project.passwordProtected ? 'Enter Password' : 'Read Case Study'}
+                            </div>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                    <div className={`w-full md:w-1/3 ${project.id === 'ez-recipe' ? '-mt-12 md:mt-0' : ''}`}>
-                      <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-4">{project.title}</h3>
-                      <p className="text-gray-600 uppercase tracking-wider text-xs md:text-sm mb-6">
-                        {project.tags.join(' • ')}
-                      </p>
-                      <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed">
-                        {project.description}
-                      </p>
-                      <Link 
-                        href={project.link}
-                        className={`inline-block ${project.buttonColor} text-white px-6 md:px-8 py-3 rounded-xl transition-colors text-base md:text-lg`}
-                      >
-                        Read Case Study
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -347,6 +392,56 @@ export default function Home() {
               height={900}
               className="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl"
             />
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Password Modal */}
+      {passwordModal.isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={closePasswordModal}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Password Required</h3>
+            <p className="text-gray-600 mb-6">
+              This project is password protected. Please enter the password to continue.
+            </p>
+            <div className="space-y-4">
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="Enter password"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                autoFocus
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={closePasswordModal}
+                  className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handlePasswordSubmit}
+                  className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
+                >
+                  Enter
+                </button>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       )}
