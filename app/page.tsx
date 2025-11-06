@@ -73,6 +73,8 @@ export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [passwordModal, setPasswordModal] = useState<{isOpen: boolean, projectId: string | null}>({isOpen: false, projectId: null});
   const [passwordInput, setPasswordInput] = useState('');
+  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (window.location.hash === '#work') {
@@ -85,6 +87,16 @@ export default function Home() {
     }
   }, []);
 
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     if (activeFilter === 'all') {
       setFilteredProjects(projects);
@@ -93,13 +105,33 @@ export default function Home() {
         project.platforms.includes(activeFilter)
       ));
     }
+    // Reset flipped cards when filter changes
+    setFlippedCards(new Set());
   }, [activeFilter]);
 
-  const handleProjectClick = (project: any) => {
-    if (project.passwordProtected) {
-      setPasswordModal({isOpen: true, projectId: project.id});
+  const handleProjectClick = (project: any, e: React.MouseEvent) => {
+    // On mobile: first click flips, second click navigates
+    if (isMobile) {
+      if (flippedCards.has(project.id)) {
+        // Card is already flipped, navigate
+        e.stopPropagation();
+        if (project.passwordProtected) {
+          setPasswordModal({isOpen: true, projectId: project.id});
+        } else {
+          window.location.href = project.link;
+        }
+      } else {
+        // First click: flip the card
+        e.stopPropagation();
+        setFlippedCards(prev => new Set(prev).add(project.id));
+      }
     } else {
-      window.location.href = project.link;
+      // Desktop: navigate directly (hover handles flip)
+      if (project.passwordProtected) {
+        setPasswordModal({isOpen: true, projectId: project.id});
+      } else {
+        window.location.href = project.link;
+      }
     }
   };
 
@@ -293,9 +325,13 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
                   className="group perspective-1000 cursor-pointer"
-                  onClick={() => handleProjectClick(project)}
+                  onClick={(e) => handleProjectClick(project, e)}
                 >
-                  <div className="relative w-full h-96 md:h-[28rem] lg:h-[32rem] transform-style-preserve-3d transition-transform duration-700 group-hover:rotate-y-180">
+                  <div className={`relative w-full h-96 md:h-[28rem] lg:h-[32rem] transform-style-preserve-3d transition-transform duration-700 ${
+                    isMobile 
+                      ? (flippedCards.has(project.id) ? 'rotate-y-180' : '')
+                      : 'group-hover:rotate-y-180'
+                  }`}>
                     {/* Front of card - Hero Image with Project Info Overlay */}
                     <div className="absolute inset-0 w-full h-full backface-hidden">
                       <div className="relative rounded-3xl h-full overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
