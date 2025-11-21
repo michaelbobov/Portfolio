@@ -453,12 +453,131 @@ export default function EZRecipeCaseStudy() {
           {/* Step 3: Ideate */}
           <div className="space-y-8 mb-12">
             <h3 className="text-xl font-semibold text-gray-900">3. Ideate</h3>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              I structured the app around 4 core questions: What's your goal? (Healthy or indulgent), Calorie target? (Low, Medium, High), Protein level? (Low, Medium, High), and Cuisine preference? (American, Vegan, Chinese, etc.)
+            
+            <p className="text-gray-600 leading-relaxed mb-6">
+              With user needs clearly defined, I explored multiple approaches to constraint-based recipe generation. The goal was to balance simplicity with flexibility—allowing users to set preferences quickly while maintaining control over their cooking experience.
             </p>
-            <p className="text-gray-600 leading-relaxed">
-              This short questionnaire feeds into the ingredient editor. Users can input ingredients manually or scan fridge lists, edit quantities and remove items, and view AI-generated meals instantly.
-            </p>
+
+            <div>
+              <h4 className="text-lg font-medium mb-4 text-gray-900">Concept Exploration</h4>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                I brainstormed three primary interaction models, each with different trade-offs:
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6 mb-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-5">
+                  <h5 className="text-gray-900 font-medium mb-2">Multi-Step Wizard</h5>
+                  <p className="text-gray-600 text-sm mb-3">Guided questionnaire across multiple screens with progress indicators.</p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <p className="font-medium text-gray-700">Pros:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Clear progression</li>
+                      <li>Reduced cognitive load per screen</li>
+                    </ul>
+                    <p className="font-medium text-gray-700 mt-2">Cons:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Too many taps for quick use</li>
+                      <li>Can't see all options at once</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg border border-gray-200 p-5">
+                  <h5 className="text-gray-900 font-medium mb-2">Single Form View</h5>
+                  <p className="text-gray-600 text-sm mb-3">All preferences and ingredients in one scrollable form.</p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <p className="font-medium text-gray-700">Pros:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Complete overview</li>
+                      <li>Fast to scan and adjust</li>
+                    </ul>
+                    <p className="font-medium text-gray-700 mt-2">Cons:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Overwhelming on mobile</li>
+                      <li>Hard to prioritize visually</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-[#FFB800]/10 to-[#FFB800]/5 rounded-lg border-2 border-[#FFB800]/20 p-5">
+                  <h5 className="text-gray-900 font-medium mb-2">Consolidated Card</h5>
+                  <p className="text-gray-600 text-sm mb-3">Grouped preferences in a single card with smart defaults.</p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <p className="font-medium text-gray-700">Pros:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Scannable and compact</li>
+                      <li>Mobile-friendly layout</li>
+                      <li>Quick to modify</li>
+                    </ul>
+                    <p className="font-medium text-gray-700 mt-2">Cons:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Requires careful information hierarchy</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <h4 className="text-lg font-medium mb-4 text-gray-900">Final Concept: Constraint-Based Questionnaire</h4>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                I chose the <strong>Consolidated Card</strong> approach, structuring the app around 6 core constraint questions that users can answer quickly:
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <ul className="space-y-2 text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <span><strong>Time of day:</strong> Breakfast, Lunch, Dinner</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <span><strong>Cuisine:</strong> American, French, Italian, etc.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <span><strong>Servings:</strong> 1-10+ people</span>
+                  </li>
+                </ul>
+                <ul className="space-y-2 text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <span><strong>Time limit:</strong> 15, 30, 45, 60+ minutes</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <span><strong>Calories:</strong> Custom or preset ranges</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <span><strong>Food style:</strong> Protein, Low-carb, Balanced, etc.</span>
+                  </li>
+                </ul>
+              </div>
+              <p className="text-gray-600 leading-relaxed">
+                This short questionnaire feeds into the ingredient editor, where users can input ingredients manually or scan fridge lists, edit quantities, and view AI-generated meals instantly. The consolidated approach reduces decision fatigue while maintaining full control over recipe parameters.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-medium mb-4 text-gray-900">Information Architecture</h4>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                The app structure prioritizes three core user goals: discovery, generation, and saving. Each primary screen serves a distinct purpose while maintaining consistent navigation patterns.
+              </p>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                  <h5 className="font-medium text-gray-900 mb-2">Home</h5>
+                  <p className="text-sm text-gray-600">Quick access to recipe generation, personalized recommendations, and search functionality.</p>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                  <h5 className="font-medium text-gray-900 mb-2">Generate</h5>
+                  <p className="text-sm text-gray-600">Constraint-based preferences and ingredient input leading to AI-generated recipe results.</p>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                  <h5 className="font-medium text-gray-900 mb-2">Saved</h5>
+                  <p className="text-sm text-gray-600">Library of bookmarked recipes for quick access to favorite meals.</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Step 4: Prototype & Design */}
