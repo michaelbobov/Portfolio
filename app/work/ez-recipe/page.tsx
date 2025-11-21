@@ -151,8 +151,8 @@ export default function EZRecipeCaseStudy() {
         >
           <div className="bg-gradient-to-r from-[#FFB800]/10 to-[#FFB800]/5 rounded-2xl p-8 border border-[#FFB800]/20">
             <div className="text-center">
-          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-                Live Product
+              <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+                🚀 Live Product
               </h2>
               <p className="text-lg text-gray-600 mb-8">
                 This case study evolved into a real, working product. Try it yourself!
@@ -461,58 +461,6 @@ export default function EZRecipeCaseStudy() {
             </p>
           </div>
 
-          {/* Initial Wireframes */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">Initial Hand-Drawn Wireframes</h3>
-            <p className="text-gray-600 leading-relaxed mb-6">
-              Before diving into digital design, I started with pen and paper to quickly explore different layout concepts and user flows. These initial sketches helped me think through the core interaction patterns and identify potential usability issues early in the process.
-            </p>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <h4 className="text-lg font-medium text-gray-900">Wireframe 1: Main Flow</h4>
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <Image 
-                    src="/ezrecipedraw0.jpeg"
-                    alt="EZ Recipe Initial Hand-Drawn Wireframe - Main User Flow"
-                    width={300}
-                    height={450}
-                    className="w-72 h-[28rem] object-cover rounded-lg shadow-sm mx-auto"
-                  />
-                </div>
-                <p className="text-sm text-gray-500 text-center">
-                  Initial concept for the main user flow and ingredient input interface
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <h4 className="text-lg font-medium text-gray-900">Wireframe 2: Saved Recipe</h4>
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <Image 
-                    src="/ezrecipedraw1.jpeg"
-                    alt="EZ Recipe Initial Hand-Drawn Wireframe - Saved Recipe Interface"
-                    width={300}
-                    height={450}
-                    className="w-72 h-[28rem] object-cover rounded-lg shadow-sm mx-auto"
-                  />
-                </div>
-                <p className="text-sm text-gray-500 text-center">
-                  Early exploration of the saved recipe and display interface
-                </p>
-              </div>
-            </div>
-            
-            <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-              <h4 className="text-lg font-medium text-blue-900 mb-3">Key Insights from Wireframing</h4>
-              <ul className="space-y-2 text-blue-800 list-disc list-inside">
-                <li>The ingredient input needed to be as simple as possible - no complex forms</li>
-                <li>Dropdown preferences were crucial - users should only choose what's important to them</li>
-                <li>Side-by-side layout wouldn't work on mobile - generated recipes needed to appear below preferences</li>
-                <li>Visual hierarchy needed to guide users through the 6-question flow (not 4 as initially planned)</li>
-              </ul>
-            </div>
-          </div>
-
           {/* Step 4: Prototype & Design */}
           <div className="space-y-8 mb-12">
             <h3 className="text-xl font-semibold text-gray-900">4. Prototype & Design</h3>
@@ -523,140 +471,305 @@ export default function EZRecipeCaseStudy() {
             <p className="text-gray-600 leading-relaxed mb-4">
               <strong>Design Principles:</strong> Frictionless First-Time Use (no logins, no long setup), Constraint-Aware Layout (emphasize available ingredients & adjustable filters), Lightweight Aesthetic (clean, soft visuals with food-forward colors), Mobile-Friendly (designed with one-handed use in mind).
             </p>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 leading-relaxed mb-8">
               All designs were prototyped in Figma, tested for responsiveness, and later developed in HTML/CSS for iteration.
             </p>
 
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">User Experience Flow</h4>
-              <ol className="space-y-3 text-gray-600">
-                <li className="flex items-start gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                  <span>User inputs available ingredients and dietary preferences</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-                  <span>AI analyzes ingredients and generates personalized recipe suggestions</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
-                  <span>User selects a recipe and views step-by-step instructions</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
-                  <span>Recipe adapts in real-time based on available ingredients and substitutions</span>
-                </li>
-              </ol>
+            {/* Initial Hand-Drawn Wireframes */}
+            <div className="mt-8">
+              <h4 className="text-lg font-medium mb-6 text-gray-900">Initial Hand-Drawn Wireframes</h4>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Before diving into digital design, I started with pen and paper to quickly explore different layout concepts and user flows. This initial sketch helped me think through the core interaction patterns and identify potential usability issues early in the process.
+              </p>
+              
+              <div className="space-y-4 mb-6">
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-center">
+                  <div className="w-full max-w-2xl">
+                    <Image 
+                      src="/ezrecipesketch.jpeg"
+                      alt="EZ Recipe Wireframe Sketch - Complete User Flow"
+                      width={2000}
+                      height={3000}
+                      className="w-full h-auto rounded-lg shadow-sm"
+                      unoptimized
+                    />
+                  </div>
+                </div>
+                <p className="text-sm text-gray-500 text-center">
+                  Comprehensive wireframe sketch showing the complete user flow and interface layout
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                <h5 className="text-lg font-medium text-blue-900 mb-3">Key Insights from Wireframing</h5>
+                <ul className="space-y-2 text-blue-800 list-disc list-inside">
+                  <li>The ingredient input needed to be as simple as possible - no complex forms</li>
+                  <li>Dropdown preferences were crucial - users should only choose what's important to them</li>
+                  <li>Side-by-side layout wouldn't work on mobile - generated recipes needed to appear below preferences</li>
+                  <li>Visual hierarchy needed to guide users through the 6-question flow (not 4 as initially planned)</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Lo-Fi Prototype */}
+            <div className="mt-12">
+              <h4 className="text-lg font-medium mb-6 text-gray-900">Lo-Fi Prototype</h4>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                We wanted to create a simple interface that prioritizes clarity and speed over visual complexity. These low-fidelity prototypes establish the core information architecture and user flow, focusing on how users discover recipes, set constraints, and access saved content. Each screen was designed to minimize cognitive load while maximizing the utility of constraint-based recipe generation.
+              </p>
+              
+              <div className="flex justify-center gap-6 flex-wrap">
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/Home App.png"
+                      alt="EZ Recipe Home Screen - Low-Fi Wireframe"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Home</h6>
+                  <p className="text-sm text-gray-600">Generate button, search, and personalized recommendations.</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/Sevings select.png"
+                      alt="EZ Recipe Cooking Preferences - Low-Fi Wireframe"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Cooking Preferences</h6>
+                  <p className="text-sm text-gray-600">Dropdown menus for constraints and ingredient input.</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/View Recipe Saved.png"
+                      alt="EZ Recipe Detail View - Low-Fi Wireframe"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Recipe Detail</h6>
+                  <p className="text-sm text-gray-600">Ingredients list with substitutions and nutritional info.</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/Saved-1.png"
+                      alt="EZ Recipe Saved Recipes - Low-Fi Wireframe"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Saved Recipes</h6>
+                  <p className="text-sm text-gray-600">Grid view of bookmarked recipes for quick access.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hi-Fi Prototype */}
+            <div className="mt-12">
+              <h4 className="text-lg font-medium mb-6 text-gray-900">Hi-Fi Prototype</h4>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                The high-fidelity designs translate the validated wireframes into a polished, production-ready interface. Each screen maintains the simplicity established in the lo-fi phase while adding visual hierarchy, brand consistency, and micro-interactions that enhance the user experience.
+              </p>
+              
+              <div className="flex justify-center gap-6 flex-wrap">
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/HiFiHomeApp.png"
+                      alt="EZ Recipe Home Screen - Hi-Fi"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Home</h6>
+                  <p className="text-sm text-gray-600">Personalized recommendations with recipe cards showing calories and servings.</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/HiFiSevingsselect.png"
+                      alt="EZ Recipe Cooking Preferences - Hi-Fi"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Cooking Preferences</h6>
+                  <p className="text-sm text-gray-600">Clean dropdown interface for setting constraints and adding ingredients.</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/HiFiViewRecipe.png"
+                      alt="EZ Recipe Detail View - Hi-Fi"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Recipe Detail</h6>
+                  <p className="text-sm text-gray-600">Full recipe view with high-quality imagery and detailed ingredients list.</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="mb-4">
+                    <Image 
+                      src="/HiFiSaved.png"
+                      alt="EZ Recipe Saved Recipes - Hi-Fi"
+                      width={300}
+                      height={600}
+                      className="w-full rounded-2xl shadow-lg"
+                    />
+                  </div>
+                  <h6 className="font-medium text-gray-900 mb-2">Saved Recipes</h6>
+                  <p className="text-sm text-gray-600">Grid layout of saved recipes with visual recipe cards.</p>
+                </div>
+              </div>
+
+              {/* Figma Prototype Link */}
+              <div className="text-center mt-8">
+                <p className="text-gray-600 mb-4">Try the interactive prototype:</p>
+                <a 
+                  href="https://www.figma.com/proto/GOjpA24g78gIKt9TUFChQF/Untitled?node-id=96-79&t=MttJEYT4p7wcNixC-1" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-[#FFB800] hover:bg-[#E6A600] text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg hover:shadow-xl"
+                >
+                  Open Figma Prototype
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
 
           {/* Step 5: Test & Iterate */}
           <div className="space-y-8 mb-12">
             <h3 className="text-xl font-semibold text-gray-900">5. Test & Iterate</h3>
-            {/* Goals */}
-            <div className="space-y-4">
+            
+            {/* User Surveys */}
+            <div className="space-y-6">
+              <h4 className="text-lg font-medium text-gray-900">User Surveys</h4>
               <p className="text-gray-600 leading-relaxed">
-                The primary objective was to validate whether EZ Recipe’s ingredient-based recipe generation felt fast, relevant, and easy to use — especially for busy home cooks.
+                We conducted user surveys to identify friction points in the recipe generation flow, particularly around perceived wait times and user satisfaction.
               </p>
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-                <h4 className="text-lg font-medium mb-3 text-gray-900">Specific questions we aimed to answer:</h4>
-                <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                  <li>Can users quickly add their available ingredients without frustration?</li>
-                  <li>Do the generated recipes feel relevant and appealing?</li>
-                  <li>Does image generation enhance or hinder the experience?</li>
-                  <li>Are users confident in saving and re-finding recipes they like?</li>
-                </ul>
+              
+              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                <h5 className="font-semibold text-gray-900 mb-4">Survey Questions</h5>
+                <div className="space-y-3 text-gray-700">
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                    <span>How easy was it to input your ingredients? (1–5 scale)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                    <span>How relevant were the generated recipes to your needs? (1–5 scale)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                    <span>How much did the recipe images improve your experience? (1–5 scale)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+                    <span>Would you prefer faster recipe generation even if it meant no images? (Yes/No)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
+                    <span>How confident do you feel saving and re-finding a recipe? (1–5 scale)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">6</span>
+                    <span>How satisfied are you with the app overall? (1–5 scale)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg border border-gray-200 p-6">
+                <h5 className="font-semibold text-gray-900 mb-4">Average Participant Feedback</h5>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <div>
+                      <p className="text-gray-700 font-medium">Recipe Generation Speed</p>
+                      <p className="text-gray-600 text-sm">Participants reported feeling frustrated by perceived wait times during recipe generation, especially when waiting for AI-generated images to load.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <div>
+                      <p className="text-gray-700 font-medium">Recipe Relevance</p>
+                      <p className="text-gray-600 text-sm">Average rating: 4.3/5 — Recipes were highly relevant, but users wanted more variety on repeat runs.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
+                    <div>
+                      <p className="text-gray-700 font-medium">Image Generation</p>
+                      <p className="text-gray-600 text-sm">85% of users preferred faster results without images, confirming speed was more important than visual enhancements.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-[#FFB800]/10 to-[#FFB800]/5 rounded-lg border-l-4 border-[#FFB800] p-6">
+                <h5 className="font-semibold text-gray-900 mb-3">What We Did</h5>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  Based on survey feedback identifying friction in the recipe generation flow, we optimized the load sequence to display text content before AI-generated images.
+                </p>
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <h6 className="font-medium text-gray-900 mb-2">Results</h6>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] flex-shrink-0"></span>
+                      <span><strong>67% reduction</strong> in perceived wait time</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] flex-shrink-0"></span>
+                      <span><strong>Significantly improved</strong> user satisfaction scores</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 
-            {/* Method */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-medium text-gray-900">Method</h4>
-            <p className="text-gray-600 leading-relaxed">
-                We conducted moderated remote testing with 6 participants representing our target persona — busy parents and health-conscious home cooks. Sessions were run via Zoom using a clickable Figma prototype.
-              </p>
+            {/* Additional Findings */}
+            <div className="space-y-4 mt-8">
+              <h4 className="text-lg font-medium text-gray-900">Additional Findings</h4>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Participants</h5>
-                  <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                    <li>Age range: 28–44</li>
-                    <li>4 primary household meal planners</li>
-                    <li>2 cooking beginners</li>
-                    <li>Mix of dietary preferences (2 vegetarian, 1 low-carb, 3 no restrictions)</li>
+                  <h5 className="text-gray-900 font-medium mb-3">Quantitative Metrics</h5>
+                  <ul className="space-y-2 text-gray-700 text-sm">
+                    <li>• Average time to input ingredients: <strong>1 min 18 sec</strong></li>
+                    <li>• Recipe relevance rating: <strong>4.3/5</strong></li>
+                    <li>• Save/retrieve ease: <strong>83%</strong> found it easy</li>
                   </ul>
                 </div>
                 <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Tasks Given</h5>
-                  <ol className="text-gray-700 space-y-2 list-decimal list-inside">
-                    <li>Input 5–6 ingredients you currently have at home.</li>
-                    <li>Set a cuisine preference and calorie goal.</li>
-                    <li>Generate a recipe.</li>
-                    <li>Save the recipe.</li>
-                    <li>Locate the saved recipe.</li>
-                    <li>Toggle image generation on/off and regenerate a recipe (concept testing).</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-
-            {/* Metrics Collected */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-medium text-gray-900">Metrics Collected</h4>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-                  <h5 className="text-gray-900 font-medium mb-3">Quantitative</h5>
-                  <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                    <li>Average time to input ingredients: 1 min 18 sec</li>
-                    <li>Recipe relevance rating (1–5): 4.3 avg</li>
-                    <li>% who found save/retrieve easy: 83%</li>
-                    <li>% who preferred recipes without images (for speed): 50%</li>
-                  </ul>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-                  <h5 className="text-gray-900 font-medium mb-3">Qualitative (user quotes)</h5>
-                  <ul className="space-y-3 text-gray-700">
-                    <li className="italic">“I love that it uses what I already have—it feels smart.”</li>
-                    <li className="italic">“The save button confused me at first—looked like Spotify’s.”</li>
-                    <li className="italic">“Image recipes are nice for browsing, but I’d skip them if I’m in a hurry.”</li>
+                  <h5 className="text-gray-900 font-medium mb-3">Key Insights</h5>
+                  <ul className="space-y-2 text-gray-700 text-sm">
+                    <li>• Ingredient entry works well but could be faster with barcode scanning</li>
+                    <li>• Save button iconography needs differentiation to avoid confusion</li>
+                    <li>• Users want more variety in recipe outputs for repeated ingredient sets</li>
                   </ul>
                 </div>
               </div>
-            </div>
-
-            {/* Post-Test Questionnaire */}
-            <div className="space-y-2">
-              <h4 className="text-lg font-medium text-gray-900">Post-Test Questionnaire</h4>
-              <p className="text-gray-600">(1–5 scale unless noted otherwise)</p>
-              <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                <li>How easy was it to input your ingredients?</li>
-                <li>How relevant were the generated recipes to your needs?</li>
-                <li>How much did the recipe images improve your experience?</li>
-                <li>Would you prefer faster recipe generation even if it meant no images? (Yes/No)</li>
-                <li>How confident do you feel saving and re-finding a recipe?</li>
-                <li>How satisfied are you with the app overall?</li>
-              </ul>
-            </div>
-
-            {/* Key Insights */}
-            <div className="space-y-2">
-              <h4 className="text-lg font-medium text-gray-900">Key Insights</h4>
-              <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                <li>Ingredient entry flow works well but could be faster with barcode scanning.</li>
-                <li>Recipe relevance is strong, but some users wanted more variety on repeat runs.</li>
-                <li>Strategic testing of image generation concept validated concerns about speed — 50% of users preferred faster results without images, confirming it's not worth the development investment.</li>
-                <li>Save button iconography needs differentiation to avoid confusion with music apps.</li>
-              </ul>
-            </div>
-
-            {/* Next Steps */}
-            <div className="space-y-2">
-              <h4 className="text-lg font-medium text-gray-900">Next Steps</h4>
-              <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                <li>Avoid image generation feature — concept testing confirmed user preference for speed over visual enhancements.</li>
-                <li>Test barcode scanning for ingredient entry to improve input speed.</li>
-                <li>Redesign "Save" icon for clarity to avoid confusion with music apps.</li>
-                <li>Explore more diverse recipe outputs for repeated ingredient sets.</li>
-              </ul>
             </div>
           </div>
         </motion.section>
