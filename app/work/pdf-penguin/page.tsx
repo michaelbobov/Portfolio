@@ -3,954 +3,540 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
 import Navigation from '@/app/components/Navigation';
-import { Dancing_Script } from 'next/font/google';
-
-const dancingScript = Dancing_Script({ 
-  subsets: ['latin'],
-  weight: ['400', '700']
-});
 
 export const dynamic = 'force-dynamic';
 
 export default function PDFPenguinCaseStudy() {
-  const [activeSection, setActiveSection] = useState('overview');
-  const sections = useRef<{ [key: string]: HTMLElement | null }>({});
-  const [isManualScroll, setIsManualScroll] = useState(false);
-
-  // Function to determine which section is most visible
-  const determineActiveSection = () => {
-    const windowHeight = window.innerHeight;
-    const scrollPosition = window.pageYOffset;
-    
-    // Find the section that is most visible in the viewport
-    let bestSection = activeSection;
-    let bestVisibility = 0;
-
-    Object.entries(sections.current).forEach(([id, element]) => {
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        
-        // Check if section is in viewport
-        if (rect.bottom > 0 && rect.top < windowHeight) {
-          // Calculate how much of the section is visible
-          const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-          const visibilityRatio = visibleHeight / rect.height;
-          
-          // Give extra weight to sections that are more centered
-          const sectionCenter = rect.top + rect.height / 2;
-          const viewportCenter = windowHeight / 2;
-          const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
-          const centerWeight = Math.max(0, 1 - distanceFromCenter / (windowHeight / 2));
-          
-          const totalScore = visibilityRatio + centerWeight * 0.3;
-          
-          if (totalScore > bestVisibility) {
-            bestVisibility = totalScore;
-            bestSection = id;
-          }
-        }
-      }
-    });
-
-    return bestSection;
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isManualScroll) return;
-      
-      const newActiveSection = determineActiveSection();
-      if (newActiveSection !== activeSection) {
-        setActiveSection(newActiveSection);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isManualScroll, activeSection]);
-
-
-
-  const scrollToSection = (sectionId: string) => {
-    const section = sections.current[sectionId];
-    if (section) {
-      setIsManualScroll(true);
-      setActiveSection(sectionId);
-
-      const headerOffset = 100;
-      const elementPosition = section.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-
-      // Reset manual scroll after animation
-      setTimeout(() => {
-        setIsManualScroll(false);
-      }, 1000);
-    }
-  };
-
-  const setSectionRef = (sectionId: string) => (el: HTMLElement | null) => {
-    sections.current[sectionId] = el;
-  };
-
   return (
-    <main className="bg-white">
+    <main className="bg-[#FAFAF8] min-h-screen">
       {/* Navigation */}
-      <div className="container mx-auto px-4 pt-20">
-        <div className="flex justify-between items-center mb-8 md:mb-12 lg:mb-16">
-          <Link href="/" className="hover:opacity-90 transition-opacity">
-            <Image 
-              src="/blackinitals.png"
-              alt="MB - Michael Bobov"
-              width={80}
-              height={80}
-              className="w-16 h-16"
-              priority
-            />
+      <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#C75B3B] transition-colors">
+            MICHAEL BOBOV
           </Link>
           <Navigation />
         </div>
+      </nav>
 
-        {/* Title */}
-        <motion.h1 
+      {/* Hero Section */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4"
+        >
+          AI • Developer Tools • 2025
+        </motion.p>
+        
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-3xl md:text-5xl lg:text-6xl font-normal text-center mb-8 tracking-tight text-gray-900"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl md:text-5xl lg:text-6xl font-serif text-gray-900 mb-6"
         >
           PDF Penguin
         </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-base md:text-lg lg:text-xl xl:text-2xl text-center mb-8 md:mb-12 lg:mb-16 text-gray-600 font-light"
-        >
-          AI-powered PDF to JSON conversion for structured, usable data
-        </motion.p>
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-base md:text-lg text-center mb-8 md:mb-12 lg:mb-16 text-gray-500 italic"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-lg md:text-xl text-gray-600 max-w-2xl mb-12"
         >
-          A comprehensive document processing tool that transforms unstructured PDF data into clean, structured JSON for developers and data analysts.
+          AI-powered PDF to JSON conversion for structured, usable data.
         </motion.p>
 
         {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="overflow-hidden mb-8 md:mb-12 lg:mb-16 xl:mb-20 max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full"
         >
-          <Image 
+          <Image
             src="/mockuuups-macknook-air.png"
-            alt="PDF Penguin Interface on MacBook Air"
-            width={1200}
-            height={675}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-            className="w-full"
+            alt="PDF Penguin Interface"
+            width={1920}
+            height={1080}
+            className="w-full h-auto"
+            priority
           />
         </motion.div>
-      </div>
+      </section>
 
-      {/* Main Content Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 md:gap-6 lg:gap-8 container mx-auto px-4">
-        {/* Sidebar Navigation */}
-        <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
-          <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 shadow-sm">
-            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
-            <div className="flex flex-col gap-2">
-              {['overview', 'problem', 'design', 'build', 'challenges', 'reflections', 'future', 'final'].map((section) => (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`text-left px-3 py-4 rounded-md text-sm transition-colors min-h-[44px] flex items-center ${
-                    activeSection === section 
-                      ? 'bg-blue-50 text-[#4A90E2] font-medium border-l-2 border-[#4A90E2]' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  {section === 'overview' && 'Project Summary'}
-                  {section === 'problem' && 'Problem Statement'}
-                  {section === 'design' && 'Design Process'}
-                  {section === 'build' && 'Build Process'}
-                  {section === 'challenges' && 'Challenges & Lessons'}
-                  {section === 'reflections' && 'Reflections & Takeaways'}
-                  {section === 'future' && 'Future Enhancements'}
-                  {section === 'final' && 'Final Thoughts'}
-                </button>
-              ))}
-            </div>
-            
-            {/* Back to Top Button */}
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="w-full bg-[#4A90E2] hover:bg-[#3A7BC8] text-white px-4 py-4 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-h-[44px]"
-              >
-                <svg 
-                  className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M5 10l7-7m0 0l7 7m-7-7v18" 
-                  />
-                </svg>
-                Back to Top
-              </button>
-            </div>
+      {/* Project Details */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
+            <p className="text-gray-900">Founder</p>
+            <p className="text-gray-900">Product Designer</p>
+            <p className="text-gray-900">Frontend Developer</p>
           </div>
-        </nav>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
+            <p className="text-gray-900">3 months</p>
+            <p className="text-gray-600 text-sm">Concept to MVP</p>
+          </div>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
+            <p className="text-gray-900">Solo Project</p>
+            <p className="text-gray-600 text-sm">End-to-end ownership</p>
+          </div>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Skills</p>
+            <p className="text-gray-900">Product Design</p>
+            <p className="text-gray-900">AI Integration</p>
+            <p className="text-gray-900">Frontend Dev</p>
+          </div>
+        </div>
+      </section>
 
-        {/* Content Area */}
-        <div className="order-1 lg:order-2">
-          {/* Project Overview Section */}
-        <motion.section
-          ref={setSectionRef('overview')}
-          id="overview"
+      {/* Content */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
+        
+        {/* Overview */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
+          className="py-16 border-t border-gray-200"
         >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            Project Summary
-          </h2>
-          <div className="space-y-8">
-            <div className="p-6 bg-gray-50 rounded-lg border border-gray-100 border-l-4 border-l-[#4A90E2]">
-              <h3 className="text-base md:text-lg font-medium mb-2 text-gray-900">TL;DR</h3>
-              <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                <li>Problem: Non‑technical users struggle to extract structured data from PDFs quickly.</li>
-                <li>Solution: Drag‑drop PDF → prompt desired structure → instant JSON output.</li>
-                <li>Success criteria: time‑to‑first‑output ≤ 10s, ≥ 90% parse success for common docs, clear fallback for scans.</li>
-              </ul>
-            </div>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            PDF Penguin converts unstructured PDFs into clean, structured JSON data using AI. Drag, drop, describe what you need — get instant results.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            I built this while developing EZ Recipe, where I needed to extract USDA nutrition data from messy PDFs. Existing tools were too technical or unreliable, so I created something simpler. PDF Penguin has since evolved into a standalone product with broader applications.
+          </p>
+        </motion.div>
 
-            <div>
-              <p className="text-gray-600 leading-relaxed">
-                While developing my recipe generator app, EZ Recipe, I needed a way to extract structured ingredient and nutrition data from USDA PDFs. The datasets were available, but they were formatted as complex, unstructured PDFs that were difficult to work with programmatically. Existing tools were unreliable or too technical, so I built a clean, AI-powered tool for parsing and exporting PDF data into usable JSON.
-              </p>
-              <p className="text-gray-600 leading-relaxed mt-4">
-                PDF Penguin has since evolved into a standalone product with broader application across document-heavy industries.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-base md:text-lg font-medium mb-2 text-gray-900">My Role</h3>
-              <p className="text-gray-600 leading-relaxed">
-                This was a completely solo project, where I handled every aspect from product vision to deployment.
-              </p>
-              <ul className="mt-4 space-y-2">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  Founder
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  Product Designer (UX & UI)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  Frontend Developer (React, TailwindCSS)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  AI Integration (Vision Models)
-                </li>
-              </ul>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Problem & Goal Section */}
-        <motion.section
-          ref={setSectionRef('problem')}
-          id="problem"
+        {/* Problem */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
+          className="py-16 border-t border-gray-200"
         >
-          <h2 className="text-xl md:text-2xl text-[#4A90E2] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Problem & Goal
-          </h2>
-          <div className="space-y-8">
-            <div>
-              <h4 className="text-base md:text-lg font-medium mb-4 text-[#4A90E2]">Problem</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-              The biggest issue with existing PDF parsers was that they were overly technical — requiring specialized setup, manual formatting, command-line usage, or developer-only integrations. Tools like Tabula and Adobe's OCR exports were powerful but inaccessible to non-technical users. Many required users to predefine table structures or fiddle with JSON schemas before seeing results, which added friction for those just trying to extract usable information from documents.
-            </p>
-              <p className="text-gray-600 leading-relaxed mb-4">
-              Additionally, tools often failed with scanned documents or image-based PDFs, offering inconsistent or incomplete results. Even when they worked, the interfaces were cluttered and required unnecessary steps or downloads.
-            </p>
-              <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                <h5 className="font-medium text-[#4A90E2] mb-3">Success Metrics</h5>
-                <ul className="text-gray-700 divide-y divide-gray-200 rounded-md overflow-hidden">
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>≤ 10s time-to-first-output</span>
-                  </li>
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>90%+ parse success rate for common documents</span>
-                  </li>
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>Clear fallback guidance for scanned PDFs</span>
-                  </li>
-                  <li className="flex items-start gap-2 p-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></span>
-                    <span>Zero setup required for first use</span>
-                  </li>
-                </ul>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Non-technical users struggle to extract structured data from PDFs. Existing tools require setup, technical knowledge, or produce inconsistent results.
+          </p>
+          <div className="space-y-6 mb-8">
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <div>
+                <p className="text-gray-900 font-medium">Tools are too technical</p>
+                <p className="text-gray-600 text-sm mt-1">Tabula requires manual area selection. DocParser needs schema expertise. Adobe exports break formatting.</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div className="p-5 rounded-lg border border-gray-100 border-l-4 border-l-gray-300 bg-white">
-                  <h5 className="font-medium text-gray-900 mb-2">Before (Current Tools)</h5>
-                  <p className="text-gray-600 leading-relaxed">Users spend 15+ minutes manually copying data from PDFs, dealing with complex setup, or getting inconsistent results from existing parsers.</p>
-                </div>
-                <div className="p-5 rounded-lg border border-gray-100 border-l-4 border-l-[#4A90E2] bg-[#4A90E2]/5">
-                  <h5 className="font-medium text-[#4A90E2] mb-2">After (PDF Penguin)</h5>
-                  <p className="text-gray-700 leading-relaxed">Drag, drop, type what you want — and get clean JSON in 10 seconds. No setup. No training. Just output.</p>
-                </div>
-              </div>
-              <div className="h-px bg-gray-200 my-8" />
             </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-4 text-gray-900">PDF Penguin</h3>
-            <p className="text-gray-600 leading-relaxed">
-              I set out to design a tool that required zero onboarding: drag, drop, type what you want — and get clean JSON instantly. No setup. No training. Just output.
-            </p>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <div>
+                <p className="text-gray-900 font-medium">Inconsistent results</p>
+                <p className="text-gray-600 text-sm mt-1">Scanned PDFs fail. Multi-page documents break. Output requires extensive cleanup.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <div>
+                <p className="text-gray-900 font-medium">Slow time-to-first-output</p>
+                <p className="text-gray-600 text-sm mt-1">Users spend 15+ minutes on setup, configuration, or manual data copying.</p>
+              </div>
             </div>
           </div>
-        </motion.section>
+          <div className="bg-gray-100 p-6 rounded-lg">
+            <p className="text-gray-900 italic">"I just need to get this table data into a spreadsheet, but the PDF is a mess."</p>
+            <p className="text-gray-500 text-sm mt-2">— Common user frustration</p>
+          </div>
+        </motion.div>
 
-        {/* Design Process Section */}
-        <motion.section
-          ref={setSectionRef('design')}
-          id="design"
+        {/* Research */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
+          className="py-16 border-t border-gray-200"
         >
-          <h2 className="text-xl md:text-2xl text-[#4A90E2] font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Design Process
-          </h2>
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-base md:text-lg font-medium mb-4 text-gray-900">Step 1: Empathize & Research</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                I explored a range of existing PDF parsing tools including Tabula, Adobe Acrobat's OCR export, and DocParser. While all three were technically capable, they presented significant barriers for non-technical users — requiring either installation, rule-building, or an understanding of export settings and schemas. I tested each one by attempting to extract structured data without relying on documentation or setup guides, simulating the experience of a first-time user with minimal technical background.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Across the board, I encountered slow onboarding, confusing interfaces, and results that required multiple adjustments or retries. Even simple use cases like "extract table data" demanded upfront learning or configuration. These pain points reinforced a clear gap in the space: a need for a tool that provides structure, flexibility, and results — without setup or specialized knowledge.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                The table below summarizes how PDF Penguin compares to these tools, based on that usability-first evaluation.
-              </p>
-              {/* Desktop Table */}
-              <div className="hidden lg:block my-6">
-                <div className="w-full overflow-x-auto">
-                  <table className="w-full border-collapse border-2 border-gray-500">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">Category</th>
-                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">Tabula (Open Source)</th>
-                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">Adobe Acrobat Export</th>
-                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-gray-900">DocParser</th>
-                        <th className="border-2 border-gray-500 px-4 py-3 text-left font-medium text-[#4A90E2]">PDF Penguin</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-sm">
-                      <tr>
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">How to Use</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Install app → select table area → export</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Open PDF → Export To (Excel/Word) → fix formatting</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Create parser → define rules/schema → run</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Drag & drop PDF → describe output in plain language → copy JSON</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Ease of Use</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Manual area selection every time — long PDFs are painful</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Export menus are cluttered; results vary per doc</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Requires technical rule-building</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Zero setup — natural prompts, instant results</td>
-                      </tr>
-                      <tr>
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Learning Curve</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Steep — geared to developers</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Moderate — still need guides/tutorials</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">High — requires schema expertise</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">None — works instantly</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Setup Time</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">10–15 mins for first export; longer for large PDFs</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">5–10 mins per document, plus fixing errors</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">15–30 mins upfront per parser</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">&lt;10s to first output</td>
-                      </tr>
-                      <tr>
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Output Quality</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Raw, messy tables — struggles with multi-page PDFs</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Exports often break formatting; images/tables distort</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Accurate only if rules are perfect; brittle if format changes</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Clean, structured JSON every time</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Falls Short On…</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Tedious with long/multi-page PDFs; messy copy-paste cleanup</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Time wasted fixing Excel/Word errors; inconsistent exports</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">High upfront effort, breaks when PDF layout changes</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Designed to handle any PDF instantly</td>
-                      </tr>
-                      <tr>
-                        <td className="border-2 border-gray-500 px-4 py-3 font-medium text-gray-900">Target Audience</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Developers tinkering on small files</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Business users with patience for cleanup</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600">Technical ops/data teams</td>
-                        <td className="border-2 border-gray-500 px-4 py-3 text-gray-600 font-medium text-[#4A90E2]">Anyone — including non-technical users</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <p className="text-gray-600 text-sm mt-3">
-                    <strong className="text-gray-900">Findings:</strong> Competing tools work well but expect users to know setup, schemas, and exports. PDF Penguin is the fastest and simplest to operate: drag & drop, describe the structure, copy clean JSON.
-                  </p>
-                </div>
-              </div>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            I tested Tabula, Adobe Acrobat, and DocParser as a first-time user with minimal technical background.
+          </p>
+          
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto mb-8">
+            <table className="w-full border-collapse border-2 border-gray-300 text-sm">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border-2 border-gray-300 px-4 py-3 text-left font-medium text-gray-900">Category</th>
+                  <th className="border-2 border-gray-300 px-4 py-3 text-left font-medium text-gray-900">Tabula</th>
+                  <th className="border-2 border-gray-300 px-4 py-3 text-left font-medium text-gray-900">Adobe Acrobat</th>
+                  <th className="border-2 border-gray-300 px-4 py-3 text-left font-medium text-gray-900">DocParser</th>
+                  <th className="border-2 border-gray-300 px-4 py-3 text-left font-medium text-[#C75B3B]">PDF Penguin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border-2 border-gray-300 px-4 py-3 font-medium text-gray-900">How to Use</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600">Install → select area → export</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600">Open → Export To → fix formatting</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600">Create parser → define rules → run</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600 font-medium text-[#C75B3B]">Drag & drop → describe → copy</td>
+                </tr>
+                <tr className="bg-gray-50">
+                  <td className="border-2 border-gray-300 px-4 py-3 font-medium text-gray-900">Setup Time</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600">10–15 mins</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600">5–10 mins per doc</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600">15–30 mins upfront</td>
+                  <td className="border-2 border-gray-300 px-4 py-3 text-gray-600 font-medium text-[#C75B3B]">&lt;10 seconds</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-              {/* Mobile Comparison Cards */}
-              <div className="lg:hidden my-6 space-y-4">
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Tabula (Open Source)</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">How to Use:</span> Install app → select table area → export</p>
-                    <p><span className="font-medium">Ease of Use:</span> Manual area selection every time — long PDFs are painful</p>
-                    <p><span className="font-medium">Learning Curve:</span> Steep — geared to developers</p>
-                    <p><span className="font-medium">Setup Time:</span> 10–15 mins for first export</p>
-                  </div>
-                </div>
-                
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Adobe Acrobat Export</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">How to Use:</span> Open PDF → Export To (Excel/Word) → fix formatting</p>
-                    <p><span className="font-medium">Ease of Use:</span> Export menus are cluttered; results vary per doc</p>
-                    <p><span className="font-medium">Learning Curve:</span> Moderate — still need guides/tutorials</p>
-                    <p><span className="font-medium">Setup Time:</span> 5–10 mins per document, plus fixing errors</p>
-                  </div>
-                </div>
-                
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">DocParser</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">How to Use:</span> Create parser → define rules/schema → run</p>
-                    <p><span className="font-medium">Ease of Use:</span> Requires technical rule-building</p>
-                    <p><span className="font-medium">Learning Curve:</span> High — requires schema expertise</p>
-                    <p><span className="font-medium">Setup Time:</span> 15–30 mins upfront per parser</p>
-                  </div>
-                </div>
-                
-                <div className="bg-[#4A90E2]/5 border-2 border-[#4A90E2] rounded-lg p-4">
-                  <h4 className="font-semibold text-[#4A90E2] mb-3">PDF Penguin</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">How to Use:</span> Drag & drop PDF → describe output in plain language → copy JSON</p>
-                    <p><span className="font-medium">Ease of Use:</span> Zero setup — natural prompts, instant results</p>
-                    <p><span className="font-medium">Learning Curve:</span> None — works instantly</p>
-                    <p><span className="font-medium">Setup Time:</span> &lt;10s to first output</p>
-                  </div>
-                </div>
-                
-                <p className="text-gray-600 text-sm mt-4 p-3 bg-gray-50 rounded-lg">
-                  <strong className="text-gray-900">Findings:</strong> Competing tools work well but expect users to know setup, schemas, and exports. PDF Penguin is the fastest and simplest to operate: drag & drop, describe the structure, copy clean JSON.
-                </p>
-              </div>
+          {/* Mobile Cards */}
+          <div className="lg:hidden space-y-4 mb-8">
+            <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
+              <h5 className="font-medium text-gray-900 mb-2">Tabula</h5>
+              <p className="text-sm text-gray-600">Install → select area → export. 10–15 min setup.</p>
             </div>
-
-            <div>
-              <h3 className="text-base md:text-lg font-medium mb-4 text-gray-900">Step 2: Define</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                PDFs are the universal standard for sharing information, but they weren’t designed for easy data extraction. From our research, one theme was clear: the biggest barrier with existing tools wasn’t raw technical capability — it was usability.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-2">
-                <span className="font-medium text-gray-900">Tabula</span> required manually drawing boxes around tables, a painful process on long or multi-page PDFs.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-2">
-                <span className="font-medium text-gray-900">Adobe Acrobat</span> exported to Word or Excel, but the formatting often broke, leaving users to waste time fixing errors.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                <span className="font-medium text-gray-900">DocParser</span> offered accuracy, but only after heavy upfront investment in parser setup, schema design, and ongoing maintenance whenever the PDF layout changed.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Across all of these, the “define” step was the bottleneck: users were forced to either manually mark up data, accept inaccurate exports, or engineer schemas. None of these approaches fit the needs of non-technical users who just want structured data quickly.
-              </p>
-              <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                <h4 className="text-gray-900 font-medium mb-2">Problem Statement</h4>
-                <p className="text-gray-700 leading-relaxed">
-                  Extracting structured data from PDFs today is slow, technical, and inconsistent. Users need a solution that requires no setup, no manual definition, and no technical expertise — while still delivering clean, structured outputs instantly.
-                </p>
-              </div>
+            <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
+              <h5 className="font-medium text-gray-900 mb-2">Adobe Acrobat</h5>
+              <p className="text-sm text-gray-600">Open → Export → fix formatting. 5–10 min per doc.</p>
             </div>
-
-            <div>
-              <h3 className="text-base md:text-lg font-medium mb-4 text-gray-900">Step 3: Ideate</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                I brainstormed multiple UI approaches, including <strong>single-page processing</strong> (streamlined but potentially overwhelming), <strong>wizard-style multi-step</strong> (guided but slow), and <strong>two-panel layout</strong> (immediate feedback, familiar pattern).
-              </p>
-              
-              <div className="mb-6 flex justify-center">
-                <Image 
-                  src="/sketchpdfpenguin.png"
-                  alt="PDF Penguin Initial Sketches"
-                  width={600}
-                  height={450}
-                  className="w-full max-w-xl md:max-w-2xl rounded-lg"
-                />
-              </div>
-              
-              <p className="text-gray-600 leading-relaxed mb-6">
-                I decided to move forward with a two-panel layout. This structure offered the clearest balance of simplicity and control: users could upload a PDF on the left while immediately seeing the structured output on the right. Unlike a single-page or wizard flow, the two-panel model provided instant feedback without overwhelming users with steps or clutter.
-              </p>
-
-              {/* User Flow Chart */}
-              <div className="mt-8">
-                <h4 className="text-base md:text-lg font-medium mb-4 text-gray-900">User Flow Mapping</h4>
-                <p className="text-gray-600 leading-relaxed mb-6">
-                  With this direction in place, the next step was to validate how users would actually move through the product. To do this, I mapped out the complete user flow — from uploading a file, to defining the output, to copying the final JSON. This flow chart helped surface potential friction points and confirm that the two-panel design supported a smooth, low-effort experience.
-                </p>
-                <div className="flex justify-center">
-                  <Image 
-                    src="/pdfpenguinflow.png"
-                    alt="PDF Penguin User Flow Chart showing the step-by-step process of uploading, processing, and extracting data from PDFs"
-                    width={400}
-                    height={200}
-                    className="w-full max-w-sm md:max-w-md border border-gray-200 shadow-lg rounded-xl"
-                  />
-                </div>
-                <p className="text-sm text-gray-500 text-center mt-3 italic">
-                  💡 The flow shows the complete user journey from upload to structured output
-                </p>
-              </div>
+            <div className="bg-white border-2 border-gray-300 rounded-lg p-4">
+              <h5 className="font-medium text-gray-900 mb-2">DocParser</h5>
+              <p className="text-sm text-gray-600">Create parser → define rules → run. 15–30 min upfront.</p>
             </div>
-
-            <div>
-              <h3 className="text-base md:text-lg font-medium mb-4 text-gray-900">Step 4: Prototype & Design</h3>
-              <p className="text-gray-600 leading-relaxed">
-                With a clear layout concept from the ideation phase, I began prototyping to test the interface flow and validate the user experience. I started with low-fidelity wireframes to quickly iterate on the core interaction patterns before moving into high-fidelity development.
-              </p>
+            <div className="bg-[#C75B3B]/5 border-2 border-[#C75B3B] rounded-lg p-4">
+              <h5 className="font-medium text-[#C75B3B] mb-2">PDF Penguin</h5>
+              <p className="text-sm text-gray-600">Drag & drop → describe → copy. &lt;10 seconds.</p>
             </div>
+          </div>
 
-            {/* Lo-Fi Prototype */}
-            <div className="mt-12">
-              <h4 className="text-base md:text-lg font-medium mb-6 text-gray-900">Lo-Fi Prototype</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                With the concept validated through research, I moved into rapid prototyping to test the interface flow. The low-fi wireframes focused on three key aspects: the upload process, prompt customization, and JSON output display within the clean, minimal interface.
-              </p>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/pengu1lowfi.png"
-                      alt="PDF Penguin Low-Fi Prototype 1 - Upload Interface"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">1. Upload Interface</h6>
-                  <p className="text-gray-600">Clean drag-and-drop area with clear visual feedback for file uploads.</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/pengu2lowfi.png"
-                      alt="PDF Penguin Low-Fi Prototype 2 - JSON Output"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">2. JSON Output</h6>
-                  <p className="text-gray-600">Structured data display with syntax highlighting and copy functionality.</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/pengu3lowfi.png"
-                      alt="PDF Penguin Low-Fi Prototype 3 - Library View"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">3. Library</h6>
-                  <p className="text-gray-600">Saved documents and parsed data organized in a clean library interface.</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/pengu4lowfi.png"
-                      alt="PDF Penguin Low-Fi Prototype 4 - Library Document View"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">4. Library Document View</h6>
-                  <p className="text-gray-600">Viewing and managing individual documents from the library with parsed data.</p>
-                </div>
-              </div>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
+            <p className="text-gray-900 text-lg mb-4">
+              <span className="text-[#C75B3B] font-medium">Zero-config wins.</span> Competing tools expect users to know schemas and export settings. PDF Penguin should require zero setup.
+            </p>
+          </div>
+        </motion.div>
 
-              <div className="space-y-4 text-gray-600">
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">Key Insights from Lo-Fi Testing:</h5>
-                  <p className="text-gray-600 leading-relaxed">
-                    Users preferred a two-panel layout for immediate visual feedback, the prompt field needed clear placeholder text to guide effective AI instructions, and error states required helpful messaging to guide users toward successful parsing.
-                  </p>
-                </div>
+        {/* Solution */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            A two-panel interface: drag and drop PDFs on the left, describe your desired output in plain language, get clean JSON on the right.
+          </p>
 
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">Refinements Made:</h5>
-                  <p className="text-gray-600 leading-relaxed">
-                    I simplified the upload process to drag-and-drop only, added contextual placeholder text with examples, and integrated clear error messaging with actionable next steps for users.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* High-Fidelity Prototypes */}
-            <div className="mt-12">
-              <h4 className="text-xl font-medium mb-6 text-gray-900">High-Fidelity Prototypes</h4>
-              <p className="text-gray-600 leading-relaxed mb-8">
-                Based on the low-fidelity testing insights, I created polished high-fidelity prototypes that refined the visual design, improved the user experience, and prepared for final development.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/highfipengu1.png"
-                      alt="PDF Penguin High-Fi Prototype 1 - Upload Interface"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">1. Upload Interface</h6>
-                  <p className="text-gray-600">Clean, modern upload experience with drag-and-drop functionality, output format dropdown selection, and clear visual feedback.</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/highfipengu2.png"
-                      alt="PDF Penguin High-Fi Prototype 2 - JSON Output"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border-2 border-gray-300"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">2. JSON Output</h6>
-                  <p className="text-gray-600">Structured data display with syntax highlighting and copy functionality.</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/highfipengu3.png"
-                      alt="PDF Penguin High-Fi Prototype 3 - Library View"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">3. Library</h6>
-                  <p className="text-gray-600">Saved documents and parsed data organized in a clean library interface with color-coded file categories in the top left.</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="mb-6">
-                    <Image
-                      src="/highfipengu4.png"
-                      alt="PDF Penguin High-Fi Prototype 4 - Library Document View"
-                      width={1200}
-                      height={1400}
-                      className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
-                      priority
-                      quality={100}
-                    />
-                  </div>
-                  <h6 className="text-base md:text-lg font-medium text-gray-900 mb-2">4. Library Document View</h6>
-                  <p className="text-gray-600">Specific document view showing detailed information with download and copy functionality for parsed data.</p>
-                </div>
-              </div>
-              
-              {/* Figma Prototype Link */}
-              <div className="text-center mt-8">
-                <p className="text-gray-600 mb-4">Try the interactive prototype:</p>
-                <a 
-                  href="https://www.figma.com/proto/6gUB6gR6ATucf890UPjQO6/Pdf-Pengu?node-id=14-418&t=O1XBikXg0ng6HNMv-1" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg hover:shadow-xl"
-                >
-                  Open Figma Prototype
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Step 5: Test & Iterate</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Each time I implemented a new UI or prompt behavior, I tested it by uploading different document types — invoices, receipts, reports — and refining the prompt UX to guide the AI parser. After discovering poor output from vague prompts, I added a customizable instruction field and clarified the placeholder text to guide user input.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                Once the interface flow and AI behavior were reliable, I built the full app in Cursor with a React + TailwindCSS frontend, integrated OCR and OpenAI APIs, and deployed it via Vercel. The result is a working product with real users, capable of turning even messy PDFs into structured data in seconds.
-              </p>
-            </div>
-            {/* Final Product Screenshot */}
-            <div className="my-8 flex justify-center">
-              <Image 
-                src="/pdf-penguin.png"
-                alt="PDF Penguin Final Product Screenshot"
-                width={1200}
-                height={600}
-                className="w-full max-w-2xl md:max-w-3xl rounded-xl"
+          {/* User Flow */}
+          <div className="mb-8">
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">User Flow</p>
+            <div className="flex justify-center">
+              <Image
+                src="/pdfpenguinflow.png"
+                alt="PDF Penguin User Flow Chart"
+                width={1920}
+                height={1280}
+                className="max-w-md w-full h-auto"
+                quality={95}
               />
             </div>
           </div>
-        </motion.section>
-
-
-
-        {/* Build Process Section */}
-        <motion.section
-          ref={setSectionRef('build')}
-          id="build"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            Build Process
-          </h2>
-          <div className="space-y-4">
-            <p className="text-gray-600 leading-relaxed">
-              This project was coded entirely using Cursor, an AI-native coding environment. I leveraged its inline generation, autocompletion, and iterative coding features to build and refine the full frontend and backend without switching tools. Cursor's fluid AI-assisted workflow allowed me to move quickly from concept to implementation, especially in structuring the prompt logic and dynamic output panel.
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-gray-600">
-              <li>Frontend: React + TailwindCSS</li>
-              <li>Backend: AI pipeline integrating OCR and OpenAI API for document parsing</li>
-              <li>Deployment: Vercel</li>
-            </ul>
-            <p className="text-gray-600 leading-relaxed">
-              The AI interprets user instructions from a prompt field and uses document layout detection to output structured key-value JSON data, even from unstructured or scanned documents.
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Challenges & Lessons Section */}
-        <motion.section
-          ref={setSectionRef('challenges')}
-          id="challenges"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            Challenges & Lessons Learned
-          </h2>
-          <div className="space-y-6">
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium mb-3 text-gray-900">Challenge: Designing a Two-Click PDF Converter</h3>
-              <p className="text-gray-600 mb-3">
-                The main challenge was keeping the experience as minimal as possible. Many converters overload users with extra steps — multiple menus, settings, or upsells — which slows them down. The goal for PDF Penguin was clear: users should be able to upload their file and get the converted result in just two clicks.
-              </p>
-              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                <h4 className="font-medium text-blue-900 mb-2">Lesson Learned</h4>
-                <p className="text-blue-800">
-                  Stripping down features is harder than adding them. I had to carefully decide what was essential (upload → convert → download) and what could be excluded or postponed. This exercise taught me that simplicity isn't about doing less work — it's about making tough design choices to keep the user's path frictionless.
-                </p>
-              </div>
+          
+          <div className="space-y-6 mb-8">
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Upload & Process</p>
+              <p className="text-gray-600">Drag PDF → AI analyzes structure → Extracts data based on prompt</p>
             </div>
-
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium mb-3 text-gray-900">Challenge: Guiding Without Overwhelming</h3>
-              <p className="text-gray-600 mb-3">
-                Even with a simple flow, users still need a sense of control (e.g., naming the file or choosing output format). Adding these options without cluttering the interface was a balancing act.
-              </p>
-              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                <h4 className="font-medium text-blue-900 mb-2">Lesson Learned</h4>
-                <p className="text-blue-800">
-                  Clear defaults and progressive disclosure are key. By setting smart defaults, users can complete their task quickly, while still having the option to customize if needed.
-                </p>
-              </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Customize Output</p>
+              <p className="text-gray-600">Describe structure in plain language → Preview results → Iterate</p>
             </div>
-
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium mb-3 text-gray-900">Challenge: Maintaining Trust and Reliability</h3>
-              <p className="text-gray-600 mb-3">
-                Because file conversion involves sensitive documents, users need to trust the process. Any hiccup — like unclear status indicators or unexpected results — could break that trust.
-              </p>
-              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                <h4 className="font-medium text-blue-900 mb-2">Lesson Learned</h4>
-                <p className="text-blue-800">
-                  Feedback and transparency build confidence. Simple loading indicators, confirmation messages, and a visible "library" of past conversions reassured users that their files were safe and the process worked as expected.
-                </p>
-              </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Export & Save</p>
+              <p className="text-gray-600">Copy JSON → Save to library → Access anytime</p>
             </div>
           </div>
-        </motion.section>
 
-        {/* Reflections & Takeaways Section */}
-        <motion.section
-          ref={setSectionRef('reflections')}
-          id="reflections"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            Reflections & Takeaways
-          </h2>
-          <div className="space-y-6">
-            <p className="text-gray-600 leading-relaxed">
-              PDF Penguin might seem like a simple tool, but it addresses a fundamental gap in document processing. From data analysts to developers, people need to extract structured information from unstructured documents quickly and reliably. This tool empowers users to transform messy PDFs into usable data without technical barriers.
-            </p>
-            <blockquote className="text-gray-700 italic border-l-4 border-[#4A90E2] pl-4">
-              "I just need to get this table data into a spreadsheet, but the PDF is a mess."
-            </blockquote>
-            <p className="text-gray-600 leading-relaxed">
-              As a designer and developer, this project taught me the value of solving real problems with simple solutions. Sometimes the best tools are the ones that eliminate complexity rather than adding features.
-            </p>
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h4 className="text-lg font-medium mb-3 text-gray-900">Key Learnings</h4>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  <span><strong>AI + UX = Magic</strong> – The combination of AI capabilities with thoughtful user experience design can create tools that feel almost magical to use.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  <span><strong>Simplicity Scales</strong> – The most powerful tools are often the simplest ones. PDF Penguin's success comes from doing one thing exceptionally well.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-                  <span><strong>Real Problems, Real Solutions</strong> – Building tools to solve your own problems often leads to solutions that resonate with others facing similar challenges.</span>
-                </li>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Design Principles</p>
+            <div className="space-y-3 text-gray-600">
+              <p><span className="text-gray-900 font-medium">Zero setup:</span> No installation, no configuration, no learning curve.</p>
+              <p><span className="text-gray-900 font-medium">Natural language:</span> Describe what you want, not how to extract it.</p>
+              <p><span className="text-gray-900 font-medium">Instant feedback:</span> See results immediately, iterate quickly.</p>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Design Process */}
+      <section className="py-16 border-t border-gray-200">
+        <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Process</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
+            From sketches to high-fidelity prototypes through rapid iteration.
+          </p>
+        </div>
+        
+        <div className="space-y-16">
+          {/* Initial Sketches */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Initial Sketches</p>
+              <p className="text-gray-600">Early exploration of layout concepts and interaction patterns.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/sketchpdfpenguin.png"
+                alt="PDF Penguin Initial Sketches"
+                width={1920}
+                height={1280}
+                className="max-w-xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+
+          {/* Lo-Fi Prototype */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Lo-Fi Prototypes</p>
+              <p className="text-gray-600">Testing the upload, prompt, and output flow with minimal styling.</p>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-3 mb-6">
+              <Image src="/pengu1lowfi.png" alt="Upload Interface" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+              <Image src="/pengu2lowfi.png" alt="JSON Output" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+              <Image src="/pengu3lowfi.png" alt="Library View" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+              <Image src="/pengu4lowfi.png" alt="Document View" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+            </div>
+
+            <div className="max-w-4xl">
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Testing Insights</p>
+              <ul className="text-gray-600 space-y-2">
+                <li>• Two-panel layout preferred for immediate visual feedback</li>
+                <li>• Prompt field needed placeholder text to guide AI instructions</li>
+                <li>• Error states required helpful messaging with next steps</li>
               </ul>
             </div>
           </div>
-        </motion.section>
 
-        {/* Future Improvements Section */}
-        <motion.section
-          ref={setSectionRef('future')}
-          id="future"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            Future Enhancements
-          </h2>
-          <ul className="space-y-2 text-gray-600">
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-              Add user authentication and upload history saving
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-              Allow exports to CSV and XML formats
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-              Improve support for low-quality scanned PDFs
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4A90E2] mt-2 flex-shrink-0"></span>
-              Mobile-responsive improvements
-            </li>
-          </ul>
-        </motion.section>
-
-        {/* Final Thoughts Section */}
-        <motion.section
-          ref={setSectionRef('final')}
-          id="final"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-2xl text-[#4A90E2] font-medium mb-8 uppercase tracking-wide">
-            Final Thoughts
-          </h2>
-          <div className="space-y-6">
-            <p className="text-gray-600 leading-relaxed">
-              This case study pushed me to think deeply about the intersection of AI capabilities and user experience design. PDF Penguin is about more than document processing — it's about making powerful technology accessible to everyone, regardless of their technical background.
-            </p>
-            <p className="text-gray-600 leading-relaxed">
-              Since building PDF Penguin, I've used it to power real-time parsing for multiple EZ Recipe recipes and shared it with other developers who've since used it in document-heavy workflows. It's now a core part of my toolset and continues to inspire ideas for standalone API-based parsing services.
-            </p>
-            <div className="bg-[#4A90E2]/5 rounded-lg p-6 border border-[#4A90E2]/20">
-              <h4 className="text-lg font-medium mb-3 text-[#4A90E2]">Impact & Results</h4>
-              <p className="text-gray-700 leading-relaxed">
-                PDF Penguin has successfully achieved its core goals: reducing time-to-first-output to under 10 seconds, achieving high parse success rates for common document types, and providing a zero-setup experience that works for both technical and non-technical users. The tool has become an essential part of my development workflow and has been adopted by other developers facing similar document processing challenges.
-              </p>
+          {/* High-Fidelity Prototypes */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">High-Fidelity Prototypes</p>
+              <p className="text-gray-600">Polished designs ready for development.</p>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-3 mb-6">
+              <Image src="/highfipengu1.png" alt="Upload Interface Hi-Fi" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+              <Image src="/highfipengu2.png" alt="JSON Output Hi-Fi" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+              <Image src="/highfipengu3.png" alt="Library View Hi-Fi" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+              <Image src="/highfipengu4.png" alt="Document View Hi-Fi" width={1920} height={1280} className="max-w-lg w-full h-auto" quality={95} />
+            </div>
+            
+            <div className="text-center">
+              <a 
+                href="https://www.figma.com/proto/6gUB6gR6ATucf890UPjQO6/Pdf-Pengu?node-id=14-418&t=O1XBikXg0ng6HNMv-1" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#C75B3B] hover:bg-[#A84A2E] text-white px-6 py-3 rounded-xl font-medium transition-colors"
+              >
+                Open Figma Prototype
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
             </div>
           </div>
-        </motion.section>
+
+          {/* Final Product */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Final Product</p>
+              <p className="text-gray-600">Built with React + TailwindCSS, integrated OCR and OpenAI APIs, deployed via Vercel.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/pdf-penguin.png"
+                alt="PDF Penguin Final Product"
+                width={1920}
+                height={1280}
+                className="max-w-3xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Design Decisions */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Key decisions that shaped the final product.
+          </p>
+          
+          <div className="space-y-8">
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why a two-panel layout?</p>
+              <p className="text-gray-600">Immediate feedback. Users see results as they type prompts — no page refreshes, no waiting. The familiar pattern (think code editors) reduces cognitive load.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why natural language prompts instead of forms?</p>
+              <p className="text-gray-600">Non-technical users don't know schema syntax. Describing output in plain English ("Extract all product names and prices as a list") lowers the barrier to zero.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why JSON as the primary output?</p>
+              <p className="text-gray-600">Developers need structured data. JSON is universal — works with APIs, databases, and spreadsheet imports. Future versions will add CSV/XML export.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why include a library feature?</p>
+              <p className="text-gray-600">Users often process the same document types repeatedly. Saving past parses lets them reference outputs, compare results, and build workflows.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Outcomes */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Outcomes</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">&lt;10s</p>
+              <p className="text-gray-600 text-sm">Time to first output</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">90%+</p>
+              <p className="text-gray-600 text-sm">Parse success rate</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">0</p>
+              <p className="text-gray-600 text-sm">Setup required</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">2 clicks</p>
+              <p className="text-gray-600 text-sm">Upload to export</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Learnings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            What I learned building this product.
+          </p>
+          
+          <div className="space-y-6">
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">01</span> AI + UX = Magic</p>
+              <p className="text-gray-600 mt-1">The combination of AI capabilities with thoughtful UX creates tools that feel almost magical. The AI does the heavy lifting; the interface makes it accessible.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Simplicity scales</p>
+              <p className="text-gray-600 mt-1">The most powerful tools often do one thing exceptionally well. PDF Penguin's success comes from a ruthless focus on the core use case.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Stripping features is harder than adding them</p>
+              <p className="text-gray-600 mt-1">I had to constantly resist scope creep. Every "nice to have" feature threatened the two-click simplicity that makes the product work.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Next Steps */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</p>
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <p className="text-gray-600">User authentication and upload history</p>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <p className="text-gray-600">CSV and XML export formats</p>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <p className="text-gray-600">Improved support for scanned/low-quality PDFs</p>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <p className="text-gray-600">API access for developer integrations</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Final Thoughts */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            PDF Penguin is about making powerful technology accessible to everyone, regardless of technical background.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            This project reminded me why I love product design: solving real problems for real people. Every decision — from the two-panel layout to natural language prompts — was grounded in research and empathy. It's now a core part of my toolset and continues to evolve.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Footer Navigation */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-gray-600 hover:text-[#C75B3B] transition-colors flex items-center gap-2">
+            <span>←</span>
+            <span>Back to Home</span>
+          </Link>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-gray-600 hover:text-[#C75B3B] transition-colors"
+          >
+            Back to Top ↑
+          </button>
+        </div>
+      </section>
     </main>
   );
-} 
+}

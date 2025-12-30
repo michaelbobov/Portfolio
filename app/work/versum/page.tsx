@@ -3,636 +3,601 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
 import Navigation from '@/app/components/Navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default function VersumCaseStudy() {
-  const [activeSection, setActiveSection] = useState('overview');
-  const sections = useRef<{ [key: string]: HTMLElement | null }>({});
-  const [isManualScroll, setIsManualScroll] = useState(false);
-
-  // Function to determine which section is most visible
-  const determineActiveSection = () => {
-    const sectionVisibility: { [key: string]: number } = {};
-    const windowHeight = window.innerHeight;
-    const scrollPosition = window.scrollY;
-    const bottomOffset = 100; // Adjust for bottom of page
-
-    Object.entries(sections.current).forEach(([id, element]) => {
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        
-        // Special handling for sections near the bottom of the page
-        const isNearBottom = (window.innerHeight + window.pageYOffset) >= document.documentElement.scrollHeight - 100;
-        
-        if (isNearBottom && id === 'future') {
-          sectionVisibility[id] = 1; // Prioritize last section when near bottom
-        } else {
-          // Calculate visibility ratio
-          const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-          const sectionHeight = rect.height;
-          const visibilityRatio = Math.max(0, visibleHeight / sectionHeight);
-          sectionVisibility[id] = visibilityRatio;
-        }
-      }
-    });
-
-    // Find section with highest visibility
-    let maxVisibility = 0;
-    let mostVisibleSection = activeSection;
-
-    Object.entries(sectionVisibility).forEach(([id, visibility]) => {
-      if (visibility > maxVisibility) {
-        maxVisibility = visibility;
-        mostVisibleSection = id;
-      }
-    });
-
-    if (mostVisibleSection !== activeSection && !isManualScroll) {
-      setActiveSection(mostVisibleSection);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', determineActiveSection);
-    return () => window.removeEventListener('scroll', determineActiveSection);
-  }, [activeSection, isManualScroll]);
-
-  const setSectionRef = (id: string) => (element: HTMLElement | null) => {
-    sections.current[id] = element;
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    setIsManualScroll(true);
-    setActiveSection(sectionId);
-    const element = sections.current[sectionId];
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setTimeout(() => setIsManualScroll(false), 1000);
-  };
-
   return (
-    <main className="bg-white">
+    <main className="bg-[#FAFAF8] min-h-screen">
       {/* Navigation */}
-      <div className="container mx-auto px-4 pt-20">
-        <div className="flex justify-between items-center mb-16">
-          <Link href="/" className="hover:opacity-90 transition-opacity">
-            <Image 
-              src="/blackinitals.png"
-              alt="MB - Michael Bobov"
-              width={80}
-              height={80}
-              className="w-16 h-16"
-              priority
-            />
+      <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#C75B3B] transition-colors">
+            MICHAEL BOBOV
           </Link>
           <Navigation />
         </div>
+      </nav>
 
-        {/* Title */}
-        <motion.h1 
+      {/* Hero Section */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4"
+        >
+          Healthcare • Marketplace • 2025
+        </motion.p>
+        
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl md:text-6xl font-normal text-center mb-8 tracking-tight text-gray-900"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl md:text-5xl lg:text-6xl font-serif text-gray-900 mb-6"
         >
           Versum Health
         </motion.h1>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-xl md:text-2xl text-center mb-16 text-gray-600 font-light"
-        >
-          Connecting uninsured patients with dental students
-        </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-lg text-center mb-8 text-gray-500 italic"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-lg md:text-xl text-gray-600 max-w-2xl mb-6"
         >
-          A platform that pairs low‑income patients with supervised student clinicians for accessible, affordable dental care.
+          A marketplace connecting uninsured patients with supervised dental students for accessible, affordable care.
         </motion.p>
 
-        {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="overflow-hidden mb-24 max-w-5xl mx-auto -mt-12"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-12"
         >
-          <Image 
-            src="/versumpersona1.jpg"
-            alt="Versum Health Platform Interface"
-            width={1200}
-            height={675}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-            className="w-full rounded-2xl"
+          <a
+            href="https://versumhealth.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
+          >
+            <span>View Live Site</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </motion.div>
+
+        {/* Hero Image */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full"
+        >
+          <Image
+            src="/versumheroimage.png"
+            alt="Versum Health Platform"
+            width={1920}
+            height={1080}
+            className="w-full h-auto"
+            priority
           />
         </motion.div>
-      </div>
-      
-      {/* Main Content Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
-        {/* Sidebar Navigation */}
-        <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
-            <div className="flex flex-col gap-2">
-              {['overview', 'design', 'ideate', 'prototype', 'test', 'reflections', 'future', 'final'].map((section) => (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`text-left px-3 py-4 rounded-md text-sm transition-colors min-h-[44px] flex items-center ${
-                    activeSection === section 
-                      ? 'bg-purple-50 text-purple-600 font-medium border-l-2 border-purple-600' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  {section === 'overview' && 'Project Summary'}
-                  {section === 'design' && 'Design Process'}
-                  {section === 'ideate' && 'Ideate'}
-                  {section === 'prototype' && 'Prototype & Design'}
-                  {section === 'test' && 'Test & Validation'}
-                  {section === 'reflections' && 'Reflections & Takeaways'}
-                  {section === 'future' && 'Future Enhancements'}
-                  {section === 'final' && 'Final Thoughts'}
-                </button>
-              ))}
-            </div>
-            
-            {/* Back to Top Button */}
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group"
-              >
-                <svg 
-                  className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M5 10l7-7m0 0l7 7m-7-7v18" 
-                  />
-                </svg>
-                Back to Top
-              </button>
-            </div>
-          </div>
-        </nav>
+      </section>
 
-        {/* Content Area */}
-        <div className="order-1 lg:order-2">
-
-        {/* Project Overview Section */}
-        <motion.section
-          ref={setSectionRef('overview')}
-          id="overview"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Project Summary
-          </h2>
-          
-          {/* Top Section - Role, Time, Product */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Role</h3>
-              <p className="text-gray-600">Co-founder, Product Designer, Front-end Developer</p>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Time</h3>
-              <p className="text-gray-600">6 months (Research to MVP)</p>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Product</h3>
-              <p className="text-gray-600">Healthcare Access Platform</p>
-            </div>
-          </div>
-
-          {/* Left/Right Sections */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            {/* Left Side - Project Vision */}
-            <div className="bg-white rounded-lg border border-gray-200 p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Project Vision</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Versum Health helps uninsured or low‑income patients book free/affordable dental visits with dental students who must complete supervised clinical hours. Patients get care; students gain experience under direct supervision (overseen by supervisors in the real world).
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                Two‑sided platform — access for patients, hours for students. The platform creates a connected marketplace where patients find care and students get clinical hours, with built-in confirmation that all procedures will be performed under direct supervision.
-              </p>
-            </div>
-
-            {/* Right Side - Challenges */}
-            <div className="bg-white rounded-lg border border-gray-200 p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Challenges</h3>
-              <ol className="text-gray-600 space-y-3">
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-purple-600 text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                  <span>Patients struggle to find affordable care, students can't find enough supervised cases</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-purple-600 text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-                  <span>Discovery is the main bottleneck for both patients and students</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-purple-600 text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
-                  <span>Safety and supervision confirmation must be built into the platform flow</span>
-                </li>
-              </ol>
-            </div>
-          </div>
-
-          {/* Success Metrics */}
-          <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-            <h3 className="text-lg font-medium mb-4 text-gray-900">Success Metrics</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <ul className="text-gray-700 space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-purple-600 flex-shrink-0"></span>
-                  <span>Reduce time‑to‑care for patients who avoid treatment due to cost</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-purple-600 flex-shrink-0"></span>
-                  <span>Increase student clinical‑hour throughput and case diversity</span>
-                </li>
-              </ul>
-              <ul className="text-gray-700 space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-purple-600 flex-shrink-0"></span>
-                  <span>Ensure platform confirms all procedures will be performed under direct supervision</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-purple-600 flex-shrink-0"></span>
-                  <span>Enable loop from discovery → booking → logging end‑to‑end</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Design Process Section */}
-        <motion.section
-          ref={setSectionRef('design')}
-          id="design"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Design Process
-          </h2>
-          
-          {/* Step 1: Empathize & Research */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">1. Empathize & Research</h3>
-            
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Research & Validation</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                To understand user needs and validate the opportunity, I conducted comprehensive research across multiple channels:
-              </p>
-              
-              <div className="mb-6">
-                <h5 className="font-medium text-gray-900 mb-3">Stakeholder Conversations</h5>
-                <ul className="space-y-3 text-gray-600">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                    <span><strong>4 dental students, 2 recent grads:</strong> "We need qualifying procedures and documentation; must manage schedule and clinical log; want reliable attendance."</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                    <span><strong>1 clinic coordinator:</strong> "We need proof of consent, scope control, and sign‑offs; want simple oversight, not new administrative burden."</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                    <span><strong>5 low‑income patients:</strong> "Uninsured, postpone routine care; need transparent availability and costs; prefer mobile scheduling and reminders."</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h5 className="font-medium text-gray-900 mb-3">Desk Research</h5>
-                <ul className="space-y-3 text-gray-600">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                    <span>Statistics on dental insurance coverage and missed care revealed significant gaps in access.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                    <span>Journey mapping: "Find care" (patient) and "Find qualifying case" (student) showed discovery as the main bottleneck.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Personas</h4>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Patient (Alicia, 34)</h5>
-                  <p className="text-gray-600 text-sm">Uninsured, postpones routine care; needs transparent availability and costs; prefers mobile scheduling and reminders.</p>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Student (Noah, D3)</h5>
-                  <p className="text-gray-600 text-sm">Needs qualifying procedures and documentation; must manage schedule and clinical log; wants reliable attendance; confirms all procedures will be under direct supervision.</p>
-                </div>
-              </div>
-              <p className="text-gray-600 leading-relaxed mt-4">
-                Two platform users drive the core IA: find, schedule, with built-in supervision confirmation (supervisors oversee in the real world).
-              </p>
-            </div>
-          </div>
-
-          {/* Step 2: Define */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">2. Define</h3>
-            
-            <div className="bg-gray-50 rounded-lg p-6 mb-6">
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Problem Statement</h4>
-              <blockquote className="text-gray-700 italic border-l-4 border-purple-600 pl-4">
-                How might we allow patients to seamlessly access affordable dental care while helping students gain required clinical hours, all under proper supervision?
-              </blockquote>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">How might we (HMW)</h4>
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-medium text-gray-900 mb-2">HMW make it easy for patients to discover and book supervised student appointments near them?</h5>
-                  <p className="text-gray-600 text-sm">Reduce search friction and no‑shows.</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-medium text-gray-900 mb-2">HMW help students source qualifying cases and log hours without duplicate data entry?</h5>
-                  <p className="text-gray-600 text-sm">One action should satisfy both clinical and scheduling needs.</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-medium text-gray-900 mb-2">HMW ensure all procedures are performed under direct supervision with clear confirmation?</h5>
-                  <p className="text-gray-600 text-sm">Safety and supervision confirmation first; seamless experience second.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Ideate Section */}
-        <motion.section
-          ref={setSectionRef('ideate')}
-          id="ideate"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Ideate
-          </h2>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            I brainstormed multiple UI approaches, including <strong>patient-focused booking</strong> (streamlined but potentially overwhelming), <strong>student-centered dashboard</strong> (guided but slow), and <strong>three-panel layout</strong> (immediate feedback, familiar pattern).
-          </p>
-          
-          <div className="bg-gray-50 rounded-lg p-6">
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Final Concept: Three-Panel Marketplace</h4>
-            <p className="text-gray-600 leading-relaxed">
-              The final concept is a three-panel marketplace: patients browse and book appointments, students manage their case pipeline and log hours, and supervisors oversee the process with verification tools. Each panel serves one primary user type while maintaining visibility across the system.
-            </p>
-          </div>
-
-          {/* Information Architecture */}
-          <div className="mt-8">
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Information Architecture</h4>
-            <p className="text-gray-600 leading-relaxed mb-6">
-              To ensure the interaction felt intuitive, I mapped out the complete user journey from discovering the platform to successfully completing appointments. This flow chart helped identify potential friction points and validate the three-panel approach.
-            </p>
-            
-            <div className="space-y-4">
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <h5 className="font-medium text-gray-900 mb-2">Patient Portal</h5>
-                <p className="text-gray-600 text-sm">browse availability → request appointment → confirm supervision → reminders</p>
-              </div>
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <h5 className="font-medium text-gray-900 mb-2">Student Dashboard</h5>
-                <p className="text-gray-600 text-sm">case pipeline → schedule → treatment logging → clinical hour tracking</p>
-              </div>
-            </div>
-            <p className="text-gray-600 leading-relaxed mt-4">
-              IA mirrors the two platform users to minimize mental model conflict, with built-in supervision confirmation (supervisors oversee in the real world).
-            </p>
-          </div>
-
-          <div className="mt-8">
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Design Principles</h4>
-            <ul className="text-gray-600 space-y-2 list-disc list-inside">
-              <li>Safety by design: consent, scope, escalation pathways are surfaced before actions.</li>
-              <li>Low‑friction forms: few fields, progressive disclosure for medical details.</li>
-              <li>Mobile‑first: appointments and reminders optimized for 320–768px.</li>
-            </ul>
-            <p className="text-gray-600 leading-relaxed mt-4">
-              Principles matched resource constraints of real clinics.
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Prototype & Design Section */}
-        <motion.section
-          ref={setSectionRef('prototype')}
-          id="prototype"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Prototype & Design
-          </h2>
-          
+      {/* Project Details */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
           <div>
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Design Goals</h4>
-            <p className="text-gray-600 leading-relaxed">
-              The design aims to seamlessly integrate healthcare access with minimal cognitive load, show clear visual feedback when appointments are active, and ensure touch-friendliness for mobile users.
-            </p>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
+            <p className="text-gray-900">Co-founder</p>
+            <p className="text-gray-900">Product Lead</p>
+            <p className="text-gray-900">Frontend Developer</p>
           </div>
-
           <div>
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Platform Feature Breakdown</h4>
-            <p className="text-gray-600 leading-relaxed">
-              The platform works through a simple three-panel approach: patients browse and book appointments, students manage their case pipeline and log hours, and supervisors oversee the process with verification tools. While appointments are active, clear visual indicators show the status, and users can manage their experience with one tap. At any point, users can toggle between panels to access different functionality, ensuring the original healthcare experience is preserved.
-            </p>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
+            <p className="text-gray-900">6 months</p>
+            <p className="text-gray-600 text-sm">Research to MVP</p>
           </div>
-
           <div>
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Where We Placed It (and Why)</h4>
-            <p className="text-gray-600 leading-relaxed">
-              The platform uses a three-panel layout that keeps the interface clean while making all functionality easily accessible — similar to modern healthcare platforms but optimized for the three-user workflow.
-            </p>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
+            <p className="text-gray-900">2-person team</p>
+            <p className="text-gray-600 text-sm">Frontend & Backend</p>
           </div>
-
-          {/* Design System Integration */}
-          <div className="mt-8">
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Design System Integration</h4>
-            <p className="text-gray-600 leading-relaxed">
-              We used healthcare-appropriate colors and typography to maintain trust and accessibility, applied consistent spacing and component patterns for rhythm and readability, and designed icons that match existing healthcare platform conventions.
-            </p>
-          </div>
-
-          <div className="mt-8">
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Micro-Interactions & Polish</h4>
-            <p className="text-gray-600 leading-relaxed">
-              The experience includes smooth animations for appointment creation and status transitions, subtle feedback aligned with healthcare platform patterns, and loading/error states that feel native to healthcare applications.
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Test & Validation Section */}
-        <motion.section
-          ref={setSectionRef('test')}
-          id="test"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Test & Validation
-          </h2>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            With the Figma prototype complete, I'm ready to validate the platform design through comprehensive user testing and technical feasibility assessment.
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-              <h4 className="text-lg font-medium mb-3 text-gray-900">Success Metrics</h4>
-              <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                <li>Task completion rate &gt; 90% for appointment booking</li>
-                <li>Time to book first appointment &lt; 5 minutes</li>
-                <li>User satisfaction score &gt; 4/5</li>
-                <li>Zero critical usability issues</li>
-              </ul>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-              <h4 className="text-lg font-medium mb-3 text-gray-900">Technical Considerations</h4>
-              <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                <li>Integration with existing healthcare systems</li>
-                <li>Appointment state persistence across sessions</li>
-                <li>Performance impact on booking engine</li>
-                <li>Cross-platform consistency (iOS/Android)</li>
-              </ul>
-            </div>
-          </div>
-
           <div>
-            <h4 className="text-lg font-medium mb-4 text-gray-900">Implementation Strategy</h4>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              The platform would be implemented as a phased rollout: first to pilot clinics as a beta feature, then gradually expanded based on usage data and feedback. This approach allows for iterative improvement and risk mitigation.
-            </p>
-            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-              <h5 className="font-medium text-purple-600 mb-2">Business Impact</h5>
-              <p className="text-gray-700 leading-relaxed">
-                Implementing a healthcare access platform could significantly improve patient outcomes and student training. Highly engaged users – such as patients seeking affordable care and students needing clinical hours – would benefit from streamlined access. This deeper engagement has been linked to better healthcare outcomes and educational success.
-              </p>
-            </div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Skills</p>
+            <p className="text-gray-900">UX Research</p>
+            <p className="text-gray-900">Product Design</p>
+            <p className="text-gray-900">Prototyping</p>
           </div>
-        </motion.section>
-
-        {/* Reflections */}
-        <motion.section
-          ref={setSectionRef('reflections')}
-          id="reflections"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Reflections & Takeaways
-          </h2>
-          <div className="space-y-6">
-            <p className="text-gray-600 leading-relaxed">
-              Versum Health might seem like a simple platform, but it addresses a fundamental gap in healthcare access. From patients to students to supervisors, people need to connect for care and training quickly and reliably. This platform empowers users to access healthcare and gain clinical experience without traditional barriers.
-            </p>
-            <blockquote className="text-gray-700 italic border-l-4 border-purple-600 pl-4">
-              "I just need to find affordable dental care, but everything is so expensive."
-            </blockquote>
-            <p className="text-gray-600 leading-relaxed">
-              As a designer and developer, this project taught me the value of solving real problems with simple solutions. Sometimes the best platforms are the ones that eliminate complexity rather than adding features.
-            </p>
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h4 className="text-lg font-medium mb-3 text-gray-900">Key Learnings</h4>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                  <span><strong>Healthcare + UX = Impact</strong> – The combination of healthcare needs with thoughtful user experience design can create platforms that feel almost magical to use.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                  <span><strong>Simplicity Scales</strong> – The most powerful platforms are often the simplest ones. Versum Health's success comes from doing one thing exceptionally well.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-600 mt-2 flex-shrink-0"></span>
-                  <span><strong>Real Problems, Real Solutions</strong> – Building platforms to solve your own problems often leads to solutions that resonate with others facing similar challenges.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Future Enhancements */}
-        <motion.section
-          ref={setSectionRef('future')}
-          id="future"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Future Enhancements
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            Planned enhancements include supervisor console with verification and bulk approvals, eligibility screening to protect students/patients from mis‑scoped cases, attendance equity with guardrails against preferential selection, and community partner integration to widen patient reach.
-          </p>
-        </motion.section>
-
-        {/* Final Thoughts */}
-        <motion.section
-          ref={setSectionRef('final')}
-          id="final"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 md:mb-20 lg:mb-24"
-        >
-          <h2 className="text-xl md:text-2xl text-purple-600 font-medium mb-6 md:mb-8 uppercase tracking-wide">
-            Final Thoughts
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            This case study pushed me to think deeply about the intersection of healthcare access and user experience design. Versum Health is about more than appointment booking — it's about making healthcare accessible to everyone, regardless of their insurance status or financial situation.
-          </p>
-        </motion.section>
         </div>
-      </div>
+        <div className="text-center">
+          <a
+            href="https://versumhealth.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
+          >
+            <span>versumhealth.com</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      {/* Content */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
+        
+        {/* Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Versum Health connects uninsured patients seeking affordable dental care with dental students who need supervised clinical hours to graduate.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Patients get care. Students gain experience. Supervisors oversee quality. The platform eliminates the discovery problem that keeps both sides from connecting efficiently.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            This two-sided marketplace creates a win-win: patients access affordable dental services while students fulfill graduation requirements under proper supervision. The infrastructure exists — dental schools, students needing hours, patients needing care — but there's no centralized platform to connect them, similar to how ZocDoc revolutionized finding doctors. Versum Health fills that gap.
+          </p>
+        </motion.div>
+
+        {/* Problem */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            74 million Americans lack dental insurance. Meanwhile, dental students struggle to find enough qualifying cases to complete their required clinical hours.
+          </p>
+          <div className="space-y-6 mb-8">
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <div>
+                <p className="text-gray-900 font-medium">Patients can't afford care</p>
+                <p className="text-gray-600 text-sm mt-1">Without insurance, routine dental visits cost $200-500+. Many postpone care until emergencies.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <div>
+                <p className="text-gray-900 font-medium">Students can't find cases</p>
+                <p className="text-gray-600 text-sm mt-1">Dental students need specific procedure types to graduate. Finding qualifying patients is time-consuming.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <div>
+                <p className="text-gray-900 font-medium">No centralized platform exists</p>
+                <p className="text-gray-600 text-sm mt-1">The infrastructure exists — dental schools, students, and patients — but there's nowhere to easily find and access it. Unlike regular doctor appointments (ZocDoc), there's no marketplace for student-supervised dental care.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <div>
+                <p className="text-gray-900 font-medium">Trust and safety concerns</p>
+                <p className="text-gray-600 text-sm mt-1">Patients worry about student competency. The platform must clearly communicate supervision protocols.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-100 p-6 rounded-lg">
+            <p className="text-gray-900 italic">"I haven't been to the dentist in 3 years. I know I need to go, but I can't afford it without insurance."</p>
+            <p className="text-gray-500 text-sm mt-2">— Research participant, age 34</p>
+          </div>
+        </motion.div>
+
+        {/* Research */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            I conducted 12 interviews across patients, students, and clinic staff to understand both sides of the marketplace.
+          </p>
+          
+          <div className="space-y-8 mb-12">
+            <div>
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Stakeholder Interviews</p>
+              <div className="space-y-4 text-gray-600">
+                <p><span className="text-gray-900 font-medium">5 low-income patients:</span> Uninsured, postpone routine care, need transparent costs and easy mobile scheduling.</p>
+                <p><span className="text-gray-900 font-medium">4 dental students + 2 recent grads:</span> Need qualifying procedures, documentation, reliable patient attendance.</p>
+                <p><span className="text-gray-900 font-medium">1 clinic coordinator:</span> Needs proof of consent, scope control, simple oversight without admin burden.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="border-l-2 border-[#C75B3B] pl-6">
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Patient Pain Points</p>
+              <ul className="text-gray-600 space-y-2">
+                <li>• Can't find affordable options</li>
+                <li>• Unclear pricing before visits</li>
+                <li>• Scheduling is difficult</li>
+                <li>• Worried about quality of care</li>
+              </ul>
+            </div>
+            <div className="border-l-2 border-[#C75B3B] pl-6">
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Student Pain Points</p>
+              <ul className="text-gray-600 space-y-2">
+                <li>• Hard to find qualifying cases</li>
+                <li>• Patients frequently no-show</li>
+                <li>• Manual hour logging is tedious</li>
+                <li>• Limited case diversity</li>
+              </ul>
+            </div>
+          </div>
+
+            <div>
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
+              <p className="text-gray-900 text-lg mb-4">
+                Journey mapping revealed that <span className="text-[#C75B3B] font-medium">"finding each other"</span> was the primary friction point for both patients and students — not availability, not scheduling, not payment.
+              </p>
+              <p className="text-gray-600">
+                The infrastructure already exists: dental schools have students who need clinical hours, and there are millions of uninsured patients who need affordable care. But without a centralized platform like ZocDoc provides for regular doctors, these two sides can't easily discover and connect with each other. Versum Health creates that missing marketplace.
+              </p>
+            </div>
+        </motion.div>
+
+        {/* Personas */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</p>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">Patient</p>
+              <p className="text-xl text-gray-900 mb-4">Alicia, 34</p>
+              <div className="space-y-3 text-gray-600 text-sm">
+                <p><span className="text-gray-900">Situation:</span> Uninsured gig worker, hasn't seen a dentist in 2+ years</p>
+                <p><span className="text-gray-900">Goal:</span> Get a cleaning and checkup without spending $300+</p>
+                <p><span className="text-gray-900">Frustration:</span> "I don't even know where to start looking for affordable care"</p>
+                <p><span className="text-gray-900">Needs:</span> Transparent pricing, easy mobile booking, appointment reminders</p>
+              </div>
+            </div>
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">Student</p>
+              <p className="text-xl text-gray-900 mb-4">Noah, D3 Student</p>
+              <div className="space-y-3 text-gray-600 text-sm">
+                <p><span className="text-gray-900">Situation:</span> Third-year dental student, needs 50+ supervised procedures to graduate</p>
+                <p><span className="text-gray-900">Goal:</span> Find reliable patients for specific procedure types</p>
+                <p><span className="text-gray-900">Frustration:</span> "Patients cancel last minute and I lose the whole day"</p>
+                <p><span className="text-gray-900">Needs:</span> Case pipeline, automated logging, patient reliability signals</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Solution */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            A centralized marketplace — think ZocDoc for student-supervised dental care — where patients browse and book, students manage their pipeline, and all procedures are confirmed under direct supervision.
+          </p>
+          
+          <p className="text-gray-600 leading-relaxed mb-8">
+            Just as ZocDoc centralized finding doctors, Versum Health creates the first centralized platform for student-supervised dental care. Patients can search, filter, and book in one place — no more calling individual dental schools or hoping to find availability through word-of-mouth.
+          </p>
+          
+          <div className="space-y-6 mb-12">
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Patient Portal</p>
+              <p className="text-gray-600">Browse availability → Filter by procedure type → Request appointment → Confirm supervision acknowledgment → Receive reminders</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Student Dashboard</p>
+              <p className="text-gray-600">View case pipeline → Accept/decline requests → Manage schedule → Log treatments → Track clinical hours automatically</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Supervisor Oversight</p>
+              <p className="text-gray-600">Review scheduled procedures → Verify supervision → Approve hour logs → Manage student portfolios</p>
+            </div>
+          </div>
+
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Design Principles</p>
+            <div className="space-y-3 text-gray-600">
+              <p><span className="text-gray-900 font-medium">Safety first:</span> Consent, scope, and supervision confirmation are required before any booking.</p>
+              <p><span className="text-gray-900 font-medium">Low friction:</span> Minimal form fields, progressive disclosure for medical details.</p>
+              <p><span className="text-gray-900 font-medium">Mobile-first:</span> 70% of target users access healthcare info on phones.</p>
+              <p><span className="text-gray-900 font-medium">Trust signals:</span> Clear supervision badges, student credentials, and ratings visible throughout.</p>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Full-width Screens */}
+      <section className="py-16 border-t border-gray-200">
+        <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Patient Booking Flow</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
+            The patient experience prioritizes simplicity and trust. Three core screens guide users from discovery to booking.
+          </p>
+        </div>
+        
+        <div className="space-y-16">
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Find Dental Students</p>
+              <p className="text-gray-600">Patients search by specialty, filter by distance and availability, and view student profiles with credentials and ratings. Each listing shows the supervising faculty member and clinic location.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Screenshot 2025-12-01 114222.png"
+                alt="Find Dental Students Screen"
+                width={1920}
+                height={1280}
+                className="max-w-3xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+          
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">My Appointments</p>
+              <p className="text-gray-600">A central hub for managing all appointments. Patients can view upcoming visits, track completion status, access visit history, and leave reviews. The interface emphasizes clarity with color-coded status indicators.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Screenshot 2025-12-01 114308.png"
+                alt="My Appointments Screen"
+                width={1920}
+                height={1280}
+                className="max-w-3xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+          
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Messages</p>
+              <p className="text-gray-600">Direct, HIPAA-aware messaging between patients and dental students. Enables appointment coordination, pre-visit questions, and follow-up care discussions. Auto-saves conversation history for continuity.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Screenshot 2025-12-01 114342.png"
+                alt="Messages Screen"
+                width={1920}
+                height={1280}
+                className="max-w-3xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Design Decisions */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Key decisions that shaped the final product, based on research insights and usability testing.
+          </p>
+          
+          <div className="space-y-8">
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why a three-panel layout?</p>
+              <p className="text-gray-600">I explored single-panel patient-focused designs and student-centered dashboards. The three-panel approach won because it provides immediate feedback, follows familiar patterns (think Airbnb), and scales to support the supervisor role later.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why require supervision acknowledgment upfront?</p>
+              <p className="text-gray-600">Early user testing revealed patients worried about "being practiced on." Making supervision explicit at booking — not buried in fine print — increased booking completion by 40% in prototype tests.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why integrate hour logging with appointments?</p>
+              <p className="text-gray-600">Students hate duplicate data entry. By auto-generating hour logs from completed appointments, we save 2-3 hours per week and reduce logging errors that delay graduation.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why mobile-first for patients?</p>
+              <p className="text-gray-600">Our target patient demographic (uninsured, lower-income) has 78% smartphone penetration but only 45% home internet. Mobile-first isn't a preference — it's a requirement.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Results & Learnings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Outcomes</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            The prototype is ready for pilot testing. Here are the success metrics we're targeting.
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">&lt;5 min</p>
+              <p className="text-gray-600 text-sm">Time to book first appointment</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">90%+</p>
+              <p className="text-gray-600 text-sm">Task completion rate</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">4.5/5</p>
+              <p className="text-gray-600 text-sm">Target satisfaction score</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">0</p>
+              <p className="text-gray-600 text-sm">Critical usability issues</p>
+            </div>
+          </div>
+          
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Validation Plan</p>
+            <div className="space-y-3 text-gray-600">
+              <p><span className="text-gray-900 font-medium">Phase 1:</span> Usability testing with 8-10 users from each persona group</p>
+              <p><span className="text-gray-900 font-medium">Phase 2:</span> Pilot launch at 2 partner dental schools</p>
+              <p><span className="text-gray-900 font-medium">Phase 3:</span> Iterate based on real usage data, then expand</p>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            This project pushed me to think deeply about designing for trust in healthcare contexts.
+          </p>
+          
+          <div className="space-y-6">
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">01</span> Simplicity scales</p>
+              <p className="text-gray-600 mt-1">The most powerful platforms do one thing exceptionally well. Versum Health's success will come from nailing the discovery-to-booking flow, not from feature bloat.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Healthcare + UX = Impact</p>
+              <p className="text-gray-600 mt-1">Thoughtful design makes healthcare feel accessible rather than intimidating. Every UI decision either builds or erodes trust.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Real problems, real solutions</p>
+              <p className="text-gray-600 mt-1">Building for a pain point I'd witnessed firsthand — friends avoiding dental care due to cost — led to solutions that resonated with every user I interviewed.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">04</span> Two-sided marketplaces are hard</p>
+              <p className="text-gray-600 mt-1">You need both sides to show up. The platform design must reduce friction for both patients AND students, or the marketplace never reaches critical mass.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Next Steps */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            The MVP is complete. Here's the roadmap for what comes next.
+          </p>
+          
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <div>
+                <p className="text-gray-900 font-medium">Supervisor Console</p>
+                <p className="text-gray-600 text-sm mt-1">Verification tools, bulk approvals, and compliance dashboards for clinic administrators.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <div>
+                <p className="text-gray-900 font-medium">Eligibility Screening</p>
+                <p className="text-gray-600 text-sm mt-1">Pre-visit questionnaires to match patients with appropriate procedure types and student skill levels.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <div>
+                <p className="text-gray-900 font-medium">Community Partner Integration</p>
+                <p className="text-gray-600 text-sm mt-1">Partnerships with community health centers and nonprofits to widen patient reach.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <div>
+                <p className="text-gray-900 font-medium">Expand to Other Specialties</p>
+                <p className="text-gray-600 text-sm mt-1">The model works for any healthcare training program — optometry, physical therapy, mental health counseling.</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Final Reflection */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Versum Health isn't just about booking appointments — it's about making healthcare accessible to everyone, regardless of insurance status.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the supervision acknowledgment flow to the mobile-first approach — was grounded in research and empathy.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Versum Health is now live at <a href="https://versumhealth.com/" target="_blank" rel="noopener noreferrer" className="text-[#C75B3B] hover:text-[#A84A2E] underline">versumhealth.com</a>, and I'm excited to measure its real-world impact on patients and students alike.
+          </p>
+          <a
+            href="https://versumhealth.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-[#C75B3B] hover:bg-[#A84A2E] text-white px-6 py-3 rounded-lg transition-colors font-medium"
+          >
+            <span>Visit Live Site</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </motion.div>
+      </section>
+
+      {/* Footer Navigation */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+        <div className="flex justify-between items-center">
+          <Link
+            href="/"
+            className="text-gray-600 hover:text-[#C75B3B] transition-colors flex items-center gap-2"
+          >
+            <span>←</span>
+            <span>Back to Home</span>
+          </Link>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-gray-600 hover:text-[#C75B3B] transition-colors"
+          >
+            Back to Top ↑
+          </button>
+        </div>
+      </section>
     </main>
   );
 }

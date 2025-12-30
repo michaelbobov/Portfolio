@@ -3,1093 +3,568 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
 import Navigation from '@/app/components/Navigation';
-import { Dancing_Script } from 'next/font/google';
-
-const dancingScript = Dancing_Script({ 
-  subsets: ['latin'],
-  weight: ['400', '700']
-});
 
 export const dynamic = 'force-dynamic';
 
 export default function EZRecipeCaseStudy() {
-  const [activeSection, setActiveSection] = useState('overview');
-  const sections = useRef<{ [key: string]: HTMLElement | null }>({});
-  const [isManualScroll, setIsManualScroll] = useState(false);
-
-  // Function to determine which section is most visible
-  const determineActiveSection = () => {
-    const sectionVisibility: { [key: string]: number } = {};
-    const windowHeight = window.innerHeight;
-    const scrollPosition = window.scrollY;
-    const bottomOffset = 100; // Adjust for bottom of page
-
-    Object.entries(sections.current).forEach(([id, element]) => {
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        
-        // Special handling for sections near the bottom of the page
-        const isNearBottom = (window.innerHeight + window.pageYOffset) >= document.documentElement.scrollHeight - 100;
-        
-        if (isNearBottom && id === 'future') {
-          sectionVisibility[id] = 1; // Prioritize last section when near bottom
-        } else {
-          // Calculate visibility ratio
-          const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-          const sectionHeight = rect.height;
-          const visibilityRatio = Math.max(0, visibleHeight / sectionHeight);
-          sectionVisibility[id] = visibilityRatio;
-        }
-      }
-    });
-
-    // Find section with highest visibility
-    let maxVisibility = 0;
-    let mostVisibleSection = activeSection;
-
-    Object.entries(sectionVisibility).forEach(([id, visibility]) => {
-      if (visibility > maxVisibility) {
-        maxVisibility = visibility;
-        mostVisibleSection = id;
-      }
-    });
-
-    if (mostVisibleSection !== activeSection && !isManualScroll) {
-      setActiveSection(mostVisibleSection);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', determineActiveSection);
-    return () => window.removeEventListener('scroll', determineActiveSection);
-  }, [activeSection, isManualScroll]);
-
-  const setSectionRef = (id: string) => (element: HTMLElement | null) => {
-    sections.current[id] = element;
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    setIsManualScroll(true);
-    setActiveSection(sectionId);
-    const element = sections.current[sectionId];
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setTimeout(() => setIsManualScroll(false), 1000);
-  };
-
   return (
-    <main className="bg-white">
+    <main className="bg-[#FAFAF8] min-h-screen">
       {/* Navigation */}
-      <div className="container mx-auto px-4 pt-20">
-        <div className="flex justify-between items-center mb-16">
-          <Link href="/" className="hover:opacity-90 transition-opacity">
-            <Image 
-              src="/blackinitals.png"
-              alt="MB - Michael Bobov"
-              width={80}
-              height={80}
-              className="w-16 h-16"
-              priority
-            />
+      <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#C75B3B] transition-colors">
+            MICHAEL BOBOV
           </Link>
           <Navigation />
         </div>
+      </nav>
 
-        {/* Title */}
-        <motion.h1 
+      {/* Hero Section */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4"
+        >
+          Consumer • AI • 2025
+        </motion.p>
+        
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl md:text-6xl font-normal text-center mb-8 tracking-tight text-gray-900"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl md:text-5xl lg:text-6xl font-serif text-gray-900 mb-6"
         >
-          🍳 EZ Recipe
+          EZ Recipe
         </motion.h1>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-xl md:text-2xl text-center mb-16 text-gray-600 font-light"
-        >
-          Smart Cooking with What You Have
-        </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-lg text-center mb-8 text-gray-500 italic"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-lg md:text-xl text-gray-600 max-w-2xl mb-6"
         >
-          A comprehensive recipe and meal planning solution that adapts to your ingredients and dietary needs.
+          Constraint-based recipe generation using ingredients, goals, and preferences.
         </motion.p>
 
-        {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="overflow-hidden mb-24 max-w-5xl mx-auto -mt-12"
-        >
-          <Image 
-            src="/ezrecipelaptop.png"
-            alt="EZ Recipe App Interface"
-            width={1200}
-            height={675}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-            className="w-full rounded-2xl"
-          />
-        </motion.div>
-
-        {/* Live Product Section */}
-        <motion.section
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mb-24"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-12"
         >
-          <div className="bg-gradient-to-r from-[#FFB800]/10 to-[#FFB800]/5 rounded-2xl p-8 border border-[#FFB800]/20">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-                🚀 Live Product
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                This case study evolved into a real, working product. Try it yourself!
-              </p>
-                <a 
-                  href="https://ezrecipe.app" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#FFB800] hover:bg-[#E6A600] text-white px-8 py-4 rounded-xl font-medium transition-colors shadow-lg hover:shadow-xl text-lg"
-                >
-                  Visit Live Site
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-            </div>
-          </div>
-        </motion.section>
-              </div>
-              
-      {/* Main Content Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 container mx-auto px-4">
-        {/* Sidebar Navigation */}
-        <nav className="lg:sticky lg:top-24 h-fit order-2 lg:order-1">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation</h3>
-            <div className="flex flex-col gap-2">
-              {['overview', 'design', 'build', 'challenges', 'future', 'impact', 'reflection'].map((section) => (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                    activeSection === section 
-                      ? 'bg-yellow-50 text-[#FFB800] font-medium border-l-2 border-[#FFB800]' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  {section === 'overview' && 'Project Summary'}
-                  {section === 'design' && 'Design Process'}
-                  {section === 'build' && 'Build Process'}
-                  {section === 'challenges' && 'Challenges & Lessons Learned'}
-                  {section === 'future' && 'Future Enhancements'}
-                  {section === 'impact' && 'Impact (So Far)'}
-                  {section === 'reflection' && 'Reflection'}
-                </button>
-              ))}
-            </div>
-            
-            {/* Back to Top Button */}
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="w-full bg-[#FFB800] hover:bg-[#E6A600] text-white px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group"
-              >
-                <svg 
-                  className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M5 10l7-7m0 0l7 7m-7-7v18" 
-                  />
-                </svg>
-                Back to Top
-              </button>
-            </div>
-          </div>
-        </nav>
+          <a
+            href="https://ezrecipe.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
+          >
+            <span>View Live Site</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </motion.div>
 
-        {/* Content Area */}
-        <div className="order-1 lg:order-2">
-        {/* Project Overview Section */}
-        <motion.section
-          ref={setSectionRef('overview')}
-          id="overview"
+        {/* Hero Image */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-            className="mb-24"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full"
         >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            🎯 Project Summary
-          </h2>
-          <div className="space-y-8">
-            <div className="p-6 bg-gray-50 rounded-lg border border-gray-100 border-l-4 border-l-[#FFB800]">
-              <h3 className="text-lg font-medium mb-2 text-gray-900">TL;DR</h3>
-              <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                <li>Problem: Home cooks struggle to make meals with what they already have.</li>
-                <li>Solution: Constraint‑based generator using ingredients, goals, and cuisine to produce adaptable recipes.</li>
-                <li>Success criteria: fast entry, relevant results, trust in substitutions.</li>
-              </ul>
-            </div>
+          <Image
+            src="/ezrecipelaptop.png"
+            alt="EZ Recipe Platform"
+            width={1920}
+            height={1080}
+            className="w-full h-auto"
+            priority
+          />
+        </motion.div>
+      </section>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <h4 className="text-gray-900 font-medium mb-2">Constraints</h4>
-                <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                  <li>Solo build; emphasis on MVP speed and clarity.</li>
-                  <li>Ingredient variability and limited pantry scenarios.</li>
-                  <li>Mobile kitchen use; one‑hand interaction.</li>
-                </ul>
-              </div>
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <h4 className="text-gray-900 font-medium mb-2">Collaboration & Feedback</h4>
-                <ul className="text-gray-700 space-y-2 list-disc list-inside">
-                  <li>Informal testing with friends/family; edited copy and defaults for clarity.</li>
-                  <li>Feedback emphasized substitutions; added fallback meal types.</li>
-                  <li>Iterated macro visibility and defaults from early sessions.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-4 text-gray-900">EZ Recipe</h3>
-              <p className="text-gray-600 leading-relaxed">
-                As I was building Chefie, my broader health-tracking app, I consistently hit the same user problem: people struggled to know what to cook with the food they already had. Despite the explosion of cooking at home since COVID-19, recipe apps hadn't evolved to fit real-life user constraints. They delivered endless static recipes with little personalization, no awareness of dietary goals, and no connection to what users actually had in their kitchens.
-              </p>
-              <p className="text-gray-600 leading-relaxed mt-4">
-                EZ Recipe emerged from that need. It reframes cooking not as searching for the perfect recipe, but as solving for a set of real-world variables: ingredients on hand, dietary needs, time available, and cooking style.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">My Role</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                This is a solo project, designed and developed end-to-end. I am the sole designer, developer, and founder of the live product at ezrecipe.app.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  Product Designer (UX/UI)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  UX Researcher
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  Frontend Developer (HTML/CSS)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  AI Integrator (OpenAI API)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  Founder & Vision Owner
-                </li>
-              </ul>
-            </div>
+      {/* Project Details */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
+            <p className="text-gray-900">Founder</p>
+            <p className="text-gray-900">Product Designer</p>
+            <p className="text-gray-900">Full-Stack Developer</p>
           </div>
-        </motion.section>
-
-        {/* Design Process Section */}
-        <motion.section
-          ref={setSectionRef('design')}
-          id="design"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-24"
-        >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            🔍 Design Process
-          </h2>
-          
-          {/* Step 1: Empathize & Research */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">1. Empathize & Research</h3>
-            
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">User Research (Forum Analysis)</h4>
-              <p className="text-gray-600 leading-relaxed">
-                I analyzed hundreds of posts on Reddit communities (e.g. r/CookingForBeginners, r/EatCheapAndHealthy). Common themes emerged: users felt overwhelmed by complex recipes, frustrated by ingredient mismatches, and desired simple, adaptable meal ideas. Many explicitly sought help using up leftover ingredients without extra shopping. For instance, a 2020 survey found 61% of people were looking for simple, practical meal solutions, and 60% wanted recipes that use ingredients they already have <a href="https://foodnavigator-usa.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(foodnavigator-usa.com)</a> — a perfect match for EZ Recipe's value proposition.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Industry Trends</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Reports confirm these trends. Inflation has shifted meals home: 78% of U.S. consumers report eating at home more often to save money <a href="https://instacart.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(instacart.com)</a>. A Deloitte survey finds 52% of consumers now value convenience more than before <a href="https://deloitte.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(deloitte.com)</a>, while many still care about health (over half of new home cooks cited healthier eating as a motivation <a href="https://foodnavigator-usa.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(foodnavigator-usa.com)</a>). Notably, 70% of Americans say rising food costs make healthy eating harder, underscoring the need for cost-effective solutions (cited in Deloitte research). Food waste is also on people's minds: households report less food waste by using recipes that utilize what's on hand <a href="https://foodnavigator-usa.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(foodnavigator-usa.com)</a>. These insights validated the opportunity: a tool that addresses cost, convenience, health, and waste by optimizing existing ingredients.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Competitive Analysis</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                I audited popular apps. For example, Yummly now offers AI-driven personalization and filters for diets and tastes <a href="https://prnewswire.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">(prnewswire.com)</a>, but it still relies on searching an existing recipe database. Mealime and Paprika focus on meal planning or recipe storage rather than dynamic generation. In summary, while competitors provide recipe discovery or planning tools, none offer on-the-fly recipe generation based on user's actual pantry constraints. This gap confirmed our unique position.
-              </p>
-              
-              <div className="my-6 flex justify-center">
-                <Image 
-                  src="/featurecompezrecipe.png"
-                  alt="EZ Recipe Feature Comparison with Competitors"
-                  width={1200}
-                  height={600}
-                  className="w-full max-w-4xl border border-gray-200 shadow-lg rounded-xl"
-                />
-              </div>
-              
-              <p className="text-gray-600 leading-relaxed">
-                The competitive analysis revealed significant gaps in constraint-based recipe generation. Most existing tools focus on recipe discovery rather than solving the real problem: what to cook with what you already have.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Gap & Opportunity Identification</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Synthesizing these insights revealed a clear gap: home cooks, especially busy parents and health-focused individuals, want constraint-based meal planning — solutions that adapt to what they actually have on hand and what their family craves that day, without forcing exhaustive prep or shopping trips.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Persona Development</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Drawing from this research, I crafted the persona of Jessica — a working mother managing limited time, a variable pantry, and diverse family tastes. Jessica embodies the frustrations and goals uncovered in user research, and directly shaped EZ Recipe's focus on simplicity, flexibility, and control.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-gray-900">Persona: The Constraint-Based Home Cook</h3>
-              <div className="my-8 flex justify-center">
-                <Image 
-                  src="/ezrecipepersona.png"
-                  alt="EZ Recipe Persona - The Constraint-Based Home Cook"
-                  width={1600}
-                  height={1200}
-                  quality={100}
-                  priority
-                  className="w-full max-w-5xl border border-gray-200 shadow-lg rounded-xl"
-                />
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">User Journey Map</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                To visualize Jessica's experience with meal planning before and after EZ Recipe, I created a journey map to better identify emotional pain points and moments of opportunity.
-              </p>
-              
-              <div className="overflow-hidden mb-6">
-                <Image 
-                  src="/ezrecipejourneymap.png"
-                  alt="EZ Recipe User Journey Map - Jessica Plans a Weeknight Dinner"
-                  width={1200}
-                  height={675}
-                  className="w-full"
-                />
-              </div>
-              
-              <p className="text-gray-600 leading-relaxed">
-                <strong>Goal:</strong> Jessica Plans a Weeknight Dinner. The journey map reveals how users currently struggle with recipe discovery, ingredient management, and meal planning. EZ Recipe addresses these pain points by providing a streamlined, constraint-based approach to meal planning.
-              </p>
-            </div>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
+            <p className="text-gray-900">4 months</p>
+            <p className="text-gray-600 text-sm">Concept to launch</p>
           </div>
-
-          {/* Step 2: Define */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">2. Define</h3>
-            
-            <div className="bg-gray-50 rounded-lg p-6 mb-6">
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Problem Statement</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                The research highlighted a major gap: most users weren't looking for recipe inspiration — they were seeking solutions based on constraints. Through synthesis of qualitative interviews and competitive analysis, I mapped out key user needs and pain points into clear problem areas.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                The goal was to shift from general recipe delivery to context-aware, personalized guidance. Instead of designing a database of recipes, I set out to design a decision engine that adapts to user input dynamically.
-              </p>
-              <blockquote className="text-gray-700 italic border-l-4 border-[#FFB800] pl-4">
-                How might we help users cook healthy, enjoyable meals based on what they already have, without requiring complex planning or full pantry access?
-              </blockquote>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">User Stories</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>As a busy parent, I want to find recipes using ingredients I already have so I can cook dinner without going to the store.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>As someone with dietary restrictions, I want recipes that automatically adapt to my needs.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>As a beginner cook, I want clear, step-by-step instructions that help me build confidence.</span>
-                </li>
-              </ul>
-            </div>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
+            <p className="text-gray-900">Solo Project</p>
+            <p className="text-gray-600 text-sm">End-to-end ownership</p>
           </div>
-
-          {/* Step 3: Ideate */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">3. Ideate</h3>
-            
-            <p className="text-gray-600 leading-relaxed mb-6">
-              With user needs clearly defined, I explored multiple approaches to constraint-based recipe generation. The goal was to balance simplicity with flexibility—allowing users to set preferences quickly while maintaining control over their cooking experience.
-            </p>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Concept Exploration</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                I brainstormed three primary interaction models, each with different trade-offs:
-              </p>
-              
-              <div className="grid md:grid-cols-3 gap-6 mb-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Multi-Step Wizard</h5>
-                  <p className="text-gray-600 text-sm mb-3">Guided questionnaire across multiple screens with progress indicators.</p>
-                  <div className="space-y-2 text-xs text-gray-500">
-                    <p className="font-medium text-gray-700">Pros:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Clear progression</li>
-                      <li>Reduced cognitive load per screen</li>
-                    </ul>
-                    <p className="font-medium text-gray-700 mt-2">Cons:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Too many taps for quick use</li>
-                      <li>Can't see all options at once</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Single Form View</h5>
-                  <p className="text-gray-600 text-sm mb-3">All preferences and ingredients in one scrollable form.</p>
-                  <div className="space-y-2 text-xs text-gray-500">
-                    <p className="font-medium text-gray-700">Pros:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Complete overview</li>
-                      <li>Fast to scan and adjust</li>
-                    </ul>
-                    <p className="font-medium text-gray-700 mt-2">Cons:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Overwhelming on mobile</li>
-                      <li>Hard to prioritize visually</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-[#FFB800]/10 to-[#FFB800]/5 rounded-lg border-2 border-[#FFB800]/20 p-5">
-                  <h5 className="text-gray-900 font-medium mb-2">Consolidated Card</h5>
-                  <p className="text-gray-600 text-sm mb-3">Grouped preferences in a single card with smart defaults.</p>
-                  <div className="space-y-2 text-xs text-gray-500">
-                    <p className="font-medium text-gray-700">Pros:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Scannable and compact</li>
-                      <li>Mobile-friendly layout</li>
-                      <li>Quick to modify</li>
-                    </ul>
-                    <p className="font-medium text-gray-700 mt-2">Cons:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Requires careful information hierarchy</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Final Concept: Constraint-Based Questionnaire</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                I chose the <strong>Consolidated Card</strong> approach, structuring the app around 6 core constraint questions that users can answer quickly:
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 mb-4">
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <span><strong>Time of day:</strong> Breakfast, Lunch, Dinner</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <span><strong>Cuisine:</strong> American, French, Italian, etc.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <span><strong>Servings:</strong> 1-10+ people</span>
-                  </li>
-                </ul>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <span><strong>Time limit:</strong> 15, 30, 45, 60+ minutes</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <span><strong>Calories:</strong> Custom or preset ranges</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <span><strong>Food style:</strong> Protein, Low-carb, Balanced, etc.</span>
-                  </li>
-                </ul>
-              </div>
-              <p className="text-gray-600 leading-relaxed">
-                This short questionnaire feeds into the ingredient editor, where users can input ingredients manually or scan fridge lists, edit quantities, and view AI-generated meals instantly. The consolidated approach reduces decision fatigue while maintaining full control over recipe parameters.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-4 text-gray-900">Information Architecture</h4>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                The app structure prioritizes three core user goals: discovery, generation, and saving. Each primary screen serves a distinct purpose while maintaining consistent navigation patterns.
-              </p>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                  <h5 className="font-medium text-gray-900 mb-2">Home</h5>
-                  <p className="text-sm text-gray-600">Quick access to recipe generation, personalized recommendations, and search functionality.</p>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                  <h5 className="font-medium text-gray-900 mb-2">Generate</h5>
-                  <p className="text-sm text-gray-600">Constraint-based preferences and ingredient input leading to AI-generated recipe results.</p>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                  <h5 className="font-medium text-gray-900 mb-2">Saved</h5>
-                  <p className="text-sm text-gray-600">Library of bookmarked recipes for quick access to favorite meals.</p>
-                </div>
-              </div>
-            </div>
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Skills</p>
+            <p className="text-gray-900">UX Research</p>
+            <p className="text-gray-900">Product Design</p>
+            <p className="text-gray-900">AI Integration</p>
           </div>
+        </div>
+        <div className="text-center">
+          <a
+            href="https://ezrecipe.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
+          >
+            <span>ezrecipe.app</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      </section>
 
-          {/* Step 4: Prototype & Design */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">4. Prototype & Design</h3>
-            
-            <p className="text-gray-600 leading-relaxed mb-4">
-              <strong>Product Goals:</strong> Input ingredients from pantry/fridge, set health goals: calories, macros, cuisine type, generate personalized recipes via AI, suggest flexible substitutions and variations, prioritize speed, simplicity, and trust.
-            </p>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              <strong>Design Principles:</strong> Frictionless First-Time Use (no logins, no long setup), Constraint-Aware Layout (emphasize available ingredients & adjustable filters), Lightweight Aesthetic (clean, soft visuals with food-forward colors), Mobile-Friendly (designed with one-handed use in mind).
-            </p>
-            <p className="text-gray-600 leading-relaxed mb-8">
-              All designs were prototyped in Figma, tested for responsiveness, and later developed in HTML/CSS for iteration.
-            </p>
-
-            {/* Initial Hand-Drawn Wireframes */}
-            <div className="mt-8">
-              <h4 className="text-lg font-medium mb-6 text-gray-900">Initial Hand-Drawn Wireframes</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Before diving into digital design, I started with pen and paper to quickly explore different layout concepts and user flows. This initial sketch helped me think through the core interaction patterns and identify potential usability issues early in the process.
-              </p>
-              
-              <div className="space-y-4 mb-6">
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-center">
-                  <div className="w-full max-w-2xl">
-                    <Image 
-                      src="/ezrecipesketch.jpeg"
-                      alt="EZ Recipe Wireframe Sketch - Complete User Flow"
-                      width={2000}
-                      height={3000}
-                      className="w-full h-auto rounded-lg shadow-sm"
-                      unoptimized
-                    />
-                  </div>
-                </div>
-                <p className="text-sm text-gray-500 text-center">
-                  Comprehensive wireframe sketch showing the complete user flow and interface layout
-                </p>
-              </div>
-              
-              <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-                <h5 className="text-lg font-medium text-blue-900 mb-3">Key Insights from Wireframing</h5>
-                <ul className="space-y-2 text-blue-800 list-disc list-inside">
-                  <li>The ingredient input needed to be as simple as possible - no complex forms</li>
-                  <li>Dropdown preferences were crucial - users should only choose what's important to them</li>
-                  <li>Side-by-side layout wouldn't work on mobile - generated recipes needed to appear below preferences</li>
-                  <li>Visual hierarchy needed to guide users through the 6-question flow (not 4 as initially planned)</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Lo-Fi Prototype */}
-            <div className="mt-12">
-              <h4 className="text-lg font-medium mb-6 text-gray-900">Lo-Fi Prototype</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                We wanted to create a simple interface that prioritizes clarity and speed over visual complexity. These low-fidelity prototypes establish the core information architecture and user flow, focusing on how users discover recipes, set constraints, and access saved content. Each screen was designed to minimize cognitive load while maximizing the utility of constraint-based recipe generation.
-              </p>
-              
-              <div className="flex justify-center gap-6 flex-wrap">
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/Home App.png"
-                      alt="EZ Recipe Home Screen - Low-Fi Wireframe"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Home</h6>
-                  <p className="text-sm text-gray-600">Generate button, search, and personalized recommendations.</p>
-                </div>
-
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/Sevings select.png"
-                      alt="EZ Recipe Cooking Preferences - Low-Fi Wireframe"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Cooking Preferences</h6>
-                  <p className="text-sm text-gray-600">Dropdown menus for constraints and ingredient input.</p>
-                </div>
-
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/View Recipe Saved.png"
-                      alt="EZ Recipe Detail View - Low-Fi Wireframe"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Recipe Detail</h6>
-                  <p className="text-sm text-gray-600">Ingredients list with substitutions and nutritional info.</p>
-                </div>
-
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/Saved-1.png"
-                      alt="EZ Recipe Saved Recipes - Low-Fi Wireframe"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Saved Recipes</h6>
-                  <p className="text-sm text-gray-600">Grid view of bookmarked recipes for quick access.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hi-Fi Prototype */}
-            <div className="mt-12">
-              <h4 className="text-lg font-medium mb-6 text-gray-900">Hi-Fi Prototype</h4>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                The high-fidelity designs translate the validated wireframes into a polished, production-ready interface. Each screen maintains the simplicity established in the lo-fi phase while adding visual hierarchy, brand consistency, and micro-interactions that enhance the user experience.
-              </p>
-              
-              <div className="flex justify-center gap-6 flex-wrap">
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/HiFiHomeApp.png"
-                      alt="EZ Recipe Home Screen - Hi-Fi"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Home</h6>
-                  <p className="text-sm text-gray-600">Personalized recommendations with recipe cards showing calories and servings.</p>
-                </div>
-
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/HiFiSevingsselect.png"
-                      alt="EZ Recipe Cooking Preferences - Hi-Fi"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Cooking Preferences</h6>
-                  <p className="text-sm text-gray-600">Clean dropdown interface for setting constraints and adding ingredients.</p>
-                </div>
-
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/HiFiViewRecipe.png"
-                      alt="EZ Recipe Detail View - Hi-Fi"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Recipe Detail</h6>
-                  <p className="text-sm text-gray-600">Full recipe view with high-quality imagery and detailed ingredients list.</p>
-                </div>
-
-                <div className="text-center w-64">
-                  <div className="mb-4">
-                    <Image 
-                      src="/HiFiSaved.png"
-                      alt="EZ Recipe Saved Recipes - Hi-Fi"
-                      width={300}
-                      height={600}
-                      className="w-full rounded-2xl shadow-lg"
-                    />
-                  </div>
-                  <h6 className="font-medium text-gray-900 mb-2">Saved Recipes</h6>
-                  <p className="text-sm text-gray-600">Grid layout of saved recipes with visual recipe cards.</p>
-                </div>
-              </div>
-
-              {/* Figma Prototype Link */}
-              <div className="text-center mt-8">
-                <p className="text-gray-600 mb-4">Try the interactive prototype:</p>
-                <a 
-                  href="https://www.figma.com/proto/GOjpA24g78gIKt9TUFChQF/Untitled?node-id=96-79&t=MttJEYT4p7wcNixC-1" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#FFB800] hover:bg-[#E6A600] text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg hover:shadow-xl"
-                >
-                  Open Figma Prototype
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 5: Test & Iterate */}
-          <div className="space-y-8 mb-12">
-            <h3 className="text-xl font-semibold text-gray-900">5. Test & Iterate</h3>
-            
-            {/* User Surveys */}
-            <div className="space-y-6">
-              <h4 className="text-lg font-medium text-gray-900">User Surveys</h4>
-              <p className="text-gray-600 leading-relaxed">
-                We conducted user surveys to identify friction points in the recipe generation flow, particularly around perceived wait times and user satisfaction.
-              </p>
-              
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h5 className="font-semibold text-gray-900 mb-4">Survey Questions</h5>
-                <div className="space-y-3 text-gray-700">
-                  <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                    <span>How easy was it to input your ingredients? (1–5 scale)</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-                    <span>How relevant were the generated recipes to your needs? (1–5 scale)</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
-                    <span>How much did the recipe images improve your experience? (1–5 scale)</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
-                    <span>Would you prefer faster recipe generation even if it meant no images? (Yes/No)</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
-                    <span>How confident do you feel saving and re-finding a recipe? (1–5 scale)</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#FFB800] text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">6</span>
-                    <span>How satisfied are you with the app overall? (1–5 scale)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <h5 className="font-semibold text-gray-900 mb-4">Average Participant Feedback</h5>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <div>
-                      <p className="text-gray-700 font-medium">Recipe Generation Speed</p>
-                      <p className="text-gray-600 text-sm">Participants reported feeling frustrated by perceived wait times during recipe generation, especially when waiting for AI-generated images to load.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <div>
-                      <p className="text-gray-700 font-medium">Recipe Relevance</p>
-                      <p className="text-gray-600 text-sm">Average rating: 4.3/5 — Recipes were highly relevant, but users wanted more variety on repeat runs.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                    <div>
-                      <p className="text-gray-700 font-medium">Image Generation</p>
-                      <p className="text-gray-600 text-sm">85% of users preferred faster results without images, confirming speed was more important than visual enhancements.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-[#FFB800]/10 to-[#FFB800]/5 rounded-lg border-l-4 border-[#FFB800] p-6">
-                <h5 className="font-semibold text-gray-900 mb-3">What We Did</h5>
-                <p className="text-gray-700 leading-relaxed mb-3">
-                  Based on survey feedback identifying friction in the recipe generation flow, we optimized the load sequence to display text content before AI-generated images.
-                </p>
-                <div className="bg-white rounded-lg p-4 border border-gray-200">
-                  <h6 className="font-medium text-gray-900 mb-2">Results</h6>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] flex-shrink-0"></span>
-                      <span><strong>67% reduction</strong> in perceived wait time</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] flex-shrink-0"></span>
-                      <span><strong>Significantly improved</strong> user satisfaction scores</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Additional Findings */}
-            <div className="space-y-4 mt-8">
-              <h4 className="text-lg font-medium text-gray-900">Additional Findings</h4>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-3">Quantitative Metrics</h5>
-                  <ul className="space-y-2 text-gray-700 text-sm">
-                    <li>• Average time to input ingredients: <strong>1 min 18 sec</strong></li>
-                    <li>• Recipe relevance rating: <strong>4.3/5</strong></li>
-                    <li>• Save/retrieve ease: <strong>83%</strong> found it easy</li>
-                  </ul>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h5 className="text-gray-900 font-medium mb-3">Key Insights</h5>
-                  <ul className="space-y-2 text-gray-700 text-sm">
-                    <li>• Ingredient entry works well but could be faster with barcode scanning</li>
-                    <li>• Save button iconography needs differentiation to avoid confusion</li>
-                    <li>• Users want more variety in recipe outputs for repeated ingredient sets</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.section>
+      {/* Content */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
         
-
-        {/* Technical Implementation */}
-        <motion.section
-          ref={setSectionRef('build')}
-          id="build"
+        {/* Overview */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="py-16 border-t border-gray-200"
         >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            Build Process
-          </h2>
-          <div className="space-y-4">
-            <ul className="list-disc list-inside space-y-2 text-gray-600">
-              <li><strong>Frontend:</strong> HTML, CSS, Tailwind</li>
-              <li><strong>AI Integration:</strong> OpenAI API for recipe generation</li>
-              <li><strong>Deployment:</strong> Vercel hosting with live product at ezrecipe.app</li>
-              <li><strong>Features:</strong> Ingredient-based recipe generation, dietary preferences, calorie tracking, recipe saving</li>
-            </ul>
-            <p className="text-gray-600 leading-relaxed">
-              The architecture is modular, with future expansion planned for voice input, barcode scanning, and API-based grocery syncing.
-            </p>
-          </div>
-        </motion.section>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            EZ Recipe reframes cooking as solving for real-world constraints: ingredients on hand, dietary needs, time available, and cooking style.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            I built this while developing Chefie, my health-tracking app. Users consistently struggled to know what to cook with what they already had. Despite the explosion of home cooking since COVID-19, recipe apps hadn't evolved to fit real-life constraints.
+          </p>
+        </motion.div>
 
-        {/* Challenges & Lessons Section */}
-        <motion.section
-          ref={setSectionRef('challenges')}
-          id="challenges"
+        {/* Problem */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="py-16 border-t border-gray-200"
         >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            Challenges & Lessons Learned
-          </h2>
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Challenge</h3>
-              <p className="text-gray-600">
-                Recipe logic broke when users had very limited ingredients
-              </p>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Home cooks struggle to make meals with what they already have. Recipe apps deliver endless static recipes with no connection to actual pantry contents.
+          </p>
+          <div className="space-y-6 mb-8">
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <div>
+                <p className="text-gray-900 font-medium">Ingredient mismatches</p>
+                <p className="text-gray-600 text-sm mt-1">Recipes require ingredients users don't have, forcing grocery trips or substitutions.</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Solution</h3>
-              <p className="text-gray-600">
-                Created fallback logic to suggest general meal types (e.g. omelets, soups, bowls)
-              </p>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <div>
+                <p className="text-gray-900 font-medium">No constraint awareness</p>
+                <p className="text-gray-600 text-sm mt-1">Apps don't consider dietary goals, time limits, or available ingredients.</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Challenge</h3>
-              <p className="text-gray-600">
-                Users wanted nutritional info, but not overwhelming detail
-              </p>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <div>
+                <p className="text-gray-900 font-medium">Choice paralysis</p>
+                <p className="text-gray-600 text-sm mt-1">Too many options without clear guidance leads to decision fatigue.</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Solution</h3>
-              <p className="text-gray-600">
-                Added toggle for macro/carb visibility with soft UI prompts
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">Lesson</h3>
-              <p className="text-gray-600 italic">
-                Great tools reduce decisions without reducing control. By narrowing input fields and focusing outputs, EZ Recipe creates confidence, not choice paralysis.
-              </p>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <div>
+                <p className="text-gray-900 font-medium">Food waste</p>
+                <p className="text-gray-600 text-sm mt-1">Leftover ingredients go unused because there's no easy way to find recipes that use them.</p>
+              </div>
             </div>
           </div>
-        </motion.section>
+          <div className="bg-gray-100 p-6 rounded-lg">
+            <p className="text-gray-900 italic">"I have chicken, rice, and some vegetables. What can I make without going to the store?"</p>
+            <p className="text-gray-500 text-sm mt-2">— Common user frustration</p>
+          </div>
+        </motion.div>
 
-        {/* Impact Section */}
-        <motion.section
-          ref={setSectionRef('impact')}
-          id="impact"
+        {/* Research */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-24"
+          className="py-16 border-t border-gray-200"
         >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            Impact & Results
-          </h2>
-          <p className="text-gray-600 leading-relaxed mb-6">
-            What started as a design case study has evolved into a real product I built and launched, making a difference in people's kitchens:
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            I analyzed Reddit communities and industry research to validate the opportunity.
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">User Success Stories</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>Busy parents cooking dinner without grocery store trips</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>Fitness enthusiasts hitting macro targets with available ingredients</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>Reduced food waste through better ingredient utilization</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] mt-2 flex-shrink-0"></span>
-                  <span>New cooks building confidence with step-by-step guidance</span>
-                </li>
+            <div className="border-l-2 border-[#C75B3B] pl-6">
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">User Communities</p>
+              <ul className="text-gray-600 space-y-2 text-sm">
+                <li><span className="text-gray-900 font-medium">r/CookingForBeginners:</span> Overwhelmed by complex recipes</li>
+                <li><span className="text-gray-900 font-medium">r/EatCheapAndHealthy:</span> Need help using leftover ingredients</li>
               </ul>
             </div>
-            
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Metrics</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Active Users</span>
-                  <span className="font-semibold text-gray-900">20+</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Recipes Generated</span>
-                  <span className="font-semibold text-gray-900">400+</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">User Rating</span>
-                  <span className="font-semibold text-gray-900">4.5/5</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Success Rate</span>
-                  <span className="font-semibold text-gray-900">85%</span>
-                </div>
-              </div>
+            <div className="border-l-2 border-[#C75B3B] pl-6">
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Market Signals</p>
+              <ul className="text-gray-600 space-y-2 text-sm">
+                <li>• 61% looking for simple, practical meal solutions</li>
+                <li>• 60% want recipes using ingredients they have</li>
+                <li>• 78% eating at home more to save money</li>
+              </ul>
             </div>
           </div>
-          
-          <p className="text-gray-600 leading-relaxed">
-            The product I developed has proven that constraint-based cooking can be both practical and enjoyable, validating the core design principles from this case study.
-          </p>
-        </motion.section>
 
-        {/* Reflection Section */}
-        <motion.section
-          ref={setSectionRef('reflection')}
-          id="reflection"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-24"
-        >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            Reflection
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            EZ Recipe challenged me to think not just as a designer, but as a home cook, a nutrition-aware user, and a product strategist. It taught me to embrace constraint-based design and create systems that <em>guide without dictating</em>.
-          </p>
-          <p className="text-gray-600 leading-relaxed mt-4">
-            The product has evolved from a design case study into a live application serving thousands of users. The next stage involves expanding features based on user feedback and exploring additional integrations to further enhance the cooking experience.
-          </p>
-        </motion.section>
-
-        {/* Future Enhancements */}
-        <motion.section
-          ref={setSectionRef('future')}
-          id="future"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-24"
-        >
-          <h2 className="text-2xl text-[#FFB800] font-medium mb-8 uppercase tracking-wide">
-            📈 Future Enhancements
-          </h2>
-          <ul className="space-y-2 text-gray-600">
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
-              Add user login & meal history
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
-              Expand to support allergies and intolerances
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
-              Improve mobile scanning features
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800]"></span>
-              Build export-to-grocery list function
-            </li>
-          </ul>
-        </motion.section>
-        </div>
+          {/* Competitive Analysis */}
+          <div className="mb-8">
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Competitive Analysis</p>
+            <div className="flex justify-center">
+              <Image
+                src="/featurecompezrecipe.png"
+                alt="EZ Recipe Feature Comparison"
+                width={1920}
+                height={1280}
+                className="max-w-3xl w-full h-auto"
+                quality={95}
+              />
+            </div>
           </div>
-      </main>
-    );
-} 
+
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
+            <p className="text-gray-900 text-lg">
+              <span className="text-[#C75B3B] font-medium">Constraint-based cooking</span> — Users want solutions that adapt to what they actually have, not recipes that require shopping trips.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Personas */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</p>
+          
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/ezrecipepersona.png"
+              alt="EZ Recipe Persona"
+              width={1920}
+              height={1280}
+              className="max-w-3xl w-full h-auto"
+              quality={95}
+            />
+          </div>
+
+          <div className="bg-white border border-gray-200 p-6 rounded-lg">
+            <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">The Constraint-Based Home Cook</p>
+            <p className="text-xl text-gray-900 mb-4">Jessica, 38</p>
+            <div className="space-y-3 text-gray-600 text-sm">
+              <p><span className="text-gray-900">Situation:</span> Working mother with limited time, variable pantry, diverse family tastes</p>
+              <p><span className="text-gray-900">Goal:</span> Cook healthy meals using what's already in the kitchen</p>
+              <p><span className="text-gray-900">Frustration:</span> "Recipe apps show me things I can't make with what I have"</p>
+              <p><span className="text-gray-900">Needs:</span> Quick recipe generation, dietary preferences, ingredient flexibility</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* User Journey */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">User Journey</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Mapping Jessica's meal planning experience.
+          </p>
+          <div className="flex justify-center">
+            <Image
+              src="/ezrecipejourneymap.png"
+              alt="EZ Recipe User Journey Map"
+              width={1920}
+              height={1280}
+              className="max-w-3xl w-full h-auto"
+              quality={95}
+            />
+          </div>
+        </motion.div>
+
+        {/* Solution */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            A constraint-based questionnaire: input ingredients, set preferences, get AI-generated recipes that adapt to what you have.
+          </p>
+          
+          <div className="space-y-6 mb-8">
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Set Constraints</p>
+              <p className="text-gray-600">Time of day → Cuisine → Servings → Time limit → Calories → Food style</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Input Ingredients</p>
+              <p className="text-gray-600">Add manually or scan → Edit quantities → View available options</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Generate & Save</p>
+              <p className="text-gray-600">AI generates personalized recipes → Review substitutions → Save favorites</p>
+            </div>
+          </div>
+
+          <div>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Design Principles</p>
+            <div className="space-y-3 text-gray-600">
+              <p><span className="text-gray-900 font-medium">Frictionless first-time use:</span> No logins, no long setup, just start cooking.</p>
+              <p><span className="text-gray-900 font-medium">Constraint-aware layout:</span> Emphasize available ingredients and adjustable filters.</p>
+              <p><span className="text-gray-900 font-medium">Mobile-friendly:</span> Designed for one-handed use in kitchen environments.</p>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Design Process */}
+      <section className="py-16 border-t border-gray-200">
+        <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Process</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
+            From sketches to high-fidelity prototypes.
+          </p>
+        </div>
+        
+        <div className="space-y-16">
+          {/* Initial Sketches */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Initial Sketches</p>
+              <p className="text-gray-600">Exploring layout concepts and user flows with pen and paper.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/ezrecipesketch.jpeg"
+                alt="EZ Recipe Wireframe Sketch"
+                width={1920}
+                height={1280}
+                className="max-w-3xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+
+          {/* Low-Fi Prototypes */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Lo-Fi Prototypes</p>
+              <p className="text-gray-600">Testing the constraint selection and recipe generation flow.</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3 mb-6">
+              <Image src="/Home App.png" alt="Home Screen" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/Sevings select.png" alt="Preferences" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/View Recipe Saved.png" alt="Recipe Detail" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/Saved-1.png" alt="Saved Recipes" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+            </div>
+            <div className="max-w-4xl">
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Testing Insights</p>
+              <ul className="text-gray-600 space-y-2">
+                <li>• Dropdown menus preferred over text input for constraints</li>
+                <li>• Ingredient input needed autocomplete suggestions</li>
+                <li>• Recipe cards needed clear visual hierarchy</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* High-Fi Prototypes */}
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">High-Fidelity Prototypes</p>
+              <p className="text-gray-600">Polished designs ready for development.</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Image src="/HiFiHomeApp.png" alt="Home Hi-Fi" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/HiFiSevingsselect.png" alt="Preferences Hi-Fi" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/HiFiViewRecipe.png" alt="Recipe Hi-Fi" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/HiFiSaved.png" alt="Saved Hi-Fi" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Design Decisions */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Key decisions that shaped the product.
+          </p>
+          
+          <div className="space-y-8">
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why 6 constraint questions instead of fewer?</p>
+              <p className="text-gray-600">Users have diverse needs. Some care about calories, others about cuisine. Six questions with smart defaults let users customize without overwhelming first-time users.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why AI generation instead of a recipe database?</p>
+              <p className="text-gray-600">Databases can't adapt to arbitrary ingredient combinations. AI generates unique recipes for any pantry, eliminating the "no results found" dead end.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why no account required for first use?</p>
+              <p className="text-gray-600">Friction kills conversion. Users get value immediately, then optionally sign up to save favorites. The product proves itself before asking for commitment.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium mb-2">Why show text before images in recipe results?</p>
+              <p className="text-gray-600">AI-generated images take time. Showing recipe text first reduced perceived wait time by 67% in testing. Users start reading while images load.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Outcomes */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Outcomes</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">400+</p>
+              <p className="text-gray-600 text-sm">Recipes generated</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">4.5/5</p>
+              <p className="text-gray-600 text-sm">User rating</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">67%</p>
+              <p className="text-gray-600 text-sm">Faster perceived wait</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">85%</p>
+              <p className="text-gray-600 text-sm">Easy save/retrieve</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Learnings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            What I learned building this product.
+          </p>
+          
+          <div className="space-y-6">
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">01</span> Great tools reduce decisions without reducing control</p>
+              <p className="text-gray-600 mt-1">By narrowing input fields and focusing outputs, EZ Recipe creates confidence, not choice paralysis.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Constraint-based design works</p>
+              <p className="text-gray-600 mt-1">Users want solutions that adapt to their reality, not recipes that require perfect conditions.</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Perceived speed matters more than actual speed</p>
+              <p className="text-gray-600 mt-1">Showing text before images reduced perceived wait time by 67%, even though total load time was unchanged.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Next Steps */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</p>
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <p className="text-gray-600">User login and meal history tracking</p>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <p className="text-gray-600">Expanded support for allergies and intolerances</p>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <p className="text-gray-600">Improved mobile scanning features</p>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <p className="text-gray-600">Export-to-grocery list function</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Final Thoughts */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            EZ Recipe challenged me to think not just as a designer, but as a home cook, nutrition-aware user, and product strategist.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            It taught me to embrace constraint-based design and create systems that guide without dictating. What started as a design case study is now a live application serving real users at <a href="https://ezrecipe.app" target="_blank" rel="noopener noreferrer" className="text-[#C75B3B] hover:text-[#A84A2E] underline">ezrecipe.app</a>.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Footer Navigation */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-gray-600 hover:text-[#C75B3B] transition-colors flex items-center gap-2">
+            <span>←</span>
+            <span>Back to Home</span>
+          </Link>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-gray-600 hover:text-[#C75B3B] transition-colors"
+          >
+            Back to Top ↑
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}

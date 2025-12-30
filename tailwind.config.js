@@ -9,8 +9,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)'],
-        brush: ['var(--font-brush)'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-playfair)', 'Georgia', 'serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+        handwriting: ['var(--font-caveat)', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
