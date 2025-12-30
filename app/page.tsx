@@ -241,9 +241,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="-mt-16 lg:-mt-20 flex justify-center lg:justify-end items-start lg:mr-[-40px]"
+            className="-mt-16 lg:-mt-20 flex justify-center lg:justify-start items-start lg:ml-8"
           >
-            <div className="relative">
+            <Link 
+              href="/me"
+              className="relative block"
+            >
               <Image
                 src={isHovered ? "/postitbend.png" : "/stickynote.png"}
                 alt="Sticky Note"
@@ -278,7 +281,7 @@ export default function Home() {
                 src="/sounds/Book Page Turn Flip Sound Effect.mp3"
                 preload="auto"
               />
-            </div>
+            </Link>
           </motion.div>
         </div>
       </section>
