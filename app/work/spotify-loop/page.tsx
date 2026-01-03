@@ -31,7 +31,7 @@ export default function SpotifyLoopCaseStudy() {
           Mobile • Feature Design • 2025
         </motion.p>
         
-        <motion.h1
+        <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -40,7 +40,7 @@ export default function SpotifyLoopCaseStudy() {
           Spotify Loop
         </motion.h1>
 
-        <motion.p
+        <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -61,13 +61,13 @@ export default function SpotifyLoopCaseStudy() {
         </motion.div>
 
         {/* Hero Image */}
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="w-full"
         >
-          <Image
+          <Image 
             src="/spotifyloopmockup.png"
             alt="Spotify Loop Interface"
             width={1920}
@@ -85,17 +85,17 @@ export default function SpotifyLoopCaseStudy() {
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
             <p className="text-gray-900">Product Designer</p>
             <p className="text-gray-900">UX Researcher</p>
-          </div>
+      </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
             <p className="text-gray-900">2 months</p>
             <p className="text-gray-600 text-sm">Concept to prototype</p>
-          </div>
+            </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
             <p className="text-gray-900">Solo Project</p>
             <p className="text-gray-600 text-sm">Self-initiated</p>
-          </div>
+            </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Skills</p>
             <p className="text-gray-900">UX Research</p>
@@ -107,7 +107,7 @@ export default function SpotifyLoopCaseStudy() {
 
       {/* Content */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
-        
+
         {/* Overview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -120,9 +120,9 @@ export default function SpotifyLoopCaseStudy() {
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Spotify Loop adds native segment looping to Spotify. Set start and end points, replay that moment on repeat.
           </p>
-          <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed">
             Perfect for learning lyrics, practicing instruments, or simply enjoying your favorite parts of a song. This exploratory UX case study focuses on enhancing user interaction for listeners who obsess over hooks, breakdowns, and instrumental sections.
-          </p>
+              </p>
         </motion.div>
 
         {/* Problem */}
@@ -147,17 +147,17 @@ export default function SpotifyLoopCaseStudy() {
             </div>
             <div className="flex gap-4">
               <span className="text-[#C75B3B] font-mono text-sm">02</span>
-              <div>
+            <div>
                 <p className="text-gray-900 font-medium">Imprecise scrubbing</p>
                 <p className="text-gray-600 text-sm mt-1">Manually scrubbing back and forth is tedious and inaccurate, especially on mobile.</p>
               </div>
             </div>
             <div className="flex gap-4">
               <span className="text-[#C75B3B] font-mono text-sm">03</span>
-              <div>
+            <div>
                 <p className="text-gray-900 font-medium">Fragmented experience</p>
                 <p className="text-gray-600 text-sm mt-1">App-switching disrupts listening and requires managing multiple tools.</p>
-              </div>
+            </div>
             </div>
           </div>
           <div className="bg-gray-100 p-6 rounded-lg">
@@ -195,16 +195,16 @@ export default function SpotifyLoopCaseStudy() {
                 <li>• 41% need extra tools for segment replay</li>
                 <li>• Moises.ai and AudioStretch have millions of users</li>
                 <li>• YouTube Looper: 500K+ weekly users</li>
-              </ul>
+                </ul>
+              </div>
             </div>
-          </div>
 
-          <div>
+            <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
             <p className="text-gray-900 text-lg">
               <span className="text-[#C75B3B] font-medium">Integration gap</span> — No reviewed tools work natively inside Spotify's mobile player, forcing app-switching or desktop-only workflows.
-            </p>
-          </div>
+                </p>
+              </div>
         </motion.div>
 
         {/* User Journey */}
@@ -218,17 +218,17 @@ export default function SpotifyLoopCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">User Journey</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Mapping emotional pain points and moments of opportunity.
-          </p>
+              </p>
           <div className="flex justify-center">
-            <Image
-              src="/spotifyloopjourney.png"
-              alt="Spotify Loop User Journey Map"
+                <Image 
+                  src="/spotifyloopjourney.png"
+                  alt="Spotify Loop User Journey Map"
               width={1920}
               height={1280}
               className="max-w-3xl w-full h-auto"
               quality={95}
-            />
-          </div>
+                />
+              </div>
         </motion.div>
 
         {/* Solution */}
@@ -258,7 +258,7 @@ export default function SpotifyLoopCaseStudy() {
               />
             </div>
           </div>
-          
+
           <div className="space-y-6 mb-8">
             <div>
               <p className="text-gray-900 font-medium mb-2">Set Loop Points</p>
@@ -291,9 +291,9 @@ export default function SpotifyLoopCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Process</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
             From low-fidelity wireframes to polished prototypes.
-          </p>
-        </div>
-        
+              </p>
+            </div>
+
         <div className="space-y-16">
           {/* Low-Fi Prototype */}
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
@@ -302,15 +302,15 @@ export default function SpotifyLoopCaseStudy() {
               <p className="text-gray-600">Testing loop creation, visual feedback, and control placement.</p>
             </div>
             <div className="flex justify-center mb-6">
-              <Image
-                src="/looplowfi.png"
+                <Image
+                  src="/looplowfi.png"
                 alt="Spotify Loop Low-Fi Prototype"
                 width={1920}
                 height={1280}
                 className="max-w-3xl w-full h-auto"
                 quality={95}
-              />
-            </div>
+                />
+              </div>
             <div className="max-w-4xl">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Testing Insights</p>
               <ul className="text-gray-600 space-y-2">
@@ -318,8 +318,8 @@ export default function SpotifyLoopCaseStudy() {
                 <li>• Subtle highlight band best for showing looped segment</li>
                 <li>• Swipe-up drawer kept controls discoverable but minimal</li>
               </ul>
-            </div>
-          </div>
+                </div>
+              </div>
 
           {/* High-Fi Screens */}
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
@@ -350,14 +350,14 @@ export default function SpotifyLoopCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Key decisions that shaped the feature.
-          </p>
-          
-          <div className="space-y-8">
-            <div>
+              </p>
+              
+              <div className="space-y-8">
+                <div>
               <p className="text-gray-900 font-medium mb-2">Why tap-to-set instead of waveform selection?</p>
               <p className="text-gray-600">Waveforms are powerful but complex. Tap-to-set mirrors the familiar progress bar interaction users already know. It's simple, scalable, and works on small mobile screens.</p>
-            </div>
-            <div>
+              </div>
+                <div>
               <p className="text-gray-900 font-medium mb-2">Why a swipe-up drawer for controls?</p>
               <p className="text-gray-600">Loop controls must be accessible but not intrusive. A drawer preserves Spotify's minimal aesthetic while keeping the feature discoverable for power users.</p>
             </div>
@@ -385,11 +385,11 @@ export default function SpotifyLoopCaseStudy() {
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">&lt;5s</p>
               <p className="text-gray-600 text-sm">Feature discovery time</p>
-            </div>
+              </div>
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">2 taps</p>
               <p className="text-gray-600 text-sm">Loop creation</p>
-            </div>
+              </div>
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">90%+</p>
               <p className="text-gray-600 text-sm">Target task completion</p>
@@ -494,4 +494,4 @@ export default function SpotifyLoopCaseStudy() {
       </section>
     </main>
   );
-}
+} 

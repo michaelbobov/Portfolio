@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 export default function MePage() {
   useEffect(() => {
     // Redirect to the external site
-    window.location.href = 'https://mishaos1-9z8a073im-michaelbobov-gmailcoms-projects.vercel.app/';
+    window.location.href = 'https://about.michaelbobov.com/';
   }, []);
 
   return (

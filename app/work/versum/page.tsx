@@ -31,7 +31,7 @@ export default function VersumCaseStudy() {
           Healthcare • Marketplace • 2025
         </motion.p>
         
-        <motion.h1
+        <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -40,7 +40,7 @@ export default function VersumCaseStudy() {
           Versum Health
         </motion.h1>
 
-        <motion.p
+        <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -60,7 +60,7 @@ export default function VersumCaseStudy() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
-          >
+        >
             <span>View Live Site</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -69,13 +69,13 @@ export default function VersumCaseStudy() {
         </motion.div>
 
         {/* Hero Image */}
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="w-full"
         >
-          <Image
+          <Image 
             src="/versumheroimage.png"
             alt="Versum Health Platform"
             width={1920}
@@ -94,17 +94,17 @@ export default function VersumCaseStudy() {
             <p className="text-gray-900">Co-founder</p>
             <p className="text-gray-900">Product Lead</p>
             <p className="text-gray-900">Frontend Developer</p>
-          </div>
+      </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
             <p className="text-gray-900">6 months</p>
             <p className="text-gray-600 text-sm">Research to MVP</p>
-          </div>
+            </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
             <p className="text-gray-900">2-person team</p>
             <p className="text-gray-600 text-sm">Frontend & Backend</p>
-          </div>
+            </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Skills</p>
             <p className="text-gray-900">UX Research</p>
@@ -175,14 +175,14 @@ export default function VersumCaseStudy() {
               <div>
                 <p className="text-gray-900 font-medium">Students can't find cases</p>
                 <p className="text-gray-600 text-sm mt-1">Dental students need specific procedure types to graduate. Finding qualifying patients is time-consuming.</p>
-              </div>
+            </div>
             </div>
             <div className="flex gap-4">
               <span className="text-[#C75B3B] font-mono text-sm">03</span>
               <div>
                 <p className="text-gray-900 font-medium">No centralized platform exists</p>
                 <p className="text-gray-600 text-sm mt-1">The infrastructure exists — dental schools, students, and patients — but there's nowhere to easily find and access it. Unlike regular doctor appointments (ZocDoc), there's no marketplace for student-supervised dental care.</p>
-              </div>
+          </div>
             </div>
             <div className="flex gap-4">
               <span className="text-[#C75B3B] font-mono text-sm">04</span>
@@ -220,8 +220,8 @@ export default function VersumCaseStudy() {
                 <p><span className="text-gray-900 font-medium">1 clinic coordinator:</span> Needs proof of consent, scope control, simple oversight without admin burden.</p>
               </div>
             </div>
-          </div>
-          
+              </div>
+
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="border-l-2 border-[#C75B3B] pl-6">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Patient Pain Points</p>
@@ -239,9 +239,9 @@ export default function VersumCaseStudy() {
                 <li>• Patients frequently no-show</li>
                 <li>• Manual hour logging is tedious</li>
                 <li>• Limited case diversity</li>
-              </ul>
+                </ul>
+              </div>
             </div>
-          </div>
 
             <div>
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
@@ -263,7 +263,7 @@ export default function VersumCaseStudy() {
           className="py-16 border-t border-gray-200"
         >
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</p>
-          
+            
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white border border-gray-200 p-6 rounded-lg">
               <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">Patient</p>
@@ -338,9 +338,9 @@ export default function VersumCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Patient Booking Flow</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
             The patient experience prioritizes simplicity and trust. Three core screens guide users from discovery to booking.
-          </p>
+            </p>
         </div>
-        
+            
         <div className="space-y-16">
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
@@ -357,13 +357,13 @@ export default function VersumCaseStudy() {
                 quality={95}
               />
             </div>
-          </div>
+              </div>
           
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
               <p className="text-gray-900 font-medium text-lg mb-2">My Appointments</p>
               <p className="text-gray-600">A central hub for managing all appointments. Patients can view upcoming visits, track completion status, access visit history, and leave reviews. The interface emphasizes clarity with color-coded status indicators.</p>
-            </div>
+              </div>
             <div className="flex justify-center">
               <Image
                 src="/Screenshot 2025-12-01 114308.png"
@@ -375,7 +375,7 @@ export default function VersumCaseStudy() {
               />
             </div>
           </div>
-          
+
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
               <p className="text-gray-900 font-medium text-lg mb-2">Messages</p>
@@ -410,22 +410,22 @@ export default function VersumCaseStudy() {
           </p>
           
           <div className="space-y-8">
-            <div>
+          <div>
               <p className="text-gray-900 font-medium mb-2">Why a three-panel layout?</p>
               <p className="text-gray-600">I explored single-panel patient-focused designs and student-centered dashboards. The three-panel approach won because it provides immediate feedback, follows familiar patterns (think Airbnb), and scales to support the supervisor role later.</p>
-            </div>
-            <div>
+          </div>
+          <div>
               <p className="text-gray-900 font-medium mb-2">Why require supervision acknowledgment upfront?</p>
               <p className="text-gray-600">Early user testing revealed patients worried about "being practiced on." Making supervision explicit at booking — not buried in fine print — increased booking completion by 40% in prototype tests.</p>
-            </div>
-            <div>
+          </div>
+          <div>
               <p className="text-gray-900 font-medium mb-2">Why integrate hour logging with appointments?</p>
               <p className="text-gray-600">Students hate duplicate data entry. By auto-generating hour logs from completed appointments, we save 2-3 hours per week and reduce logging errors that delay graduation.</p>
-            </div>
+          </div>
             <div>
               <p className="text-gray-900 font-medium mb-2">Why mobile-first for patients?</p>
               <p className="text-gray-600">Our target patient demographic (uninsured, lower-income) has 78% smartphone penetration but only 45% home internet. Mobile-first isn't a preference — it's a requirement.</p>
-            </div>
+          </div>
           </div>
         </motion.div>
 
@@ -460,7 +460,7 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600 text-sm">Critical usability issues</p>
             </div>
           </div>
-          
+
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Validation Plan</p>
             <div className="space-y-3 text-gray-600">

@@ -81,7 +81,7 @@ function AnimatedWordRotator() {
       }, 250); // Each dot appears every 250ms
       
       // After all ellipsis dots appear, change word
-      setTimeout(() => {
+        setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % words.length);
         setShowEllipsis(false);
         setEllipsisCount(0);
@@ -166,13 +166,13 @@ export default function Home() {
             const checkDuration = () => {
               if (!isNaN(audioRef.current!.duration) && audioRef.current!.duration > 0) {
                 resolve(true);
-              } else {
+    } else {
                 setTimeout(checkDuration, 100);
               }
             };
             checkDuration();
           });
-        }
+    }
         
         // Calculate middle point
         const middleTime = audioRef.current.duration / 2;
@@ -187,7 +187,7 @@ export default function Home() {
             setTimeout(() => {
               if (audioRef.current) {
                 audioRef.current.pause();
-              }
+      }
             }, 500);
           }).catch((error) => {
             console.error('Play promise rejected:', error);
@@ -223,10 +223,10 @@ export default function Home() {
       <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Left - Headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-900">
               <span className="font-serif">I'm Michael, a product</span>
@@ -237,7 +237,7 @@ export default function Home() {
           </motion.div>
 
           {/* Right - Sticky Note Image */}
-          <motion.div
+            <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -280,20 +280,20 @@ export default function Home() {
                 ref={audioRef}
                 src="/sounds/Book Page Turn Flip Sound Effect.mp3"
                 preload="auto"
-              />
+                />
             </Link>
-          </motion.div>
-        </div>
+        </motion.div>
+      </div>
       </section>
 
       {/* Projects Section */}
       <section id="work" className="container mx-auto px-6 md:px-12 lg:px-20 pt-0 pb-24 md:pb-32 scroll-mt-24">
-        <motion.div
-          initial={{ opacity: 0 }}
+          <motion.div 
+            initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-        >
+          >
           {/* Section Label */}
           <div className="mb-8 md:mb-12">
             <span className="font-mono text-sm text-gray-400 tracking-wide">SELECTED WORK</span>
@@ -302,7 +302,7 @@ export default function Home() {
           {/* Asymmetrical Bento Grid */}
           <div className="grid grid-cols-12 gap-6 lg:gap-8">
             {/* First Project - Large Left */}
-            <motion.div
+              <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -334,10 +334,10 @@ export default function Home() {
                   <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[0].year}</span>
                 </div>
               </Link>
-            </motion.div>
-
+              </motion.div>
+            
             {/* Second Project - Small Right */}
-            <motion.div
+                <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -349,14 +349,14 @@ export default function Home() {
                   className="relative aspect-[4/3] md:aspect-[3/4] overflow-hidden transition-all duration-500 group-hover:shadow-2xl mb-4"
                   style={{ backgroundColor: projects[1].color }}
                 >
-                  <Image
+                        <Image
                     src={projects[1].heroImage}
                     alt={projects[1].title}
-                    fill
+                          fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     priority
-                  />
-                </div>
+                        />
+                            </div>
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#C75B3B] transition-colors">
@@ -365,12 +365,12 @@ export default function Home() {
                     <p className="text-sm text-gray-500 font-sans">
                       {projects[1].tags.join(' · ')}
                     </p>
-                  </div>
+                          </div>
                   <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[1].year}</span>
-                </div>
+                        </div>
               </Link>
             </motion.div>
-
+                    
             {/* Third Project - Small Left */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -384,7 +384,7 @@ export default function Home() {
                   className="relative aspect-[4/3] md:aspect-[3/4] overflow-hidden transition-all duration-500 group-hover:shadow-2xl mb-4"
                   style={{ backgroundColor: projects[2].color }}
                 >
-                  <Image
+                          <Image
                     src={projects[2].heroImage}
                     alt={projects[2].title}
                     fill
@@ -418,12 +418,12 @@ export default function Home() {
                   className="relative aspect-[4/3] overflow-hidden transition-all duration-500 group-hover:shadow-2xl mb-4"
                   style={{ backgroundColor: projects[3].color }}
                 >
-                  <Image
+                          <Image
                     src={projects[3].heroImage}
                     alt={projects[3].title}
-                    fill
+                            fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                          />
                 </div>
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -433,13 +433,13 @@ export default function Home() {
                     <p className="text-sm text-gray-500 font-sans">
                       {projects[3].tags.join(' · ')}
                     </p>
-                  </div>
+                            </div>
                   <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[3].year}</span>
-                </div>
+                          </div>
               </Link>
-            </motion.div>
-          </div>
-        </motion.div>
+                </motion.div>
+            </div>
+          </motion.div>
       </section>
 
       {/* Contact Section */}
@@ -460,7 +460,7 @@ export default function Home() {
           <a 
             href="mailto:michael@michaelbobov.com" 
             className="inline-flex items-center gap-2 font-mono text-sm text-[#C75B3B] hover:text-[#A84A2E] transition-colors group"
-          >
+            >
             <span>GET IN TOUCH</span>
             <svg 
               className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
@@ -469,10 +469,10 @@ export default function Home() {
               viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+              </svg>
           </a>
-        </motion.div>
+          </motion.div>
       </section>
     </main>
   );
-}
+} 

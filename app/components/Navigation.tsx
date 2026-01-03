@@ -97,16 +97,16 @@ export default function Navigation() {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <span className="font-mono text-sm tracking-wide text-gray-900 font-medium">MENU</span>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                  aria-label="Close menu"
-                  type="button"
-                >
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    aria-label="Close menu"
+                    type="button"
+                  >
+                    <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
               </div>
 
               {/* Menu Items */}
@@ -130,7 +130,7 @@ export default function Navigation() {
                     >
                       RESUME
                     </a>
-                  </div>
+                    </div>
 
                   {/* Divider */}
                   <div className="h-px bg-gray-200" />
@@ -146,7 +146,7 @@ export default function Navigation() {
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="block text-gray-700 hover:text-[#C75B3B] transition-colors"
                         >
-                          {project.label}
+                              {project.label}
                         </Link>
                       ))}
                     </div>
@@ -221,13 +221,13 @@ export default function Navigation() {
             
             <AnimatePresence>
               {isWorkDropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                   className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50"
-                >
+      >
                   {projects.map((project) => (
                     <Link
                       key={project.href}
@@ -255,4 +255,4 @@ export default function Navigation() {
       <MobileMenu />
     </>
   );
-}
+} 

@@ -31,7 +31,7 @@ export default function EZRecipeCaseStudy() {
           Consumer • AI • 2025
         </motion.p>
         
-        <motion.h1
+        <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -40,7 +40,7 @@ export default function EZRecipeCaseStudy() {
           EZ Recipe
         </motion.h1>
 
-        <motion.p
+        <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -60,7 +60,7 @@ export default function EZRecipeCaseStudy() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
-          >
+        >
             <span>View Live Site</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -69,13 +69,13 @@ export default function EZRecipeCaseStudy() {
         </motion.div>
 
         {/* Hero Image */}
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="w-full"
         >
-          <Image
+          <Image 
             src="/ezrecipelaptop.png"
             alt="EZ Recipe Platform"
             width={1920}
@@ -112,21 +112,21 @@ export default function EZRecipeCaseStudy() {
             <p className="text-gray-900">AI Integration</p>
           </div>
         </div>
-        <div className="text-center">
-          <a
-            href="https://ezrecipe.app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <div className="text-center">
+                <a 
+                  href="https://ezrecipe.app" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
-          >
+                >
             <span>ezrecipe.app</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+            </div>
       </section>
-
+              
       {/* Content */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
         
@@ -183,10 +183,10 @@ export default function EZRecipeCaseStudy() {
             </div>
             <div className="flex gap-4">
               <span className="text-[#C75B3B] font-mono text-sm">04</span>
-              <div>
+            <div>
                 <p className="text-gray-900 font-medium">Food waste</p>
                 <p className="text-gray-600 text-sm mt-1">Leftover ingredients go unused because there's no easy way to find recipes that use them.</p>
-              </div>
+            </div>
             </div>
           </div>
           <div className="bg-gray-100 p-6 rounded-lg">
@@ -224,14 +224,14 @@ export default function EZRecipeCaseStudy() {
                 <li>• 78% eating at home more to save money</li>
               </ul>
             </div>
-          </div>
-
+            </div>
+            
           {/* Competitive Analysis */}
           <div className="mb-8">
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Competitive Analysis</p>
             <div className="flex justify-center">
-              <Image
-                src="/featurecompezrecipe.png"
+                <Image 
+                  src="/featurecompezrecipe.png"
                 alt="EZ Recipe Feature Comparison"
                 width={1920}
                 height={1280}
@@ -239,14 +239,14 @@ export default function EZRecipeCaseStudy() {
                 quality={95}
               />
             </div>
-          </div>
-
-          <div>
+            </div>
+            
+            <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
             <p className="text-gray-900 text-lg">
               <span className="text-[#C75B3B] font-medium">Constraint-based cooking</span> — Users want solutions that adapt to what they actually have, not recipes that require shopping trips.
-            </p>
-          </div>
+              </p>
+            </div>
         </motion.div>
 
         {/* Personas */}
@@ -260,16 +260,16 @@ export default function EZRecipeCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</p>
           
           <div className="flex justify-center mb-6">
-            <Image
-              src="/ezrecipepersona.png"
+                <Image 
+                  src="/ezrecipepersona.png"
               alt="EZ Recipe Persona"
               width={1920}
               height={1280}
               className="max-w-3xl w-full h-auto"
               quality={95}
-            />
-          </div>
-
+                />
+              </div>
+              
           <div className="bg-white border border-gray-200 p-6 rounded-lg">
             <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">The Constraint-Based Home Cook</p>
             <p className="text-xl text-gray-900 mb-4">Jessica, 38</p>
@@ -317,8 +317,8 @@ export default function EZRecipeCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             A constraint-based questionnaire: input ingredients, set preferences, get AI-generated recipes that adapt to what you have.
-          </p>
-          
+            </p>
+
           <div className="space-y-6 mb-8">
             <div>
               <p className="text-gray-900 font-medium mb-2">Set Constraints</p>
@@ -340,8 +340,8 @@ export default function EZRecipeCaseStudy() {
               <p><span className="text-gray-900 font-medium">Frictionless first-time use:</span> No logins, no long setup, just start cooking.</p>
               <p><span className="text-gray-900 font-medium">Constraint-aware layout:</span> Emphasize available ingredients and adjustable filters.</p>
               <p><span className="text-gray-900 font-medium">Mobile-friendly:</span> Designed for one-handed use in kitchen environments.</p>
-            </div>
-          </div>
+                  </div>
+                </div>
         </motion.div>
       </section>
 
@@ -351,9 +351,9 @@ export default function EZRecipeCaseStudy() {
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Process</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
             From sketches to high-fidelity prototypes.
-          </p>
-        </div>
-        
+                </p>
+              </div>
+              
         <div className="space-y-16">
           {/* Initial Sketches */}
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
@@ -362,23 +362,23 @@ export default function EZRecipeCaseStudy() {
               <p className="text-gray-600">Exploring layout concepts and user flows with pen and paper.</p>
             </div>
             <div className="flex justify-center">
-              <Image
+                    <Image 
                 src="/ezrecipesketch.jpeg"
                 alt="EZ Recipe Wireframe Sketch"
                 width={1920}
                 height={1280}
                 className="max-w-3xl w-full h-auto"
                 quality={95}
-              />
-            </div>
-          </div>
+                    />
+                  </div>
+                </div>
 
           {/* Low-Fi Prototypes */}
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
               <p className="text-gray-900 font-medium text-lg mb-2">Lo-Fi Prototypes</p>
               <p className="text-gray-600">Testing the constraint selection and recipe generation flow.</p>
-            </div>
+                  </div>
             <div className="flex flex-wrap justify-center gap-3 mb-6">
               <Image src="/Home App.png" alt="Home Screen" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
               <Image src="/Sevings select.png" alt="Preferences" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
@@ -495,7 +495,7 @@ export default function EZRecipeCaseStudy() {
             <div>
               <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Constraint-based design works</p>
               <p className="text-gray-600 mt-1">Users want solutions that adapt to their reality, not recipes that require perfect conditions.</p>
-            </div>
+                </div>
             <div>
               <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Perceived speed matters more than actual speed</p>
               <p className="text-gray-600 mt-1">Showing text before images reduced perceived wait time by 67%, even though total load time was unchanged.</p>
@@ -565,6 +565,6 @@ export default function EZRecipeCaseStudy() {
           </button>
         </div>
       </section>
-    </main>
-  );
-}
+      </main>
+    );
+} 

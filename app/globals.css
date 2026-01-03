@@ -84,7 +84,7 @@ img {
   .group-hover\:rotate-y-180:hover {
     transform: rotateY(180deg);
   }
-}
+} 
 
 /* Subtle grain texture for retro feel */
 .grain {
