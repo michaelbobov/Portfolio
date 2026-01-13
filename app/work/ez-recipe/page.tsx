@@ -53,7 +53,7 @@ export default function EZRecipeCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-12"
+          className="mb-6"
         >
           <a
             href="https://ezrecipe.app"
@@ -80,14 +80,14 @@ export default function EZRecipeCaseStudy() {
             alt="EZ Recipe Platform"
             width={1920}
             height={1080}
-            className="w-full h-auto"
+            className="w-full h-auto -mt-32"
             priority
           />
         </motion.div>
       </section>
 
       {/* Project Details */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200 -mt-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
@@ -97,7 +97,7 @@ export default function EZRecipeCaseStudy() {
           </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
-            <p className="text-gray-900">4 months</p>
+            <p className="text-gray-900">2 months</p>
             <p className="text-gray-600 text-sm">Concept to launch</p>
           </div>
           <div>
@@ -143,7 +143,7 @@ export default function EZRecipeCaseStudy() {
             EZ Recipe reframes cooking as solving for real-world constraints: ingredients on hand, dietary needs, time available, and cooking style.
           </p>
           <p className="text-gray-600 leading-relaxed">
-            I built this while developing Chefie, my health-tracking app. Users consistently struggled to know what to cook with what they already had. Despite the explosion of home cooking since COVID-19, recipe apps hadn't evolved to fit real-life constraints.
+            Users consistently struggled to know what to cook with what they already had. Despite the explosion of home cooking since COVID-19, recipe apps hadn't evolved to fit real-life constraints.
           </p>
         </motion.div>
 
@@ -219,9 +219,9 @@ export default function EZRecipeCaseStudy() {
             <div className="border-l-2 border-[#C75B3B] pl-6">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Market Signals</p>
               <ul className="text-gray-600 space-y-2 text-sm">
-                <li>• 61% looking for simple, practical meal solutions</li>
-                <li>• 60% want recipes using ingredients they have</li>
-                <li>• 78% eating at home more to save money</li>
+                <li>• Growing demand for simple, practical meal solutions</li>
+                <li>• Users want recipes using ingredients they already have</li>
+                <li>• Increased focus on eating at home to save money</li>
               </ul>
             </div>
             </div>
@@ -259,7 +259,7 @@ export default function EZRecipeCaseStudy() {
         >
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</p>
           
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center">
                 <Image 
                   src="/ezrecipepersona.png"
               alt="EZ Recipe Persona"
@@ -269,17 +269,6 @@ export default function EZRecipeCaseStudy() {
               quality={95}
                 />
               </div>
-              
-          <div className="bg-white border border-gray-200 p-6 rounded-lg">
-            <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">The Constraint-Based Home Cook</p>
-            <p className="text-xl text-gray-900 mb-4">Jessica, 38</p>
-            <div className="space-y-3 text-gray-600 text-sm">
-              <p><span className="text-gray-900">Situation:</span> Working mother with limited time, variable pantry, diverse family tastes</p>
-              <p><span className="text-gray-900">Goal:</span> Cook healthy meals using what's already in the kitchen</p>
-              <p><span className="text-gray-900">Frustration:</span> "Recipe apps show me things I can't make with what I have"</p>
-              <p><span className="text-gray-900">Needs:</span> Quick recipe generation, dietary preferences, ingredient flexibility</p>
-            </div>
-          </div>
         </motion.div>
 
         {/* User Journey */}
@@ -411,6 +400,26 @@ export default function EZRecipeCaseStudy() {
         </div>
       </section>
 
+      {/* User Testing */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="py-16 border-t border-gray-200"
+        >
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">User Testing</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
+            Testing the live product with real users.
+          </p>
+          <div className="bg-gray-100 p-6 rounded-lg">
+            <p className="text-gray-900 font-medium mb-2">Image loading bottleneck</p>
+            <p className="text-gray-600">During family testing of the live platform, recipes were taking too long to generate because images were generating alongside the recipe text. We changed the flow so images load after the recipe is ready — reducing perceived wait time by 67% and improving satisfaction.</p>
+          </div>
+        </motion.div>
+      </section>
+
       {/* Design Decisions */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
         <motion.div
@@ -433,14 +442,6 @@ export default function EZRecipeCaseStudy() {
             <div>
               <p className="text-gray-900 font-medium mb-2">Why AI generation instead of a recipe database?</p>
               <p className="text-gray-600">Databases can't adapt to arbitrary ingredient combinations. AI generates unique recipes for any pantry, eliminating the "no results found" dead end.</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium mb-2">Why no account required for first use?</p>
-              <p className="text-gray-600">Friction kills conversion. Users get value immediately, then optionally sign up to save favorites. The product proves itself before asking for commitment.</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium mb-2">Why show text before images in recipe results?</p>
-              <p className="text-gray-600">AI-generated images take time. Showing recipe text first reduced perceived wait time by 67% in testing. Users start reading while images load.</p>
             </div>
           </div>
         </motion.div>
@@ -497,8 +498,8 @@ export default function EZRecipeCaseStudy() {
               <p className="text-gray-600 mt-1">Users want solutions that adapt to their reality, not recipes that require perfect conditions.</p>
                 </div>
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Perceived speed matters more than actual speed</p>
-              <p className="text-gray-600 mt-1">Showing text before images reduced perceived wait time by 67%, even though total load time was unchanged.</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Real user testing reveals bottlenecks</p>
+              <p className="text-gray-600 mt-1">Testing with family on the live product uncovered the image generation bottleneck that wouldn't have been obvious in prototype testing. Real usage surfaces real problems.</p>
             </div>
           </div>
         </motion.div>

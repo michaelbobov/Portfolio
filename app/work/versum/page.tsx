@@ -208,16 +208,15 @@ export default function VersumCaseStudy() {
         >
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            I conducted 12 interviews across patients, students, and clinic staff to understand both sides of the marketplace.
+            I spoke with people on both sides of the marketplace to understand the real pain points.
           </p>
           
           <div className="space-y-8 mb-12">
             <div>
-              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Stakeholder Interviews</p>
+              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Conversations</p>
               <div className="space-y-4 text-gray-600">
-                <p><span className="text-gray-900 font-medium">5 low-income patients:</span> Uninsured, postpone routine care, need transparent costs and easy mobile scheduling.</p>
-                <p><span className="text-gray-900 font-medium">4 dental students + 2 recent grads:</span> Need qualifying procedures, documentation, reliable patient attendance.</p>
-                <p><span className="text-gray-900 font-medium">1 clinic coordinator:</span> Needs proof of consent, scope control, simple oversight without admin burden.</p>
+                <p><span className="text-gray-900 font-medium">Practicing dental hygienist:</span> "I really struggled to get patients to fulfill my clinical hours and almost didn't graduate. I had to pay people off the street a lot of money just to get them a free cleaning."</p>
+                <p><span className="text-gray-900 font-medium">Potential patient:</span> She goes to dental clinics through a friend who's a dental hygienist — easy for her to book because she knows someone. But she knows her friends can't do that. The connection problem is real.</p>
               </div>
             </div>
               </div>
@@ -246,7 +245,7 @@ export default function VersumCaseStudy() {
             <div>
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
               <p className="text-gray-900 text-lg mb-4">
-                Journey mapping revealed that <span className="text-[#C75B3B] font-medium">"finding each other"</span> was the primary friction point for both patients and students — not availability, not scheduling, not payment.
+                The primary friction point is <span className="text-[#C75B3B] font-medium">"finding each other"</span> — not availability, not scheduling, not payment.
               </p>
               <p className="text-gray-600">
                 The infrastructure already exists: dental schools have students who need clinical hours, and there are millions of uninsured patients who need affordable care. But without a centralized platform like ZocDoc provides for regular doctors, these two sides can't easily discover and connect with each other. Versum Health creates that missing marketplace.
@@ -272,7 +271,7 @@ export default function VersumCaseStudy() {
                 <p><span className="text-gray-900">Situation:</span> Uninsured gig worker, hasn't seen a dentist in 2+ years</p>
                 <p><span className="text-gray-900">Goal:</span> Get a cleaning and checkup without spending $300+</p>
                 <p><span className="text-gray-900">Frustration:</span> "I don't even know where to start looking for affordable care"</p>
-                <p><span className="text-gray-900">Needs:</span> Transparent pricing, easy mobile booking, appointment reminders</p>
+                <p><span className="text-gray-900">Needs:</span> Transparent pricing, easy booking, appointment reminders</p>
               </div>
             </div>
             <div className="bg-white border border-gray-200 p-6 rounded-lg">
@@ -325,7 +324,6 @@ export default function VersumCaseStudy() {
             <div className="space-y-3 text-gray-600">
               <p><span className="text-gray-900 font-medium">Safety first:</span> Consent, scope, and supervision confirmation are required before any booking.</p>
               <p><span className="text-gray-900 font-medium">Low friction:</span> Minimal form fields, progressive disclosure for medical details.</p>
-              <p><span className="text-gray-900 font-medium">Mobile-first:</span> 70% of target users access healthcare info on phones.</p>
               <p><span className="text-gray-900 font-medium">Trust signals:</span> Clear supervision badges, student credentials, and ratings visible throughout.</p>
             </div>
           </div>
@@ -353,7 +351,7 @@ export default function VersumCaseStudy() {
                 alt="Find Dental Students Screen"
                 width={1920}
                 height={1280}
-                className="max-w-3xl w-full h-auto"
+                className="max-w-5xl w-full h-auto"
                 quality={95}
               />
             </div>
@@ -370,7 +368,7 @@ export default function VersumCaseStudy() {
                 alt="My Appointments Screen"
                 width={1920}
                 height={1280}
-                className="max-w-3xl w-full h-auto"
+                className="max-w-5xl w-full h-auto"
                 quality={95}
               />
             </div>
@@ -387,7 +385,7 @@ export default function VersumCaseStudy() {
                 alt="Messages Screen"
                 width={1920}
                 height={1280}
-                className="max-w-3xl w-full h-auto"
+                className="max-w-5xl w-full h-auto"
                 quality={95}
               />
             </div>
@@ -406,25 +404,25 @@ export default function VersumCaseStudy() {
         >
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            Key decisions that shaped the final product, based on research insights and usability testing.
+            Key trade-offs and rationale behind the design choices.
           </p>
           
           <div className="space-y-8">
           <div>
-              <p className="text-gray-900 font-medium mb-2">Why a three-panel layout?</p>
-              <p className="text-gray-600">I explored single-panel patient-focused designs and student-centered dashboards. The three-panel approach won because it provides immediate feedback, follows familiar patterns (think Airbnb), and scales to support the supervisor role later.</p>
+              <p className="text-gray-900 font-medium mb-2">Task separation over unified dashboard</p>
+              <p className="text-gray-600">I considered a single-page dashboard, but users come with different goals. Separating Find, Appointments, and Messages reduces cognitive load and lets each screen focus on one job well.</p>
           </div>
           <div>
-              <p className="text-gray-900 font-medium mb-2">Why require supervision acknowledgment upfront?</p>
-              <p className="text-gray-600">Early user testing revealed patients worried about "being practiced on." Making supervision explicit at booking — not buried in fine print — increased booking completion by 40% in prototype tests.</p>
+              <p className="text-gray-900 font-medium mb-2">Dual entry points for discovery</p>
+              <p className="text-gray-600">Some patients know what they need ("I need a cleaning"). Others browse by provider. Supporting both mental models in the Find tab removes friction for different user types.</p>
           </div>
           <div>
-              <p className="text-gray-900 font-medium mb-2">Why integrate hour logging with appointments?</p>
-              <p className="text-gray-600">Students hate duplicate data entry. By auto-generating hour logs from completed appointments, we save 2-3 hours per week and reduce logging errors that delay graduation.</p>
+              <p className="text-gray-900 font-medium mb-2">Transparent pricing from day one</p>
+              <p className="text-gray-600">Cost anxiety is a major barrier for uninsured patients. Students indicate during onboarding if they offer free cleanings — this displays directly on their card. No hidden fees, no surprises at checkout.</p>
           </div>
-            <div>
-              <p className="text-gray-900 font-medium mb-2">Why mobile-first for patients?</p>
-              <p className="text-gray-600">Our target patient demographic (uninsured, lower-income) has 78% smartphone penetration but only 45% home internet. Mobile-first isn't a preference — it's a requirement.</p>
+          <div>
+              <p className="text-gray-900 font-medium mb-2">History and future in one view</p>
+              <p className="text-gray-600">Patients often need context from past visits when scheduling new ones. Combining appointment history with upcoming visits creates continuity and reduces clicks.</p>
           </div>
           </div>
         </motion.div>
@@ -561,7 +559,7 @@ export default function VersumCaseStudy() {
             Versum Health isn't just about booking appointments — it's about making healthcare accessible to everyone, regardless of insurance status.
           </p>
           <p className="text-gray-600 leading-relaxed mb-6">
-            This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the supervision acknowledgment flow to the mobile-first approach — was grounded in research and empathy.
+            This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the supervision acknowledgment flow to the trust signals — was grounded in research and empathy.
           </p>
           <p className="text-gray-600 leading-relaxed mb-6">
             Versum Health is now live at <a href="https://versumhealth.com/" target="_blank" rel="noopener noreferrer" className="text-[#C75B3B] hover:text-[#A84A2E] underline">versumhealth.com</a>, and I'm excited to measure its real-world impact on patients and students alike.

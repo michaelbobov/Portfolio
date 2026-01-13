@@ -65,14 +65,14 @@ export default function SpotifyLoopCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full"
+          className="flex justify-center"
         >
           <Image 
             src="/spotifyloopmockup.png"
             alt="Spotify Loop Interface"
             width={1920}
             height={1080}
-            className="w-full h-auto"
+            className="max-w-4xl w-full h-auto"
             priority
           />
         </motion.div>
@@ -88,7 +88,7 @@ export default function SpotifyLoopCaseStudy() {
       </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
-            <p className="text-gray-900">2 months</p>
+            <p className="text-gray-900">1 week</p>
             <p className="text-gray-600 text-sm">Concept to prototype</p>
             </div>
           <div>
@@ -241,7 +241,7 @@ export default function SpotifyLoopCaseStudy() {
         >
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            Tap-to-loop: tap once to set start, tap again to set end. Loop controls live in a swipe-up drawer to keep the player clean.
+            Tap-to-loop: tap once to set start, tap again to set end. Loop controls sit next to the Bluetooth button on the main player, with an additional entry point in the ellipses action menu.
           </p>
 
           {/* User Flow */}
@@ -278,7 +278,7 @@ export default function SpotifyLoopCaseStudy() {
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Design Principles</p>
             <div className="space-y-3 text-gray-600">
               <p><span className="text-gray-900 font-medium">Respect the music:</span> Full tracks always accessible, looping is additive.</p>
-              <p><span className="text-gray-900 font-medium">Minimal UI:</span> Loop controls hidden in drawer, preserving Spotify's clean interface.</p>
+              <p><span className="text-gray-900 font-medium">Minimal UI:</span> Loop icon placed alongside existing controls, preserving Spotify's clean interface.</p>
               <p><span className="text-gray-900 font-medium">Empower interaction:</span> Let users linger on moments that move them.</p>
             </div>
           </div>
@@ -316,7 +316,7 @@ export default function SpotifyLoopCaseStudy() {
               <ul className="text-gray-600 space-y-2">
                 <li>• Tap-to-set preferred over drag for precision</li>
                 <li>• Subtle highlight band best for showing looped segment</li>
-                <li>• Swipe-up drawer kept controls discoverable but minimal</li>
+                <li>• Placing loop icon next to Bluetooth button maximized discoverability</li>
               </ul>
                 </div>
               </div>
@@ -329,8 +329,8 @@ export default function SpotifyLoopCaseStudy() {
             </div>
             <div className="flex flex-wrap justify-center gap-3">
               <Image src="/Now Playing Screen.png" alt="Now Playing" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
-              <Image src="/Loop Set.png" alt="Loop Set" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
               <Image src="/Loop Active.png" alt="Loop Active" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/Loop Set.png" alt="Loop Set" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
               <Image src="/Loop Saved.png" alt="Loop Saved" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
               <Image src="/Saved Loops.png" alt="Saved Loops Library" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
             </div>
@@ -358,8 +358,8 @@ export default function SpotifyLoopCaseStudy() {
               <p className="text-gray-600">Waveforms are powerful but complex. Tap-to-set mirrors the familiar progress bar interaction users already know. It's simple, scalable, and works on small mobile screens.</p>
               </div>
                 <div>
-              <p className="text-gray-900 font-medium mb-2">Why a swipe-up drawer for controls?</p>
-              <p className="text-gray-600">Loop controls must be accessible but not intrusive. A drawer preserves Spotify's minimal aesthetic while keeping the feature discoverable for power users.</p>
+              <p className="text-gray-900 font-medium mb-2">Why place it next to the Bluetooth button?</p>
+              <p className="text-gray-600">The main player row has established real estate for quick actions. Placing the loop icon here makes it immediately visible without adding UI complexity. The ellipses menu provides an alternative entry point for users who prefer that flow.</p>
             </div>
             <div>
               <p className="text-gray-900 font-medium mb-2">Why include a saved loops library?</p>
@@ -372,7 +372,7 @@ export default function SpotifyLoopCaseStudy() {
           </div>
         </motion.div>
 
-        {/* Outcomes */}
+        {/* Design Highlights */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -380,23 +380,19 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Outcomes</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">&lt;5s</p>
-              <p className="text-gray-600 text-sm">Feature discovery time</p>
-              </div>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Highlights</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-8">
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">2 taps</p>
-              <p className="text-gray-600 text-sm">Loop creation</p>
+              <p className="text-gray-600 text-sm">To create a loop</p>
               </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">90%+</p>
-              <p className="text-gray-600 text-sm">Target task completion</p>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">0 menus</p>
+              <p className="text-gray-600 text-sm">Direct timeline interaction</p>
             </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">4.5/5</p>
-              <p className="text-gray-600 text-sm">Target satisfaction</p>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">2 entry points</p>
+              <p className="text-gray-600 text-sm">Main player + ellipses menu</p>
             </div>
           </div>
         </motion.div>
@@ -421,7 +417,7 @@ export default function SpotifyLoopCaseStudy() {
             </div>
             <div>
               <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Respect existing patterns</p>
-              <p className="text-gray-600 mt-1">Spotify has a design language. Any new feature must harmonize with it, not fight it. The swipe-up drawer was inspired by Spotify's existing conventions.</p>
+              <p className="text-gray-600 mt-1">Spotify has a design language. Any new feature must harmonize with it, not fight it. Placing the loop icon in the main control row mirrors how Spotify handles other quick actions.</p>
             </div>
             <div>
               <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Zoom in to find opportunities</p>

@@ -78,8 +78,8 @@ export default function PDFPenguinCaseStudy() {
       </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
-            <p className="text-gray-900">3 months</p>
-            <p className="text-gray-600 text-sm">Concept to MVP</p>
+            <p className="text-gray-900">2 weeks</p>
+            <p className="text-gray-600 text-sm">Design MVP (product not out yet)</p>
             </div>
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
