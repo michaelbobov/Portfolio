@@ -300,8 +300,11 @@ export default function VersumCaseStudy() {
             A centralized marketplace — think ZocDoc for student-supervised dental care — where patients browse and book, students manage their pipeline, and all procedures are confirmed under direct supervision.
           </p>
           
-          <p className="text-gray-600 leading-relaxed mb-8">
+          <p className="text-gray-600 leading-relaxed mb-4">
             Just as ZocDoc centralized finding doctors, Versum Health creates the first centralized platform for student-supervised dental care. Patients can search, filter, and book in one place — no more calling individual dental schools or hoping to find availability through word-of-mouth.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-8">
+            After validating the problem through research, we moved directly to prototyping in Cursor — iterating on the design through code rather than static mockups. This let us ship faster and make design decisions based on real interactions.
           </p>
           
           <div className="space-y-6 mb-12">
@@ -333,7 +336,7 @@ export default function VersumCaseStudy() {
       {/* Full-width Screens */}
       <section className="py-16 border-t border-gray-200">
         <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Patient Booking Flow</p>
+          <p className="font-mono text-xs text-[#C75B3B] uppercase tracking-widest mb-6">Patient Booking Flow</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
             The patient experience prioritizes simplicity and trust. Three core screens guide users from discovery to booking.
             </p>
@@ -393,6 +396,103 @@ export default function VersumCaseStudy() {
         </div>
       </section>
 
+      {/* Student Dashboard */}
+      <section className="py-16 border-t border-gray-200">
+        <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
+          <p className="font-mono text-xs text-[#C75B3B] uppercase tracking-widest mb-6">Student Dashboard</p>
+          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
+            The student experience focuses on managing their patient pipeline and availability.
+          </p>
+        </div>
+            
+        <div className="space-y-16">
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Dashboard</p>
+              <p className="text-gray-600">Students see all their booked appointments at a glance — upcoming visits, patient details, and procedure types. A clear overview to start each clinical day.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Student1.png"
+                alt="Student Dashboard - Booked Appointments"
+                width={1920}
+                height={1280}
+                className="max-w-5xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+          
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Availability Management</p>
+              <p className="text-gray-600">Students set when they're available for appointments. The interface shows existing time slots and makes it easy to add new availability windows.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Student2.png"
+                alt="Student Dashboard - Schedule Time Slots"
+                width={1920}
+                height={1280}
+                className="max-w-5xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Time Slot Scheduler</p>
+              <p className="text-gray-600">The detailed scheduler for creating specific time slots. Students select dates, times, and which procedures they can perform during each window.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Student3.png"
+                alt="Student Dashboard - Time Slot Scheduler"
+                width={1920}
+                height={1280}
+                className="max-w-5xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Messages</p>
+              <p className="text-gray-600">Direct communication with patients for appointment coordination, pre-visit questions, and follow-up care. Keeps all conversations organized in one place.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Student4.png"
+                alt="Student Dashboard - Messaging"
+                width={1920}
+                height={1280}
+                className="max-w-5xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+
+          <div className="container mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-4xl mb-6">
+              <p className="text-gray-900 font-medium text-lg mb-2">Profile & Services</p>
+              <p className="text-gray-600">Students customize their profile with the services they offer, credentials, and pricing (including free cleanings option). This information displays on their card when patients browse.</p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/Student5.png"
+                alt="Student Dashboard - Profile and Services"
+                width={1920}
+                height={1280}
+                className="max-w-5xl w-full h-auto"
+                quality={95}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Design Decisions */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
         <motion.div
@@ -435,36 +535,36 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Outcomes</p>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Success Metrics</p>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            The prototype is ready for pilot testing. Here are the success metrics we're targeting.
+            The metrics we're designing for and will measure as the platform grows.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">&lt;5 min</p>
-              <p className="text-gray-600 text-sm">Time to book first appointment</p>
+              <p className="text-gray-600 text-sm">Target time to book</p>
             </div>
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">90%+</p>
-              <p className="text-gray-600 text-sm">Task completion rate</p>
+              <p className="text-gray-600 text-sm">Target task completion</p>
             </div>
             <div>
               <p className="text-3xl font-serif text-[#C75B3B] mb-2">4.5/5</p>
-              <p className="text-gray-600 text-sm">Target satisfaction score</p>
+              <p className="text-gray-600 text-sm">Target satisfaction</p>
             </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">0</p>
-              <p className="text-gray-600 text-sm">Critical usability issues</p>
+              <p className="text-3xl font-serif text-[#C75B3B] mb-2">↓</p>
+              <p className="text-gray-600 text-sm">No-show rate reduction</p>
             </div>
           </div>
 
           <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Validation Plan</p>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Current Status</p>
             <div className="space-y-3 text-gray-600">
-              <p><span className="text-gray-900 font-medium">Phase 1:</span> Usability testing with 8-10 users from each persona group</p>
-              <p><span className="text-gray-900 font-medium">Phase 2:</span> Pilot launch at 2 partner dental schools</p>
-              <p><span className="text-gray-900 font-medium">Phase 3:</span> Iterate based on real usage data, then expand</p>
+              <p><span className="text-gray-900 font-medium">MVP:</span> Live at versumhealth.com</p>
+              <p><span className="text-gray-900 font-medium">Outreach:</span> Beginning conversations with dental schools</p>
+              <p><span className="text-gray-900 font-medium">Next:</span> Usability testing and pilot partnerships</p>
             </div>
           </div>
         </motion.div>
@@ -559,7 +659,7 @@ export default function VersumCaseStudy() {
             Versum Health isn't just about booking appointments — it's about making healthcare accessible to everyone, regardless of insurance status.
           </p>
           <p className="text-gray-600 leading-relaxed mb-6">
-            This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the supervision acknowledgment flow to the trust signals — was grounded in research and empathy.
+            This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the booking flow to transparent pricing on student cards — was grounded in research and empathy.
           </p>
           <p className="text-gray-600 leading-relaxed mb-6">
             Versum Health is now live at <a href="https://versumhealth.com/" target="_blank" rel="noopener noreferrer" className="text-[#C75B3B] hover:text-[#A84A2E] underline">versumhealth.com</a>, and I'm excited to measure its real-world impact on patients and students alike.
