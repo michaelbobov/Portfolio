@@ -5,15 +5,13 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
 
-export const dynamic = 'force-dynamic';
-
 export default function SpotifyLoopCaseStudy() {
   return (
     <main className="bg-[#FAFAF8] min-h-screen">
       {/* Navigation */}
       <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#C75B3B] transition-colors">
+          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#B5502F] transition-colors">
             MICHAEL BOBOV
           </Link>
           <Navigation />
@@ -70,9 +68,10 @@ export default function SpotifyLoopCaseStudy() {
           <Image 
             src="/spotifyloopmockup.png"
             alt="Spotify Loop Interface"
-            width={1920}
-            height={1080}
+            width={1500}
+            height={1125}
             className="max-w-4xl w-full h-auto"
+            sizes="(min-width: 896px) 896px, 100vw"
             priority
           />
         </motion.div>
@@ -105,6 +104,18 @@ export default function SpotifyLoopCaseStudy() {
         </div>
       </section>
 
+      {/* TL;DR */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl pb-16">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
+          <dl className="grid md:grid-cols-3 gap-6 text-sm">
+            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Spotify can’t loop part of a song, so musicians and fans scrub the progress bar imprecisely or leave the app for tools like Moises.ai.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">A 1-week, self-initiated concept: community and competitive research, journey mapping, then lo-fi to hi-fi prototypes of a native loop control.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Tap-to-loop in 2 taps from the main player, with saved loops and a second entry point in the ellipsis menu. Unofficial concept.</dd></div>
+          </dl>
+        </div>
+      </section>
+
       {/* Content */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
 
@@ -116,7 +127,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Spotify Loop adds native segment looping to Spotify. Set start and end points, replay that moment on repeat.
           </p>
@@ -133,27 +144,27 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Spotify lacks a native way to loop specific song segments. Users must rely on external tools or scrub the progress bar imprecisely.
           </p>
           <div className="space-y-6 mb-8">
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <span className="text-[#B5502F] font-mono text-sm">01</span>
               <div>
                 <p className="text-gray-900 font-medium">No native segment looping</p>
                 <p className="text-gray-600 text-sm mt-1">Users leave Spotify for external tools like PractAid or Moises.ai, breaking flow.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <span className="text-[#B5502F] font-mono text-sm">02</span>
             <div>
                 <p className="text-gray-900 font-medium">Imprecise scrubbing</p>
                 <p className="text-gray-600 text-sm mt-1">Manually scrubbing back and forth is tedious and inaccurate, especially on mobile.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <span className="text-[#B5502F] font-mono text-sm">03</span>
             <div>
                 <p className="text-gray-900 font-medium">Fragmented experience</p>
                 <p className="text-gray-600 text-sm mt-1">App-switching disrupts listening and requires managing multiple tools.</p>
@@ -174,13 +185,13 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             I analyzed Reddit communities, external research, and competitive tools to validate the opportunity.
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 mb-8">
-            <div className="border-l-2 border-[#C75B3B] pl-6">
+            <div className="border-l-2 border-[#B5502F] pl-6">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">User Communities</p>
               <ul className="text-gray-600 space-y-2 text-sm">
                 <li><span className="text-gray-900 font-medium">r/guitar:</span> "It's a pain moving the slider over and over..."</li>
@@ -188,7 +199,7 @@ export default function SpotifyLoopCaseStudy() {
                 <li><span className="text-gray-900 font-medium">r/spotify:</span> "I'll literally listen to it on loop the entire day"</li>
               </ul>
             </div>
-            <div className="border-l-2 border-[#C75B3B] pl-6">
+            <div className="border-l-2 border-[#B5502F] pl-6">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Market Signals</p>
               <ul className="text-gray-600 space-y-2 text-sm">
                 <li>• 68% of musicians 16–34 use streaming to practice (YouGov)</li>
@@ -202,7 +213,7 @@ export default function SpotifyLoopCaseStudy() {
             <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
             <p className="text-gray-900 text-lg">
-              <span className="text-[#C75B3B] font-medium">Integration gap</span> — No reviewed tools work natively inside Spotify's mobile player, forcing app-switching or desktop-only workflows.
+              <span className="text-[#B5502F] font-medium">Integration gap</span> — No reviewed tools work natively inside Spotify's mobile player, forcing app-switching or desktop-only workflows.
                 </p>
               </div>
         </motion.div>
@@ -215,20 +226,24 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">User Journey</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">User Journey</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Mapping emotional pain points and moments of opportunity.
               </p>
-          <div className="flex justify-center">
-                <Image 
-                  src="/spotifyloopjourney.png"
-                  alt="Spotify Loop User Journey Map"
-              width={1920}
-              height={1280}
-              className="max-w-3xl w-full h-auto"
-              quality={95}
-                />
-              </div>
+          <div>
+            <a href="/spotifyloopjourney.png" target="_blank" rel="noopener noreferrer" className="block overflow-x-auto" aria-label="Open the user journey map at full size">
+              <Image
+                src="/spotifyloopjourney.png"
+                alt="Spotify Loop User Journey Map"
+                width={884}
+                height={740}
+                className="max-w-3xl w-full h-auto mx-auto"
+                sizes="(min-width: 768px) 768px, 100vw"
+                quality={95}
+              />
+            </a>
+            <p className="text-xs text-gray-500 mt-2">Open full size ↗</p>
+          </div>
         </motion.div>
 
         {/* Solution */}
@@ -239,23 +254,27 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            Tap-to-loop: tap once to set start, tap again to set end. Loop controls sit next to the Bluetooth button on the main player, with an additional entry point in the ellipses action menu.
+            Tap-to-loop: tap once to set start, tap again to set end. Loop controls sit next to the Bluetooth button on the main player, with a second entry point in the ellipsis (⋯) menu.
           </p>
 
           {/* User Flow */}
           <div className="mb-8">
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">User Flow</p>
-            <div className="flex justify-center">
-              <Image
-                src="/SpotifyFlowchart.png"
-                alt="Spotify Loop User Flow Chart"
-                width={1920}
-                height={1280}
-                className="max-w-3xl w-full h-auto"
-                quality={95}
-              />
+            <div>
+              <a href="/SpotifyFlowchart.png" target="_blank" rel="noopener noreferrer" className="block overflow-x-auto" aria-label="Open the user flow at full size">
+                <Image
+                  src="/SpotifyFlowchart.png"
+                  alt="Spotify Loop User Flow Chart"
+                  width={4217}
+                  height={1054}
+                  className="min-w-[900px] w-full h-auto"
+                  sizes="(min-width: 900px) 896px, 900px"
+                  quality={95}
+                />
+              </a>
+              <p className="text-xs text-gray-500 mt-2">Open full size ↗</p>
             </div>
           </div>
 
@@ -288,7 +307,7 @@ export default function SpotifyLoopCaseStudy() {
       {/* Design Process */}
       <section className="py-16 border-t border-gray-200">
         <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Process</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Process</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
             From low-fidelity wireframes to polished prototypes.
               </p>
@@ -298,16 +317,17 @@ export default function SpotifyLoopCaseStudy() {
           {/* Low-Fi Prototype */}
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Lo-Fi Prototype</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Lo-Fi Prototype</h3>
               <p className="text-gray-600">Testing loop creation, visual feedback, and control placement.</p>
             </div>
             <div className="flex justify-center mb-6">
                 <Image
                   src="/looplowfi.png"
                 alt="Spotify Loop Low-Fi Prototype"
-                width={1920}
-                height={1280}
+                width={1180}
+                height={830}
                 className="max-w-3xl w-full h-auto"
+                sizes="(min-width: 768px) 768px, 100vw"
                 quality={95}
                 />
               </div>
@@ -324,15 +344,15 @@ export default function SpotifyLoopCaseStudy() {
           {/* High-Fi Screens */}
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">High-Fidelity Prototypes</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">High-Fidelity Prototypes</h3>
               <p className="text-gray-600">Polished designs ready for user testing.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3">
-              <Image src="/Now Playing Screen.png" alt="Now Playing" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
-              <Image src="/Loop Active.png" alt="Loop Active" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
-              <Image src="/Loop Set.png" alt="Loop Set" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
-              <Image src="/Loop Saved.png" alt="Loop Saved" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
-              <Image src="/Saved Loops.png" alt="Saved Loops Library" width={1920} height={1280} className="max-w-[200px] w-full h-auto" quality={95} />
+              <Image src="/Now Playing Screen.png" alt="Spotify Loop hi-fi: now playing screen with loop button" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <Image src="/Loop Active.png" alt="Spotify Loop hi-fi: loop active" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <Image src="/Loop Set.png" alt="Spotify Loop hi-fi: loop set" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <Image src="/Loop Saved.png" alt="Spotify Loop hi-fi: loop saved" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <Image src="/Saved Loops.png" alt="Spotify Loop hi-fi: saved loops library" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
             </div>
           </div>
         </div>
@@ -347,7 +367,7 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Key decisions that shaped the feature.
               </p>
@@ -359,7 +379,7 @@ export default function SpotifyLoopCaseStudy() {
               </div>
                 <div>
               <p className="text-gray-900 font-medium mb-2">Why place it next to the Bluetooth button?</p>
-              <p className="text-gray-600">The main player row has established real estate for quick actions. Placing the loop icon here makes it immediately visible without adding UI complexity. The ellipses menu provides an alternative entry point for users who prefer that flow.</p>
+              <p className="text-gray-600">The main player row has established real estate for quick actions. Placing the loop icon here makes it immediately visible without adding UI complexity. The ellipsis menu provides an alternative entry point for users who prefer that flow.</p>
             </div>
             <div>
               <p className="text-gray-900 font-medium mb-2">Why include a saved loops library?</p>
@@ -380,19 +400,19 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Highlights</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Highlights</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-8">
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">2 taps</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">2 taps</p>
               <p className="text-gray-600 text-sm">To create a loop</p>
               </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">0 menus</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">0 menus</p>
               <p className="text-gray-600 text-sm">Direct timeline interaction</p>
             </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">2 entry points</p>
-              <p className="text-gray-600 text-sm">Main player + ellipses menu</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">2 entry points</p>
+              <p className="text-gray-600 text-sm">Main player + ellipsis menu</p>
             </div>
           </div>
         </motion.div>
@@ -405,22 +425,22 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             What this project taught me.
           </p>
           
           <div className="space-y-6">
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">01</span> Micro-interactions matter</p>
-              <p className="text-gray-600 mt-1">Small features that feel obvious once they exist can significantly enhance user delight. The best additions feel native, not bolted on.</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">01</span> Micro-interactions matter</p>
+              <p className="text-gray-600 mt-1">Small features can significantly enhance user delight. The best additions feel native, not bolted on.</p>
             </div>
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Respect existing patterns</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">02</span> Respect existing patterns</p>
               <p className="text-gray-600 mt-1">Spotify has a design language. Any new feature must harmonize with it, not fight it. Placing the loop icon in the main control row mirrors how Spotify handles other quick actions.</p>
             </div>
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Zoom in to find opportunities</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">03</span> Zoom in to find opportunities</p>
               <p className="text-gray-600 mt-1">Finding overlooked behaviors and building features that feel obvious once they exist creates real value. Spotify Loop emerged from observing what people already try to do.</p>
             </div>
           </div>
@@ -434,22 +454,18 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</h2>
           <div className="space-y-4">
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">01</span>
-              <p className="text-gray-600">Saving loops as mini-bookmarks tied to tracks</p>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <span className="text-[#B5502F] font-mono text-sm">01</span>
               <p className="text-gray-600">Sharing loops with visual/audio snippets</p>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <span className="text-[#B5502F] font-mono text-sm">02</span>
               <p className="text-gray-600">Creating playlists of favorite segments</p>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <span className="text-[#B5502F] font-mono text-sm">03</span>
               <p className="text-gray-600">Adding loop insights to Wrapped ("Your most-looped moments")</p>
             </div>
           </div>
@@ -463,26 +479,27 @@ export default function SpotifyLoopCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Spotify Loop might seem like a small tweak, but it aligns with evolving user behavior. From TikTok loops to study playlists, people want music to be modular, not just linear.
           </p>
           <p className="text-gray-600 leading-relaxed">
-            This project taught me the value of zooming in: finding overlooked behaviors and building features that feel obvious once they exist. Looping gives users more expressive power in how they listen, learn, and love their favorite tracks.
+            Looping gives users more expressive power in how they listen, learn, and love their favorite tracks.
           </p>
         </motion.div>
       </section>
 
       {/* Footer Navigation */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="text-gray-600 hover:text-[#C75B3B] transition-colors flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+          <Link href="/" className="text-gray-600 hover:text-[#B5502F] transition-colors flex items-center gap-2">
             <span>←</span>
             <span>Back to Home</span>
           </Link>
+          <Link href="/work/ez-recipe" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: EZ Recipe →</Link>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-gray-600 hover:text-[#C75B3B] transition-colors"
+            className="text-gray-600 hover:text-[#B5502F] transition-colors"
           >
             Back to Top ↑
           </button>

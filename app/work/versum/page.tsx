@@ -5,15 +5,13 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
 
-export const dynamic = 'force-dynamic';
-
 export default function VersumCaseStudy() {
   return (
     <main className="bg-[#FAFAF8] min-h-screen">
       {/* Navigation */}
       <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#C75B3B] transition-colors">
+          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#B5502F] transition-colors">
             MICHAEL BOBOV
           </Link>
           <Navigation />
@@ -59,7 +57,7 @@ export default function VersumCaseStudy() {
             href="https://versumhealth.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
+            className="inline-flex items-center gap-2 text-[#B5502F] hover:text-[#A84A2E] transition-colors font-medium"
         >
             <span>View Live Site</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,9 +76,10 @@ export default function VersumCaseStudy() {
           <Image 
             src="/versumheroimage.png"
             alt="Versum Health Platform"
-            width={1920}
-            height={1080}
+            width={2400}
+            height={1161}
             className="w-full h-auto"
+            sizes="(min-width: 1536px) 1376px, 100vw"
             priority
           />
         </motion.div>
@@ -112,18 +111,17 @@ export default function VersumCaseStudy() {
             <p className="text-gray-900">Prototyping</p>
           </div>
         </div>
-        <div className="text-center">
-          <a
-            href="https://versumhealth.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[#C75B3B] hover:text-[#A84A2E] transition-colors font-medium"
-          >
-            <span>versumhealth.com</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
+      </section>
+
+      {/* TL;DR */}
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl pb-16">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
+          <dl className="grid md:grid-cols-3 gap-6 text-sm">
+            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">74 million Americans lack dental insurance, while dental students struggle to find patients for the procedures they need to graduate.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">As co-founder and product lead on a 2-person team, I spoke with people on both sides of the marketplace, then designed and built the patient and student experiences in code over 6 months.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">MVP live at versumhealth.com with patient booking, student scheduling, and messaging. Outreach to dental schools is underway.</dd></div>
+          </dl>
         </div>
       </section>
 
@@ -138,15 +136,12 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Versum Health connects uninsured patients seeking affordable dental care with dental students who need supervised clinical hours to graduate.
           </p>
-          <p className="text-gray-600 leading-relaxed mb-6">
-            Patients get care. Students gain experience. Supervisors oversee quality. The platform eliminates the discovery problem that keeps both sides from connecting efficiently.
-          </p>
           <p className="text-gray-600 leading-relaxed">
-            This two-sided marketplace creates a win-win: patients access affordable dental services while students fulfill graduation requirements under proper supervision. The infrastructure exists — dental schools, students needing hours, patients needing care — but there's no centralized platform to connect them, similar to how ZocDoc revolutionized finding doctors. Versum Health fills that gap.
+            Patients get care. Students gain experience. Supervisors oversee quality. The platform eliminates the discovery problem that keeps both sides from connecting efficiently.
           </p>
         </motion.div>
 
@@ -158,34 +153,34 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             74 million Americans lack dental insurance. Meanwhile, dental students struggle to find enough qualifying cases to complete their required clinical hours.
           </p>
           <div className="space-y-6 mb-8">
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <span className="text-[#B5502F] font-mono text-sm">01</span>
               <div>
                 <p className="text-gray-900 font-medium">Patients can't afford care</p>
                 <p className="text-gray-600 text-sm mt-1">Without insurance, routine dental visits cost $200-500+. Many postpone care until emergencies.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <span className="text-[#B5502F] font-mono text-sm">02</span>
               <div>
                 <p className="text-gray-900 font-medium">Students can't find cases</p>
                 <p className="text-gray-600 text-sm mt-1">Dental students need specific procedure types to graduate. Finding qualifying patients is time-consuming.</p>
             </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <span className="text-[#B5502F] font-mono text-sm">03</span>
               <div>
                 <p className="text-gray-900 font-medium">No centralized platform exists</p>
-                <p className="text-gray-600 text-sm mt-1">The infrastructure exists — dental schools, students, and patients — but there's nowhere to easily find and access it. Unlike regular doctor appointments (ZocDoc), there's no marketplace for student-supervised dental care.</p>
+                <p className="text-gray-600 text-sm mt-1">Dental schools, students, and patients all exist, but there’s no single place to find and book student-supervised dental care.</p>
           </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <span className="text-[#B5502F] font-mono text-sm">04</span>
               <div>
                 <p className="text-gray-900 font-medium">Trust and safety concerns</p>
                 <p className="text-gray-600 text-sm mt-1">Patients worry about student competency. The platform must clearly communicate supervision protocols.</p>
@@ -206,7 +201,7 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             I spoke with people on both sides of the marketplace to understand the real pain points.
           </p>
@@ -222,7 +217,7 @@ export default function VersumCaseStudy() {
               </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="border-l-2 border-[#C75B3B] pl-6">
+            <div className="border-l-2 border-[#B5502F] pl-6">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Patient Pain Points</p>
               <ul className="text-gray-600 space-y-2">
                 <li>• Can't find affordable options</li>
@@ -231,7 +226,7 @@ export default function VersumCaseStudy() {
                 <li>• Worried about quality of care</li>
               </ul>
             </div>
-            <div className="border-l-2 border-[#C75B3B] pl-6">
+            <div className="border-l-2 border-[#B5502F] pl-6">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Student Pain Points</p>
               <ul className="text-gray-600 space-y-2">
                 <li>• Hard to find qualifying cases</li>
@@ -245,10 +240,10 @@ export default function VersumCaseStudy() {
             <div>
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
               <p className="text-gray-900 text-lg mb-4">
-                The primary friction point is <span className="text-[#C75B3B] font-medium">"finding each other"</span> — not availability, not scheduling, not payment.
+                The primary friction point is <span className="text-[#B5502F] font-medium">"finding each other"</span> — not availability, not scheduling, not payment.
               </p>
               <p className="text-gray-600">
-                The infrastructure already exists: dental schools have students who need clinical hours, and there are millions of uninsured patients who need affordable care. But without a centralized platform like ZocDoc provides for regular doctors, these two sides can't easily discover and connect with each other. Versum Health creates that missing marketplace.
+                Dental schools have students who need clinical hours, and millions of uninsured patients need affordable care, but the two sides have no shared place to discover each other. Versum Health creates that missing marketplace.
               </p>
             </div>
         </motion.div>
@@ -261,11 +256,11 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</h2>
             
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">Patient</p>
+              <p className="text-[#B5502F] font-mono text-xs uppercase tracking-widest mb-2">Patient</p>
               <p className="text-xl text-gray-900 mb-4">Alicia, 34</p>
               <div className="space-y-3 text-gray-600 text-sm">
                 <p><span className="text-gray-900">Situation:</span> Uninsured gig worker, hasn't seen a dentist in 2+ years</p>
@@ -275,7 +270,7 @@ export default function VersumCaseStudy() {
               </div>
             </div>
             <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <p className="text-[#C75B3B] font-mono text-xs uppercase tracking-widest mb-2">Student</p>
+              <p className="text-[#B5502F] font-mono text-xs uppercase tracking-widest mb-2">Student</p>
               <p className="text-xl text-gray-900 mb-4">Noah, D3 Student</p>
               <div className="space-y-3 text-gray-600 text-sm">
                 <p><span className="text-gray-900">Situation:</span> Third-year dental student, needs 50+ supervised procedures to graduate</p>
@@ -295,13 +290,13 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             A centralized marketplace — think ZocDoc for student-supervised dental care — where patients browse and book, students manage their pipeline, and all procedures are confirmed under direct supervision.
           </p>
           
           <p className="text-gray-600 leading-relaxed mb-4">
-            Just as ZocDoc centralized finding doctors, Versum Health creates the first centralized platform for student-supervised dental care. Patients can search, filter, and book in one place — no more calling individual dental schools or hoping to find availability through word-of-mouth.
+            Patients can search, filter, and book in one place. No more calling individual dental schools or hoping to find availability through word-of-mouth.
           </p>
           <p className="text-gray-600 leading-relaxed mb-8">
             After validating the problem through research, we moved directly to prototyping in Cursor — iterating on the design through code rather than static mockups. This let us ship faster and make design decisions based on real interactions.
@@ -317,7 +312,7 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">View case pipeline → Accept/decline requests → Manage schedule → Log treatments → Track clinical hours automatically</p>
             </div>
             <div>
-              <p className="text-gray-900 font-medium mb-2">Supervisor Oversight</p>
+              <p className="text-gray-900 font-medium mb-2">Supervisor Oversight <span className="text-gray-500 font-normal">(planned)</span></p>
               <p className="text-gray-600">Review scheduled procedures → Verify supervision → Approve hour logs → Manage student portfolios</p>
             </div>
           </div>
@@ -336,25 +331,26 @@ export default function VersumCaseStudy() {
       {/* Full-width Screens */}
       <section className="py-16 border-t border-gray-200">
         <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
-          <p className="font-mono text-xs text-[#C75B3B] uppercase tracking-widest mb-6">Patient Booking Flow</p>
+          <h2 className="font-mono text-xs text-[#B5502F] uppercase tracking-widest mb-6">Patient Booking Flow</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
-            The patient experience prioritizes simplicity and trust. Three core screens guide users from discovery to booking.
+            The patient experience prioritizes simplicity and trust. Three core screens cover finding a student, managing appointments, and messaging before a visit.
             </p>
         </div>
             
         <div className="space-y-16">
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Find Dental Students</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Find Dental Students</h3>
               <p className="text-gray-600">Patients search by specialty, filter by distance and availability, and view student profiles with credentials and ratings. Each listing shows the supervising faculty member and clinic location.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Screenshot 2025-12-01 114222.png"
                 alt="Find Dental Students Screen"
-                width={1920}
-                height={1280}
+                width={1885}
+                height={950}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -362,16 +358,17 @@ export default function VersumCaseStudy() {
           
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">My Appointments</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">My Appointments</h3>
               <p className="text-gray-600">A central hub for managing all appointments. Patients can view upcoming visits, track completion status, access visit history, and leave reviews. The interface emphasizes clarity with color-coded status indicators.</p>
               </div>
             <div className="flex justify-center">
               <Image
                 src="/Screenshot 2025-12-01 114308.png"
                 alt="My Appointments Screen"
-                width={1920}
-                height={1280}
+                width={1885}
+                height={947}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -379,16 +376,17 @@ export default function VersumCaseStudy() {
 
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Messages</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Messages</h3>
               <p className="text-gray-600">Direct, HIPAA-aware messaging between patients and dental students. Enables appointment coordination, pre-visit questions, and follow-up care discussions. Auto-saves conversation history for continuity.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Screenshot 2025-12-01 114342.png"
                 alt="Messages Screen"
-                width={1920}
-                height={1280}
+                width={1903}
+                height={948}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -399,7 +397,7 @@ export default function VersumCaseStudy() {
       {/* Student Dashboard */}
       <section className="py-16 border-t border-gray-200">
         <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
-          <p className="font-mono text-xs text-[#C75B3B] uppercase tracking-widest mb-6">Student Dashboard</p>
+          <h2 className="font-mono text-xs text-[#B5502F] uppercase tracking-widest mb-6">Student Dashboard</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
             The student experience focuses on managing their patient pipeline and availability.
           </p>
@@ -408,16 +406,17 @@ export default function VersumCaseStudy() {
         <div className="space-y-16">
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Dashboard</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Dashboard</h3>
               <p className="text-gray-600">Students see all their booked appointments at a glance — upcoming visits, patient details, and procedure types. A clear overview to start each clinical day.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Student1.png"
                 alt="Student Dashboard - Booked Appointments"
-                width={1920}
-                height={1280}
+                width={1481}
+                height={877}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -425,16 +424,17 @@ export default function VersumCaseStudy() {
           
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Availability Management</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Availability Management</h3>
               <p className="text-gray-600">Students set when they're available for appointments. The interface shows existing time slots and makes it easy to add new availability windows.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Student2.png"
                 alt="Student Dashboard - Schedule Time Slots"
-                width={1920}
-                height={1280}
+                width={1470}
+                height={894}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -442,16 +442,17 @@ export default function VersumCaseStudy() {
 
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Time Slot Scheduler</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Time Slot Scheduler</h3>
               <p className="text-gray-600">The detailed scheduler for creating specific time slots. Students select dates, times, and which procedures they can perform during each window.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Student3.png"
                 alt="Student Dashboard - Time Slot Scheduler"
-                width={1920}
-                height={1280}
+                width={1466}
+                height={893}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -459,16 +460,17 @@ export default function VersumCaseStudy() {
 
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Messages</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Messages</h3>
               <p className="text-gray-600">Direct communication with patients for appointment coordination, pre-visit questions, and follow-up care. Keeps all conversations organized in one place.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Student4.png"
                 alt="Student Dashboard - Messaging"
-                width={1920}
-                height={1280}
+                width={1576}
+                height={899}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -476,16 +478,17 @@ export default function VersumCaseStudy() {
 
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
             <div className="max-w-4xl mb-6">
-              <p className="text-gray-900 font-medium text-lg mb-2">Profile & Services</p>
+              <h3 className="text-gray-900 font-medium text-lg mb-2">Profile & Services</h3>
               <p className="text-gray-600">Students customize their profile with the services they offer, credentials, and pricing (including free cleanings option). This information displays on their card when patients browse.</p>
             </div>
             <div className="flex justify-center">
               <Image
                 src="/Student5.png"
                 alt="Student Dashboard - Profile and Services"
-                width={1920}
-                height={1280}
+                width={1558}
+                height={902}
                 className="max-w-5xl w-full h-auto"
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 quality={95}
               />
             </div>
@@ -502,7 +505,7 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Key trade-offs and rationale behind the design choices.
           </p>
@@ -535,26 +538,26 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Success Metrics</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Success Metrics</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             The metrics we're designing for and will measure as the platform grows.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">&lt;5 min</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">&lt;5 min</p>
               <p className="text-gray-600 text-sm">Target time to book</p>
             </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">90%+</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">90%+</p>
               <p className="text-gray-600 text-sm">Target task completion</p>
             </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">4.5/5</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">4.5/5</p>
               <p className="text-gray-600 text-sm">Target satisfaction</p>
             </div>
             <div>
-              <p className="text-3xl font-serif text-[#C75B3B] mb-2">↓</p>
+              <p className="text-3xl font-serif text-[#B5502F] mb-2">↓</p>
               <p className="text-gray-600 text-sm">No-show rate reduction</p>
             </div>
           </div>
@@ -576,26 +579,26 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             This project pushed me to think deeply about designing for trust in healthcare contexts.
           </p>
           
           <div className="space-y-6">
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">01</span> Simplicity scales</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">01</span> Simplicity scales</p>
               <p className="text-gray-600 mt-1">The most powerful platforms do one thing exceptionally well. Versum Health's success will come from nailing the discovery-to-booking flow, not from feature bloat.</p>
             </div>
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">02</span> Healthcare + UX = Impact</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">02</span> Healthcare + UX = Impact</p>
               <p className="text-gray-600 mt-1">Thoughtful design makes healthcare feel accessible rather than intimidating. Every UI decision either builds or erodes trust.</p>
             </div>
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">03</span> Real problems, real solutions</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">03</span> Real problems, real solutions</p>
               <p className="text-gray-600 mt-1">Building for a pain point I'd witnessed firsthand — friends avoiding dental care due to cost — led to solutions that resonated with every user I interviewed.</p>
             </div>
             <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#C75B3B]">04</span> Two-sided marketplaces are hard</p>
+              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">04</span> Two-sided marketplaces are hard</p>
               <p className="text-gray-600 mt-1">You need both sides to show up. The platform design must reduce friction for both patients AND students, or the marketplace never reaches critical mass.</p>
             </div>
           </div>
@@ -609,35 +612,35 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             The MVP is complete. Here's the roadmap for what comes next.
           </p>
           
           <div className="space-y-6">
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">01</span>
+              <span className="text-[#B5502F] font-mono text-sm">01</span>
               <div>
                 <p className="text-gray-900 font-medium">Supervisor Console</p>
                 <p className="text-gray-600 text-sm mt-1">Verification tools, bulk approvals, and compliance dashboards for clinic administrators.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">02</span>
+              <span className="text-[#B5502F] font-mono text-sm">02</span>
               <div>
                 <p className="text-gray-900 font-medium">Eligibility Screening</p>
                 <p className="text-gray-600 text-sm mt-1">Pre-visit questionnaires to match patients with appropriate procedure types and student skill levels.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">03</span>
+              <span className="text-[#B5502F] font-mono text-sm">03</span>
               <div>
                 <p className="text-gray-900 font-medium">Community Partner Integration</p>
                 <p className="text-gray-600 text-sm mt-1">Partnerships with community health centers and nonprofits to widen patient reach.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#C75B3B] font-mono text-sm">04</span>
+              <span className="text-[#B5502F] font-mono text-sm">04</span>
               <div>
                 <p className="text-gray-900 font-medium">Expand to Other Specialties</p>
                 <p className="text-gray-600 text-sm mt-1">The model works for any healthcare training program — optometry, physical therapy, mental health counseling.</p>
@@ -654,7 +657,7 @@ export default function VersumCaseStudy() {
           viewport={{ once: true }}
           className="py-16 border-t border-gray-200"
         >
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</p>
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</h2>
           <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
             Versum Health isn't just about booking appointments — it's about making healthcare accessible to everyone, regardless of insurance status.
           </p>
@@ -662,13 +665,13 @@ export default function VersumCaseStudy() {
             This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the booking flow to transparent pricing on student cards — was grounded in research and empathy.
           </p>
           <p className="text-gray-600 leading-relaxed mb-6">
-            Versum Health is now live at <a href="https://versumhealth.com/" target="_blank" rel="noopener noreferrer" className="text-[#C75B3B] hover:text-[#A84A2E] underline">versumhealth.com</a>, and I'm excited to measure its real-world impact on patients and students alike.
+            Versum Health is now live at <a href="https://versumhealth.com/" target="_blank" rel="noopener noreferrer" className="text-[#B5502F] hover:text-[#A84A2E] underline">versumhealth.com</a>, and I'm excited to measure its real-world impact on patients and students alike.
           </p>
           <a
             href="https://versumhealth.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#C75B3B] hover:bg-[#A84A2E] text-white px-6 py-3 rounded-lg transition-colors font-medium"
+            className="inline-flex items-center gap-2 bg-[#B5502F] hover:bg-[#A84A2E] text-white px-6 py-3 rounded-lg transition-colors font-medium"
           >
             <span>Visit Live Site</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -680,17 +683,18 @@ export default function VersumCaseStudy() {
 
       {/* Footer Navigation */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
           <Link
             href="/"
-            className="text-gray-600 hover:text-[#C75B3B] transition-colors flex items-center gap-2"
+            className="text-gray-600 hover:text-[#B5502F] transition-colors flex items-center gap-2"
           >
             <span>←</span>
             <span>Back to Home</span>
           </Link>
+          <Link href="/work/pdf-penguin" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: PDF Penguin →</Link>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-gray-600 hover:text-[#C75B3B] transition-colors"
+            className="text-gray-600 hover:text-[#B5502F] transition-colors"
           >
             Back to Top ↑
           </button>

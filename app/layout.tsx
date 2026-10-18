@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, JetBrains_Mono, Caveat } from 'next/font/googl
 import './globals.css'
 import SocialLinks from './components/SocialLinks'
 import Footer from './components/Footer'
+import MotionProvider from './components/MotionProvider'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -25,18 +26,22 @@ const caveat = Caveat({
 })
 
 export const metadata: Metadata = {
-  title: 'Michael Bobov — Product Designer',
+  metadataBase: new URL('https://michaelbobov.com'),
+  title: {
+    default: 'Michael Bobov — Product Designer',
+    template: '%s — Michael Bobov',
+  },
   description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
   openGraph: {
     title: 'Michael Bobov — Product Designer',
     description: 'Product designer focused on AI, consumer experiences, and iterative product development.',
-    url: 'https://michaelbobov.com',
+    url: '/',
     siteName: 'Michael Bobov Portfolio',
     images: [
       {
         url: '/metadata.png',
-        width: 1200,
-        height: 630,
+        width: 1704,
+        height: 767,
         alt: 'Michael Bobov — Product Designer',
       },
     ],
@@ -51,7 +56,7 @@ export const metadata: Metadata = {
     creator: '@michaelbobov',
   },
   alternates: {
-    canonical: 'https://michaelbobov.com',
+    canonical: '/',
   },
   robots: {
     index: true,
@@ -73,15 +78,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
       <body className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} ${caveat.variable} font-sans h-full flex flex-col`}>
-        <main className="flex-1">
-          {children}
-        </main>
-        <SocialLinks />
-        <Footer />
+        <MotionProvider>
+          <div className="flex-1">
+            {children}
+          </div>
+          <SocialLinks />
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   )

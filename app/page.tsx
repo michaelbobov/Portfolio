@@ -11,7 +11,7 @@ const projects = [
   {
     id: 'versum',
     title: 'Versum Health',
-    description: 'Healthcare marketplace connecting patients with dental students',
+    description: 'Co-founded a two-sided marketplace connecting uninsured patients with supervised dental students. Live MVP.',
     tags: ['Healthcare', 'Marketplace'],
     heroImage: '/versumheroimage.png',
     link: '/work/versum',
@@ -22,7 +22,7 @@ const projects = [
   {
     id: 'pdf-penguin',
     title: 'PDF Penguin',
-    description: 'AI-powered document processing tool',
+    description: 'Drag-and-drop tool that turns messy PDFs into structured JSON using plain-language prompts.',
     tags: ['AI', 'Developer Tools'],
     heroImage: '/pdfpenguinhero.png',
     link: '/work/pdf-penguin',
@@ -33,7 +33,7 @@ const projects = [
   {
     id: 'spotify-loop',
     title: 'Spotify Loop',
-    description: 'Feature addition concept for micro-looping',
+    description: 'Unofficial concept: native song-section looping inside Spotify’s mobile player.',
     tags: ['Mobile', 'Feature Design'],
     heroImage: '/spotifyloophero.png',
     link: '/work/spotify-loop',
@@ -44,7 +44,7 @@ const projects = [
   {
     id: 'ez-recipe',
     title: 'EZ Recipe',
-    description: 'Constraint-based recipe generator',
+    description: 'AI recipe generator built around what’s already in your kitchen. Live, with 400+ recipes generated.',
     tags: ['Consumer', 'AI'],
     heroImage: '/ezrecipehero.png',
     link: '/work/ez-recipe',
@@ -95,7 +95,7 @@ function AnimatedWordRotator() {
   }, []);
 
   return (
-    <span className="font-serif italic text-[#C75B3B] inline-block min-w-[120px] md:min-w-[140px]">
+    <span className="font-serif italic text-[#B5502F] inline-block min-w-[120px] md:min-w-[140px]">
       <AnimatePresence mode="wait">
         {showEllipsis ? (
           <motion.span
@@ -144,58 +144,26 @@ export default function Home() {
     if (audioRef.current) {
       audioRef.current.volume = 0.7;
       audioRef.current.load();
-      
-      // Test if audio can play (for debugging)
-      audioRef.current.addEventListener('canplaythrough', () => {
-        console.log('Audio is ready to play');
-      });
-      
-      audioRef.current.addEventListener('error', (e) => {
-        console.error('Audio error:', e);
-      });
     }
   }, []);
 
   const handleMouseEnter = async () => {
     setIsHovered(true);
-    if (audioRef.current) {
-      try {
-        // Wait for duration to be available
-        if (isNaN(audioRef.current.duration) || audioRef.current.duration === 0) {
-          await new Promise((resolve) => {
-            const checkDuration = () => {
-              if (!isNaN(audioRef.current!.duration) && audioRef.current!.duration > 0) {
-                resolve(true);
-    } else {
-                setTimeout(checkDuration, 100);
-              }
-            };
-            checkDuration();
-          });
-    }
-        
-        // Calculate middle point
-        const middleTime = audioRef.current.duration / 2;
-        audioRef.current.currentTime = middleTime;
-        audioRef.current.volume = 0.7;
-        
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          await playPromise.then(() => {
-            console.log('Audio playing from middle');
-            // Stop after 0.5 seconds
-            setTimeout(() => {
-              if (audioRef.current) {
-                audioRef.current.pause();
-      }
-            }, 500);
-          }).catch((error) => {
-            console.error('Play promise rejected:', error);
-          });
-        }
-      } catch (error) {
-        console.error('Error playing audio:', error);
-      }
+    const audio = audioRef.current;
+    // Skip the sound if the audio hasn't loaded enough to know its duration yet
+    if (!audio || isNaN(audio.duration) || audio.duration === 0) return;
+
+    // Play a short clip from the middle of the sound
+    audio.currentTime = audio.duration / 2;
+    audio.volume = 0.7;
+    try {
+      await audio.play();
+      // Stop after 0.5 seconds
+      setTimeout(() => {
+        audioRef.current?.pause();
+      }, 500);
+    } catch {
+      // Autoplay can be blocked before the first user interaction; fail silently
     }
   };
 
@@ -212,7 +180,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#C75B3B] transition-colors">
+          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#B5502F] transition-colors">
             MICHAEL BOBOV
           </Link>
           <Navigation />
@@ -234,6 +202,9 @@ export default function Home() {
               <span className="font-serif">designer who </span>
               <AnimatedWordRotator />
             </h1>
+            <p className="mt-6 text-lg md:text-xl text-gray-600 max-w-xl">
+              Product designer focused on AI and consumer experiences. I take products from research to shipped code. Two of the projects below are live.
+            </p>
           </motion.div>
 
           {/* Right - Sticky Note Image */}
@@ -244,15 +215,17 @@ export default function Home() {
             className="-mt-16 lg:-mt-20 flex justify-center lg:justify-start items-start lg:ml-8"
           >
             <Link 
-              href="/me"
+              href="https://about.michaelbobov.com/"
+              aria-label="About me"
               className="relative block"
             >
               <Image
                 src={isHovered ? "/postitbend.png" : "/stickynote.png"}
-                alt="Sticky Note"
+                alt=""
                 width={350}
                 height={350}
                 className="w-auto h-auto max-w-[260px] md:max-w-[320px] transition-none"
+                sizes="(min-width: 768px) 320px, 260px"
                 priority
               />
               <div
@@ -296,7 +269,7 @@ export default function Home() {
           >
           {/* Section Label */}
           <div className="mb-8 md:mb-12">
-            <span className="font-mono text-sm text-gray-400 tracking-wide">SELECTED WORK</span>
+            <h2 className="font-mono text-sm text-gray-500 tracking-wide">SELECTED WORK</h2>
           </div>
 
           {/* Asymmetrical Bento Grid */}
@@ -316,7 +289,8 @@ export default function Home() {
                 >
                   <Image
                     src={projects[0].heroImage}
-                    alt={projects[0].title}
+                    alt=""
+                    sizes="(min-width: 768px) 58vw, 100vw"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     priority
@@ -324,14 +298,15 @@ export default function Home() {
                 </div>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#C75B3B] transition-colors">
+                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#B5502F] transition-colors">
                       {projects[0].title}
                     </h3>
+                    <p className="text-gray-600 font-sans mb-2">{projects[0].description}</p>
                     <p className="text-sm text-gray-500 font-sans">
                       {projects[0].tags.join(' · ')}
                     </p>
                   </div>
-                  <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[0].year}</span>
+                  <span className="font-mono text-xs text-[#B5502F] flex-shrink-0">{projects[0].year}</span>
                 </div>
               </Link>
               </motion.div>
@@ -351,7 +326,8 @@ export default function Home() {
                 >
                         <Image
                     src={projects[1].heroImage}
-                    alt={projects[1].title}
+                    alt=""
+                    sizes="(min-width: 768px) 42vw, 100vw"
                           fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     priority
@@ -359,14 +335,15 @@ export default function Home() {
                             </div>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#C75B3B] transition-colors">
+                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#B5502F] transition-colors">
                       {projects[1].title}
                     </h3>
+                    <p className="text-gray-600 font-sans mb-2">{projects[1].description}</p>
                     <p className="text-sm text-gray-500 font-sans">
                       {projects[1].tags.join(' · ')}
                     </p>
                           </div>
-                  <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[1].year}</span>
+                  <span className="font-mono text-xs text-[#B5502F] flex-shrink-0">{projects[1].year}</span>
                         </div>
               </Link>
             </motion.div>
@@ -386,21 +363,23 @@ export default function Home() {
                 >
                           <Image
                     src={projects[2].heroImage}
-                    alt={projects[2].title}
+                    alt=""
+                    sizes="(min-width: 768px) 42vw, 100vw"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#C75B3B] transition-colors">
+                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#B5502F] transition-colors">
                       {projects[2].title}
                     </h3>
+                    <p className="text-gray-600 font-sans mb-2">{projects[2].description}</p>
                     <p className="text-sm text-gray-500 font-sans">
                       {projects[2].tags.join(' · ')}
                     </p>
                   </div>
-                  <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[2].year}</span>
+                  <span className="font-mono text-xs text-[#B5502F] flex-shrink-0">{projects[2].year}</span>
                 </div>
               </Link>
             </motion.div>
@@ -420,21 +399,23 @@ export default function Home() {
                 >
                           <Image
                     src={projects[3].heroImage}
-                    alt={projects[3].title}
+                    alt=""
+                    sizes="(min-width: 768px) 58vw, 100vw"
                             fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                 </div>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#C75B3B] transition-colors">
+                    <h3 className="font-sans text-xl md:text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[#B5502F] transition-colors">
                       {projects[3].title}
                     </h3>
+                    <p className="text-gray-600 font-sans mb-2">{projects[3].description}</p>
                     <p className="text-sm text-gray-500 font-sans">
                       {projects[3].tags.join(' · ')}
                     </p>
                             </div>
-                  <span className="font-mono text-xs text-[#C75B3B] flex-shrink-0">{projects[3].year}</span>
+                  <span className="font-mono text-xs text-[#B5502F] flex-shrink-0">{projects[3].year}</span>
                           </div>
               </Link>
                 </motion.div>
@@ -459,7 +440,7 @@ export default function Home() {
           </p>
           <a 
             href="mailto:michael@michaelbobov.com" 
-            className="inline-flex items-center gap-2 font-mono text-sm text-[#C75B3B] hover:text-[#A84A2E] transition-colors group"
+            className="inline-flex items-center gap-2 font-mono text-sm text-[#B5502F] hover:text-[#A84A2E] transition-colors group"
             >
             <span>GET IN TOUCH</span>
             <svg 
