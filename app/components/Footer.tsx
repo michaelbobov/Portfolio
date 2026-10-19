@@ -39,23 +39,6 @@ export default function Footer() {
         </li>
       </ul>
       <p className="wf-foot-note">Product designer in Seattle</p>
-      {/* The homepage hero photos are CC BY (credit required); the CC0 platform clip is credited anyway */}
-      {pathname === '/' && (
-        <p className="wf-foot-credits">
-          Station photos:{' '}
-          <a href="https://commons.wikimedia.org/w/index.php?curid=35447866">&ldquo;Southbound Link arriving at Mount Baker&rdquo;</a>{' '}
-          by Chas Redmond, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>;{' '}
-          <a href="https://commons.wikimedia.org/w/index.php?curid=80412716">
-            &ldquo;JR Ikebukuro Yamanote Line platform and platform doors&rdquo;
-          </a>{' '}
-          by Nesnad, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; both via Wikimedia Commons.
-          Converted to black and white. Platform footage:{' '}
-          <a href="https://commons.wikimedia.org/wiki/File:Tokyo_-_Kawagoe_train_passing_by_platform.webm">
-            &ldquo;Tokyo - Kawagoe train passing by platform&rdquo;
-          </a>{' '}
-          by franck injapan, CC0, via Wikimedia Commons.
-        </p>
-      )}
     </footer>
   );
 }

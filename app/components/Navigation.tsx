@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, FocusEvent as ReactFocusEvent } from 'react';
-import Clocks from '@/app/components/Clocks';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -265,7 +264,7 @@ export default function Navigation() {
     <button
       ref={hamburgerRef}
       onClick={() => setIsMobileMenuOpen(true)}
-      className="wf-burger md:hidden -mr-2 p-2 rounded-lg hover:bg-wf-line/60 transition-colors"
+      className="md:hidden -mr-2 p-2 rounded-lg hover:bg-wf-line/60 transition-colors"
       aria-label="Open menu"
       aria-expanded={isMobileMenuOpen}
       aria-controls="mobile-menu"
@@ -280,7 +279,7 @@ export default function Navigation() {
   return (
     <>
       <div className="flex items-center gap-3 sm:gap-4 md:gap-6 text-sm">
-        <div className="wf-navlinks hidden md:flex items-center gap-[22px] text-wf-muted">
+        <div className="hidden md:flex items-center gap-[22px] text-wf-muted">
           <div
             ref={dropdownRef}
             className="relative"
@@ -344,7 +343,6 @@ export default function Navigation() {
             Resume<span className="sr-only"> (PDF, opens in a new tab)</span>
           </a>
         </div>
-        <Clocks />
         {hamburgerButton}
       </div>
       {mobileMenu}

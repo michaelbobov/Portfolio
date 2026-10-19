@@ -1,307 +1,113 @@
 /*
-  Homepage: a wayfinding system. Statement + station sign (Seattle, next: Tokyo) with a train on
-  its line bar, the work as a route map beside a sticky train window, and a transfer platform to
-  the "me" page. Colours and easing tokens live in globals.css (--wf-*).
-  House rules: no hairlines (space and tone steps separate), no shadows at rest, Geist everywhere
-  except the two real artefacts (the LED panels, in DotGothic16). Radii: 20 sheets, 12 badges,
-  pill buttons.
-  Motion: transform/opacity (plus the spec's small blurs). Springs run in rAF via refs, trains are
-  Web Animations, swaps are interruptible CSS transitions, hover only on fine pointers, and full
-  reduced-motion handling at the end.
+  Homepage: a clean typographic page. A big staggered statement, the work as a tidy list beside a
+  sticky preview window, a plain "More about me" link, and a small "Today" block.
+  House rules: no hairlines (space and tone steps separate), no shadows at rest, no mono labels,
+  running text in full ink. Ink is the accent; the only other colour is the green "live" dot.
+  Motion budget: the intro line reveal, the window swap, hover/press feedback, the "More about me"
+  arrow and underline, and calm scroll reveals. Hover only on fine pointers; full reduced-motion
+  handling at the end. Tokens live in globals.css (--wf-*).
 */
 
-/* The intro slides the sign in from the right; clip (not hidden: sticky keeps working) so it never adds sideways scroll */
-.wf-home { overflow-x: clip; }
 .wf-home :focus-visible { outline: 2px solid var(--wf-ink); outline-offset: 3px; border-radius: 6px; }
 
-/* ---------- top bar: white over the hero photo, ink on the page ground once past it ---------- */
-.wf-topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 30; background-color: var(--wf-bg); color: var(--wf-ink); transition: background-color 200ms ease, color 200ms ease; }
-.wf-topbar.on-photo { background-color: transparent; color: #fff; }
-.wf-topbar .wf-navlinks > a, .wf-topbar .wf-navlinks > div > button, .wf-topbar .wf-clocks, .wf-topbar .wf-clocks b, .wf-topbar .wf-burger svg { transition: color 200ms ease; }
-.wf-topbar.on-photo .wf-navlinks > a, .wf-topbar.on-photo .wf-navlinks > div > button { color: rgba(255, 255, 255, 0.82); }
-.wf-topbar.on-photo .wf-clocks { color: rgba(255, 255, 255, 0.72); }
-.wf-topbar.on-photo .wf-clocks b, .wf-topbar.on-photo .wf-burger svg { color: #fff; }
-.wf-topbar.on-photo :focus-visible { outline-color: #fff; }
-@media (hover: hover) and (pointer: fine) {
-  .wf-topbar.on-photo .wf-navlinks > a:hover, .wf-topbar.on-photo .wf-navlinks > div > button:hover { color: #fff; }
-  .wf-topbar.on-photo .wf-burger:hover { background-color: rgba(255, 255, 255, 0.14); }
-}
-
-/* ---------- hero: a full-bleed monochrome platform photo that changes with the station ---------- */
-.wf-hero { position: relative; }
-.wf-hero-band { position: relative; overflow: hidden; background: #1b1d20; color: #fff; }
-.wf-photos { position: absolute; inset: 0; }
-/* Each layer is 3% wider on both sides, so its ±3% travel never shows an edge */
-.wf-photo { position: absolute; top: 0; bottom: 0; left: -3%; right: -3%; opacity: 0; transform: translateX(3%); filter: blur(2px); }
-/* Synced with the bar marker: out during its 380ms departure, in over its 800ms arrival */
-.wf-photo.is-on { opacity: 1; transform: none; filter: none; transition: opacity 800ms var(--wf-ease-out) 380ms, transform 800ms var(--wf-ease-out) 380ms, filter 800ms var(--wf-ease-out) 380ms; }
-.wf-photo.is-out { opacity: 0; transform: translateX(-3%); filter: none; transition: opacity 380ms ease, transform 380ms var(--wf-ease-depart); }
-.wf-photo.no-tr { transition: none !important; }
-/* The black-and-white treatment is static; only the layer around it moves */
-.wf-photo-img { filter: grayscale(1) contrast(1.08) brightness(0.6); }
-/* One neutral scrim: a little shade under the bar, dark on the left behind the headline, and a
-   fade into the page ground over the last 80px so the hero joins the page */
-.wf-hero-scrim { position: absolute; inset: 0; pointer-events: none; background:
-  linear-gradient(to bottom, rgba(243, 243, 240, 0) calc(100% - 80px), var(--wf-bg)),
-  linear-gradient(90deg, rgba(10, 11, 13, 0.72), rgba(10, 11, 13, 0) 70%),
-  linear-gradient(to bottom, rgba(10, 11, 13, 0.45), rgba(10, 11, 13, 0) 180px); }
-.wf-hero-copy { position: relative; z-index: 1; padding-top: 112px; padding-bottom: 96px; }
-.wf-hero-signwrap { position: relative; z-index: 2; margin-top: -32px; }
-.wf-hero-signwrap .wf-sign { max-width: 460px; }
-@media (min-width: 1200px) {
-  .wf-hero-band { height: 92vh; height: 92svh; min-height: 640px; display: flex; align-items: flex-end; }
-  .wf-hero-copy { width: 100%; padding-bottom: 112px; }
-  /* The sign hangs bottom-right, 48px over the photo's lower edge into the page */
-  .wf-hero-signwrap { position: absolute; left: 0; right: 0; bottom: -48px; margin: 0 auto; display: flex; justify-content: flex-end; pointer-events: none; }
-  .wf-hero-signwrap .wf-sign { width: min(460px, 30vw); pointer-events: auto; }
-}
-@media (max-width: 1199px) {
-  .wf-hero-copy { padding-bottom: 88px; }
-}
-@media (max-width: 599px) {
-  .wf-hero-copy { padding-top: 104px; padding-bottom: 104px; }
-}
-.wf-hero-copy :focus-visible { outline-color: #fff; }
-.wf-intro .wf-photo.is-on .wf-photo-img { animation: wf-photo-settle 1600ms var(--wf-ease-out) both; }
-@keyframes wf-photo-settle { from { transform: scale(1.04); } }
-
-.wf-lines { margin: 0; color: #fff; font-weight: 500; font-size: clamp(44px, 7.2vw, 108px); line-height: 0.95; letter-spacing: -0.045em; }
+/* ---------- hero statement (sized to its content) ---------- */
+.wf-hero { padding-top: 88px; }
+.wf-lines { margin: 0; font-weight: 500; font-size: clamp(44px, 7.2vw, 108px); line-height: 0.95; letter-spacing: -0.045em; }
 .wf-lines > span { display: block; padding-bottom: 0.08em; margin-bottom: -0.08em; }
 /* Each line is a mask only while the intro plays, so the link's focus ring is never clipped */
 .wf-intro .wf-lines > span { overflow: hidden; }
 .wf-lines > span > span { display: block; }
 .wf-lines .wf-in { padding-left: 0.4em; }
 @media (max-width: 599px) { .wf-lines .wf-in { padding-left: 0; } }
-/* The last line is the quieter note under the statement */
-.wf-lines .wf-dim { color: rgba(255, 255, 255, 0.7); font-size: max(22px, 0.4em); line-height: 1.2; letter-spacing: -0.02em; margin-top: 0.8em; }
+/* The quieter note under the statement */
+.wf-lines .wf-dim { color: var(--wf-muted); font-size: clamp(24px, 2.9vw, 42px); line-height: 1.2; letter-spacing: -0.02em; margin-top: 0.7em; }
 .wf-lines a { color: inherit; text-decoration: underline; text-decoration-thickness: 0.06em; text-underline-offset: 0.14em; transition: color 160ms ease; }
-@media (hover: hover) and (pointer: fine) { .wf-lines a:hover { color: #fff; } }
-
-/* ---------- station sign (駅名標) ---------- */
-.wf-sign { position: relative; margin: 0; background: var(--wf-sheet); border-radius: 20px; overflow: hidden; }
-.wf-sky { height: 10px; background: var(--sky, #9cc6e8); transition: background-color 600ms ease; }
-.wf-sign-body { padding: 24px 24px 20px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 20px; align-items: start; }
-.wf-badge { width: 64px; height: 64px; margin-top: 6px; border-radius: 12px; border: 4px solid var(--lc, var(--wf-sea)); background: var(--wf-sheet); display: grid; place-items: center; align-content: center; line-height: 1; transition: border-color 400ms ease; }
-.wf-badge .wf-code { font-weight: 700; font-size: 13px; line-height: 1; letter-spacing: 0.04em; }
-.wf-badge .wf-num { font-weight: 700; font-size: 22px; line-height: 1.05; font-variant-numeric: tabular-nums; }
-.wf-names { position: relative; min-height: 92px; }
-.wf-name { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; }
-.wf-name .wf-kana { font-family: var(--font-noto-jp), "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 700; font-size: 15px; line-height: 1.2; color: var(--wf-muted); }
-.wf-name .wf-en { font-weight: 700; font-size: clamp(36px, 3.2vw, 42px); line-height: 1.05; letter-spacing: -0.03em; }
-.wf-name .wf-note { font-size: 15px; line-height: 1.4; color: var(--wf-muted); margin-top: 2px; }
-.wf-name.leave-l { animation: wf-leave-l 200ms ease both; }
-.wf-name.leave-r { animation: wf-leave-r 200ms ease both; }
-.wf-name.enter-r { animation: wf-enter-r 420ms var(--wf-ease-out) both; }
-.wf-name.enter-l { animation: wf-enter-l 420ms var(--wf-ease-out) both; }
-@keyframes wf-leave-l { to { opacity: 0; transform: translateX(-28px); filter: blur(2px); } }
-@keyframes wf-leave-r { to { opacity: 0; transform: translateX(28px); filter: blur(2px); } }
-@keyframes wf-enter-r { from { opacity: 0; transform: translateX(36px); filter: blur(2px); } }
-@keyframes wf-enter-l { from { opacity: 0; transform: translateX(-36px); filter: blur(2px); } }
-
-/* Platform LED: names the real line. The one place a middle dot is allowed (it is real signage). */
-.wf-pled { grid-column: 2; justify-self: start; max-width: 100%; margin-top: 12px; display: inline-flex; overflow: hidden; padding: 7px 12px 6px; border-radius: 999px; background: var(--wf-led-bg); color: var(--wf-led); font-family: var(--font-dot), "Hiragino Sans", sans-serif; font-size: 14px; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
-.wf-pled-text { display: block; }
-
-.wf-time { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 22px; font-size: 14px; color: var(--wf-muted); }
-.wf-time b { color: var(--wf-ink); font-weight: 500; font-variant-numeric: tabular-nums; font-size: 15px; }
-
-/* The line bar: a train rides it and stops on the station dot */
-.wf-track-bar { position: relative; height: 44px; overflow: hidden; container-type: inline-size; background: var(--lc, var(--wf-sea)); color: var(--lc-ink, #fff); display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; transition: background-color 400ms ease, color 400ms ease; }
-.wf-track-bar button { position: relative; z-index: 2; appearance: none; border: 0; background: none; color: inherit; font-weight: 500; font-size: 14px; line-height: 1; cursor: pointer; height: 100%; display: flex; align-items: center; gap: 8px; padding: 0 16px; white-space: nowrap; transition: background-color 160ms ease, transform 140ms var(--wf-ease-out); }
-.wf-track-bar button svg { flex: none; }
-.wf-track-bar button:active { transform: scale(0.97); }
-.wf-track-bar button[aria-disabled="true"] { opacity: 0.5; cursor: default; background: none; transform: none; }
-.wf-track-bar button:focus-visible { outline-color: currentColor; outline-offset: -5px; border-radius: 999px; }
-.wf-track-bar .wf-prev { justify-self: start; }
-.wf-track-bar .wf-next { justify-self: end; }
-.wf-track-bar .wf-next-kana { margin-left: 0.6em; }
-.wf-track-bar .wf-here { width: 40px; height: 22px; } /* keeps the centre clear for the marker */
-/* "You are here" (the JR train-LCD convention): a white dot with a translucent halo, and a short
-   motion streak behind it that shows only while it runs (StationSign toggles .is-moving) */
-.wf-marker { position: absolute; z-index: 1; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; box-sizing: border-box; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.38); background: #fff; background-clip: padding-box; pointer-events: none; }
-.wf-marker::before { content: ""; position: absolute; top: 50%; right: 100%; width: 48px; height: 6px; margin-top: -3px; border-radius: 3px; background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0)); opacity: 0; transition: opacity 120ms ease; }
-.wf-marker.is-rev::before { right: auto; left: 100%; background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0)); }
-.wf-marker.is-moving::before { opacity: 0.5; }
-.wf-sign-foot { padding: 12px 24px 14px; font-size: 14px; color: var(--wf-muted); }
-@media (max-width: 479px) {
-  .wf-sign-body { padding: 20px 18px 18px; gap: 0 16px; }
-  .wf-track-bar .wf-next-kana { display: none; }
-  .wf-sign-foot { padding-inline: 18px; }
-}
-.wf-jp { font-family: var(--font-noto-jp), "Hiragino Sans", "Yu Gothic", sans-serif; }
+@media (hover: hover) and (pointer: fine) { .wf-lines a:hover { color: var(--wf-ink); } }
+@media (max-width: 767px) { .wf-hero { padding-top: 48px; } }
 
 /* ---------- sections ---------- */
 .wf-section { padding-top: 160px; }
-.wf-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; margin-bottom: 32px; }
+.wf-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; margin-bottom: 24px; }
 .wf-head h2 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
 .wf-head p { margin: 0; font-size: 15px; color: var(--wf-muted); }
 @media (max-width: 767px) { .wf-section { padding-top: 96px; } }
 
-/* ---------- work: route list + train window ---------- */
+/* ---------- selected work: list + sticky preview window ---------- */
 @media (min-width: 1024px) {
-  .wf-work { display: grid; grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); column-gap: 56px; align-items: stretch; }
+  .wf-work { display: grid; grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); column-gap: 64px; align-items: stretch; }
 }
-.wf-route { position: relative; }
-.wf-stops { list-style: none; margin: 0; padding: 40px 0 0; }
-.wf-rail { position: absolute; left: 31px; top: 8px; bottom: 0; width: 6px; border-radius: 3px; background: var(--wf-line); }
-.wf-rail-fill { position: absolute; inset: 0; border-radius: 3px; background: var(--wf-sea); transform-origin: 50% 0; transform: scaleY(0); }
-/* The rail's position marker: an ink dot with a halo in the line colour, and a vertical streak
-   behind it while the spring moves it (RouteMap toggles .is-moving / .is-up) */
-.wf-rmark { position: absolute; left: 23px; top: 0; z-index: 2; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 4px solid color-mix(in srgb, var(--wf-sea) 45%, transparent); background: var(--wf-ink); background-clip: padding-box; opacity: 0; transition: opacity 200ms ease; will-change: transform; }
-.wf-rmark.on { opacity: 1; }
-.wf-rmark::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 6px; height: 48px; margin-left: -3px; border-radius: 3px; background: linear-gradient(to top, var(--wf-ink), rgba(18, 20, 23, 0)); opacity: 0; transition: opacity 120ms ease; }
-.wf-rmark.is-up::before { bottom: auto; top: 100%; background: linear-gradient(to bottom, var(--wf-ink), rgba(18, 20, 23, 0)); }
-.wf-rmark.is-moving::before { opacity: 0.5; }
-
-.wf-stop a { position: relative; display: grid; grid-template-columns: 68px minmax(0, 1fr); column-gap: 20px; padding-block: 20px; text-decoration: none; color: inherit; }
-.wf-stop .wf-sb { justify-self: center; position: relative; z-index: 1; width: 52px; height: 52px; border-radius: 12px; border: 3px solid var(--wf-sea); background: var(--wf-sheet); display: grid; place-items: center; align-content: center; line-height: 1; transition: transform 220ms var(--wf-ease-out); }
-.wf-stop .wf-sb .wf-code { font-weight: 700; font-size: 13px; line-height: 1; letter-spacing: 0.02em; }
-.wf-stop .wf-sb .wf-num { font-weight: 700; font-size: 17px; line-height: 1.05; font-variant-numeric: tabular-nums; }
-.wf-stop-body { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; padding-top: 9px; }
-.wf-stop h3 { margin: 0; font-size: 28px; font-weight: 600; line-height: 1.15; letter-spacing: -0.025em; display: inline-flex; gap: 10px; align-items: center; transition: transform 220ms var(--wf-ease-out), opacity 200ms ease; }
-.wf-stops.has-active .wf-stop:not(.is-active) h3 { opacity: 0.55; }
-.wf-stop .wf-go-icon { flex: none; opacity: 0; transform: translate(-4px, 4px); transition: opacity 180ms ease, transform 220ms var(--wf-ease-out); }
-.wf-stop .wf-what { font-size: 17px; line-height: 1.5; color: var(--wf-ink); max-width: 36em; }
-.wf-stop .wf-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; font-size: 14px; color: var(--wf-muted); }
-.wf-st { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-.wf-st.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #1f9d63; }
-.wf-stop .wf-thumb { display: none; }
+.wf-rows { list-style: none; margin: 0; padding: 0; }
+.wf-row a { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-block: 20px; text-decoration: none; color: inherit; }
+.wf-row h3 { margin: 0; font-size: 28px; font-weight: 600; line-height: 1.15; letter-spacing: -0.025em; display: inline-flex; gap: 10px; align-items: center; transition: transform 220ms var(--wf-ease-out), opacity 200ms ease; }
+.wf-rows.has-active .wf-row:not(.is-active) h3 { opacity: 0.55; }
+.wf-row .wf-go-icon { flex: none; opacity: 0; transform: translate(-4px, 4px); transition: opacity 180ms ease, transform 220ms var(--wf-ease-out); }
+.wf-row .wf-meta { font-size: 14px; color: var(--wf-muted); }
+.wf-row .wf-what { font-size: 17px; line-height: 1.5; color: var(--wf-ink); max-width: 36em; }
+.wf-st { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.wf-st.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--wf-live); }
+.wf-row .wf-thumb { display: none; }
 @media (hover: hover) and (pointer: fine) {
-  .wf-stop a:hover h3 { transform: translateX(4px); }
-  .wf-stop a:hover .wf-go-icon { opacity: 1; transform: none; }
-  .wf-stop a:hover .wf-sb { transform: scale(1.06); }
-  .wf-track-bar button:not([aria-disabled="true"]):hover { background: color-mix(in srgb, currentColor 14%, transparent); }
+  .wf-row a:hover h3 { transform: translateX(4px); }
+  .wf-row a:hover .wf-go-icon { opacity: 1; transform: none; }
 }
-/* Keyboard users get the same row cue as hover */
-.wf-stop a:focus-visible .wf-go-icon { opacity: 1; transform: none; }
-
-/* Mobile and tablet: no window; each stop carries its own picture */
+/* Keyboard users get the same cue as hover */
+.wf-row a:focus-visible .wf-go-icon { opacity: 1; transform: none; }
+/* Phones and tablets: no window; each project carries its own picture */
 @media (max-width: 1023px) {
-  .wf-stop .wf-thumb { display: block; position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; margin-top: 8px; background: var(--f, var(--wf-frame)); }
+  .wf-row .wf-thumb { display: block; position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; margin-top: 8px; background: var(--f, var(--wf-frame)); }
 }
-@media (max-width: 767px) {
-  .wf-rail { left: 23px; }
-  .wf-rmark { left: 15px; }
-  .wf-stop a { grid-template-columns: 52px minmax(0, 1fr); column-gap: 14px; }
-  .wf-stop .wf-sb { width: 44px; height: 44px; }
-  .wf-stop .wf-sb .wf-num { font-size: 16px; }
-  .wf-stop-body { padding-top: 7px; }
-  .wf-stop h3 { font-size: 22px; }
-}
+@media (max-width: 767px) { .wf-row h3 { font-size: 24px; } }
 
-/* The train window (desktop): a sticky, framed view of the active stop */
+/* The preview window (desktop): sticky, framed by one tone step */
 .wf-window-col { display: none; }
 @media (min-width: 1024px) {
-  .wf-window-col { display: block; padding-top: 40px; }
-  .wf-window { position: sticky; top: 96px; }
+  .wf-window-col { display: block; padding-top: 20px; }
+  .wf-window { position: sticky; top: 48px; }
 }
-.wf-pane { position: relative; aspect-ratio: 4 / 3; border-radius: 28px; background: var(--wf-frame); }
-.wf-glass { position: absolute; inset: 10px; border-radius: 18px; overflow: hidden; background: var(--wf-sheet); }
-/* Swap: the outgoing view fades (200ms) and only then resets; the incoming one slides in from the
-   right like scenery past a window. Transitions, so a quick hover across rows retargets cleanly. */
+.wf-pane { position: relative; aspect-ratio: 4 / 3; border-radius: 20px; background: var(--wf-frame); }
+.wf-glass { position: absolute; inset: 10px; border-radius: 10px; overflow: hidden; background: var(--wf-sheet); }
+/* Swap: the outgoing view fades (200ms) and only then resets; the incoming one slides in 28px
+   from the right with a little blur. Transitions, so a quick hover across rows retargets cleanly. */
 .wf-view { position: absolute; inset: 0; background: var(--wf-frame); opacity: 0; transform: translateX(28px); filter: blur(2px); transition: opacity 200ms ease, transform 0s linear 200ms, filter 0s linear 200ms; }
 .wf-view.is-on { z-index: 1; opacity: 1; transform: none; filter: none; transition: opacity 460ms var(--wf-ease-out), transform 460ms var(--wf-ease-out), filter 460ms var(--wf-ease-out); }
-.wf-caps { display: grid; margin-top: 18px; padding-inline: 4px; }
+.wf-caps { display: grid; margin-top: 16px; padding-inline: 4px; }
 .wf-cap { grid-area: 1 / 1; margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: 14px; color: var(--wf-muted); opacity: 0; transition: opacity 200ms ease; }
 .wf-cap.is-on { opacity: 1; }
 .wf-cap .wf-cap-name { font-size: 17px; font-weight: 600; color: var(--wf-ink); }
 
-/* ---------- LED "next stop" panel (floats, so it may cast a shadow) ---------- */
-.wf-led {
-  position: fixed; left: 50%; bottom: 18px; z-index: 20;
-  transform: translate(-50%, 160%); transition: transform 380ms var(--wf-ease-arrive);
-  display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-radius: 12px;
-  background: var(--wf-led-bg); color: var(--wf-led); font-family: var(--font-dot), "Hiragino Sans", sans-serif; font-size: 15px; line-height: 1; letter-spacing: 0.06em;
-  box-shadow: 0 16px 40px -18px rgba(0, 0, 0, 0.6); max-width: calc(100vw - 32px); white-space: nowrap;
-}
-.wf-led.on { transform: translate(-50%, 0); }
-.wf-led .wf-lbl { display: inline-grid; min-width: 3.4em; }
-.wf-led .wf-lbl span { grid-area: 1 / 1; transition: opacity 300ms ease; }
-.wf-led .wf-lbl span + span { opacity: 0; }
-.wf-led.jp-on .wf-lbl span { opacity: 0; }
-.wf-led.jp-on .wf-lbl span + span { opacity: 1; }
-.wf-led .wf-arrow { flex: none; color: var(--wf-tyo); }
-.wf-led .wf-dest { overflow: hidden; text-overflow: ellipsis; }
-
-/* ---------- transfer: a hanging JR transfer sign (乗換) over real platform footage ---------- */
-/* Full-bleed band; the clip is black and white like the hero photos */
-.wf-xband { --drop: 132px; position: relative; height: 440px; overflow: hidden; background: #1b1d20; }
-.wf-xband-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: grayscale(1) contrast(1.05) brightness(0.55); }
-/* The sign hangs from the band's top edge, like a sign hung from a platform ceiling, about 40% down */
-.wf-xband-inner { position: relative; z-index: 1; padding-top: var(--drop); }
-.wf-xsign { position: relative; display: grid; grid-template-columns: 112px auto auto auto; align-items: center; width: max-content; max-width: 100%; min-height: 112px; border-radius: 8px; background: #121417; color: #fff; text-decoration: none; transition: transform 140ms var(--wf-ease-out); }
-.wf-xsign:active { transform: scale(0.99); }
-.wf-xsign:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: 10px; }
-/* The rods it hangs from, light enough to read against the dark footage */
-.wf-xs-rod { position: absolute; bottom: 100%; left: 15%; width: 3px; height: var(--drop); margin-left: -1.5px; background: #9a9fa6; }
-.wf-xs-rod-r { left: 85%; }
-.wf-xs-arrow { align-self: stretch; display: grid; place-items: center; overflow: hidden; border-radius: 8px 0 0 8px; background: #ffd400; color: #121417; transition: background-color 160ms ease; }
-.wf-xs-arrow svg { display: block; }
-.wf-xs-jp { display: flex; flex-direction: column; gap: 2px; padding: 16px 0 16px 28px; }
-.wf-xs-kanji { font-family: var(--font-noto-jp), "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 700; font-size: 30px; line-height: 1.1; }
-.wf-xs-en { font-weight: 600; font-size: 15px; color: rgba(255, 255, 255, 0.7); }
-.wf-xs-to { display: flex; align-items: center; gap: 18px; padding: 16px 0 16px 40px; min-width: 0; }
-/* The "Me line" bullet, styled like a JR line code */
-.wf-xs-bullet { flex: none; width: 52px; height: 52px; border-radius: 50%; background: #fff; box-sizing: border-box; border: 5px solid var(--wf-tyo); color: var(--wf-ink); display: grid; place-items: center; font-weight: 700; font-size: 18px; line-height: 1; letter-spacing: -0.01em; }
-.wf-xs-dest { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.wf-xs-t1 { font-weight: 600; font-size: 26px; line-height: 1.1; letter-spacing: -0.015em; }
-.wf-xs-t2 { font-size: 15px; color: rgba(255, 255, 255, 0.6); overflow-wrap: anywhere; }
-.wf-xs-led { justify-self: end; padding: 0 28px 0 56px; font-family: var(--font-dot), "Hiragino Sans", sans-serif; font-size: 15px; letter-spacing: 0.08em; color: var(--wf-led); white-space: nowrap; }
-/* Hover / focus: the arrow goes out to the top-right and comes back from the bottom-left, once */
-@keyframes wf-xs-arrow {
-  0% { transform: none; animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); }
-  50% { transform: translate(140%, -140%); }
-  50.01% { transform: translate(-140%, 140%); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); }
-  100% { transform: none; }
-}
-.wf-xsign:focus-visible .wf-xs-arrow { background: #ffdf33; }
-.wf-xsign:focus-visible .wf-xs-arrow svg { animation: wf-xs-arrow 360ms both; }
+/* ---------- "More about me": a plain, confident link ---------- */
+.wf-more { display: inline-flex; flex-direction: column; gap: 10px; color: var(--wf-ink); text-decoration: none; transition: transform 140ms var(--wf-ease-out); }
+.wf-more:active { transform: scale(0.99); }
+.wf-more:focus-visible { outline-offset: 8px; border-radius: 8px; }
+.wf-more-line { display: inline-flex; align-items: center; gap: 16px; font-size: clamp(36px, 3.4vw, 48px); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; }
+/* The underline draws from left to right (a transformed bar, so it stays on the compositor) */
+.wf-more-text { position: relative; padding-bottom: 6px; }
+.wf-more-text::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 2px; background: currentColor; transform: scaleX(0); transform-origin: left center; transition: transform 320ms var(--wf-ease-out); }
+.wf-more-arrow { flex: none; transition: transform 220ms var(--wf-ease-out); }
+.wf-more-url { font-size: 17px; color: var(--wf-muted); }
+.wf-more:focus-visible .wf-more-text::after { transform: scaleX(1); }
+.wf-more:focus-visible .wf-more-arrow { transform: translateX(6px); }
 @media (hover: hover) and (pointer: fine) {
-  .wf-xsign:hover .wf-xs-arrow { background: #ffdf33; }
-  .wf-xsign:hover .wf-xs-arrow svg { animation: wf-xs-arrow 360ms both; }
+  .wf-more:hover .wf-more-text::after { transform: scaleX(1); }
+  .wf-more:hover .wf-more-arrow { transform: translateX(6px); }
 }
-@media (max-width: 899px) { .wf-xs-led { display: none; } .wf-xsign { grid-template-columns: 112px auto auto; } .wf-xs-to { padding-right: 28px; } }
-/* Phones: one board, two rows. Row 1: arrow + 乗換 Transfer. Row 2: the Me line bullet + destination. */
-@media (max-width: 699px) {
-  .wf-xsign { grid-template-columns: 72px minmax(0, 1fr); grid-template-rows: 72px auto; min-height: 0; }
-  .wf-xs-arrow { border-radius: 8px 0 0 0; }
-  .wf-xs-arrow svg { width: 32px; height: 32px; }
-  .wf-xs-jp { padding: 0 0 0 18px; flex-direction: row; align-items: baseline; gap: 12px; }
-  .wf-xs-kanji { font-size: 26px; }
-  .wf-xs-to { grid-column: 1 / -1; padding: 16px 18px 18px; gap: 14px; }
-  .wf-xs-bullet { width: 44px; height: 44px; border-width: 4px; font-size: 16px; }
-  .wf-xs-t1 { font-size: 22px; }
-  .wf-xband { --drop: 84px; height: 320px; }
-  /* On phones the attendant would be cut in half: frame the passing train only */
-  .wf-xband-video { object-position: 0% 50%; }
-  .wf-xsign { width: auto; }
-}
+@media (max-width: 599px) { .wf-more-arrow { width: 32px; height: 32px; } }
 
-/* ---------- daily stops (exit signs; renders only once it has entries) ---------- */
-.wf-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 48px; }
-@media (max-width: 760px) { .wf-two { grid-template-columns: minmax(0, 1fr); } }
-.wf-exits { list-style: none; margin: 0 0 40px; padding: 0; display: grid; gap: 16px; }
-.wf-exits li { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 14px; align-items: center; }
-.wf-exits .wf-x { width: 30px; height: 30px; border-radius: 6px; background: var(--wf-exit); color: #111; display: grid; place-items: center; font-weight: 700; font-size: 15px; line-height: 1; }
-.wf-exits .wf-what { font-size: 17px; }
-.wf-exits .wf-spot { font-size: 15px; color: var(--wf-muted); text-align: right; }
-.wf-city { font-size: 15px; color: var(--wf-muted); padding-block: 4px 14px; }
+/* ---------- Today (and Off the clock, once it has entries) ---------- */
+.wf-now { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 64px; align-items: start; }
+.wf-now h2 { margin: 0 0 20px; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.wf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.wf-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: 17px; }
+.wf-list-note { color: var(--wf-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 767px) { .wf-now { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- intro (plays once; a timer removes .wf-intro so nothing is left hidden) ---------- */
 .wf-intro .wf-lines > span > span { animation: wf-line-up 900ms var(--wf-ease-out) both; animation-delay: calc(var(--i) * 70ms + 80ms); }
 @keyframes wf-line-up { from { transform: translateY(108%); } }
-.wf-intro .wf-sign { animation: wf-arrive 1100ms var(--wf-ease-arrive) 260ms both; }
-@keyframes wf-arrive { from { transform: translateX(60px); opacity: 0; } 30% { opacity: 1; } }
-/* Then the train pulls in from the bar's left edge and stops on the dot. Pure CSS, so it plays
-   without script; a ◀ ▶ press finishes it early (StationSign). */
-.wf-intro .wf-marker { animation: wf-marker-in 900ms var(--wf-ease-arrive) 1360ms both; }
-.wf-intro .wf-marker::before { animation: wf-streak-out 900ms ease 1360ms both; }
-@keyframes wf-marker-in { from { transform: translateX(calc(-50cqw - 100% - 48px)); } }
-@keyframes wf-streak-out { from { opacity: 0.5; } to { opacity: 0; } }
 
-/* scroll-driven reveals, only where the browser supports view timelines */
+/* Calm scroll reveals (16px rise and a fade), only where the browser supports view timelines */
 @supports (animation-timeline: view()) {
-  .wf-stop, .wf-exits li, .wf-section .wf-head, .wf-xband-inner, .wf-window-col {
+  .wf-row, .wf-section .wf-head, .wf-more, .wf-now > div, .wf-window-col {
     animation: wf-rise linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 45%;
@@ -310,28 +116,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wf-intro .wf-lines > span > span, .wf-intro .wf-sign { animation: wf-fade 400ms ease both; }
+  .wf-intro .wf-lines > span > span { animation: wf-fade 400ms ease both; }
   @keyframes wf-fade { from { opacity: 0; } }
-  .wf-intro .wf-marker, .wf-intro .wf-marker::before { animation: none; }
-  .wf-marker::before, .wf-rmark::before { display: none; }
-  .wf-stop, .wf-exits li, .wf-section .wf-head, .wf-xband-inner, .wf-window-col { animation: none !important; }
-  .wf-name.enter-l, .wf-name.enter-r { animation-name: wf-fade; }
-  .wf-name.leave-l, .wf-name.leave-r { animation-name: wf-fade-out; }
-  @keyframes wf-fade-out { to { opacity: 0; } }
+  .wf-row, .wf-section .wf-head, .wf-more, .wf-now > div, .wf-window-col { animation: none !important; }
   /* The window swap keeps its crossfade and drops the travel and blur */
   .wf-view, .wf-view.is-on { transform: none; filter: none; }
   .wf-view { transition: opacity 200ms ease; }
   .wf-view.is-on { transition: opacity 300ms ease; }
-  /* The LED panel fades instead of rising */
-  .wf-led { transform: translate(-50%, 0); opacity: 0; visibility: hidden; transition: opacity 200ms ease, visibility 0s linear 200ms; }
-  .wf-led.on { opacity: 1; visibility: visible; transition: opacity 200ms ease; }
-  .wf-stop h3, .wf-stop .wf-go-icon, .wf-stop .wf-sb, .wf-xsign, .wf-track-bar button { transition-property: opacity, color, background-color; }
-  .wf-stop a:hover h3, .wf-stop a:hover .wf-sb, .wf-stop .wf-go-icon { transform: none !important; }
-  .wf-xsign:active, .wf-track-bar button:active { transform: none !important; }
-  .wf-xs-arrow svg { animation: none !important; }
-  /* Hero photo: no settle, no slide, a plain 200ms crossfade */
-  .wf-intro .wf-photo.is-on .wf-photo-img { animation: none; }
-  .wf-photo, .wf-photo.is-on, .wf-photo.is-out { transform: none; filter: none; }
-  .wf-photo.is-on { transition: opacity 200ms ease; }
-  .wf-photo.is-out { transition: opacity 200ms ease; }
+  /* Feedback stays as colour and opacity; nothing travels */
+  .wf-row h3, .wf-row .wf-go-icon, .wf-more, .wf-more-arrow { transition-property: opacity, color; }
+  .wf-row a:hover h3, .wf-row .wf-go-icon, .wf-more:active, .wf-more-arrow { transform: none !important; }
+  .wf-more-text::after { transition: opacity 200ms ease; transform: none; opacity: 0; }
+  .wf-more:hover .wf-more-text::after, .wf-more:focus-visible .wf-more-text::after { transform: none; opacity: 1; }
 }
