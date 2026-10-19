@@ -1,28 +1,33 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display, JetBrains_Mono, Caveat } from 'next/font/google'
+import { Playfair_Display, Noto_Sans_JP, DotGothic16 } from 'next/font/google'
+import { GeistSans } from 'geist/font/sans'
+import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 import SocialLinks from './components/SocialLinks'
 import Footer from './components/Footer'
 import MotionProvider from './components/MotionProvider'
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-inter'
-})
+// Geist (sans + mono) is the site-wide type; Playfair stays for the case-study headings
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
   variable: '--font-playfair',
   weight: ['400', '500', '600', '700']
 })
-const jetbrains = JetBrains_Mono({
+// Japanese station-sign type. Only the Japanese glyphs use these, so skip the Latin preload.
+const notoJp = Noto_Sans_JP({
   subsets: ['latin'],
-  variable: '--font-mono',
-  weight: ['400', '500']
+  variable: '--font-noto-jp',
+  weight: ['500', '700'],
+  display: 'swap',
+  preload: false,
 })
-const caveat = Caveat({
+// Dot-matrix face for the LED "next stop" panel
+const dotGothic = DotGothic16({
   subsets: ['latin'],
-  variable: '--font-caveat',
-  weight: ['400', '500', '600', '700']
+  variable: '--font-dot',
+  weight: '400',
+  display: 'swap',
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -78,10 +83,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} ${caveat.variable} font-sans h-full flex flex-col`}>
+      <body className={`${GeistSans.variable} ${GeistMono.variable} ${playfair.variable} ${notoJp.variable} ${dotGothic.variable} font-sans h-full flex flex-col`}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg font-mono text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-wf-sheet focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg font-mono text-sm text-wf-ink focus:outline-none focus:ring-2 focus:ring-wf-ink"
         >
           Skip to content
         </a>

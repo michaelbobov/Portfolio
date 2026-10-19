@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, FocusEvent as ReactFocusEvent } from 'react';
+import Clocks from '@/app/components/Clocks';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -38,9 +39,9 @@ export default function Navigation() {
     };
   }, [isMobileMenuOpen]);
 
-  // Close the mobile menu if the viewport grows past the lg breakpoint
+  // Close the mobile menu if the viewport grows past the md breakpoint
   useEffect(() => {
-    const query = window.matchMedia('(min-width: 1024px)');
+    const query = window.matchMedia('(min-width: 768px)');
     const handleChange = (event: MediaQueryListEvent) => {
       if (event.matches) setIsMobileMenuOpen(false);
     };
@@ -160,11 +161,11 @@ export default function Navigation() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           ref={overlayRef}
-          className="fixed inset-0 z-50 lg:hidden"
+          className="fixed inset-0 z-50 md:hidden"
         >
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-black/40"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
@@ -179,21 +180,21 @@ export default function Navigation() {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="absolute right-0 top-0 h-full w-80 max-w-[88vw] bg-[#FAFAF8] shadow-2xl"
+            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+            className="absolute right-0 top-0 h-full w-80 max-w-[88vw] bg-wf-bg text-wf-ink shadow-2xl"
           >
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <span id="mobile-menu-title" className="font-mono text-sm tracking-wide text-gray-900 font-medium">MENU</span>
+              <div className="flex items-center justify-between px-6 py-4 border-b border-wf-line">
+                <span id="mobile-menu-title" className="font-mono text-[12.5px] text-wf-muted">Menu</span>
                   <button
                     ref={closeButtonRef}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="-mr-2 p-2 rounded-lg hover:bg-wf-line/60 transition-colors"
                     aria-label="Close menu"
                     type="button"
                   >
-                    <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 text-wf-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
@@ -203,45 +204,45 @@ export default function Navigation() {
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-6">
                   {/* Main Links */}
-                  <div className="space-y-4">
+                  <div className="space-y-4 text-lg font-medium tracking-[-0.01em]">
                     <Link
                       href="/#work"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block font-mono text-sm text-[#B5502F] hover:text-[#A84A2E] transition-colors"
+                      className="block text-wf-ink"
                     >
-                      WORK
+                      Work
                     </Link>
                     <a
                       href="https://about.michaelbobov.com/"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block font-mono text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                      className="block text-wf-ink"
                     >
-                      ABOUT
+                      About
                     </a>
                     <a
                       href="/Michael Bobov - Product Designer.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block font-mono text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                      className="block text-wf-ink"
                     >
-                      RESUME
+                      Resume
                     </a>
                     </div>
 
                   {/* Divider */}
-                  <div className="h-px bg-gray-200" />
+                  <div className="h-px bg-wf-line" />
 
                   {/* Projects */}
                   <div>
-                    <span className="font-mono text-xs text-gray-500 tracking-wide">PROJECTS</span>
+                    <span className="font-mono text-[12.5px] text-wf-muted">Projects</span>
                     <div className="mt-3 space-y-3">
                       {projects.map((project) => (
                         <Link
                           key={project.href}
                           href={project.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="block text-gray-700 hover:text-[#B5502F] transition-colors"
+                          className="block text-wf-muted hover:text-wf-ink transition-colors"
                         >
                               {project.label}
                         </Link>
@@ -252,8 +253,8 @@ export default function Navigation() {
               </div>
 
               {/* Footer */}
-              <div className="p-6 border-t border-gray-200">
-                <span className="font-mono text-xs text-gray-500">© {new Date().getFullYear()} Michael Bobov</span>
+              <div className="p-6 border-t border-wf-line">
+                <span className="font-mono text-xs text-wf-muted">© {new Date().getFullYear()} Michael Bobov</span>
               </div>
             </div>
           </motion.div>
@@ -267,13 +268,13 @@ export default function Navigation() {
     <button
       ref={hamburgerRef}
       onClick={() => setIsMobileMenuOpen(true)}
-      className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+      className="md:hidden -mr-2 p-2 rounded-lg hover:bg-wf-line/60 transition-colors"
       aria-label="Open menu"
       aria-expanded={isMobileMenuOpen}
       aria-controls="mobile-menu"
       type="button"
     >
-      <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+      <svg className="w-5 h-5 text-wf-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     </button>
@@ -281,9 +282,8 @@ export default function Navigation() {
 
   return (
     <>
-      <div className="flex items-center gap-8">
-        {hamburgerButton}
-        <div className="hidden lg:flex items-center gap-8">
+      <div className="flex items-center gap-3 sm:gap-4 md:gap-6 text-sm">
+        <div className="hidden md:flex items-center gap-[22px] text-wf-muted">
           <div
             ref={dropdownRef}
             className="relative"
@@ -297,11 +297,11 @@ export default function Navigation() {
               onClick={() => setIsWorkDropdownOpen(!isWorkDropdownOpen)}
               aria-haspopup="true"
               aria-expanded={isWorkDropdownOpen}
-              className="font-mono text-sm text-[#B5502F] hover:text-[#A84A2E] transition-colors flex items-center gap-1"
+              className={`flex items-center gap-1 transition-colors duration-150 hover:text-wf-ink ${isWorkDropdownOpen ? 'text-wf-ink' : ''}`}
             >
-              WORK
+              Work
               <svg
-                className={`w-4 h-4 transition-transform ${isWorkDropdownOpen ? 'rotate-180' : ''}`}
+                className={`w-3.5 h-3.5 transition-transform duration-200 ease-wf-out ${isWorkDropdownOpen ? 'rotate-180' : ''}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -314,20 +314,20 @@ export default function Navigation() {
             <AnimatePresence>
               {isWorkDropdownOpen && (
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute top-full left-0 pt-2 z-50"
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+                  className="absolute top-full -left-3 pt-2 z-50"
       >
-                  {/* pt-2 keeps the hover area continuous between WORK and the panel */}
-                  <div className="w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2">
+                  {/* pt-2 keeps the hover area continuous between Work and the panel */}
+                  <div className="w-52 bg-wf-sheet border border-wf-line rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_24px_48px_-28px_rgba(10,14,20,0.35)] p-1.5">
                     {projects.map((project) => (
                       <Link
                         key={project.href}
                         href={project.href}
                         onClick={() => setIsWorkDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#B5502F] transition-colors"
+                        className="block rounded-lg px-3 py-2 text-sm text-wf-muted hover:bg-wf-bg hover:text-wf-ink transition-colors"
                       >
                         {project.label}
                       </Link>
@@ -337,16 +337,18 @@ export default function Navigation() {
               )}
             </AnimatePresence>
           </div>
-          <a href="https://about.michaelbobov.com/" className="font-mono text-sm text-gray-600 hover:text-gray-900 transition-colors">ABOUT</a>
+          <a href="https://about.michaelbobov.com/" className="transition-colors duration-150 hover:text-wf-ink">About</a>
           <a
             href="/Michael Bobov - Product Designer.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            className="transition-colors duration-150 hover:text-wf-ink"
           >
-            RESUME
+            Resume<span className="sr-only"> (PDF, opens in a new tab)</span>
           </a>
         </div>
+        <Clocks />
+        {hamburgerButton}
       </div>
       {mobileMenu}
     </>
