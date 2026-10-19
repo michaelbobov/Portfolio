@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
+import FullSizeLink from '@/app/components/FullSizeLink';
 
 export default function EZRecipeCaseStudy() {
   return (
@@ -19,7 +20,7 @@ export default function EZRecipeCaseStudy() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+      <section id="main-content" tabIndex={-1} className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 focus:outline-none">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,7 +52,7 @@ export default function EZRecipeCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="relative z-10 mb-6"
+          className="relative z-10 mb-8"
         >
           <a
             href="https://ezrecipe.app"
@@ -66,28 +67,18 @@ export default function EZRecipeCaseStudy() {
           </a>
         </motion.div>
 
-        {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full"
-        >
-          <Image 
-            src="/ezrecipelaptop.png"
-            alt="EZ Recipe Platform"
-            width={2400}
-            height={1700}
-            className="w-full h-auto -mt-8 md:-mt-32"
-            sizes="(min-width: 1536px) 1376px, 100vw"
-            priority
-          />
-        </motion.div>
-      </section>
+        {/* TL;DR */}
+        <div className="max-w-4xl bg-white border border-gray-200 rounded-lg p-6 md:p-8 mb-8">
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
+          <dl className="grid md:grid-cols-3 gap-6 text-sm">
+            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Recipe apps assume you’ll shop for the recipe. Home cooks need meals that fit what’s already in their kitchen, their time, and their goals.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">As solo founder, designer, and full-stack developer, I researched, designed, and shipped an AI recipe generator built around six constraint questions in 2 months.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Live at ezrecipe.app · 400+ recipes generated · 4.5/5 user rating · 67% faster perceived wait after a testing-driven fix.</dd></div>
+          </dl>
+        </div>
 
-      {/* Project Details */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200 -mt-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
+        {/* Project Details */}
+        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12">
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
             <p className="text-gray-900">Founder</p>
@@ -111,18 +102,24 @@ export default function EZRecipeCaseStudy() {
             <p className="text-gray-900">AI Integration</p>
           </div>
         </div>
-      </section>
 
-      {/* TL;DR */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl pb-16">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
-          <dl className="grid md:grid-cols-3 gap-6 text-sm">
-            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Recipe apps assume you’ll shop for the recipe. Home cooks need meals that fit what’s already in their kitchen, their time, and their goals.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">As solo founder, designer, and full-stack developer, I researched, designed, and shipped an AI recipe generator built around six constraint questions in 2 months.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Live at ezrecipe.app · 400+ recipes generated · 4.5/5 user rating · 67% faster perceived wait after a testing-driven fix.</dd></div>
-          </dl>
-        </div>
+        {/* Hero Image */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full"
+        >
+          <Image 
+            src="/ezrecipelaptop.png"
+            alt="EZ Recipe Platform"
+            width={2400}
+            height={1700}
+            className="w-full h-auto -mt-8 md:-mt-32"
+            sizes="(min-width: 1536px) 1376px, 100vw"
+            priority
+          />
+        </motion.div>
       </section>
               
       {/* Content */}
@@ -375,10 +372,18 @@ export default function EZRecipeCaseStudy() {
               <p className="text-gray-600">Testing the constraint selection and recipe generation flow.</p>
                   </div>
             <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <Image src="/Home App.png" alt="EZ Recipe lo-fi wireframe: home screen" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/Sevings select.png" alt="EZ Recipe lo-fi wireframe: servings and preferences" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/View Recipe Saved.png" alt="EZ Recipe lo-fi wireframe: recipe detail" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/Saved-1.png" alt="EZ Recipe lo-fi wireframe: saved recipes" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <FullSizeLink src="/Home App.png" className="max-w-[200px] w-full">
+                <Image src="/Home App.png" alt="EZ Recipe lo-fi wireframe: home screen" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/Sevings select.png" className="max-w-[200px] w-full">
+                <Image src="/Sevings select.png" alt="EZ Recipe lo-fi wireframe: servings and preferences" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/View Recipe Saved.png" className="max-w-[200px] w-full">
+                <Image src="/View Recipe Saved.png" alt="EZ Recipe lo-fi wireframe: recipe detail" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/Saved-1.png" className="max-w-[200px] w-full">
+                <Image src="/Saved-1.png" alt="EZ Recipe lo-fi wireframe: saved recipes" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
             </div>
             <div className="max-w-4xl">
               <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Testing Insights</p>
@@ -397,10 +402,18 @@ export default function EZRecipeCaseStudy() {
               <p className="text-gray-600">Polished designs ready for development.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3">
-              <Image src="/HiFiHomeApp.png" alt="EZ Recipe hi-fi design: home screen" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/HiFiSevingsselect.png" alt="EZ Recipe hi-fi design: servings and preferences" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/HiFiViewRecipe.png" alt="EZ Recipe hi-fi design: recipe detail" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/HiFiSaved.png" alt="EZ Recipe hi-fi design: saved recipes" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <FullSizeLink src="/HiFiHomeApp.png" className="max-w-[200px] w-full">
+                <Image src="/HiFiHomeApp.png" alt="EZ Recipe hi-fi design: home screen" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/HiFiSevingsselect.png" className="max-w-[200px] w-full">
+                <Image src="/HiFiSevingsselect.png" alt="EZ Recipe hi-fi design: servings and preferences" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/HiFiViewRecipe.png" className="max-w-[200px] w-full">
+                <Image src="/HiFiViewRecipe.png" alt="EZ Recipe hi-fi design: recipe detail" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/HiFiSaved.png" className="max-w-[200px] w-full">
+                <Image src="/HiFiSaved.png" alt="EZ Recipe hi-fi design: saved recipes" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
             </div>
           </div>
         </div>
@@ -566,7 +579,7 @@ export default function EZRecipeCaseStudy() {
           </Link>
           <Link href="/work/versum" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: Versum Health →</Link>
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
             className="text-gray-600 hover:text-[#B5502F] transition-colors"
           >
             Back to Top ↑

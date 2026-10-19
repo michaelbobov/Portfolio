@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -60,8 +60,20 @@ function AnimatedWordRotator() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showEllipsis, setShowEllipsis] = useState(false);
   const [ellipsisCount, setEllipsisCount] = useState(0);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  // Read the OS setting after mount so server and client markup match
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setPrefersReducedMotion(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     let ellipsisInterval: NodeJS.Timeout;
     
     const mainInterval = setInterval(() => {
@@ -92,7 +104,15 @@ function AnimatedWordRotator() {
       clearInterval(mainInterval);
       if (ellipsisInterval) clearInterval(ellipsisInterval);
     };
-  }, []);
+  }, [prefersReducedMotion]);
+
+  if (prefersReducedMotion) {
+    return (
+      <span className="font-serif italic text-[#B5502F] inline-block min-w-[120px] md:min-w-[140px]">
+        {words[0]}.
+      </span>
+    );
+  }
 
   return (
     <span className="font-serif italic text-[#B5502F] inline-block min-w-[120px] md:min-w-[140px]">
@@ -137,44 +157,6 @@ function AnimatedWordRotator() {
 
 export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    // Preload and prepare audio
-    if (audioRef.current) {
-      audioRef.current.volume = 0.7;
-      audioRef.current.load();
-    }
-  }, []);
-
-  const handleMouseEnter = async () => {
-    setIsHovered(true);
-    const audio = audioRef.current;
-    // Skip the sound if the audio hasn't loaded enough to know its duration yet
-    if (!audio || isNaN(audio.duration) || audio.duration === 0) return;
-
-    // Play a short clip from the middle of the sound
-    audio.currentTime = audio.duration / 2;
-    audio.volume = 0.7;
-    try {
-      await audio.play();
-      // Stop after 0.5 seconds
-      setTimeout(() => {
-        audioRef.current?.pause();
-      }, 500);
-    } catch {
-      // Autoplay can be blocked before the first user interaction; fail silently
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  };
-
   return (
     <main className="min-h-screen bg-[#FAFAF8]">
       {/* Navigation */}
@@ -188,7 +170,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12">
+      <section id="main-content" tabIndex={-1} className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12 focus:outline-none">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Left - Headline */}
         <motion.div 
@@ -212,7 +194,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="-mt-16 lg:-mt-20 flex justify-center lg:justify-start items-start lg:ml-8"
+            className="mt-0 lg:-mt-20 flex justify-center lg:justify-start items-start lg:ml-8"
           >
             <Link 
               href="https://about.michaelbobov.com/"
@@ -246,14 +228,9 @@ export default function Home() {
                   height: '60%',
                   zIndex: 10
                 }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
               />
-              <audio
-                ref={audioRef}
-                src="/sounds/Book Page Turn Flip Sound Effect.mp3"
-                preload="auto"
-                />
             </Link>
         </motion.div>
       </div>
@@ -292,7 +269,7 @@ export default function Home() {
                     alt=""
                     sizes="(min-width: 768px) 58vw, 100vw"
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
                     priority
                   />
                 </div>
@@ -329,8 +306,7 @@ export default function Home() {
                     alt=""
                     sizes="(min-width: 768px) 42vw, 100vw"
                           fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority
+                    className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
                         />
                             </div>
                 <div className="flex items-start justify-between gap-4">
@@ -366,7 +342,7 @@ export default function Home() {
                     alt=""
                     sizes="(min-width: 768px) 42vw, 100vw"
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-start justify-between gap-4">
@@ -402,7 +378,7 @@ export default function Home() {
                     alt=""
                     sizes="(min-width: 768px) 58vw, 100vw"
                             fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
                           />
                 </div>
                 <div className="flex items-start justify-between gap-4">
@@ -444,7 +420,7 @@ export default function Home() {
             >
             <span>GET IN TOUCH</span>
             <svg 
-              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+              className="w-4 h-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"

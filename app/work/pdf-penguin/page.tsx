@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
+import FullSizeLink from '@/app/components/FullSizeLink';
 
 export default function PDFPenguinCaseStudy() {
   return (
@@ -19,7 +20,7 @@ export default function PDFPenguinCaseStudy() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+      <section id="main-content" tabIndex={-1} className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16 focus:outline-none">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -42,33 +43,23 @@ export default function PDFPenguinCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-600 max-w-2xl mb-12"
+          className="text-lg md:text-xl text-gray-600 max-w-2xl mb-8"
         >
           AI-powered PDF to JSON conversion for structured, usable data.
         </motion.p>
 
-        {/* Hero Image */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full"
-        >
-          <Image 
-            src="/mockuuups-macknook-air.png"
-            alt="PDF Penguin Interface"
-            width={2400}
-            height={1552}
-            className="w-full h-auto"
-            sizes="(min-width: 1536px) 1376px, 100vw"
-            priority
-          />
-        </motion.div>
-      </section>
+        {/* TL;DR */}
+        <div className="max-w-4xl bg-white border border-gray-200 rounded-lg p-6 md:p-8 mb-8">
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
+          <dl className="grid md:grid-cols-3 gap-6 text-sm">
+            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Getting structured data out of PDFs means technical tools, manual area selection, or 15+ minutes of setup.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">Working solo, I tested Tabula, Acrobat, and DocParser as a first-time user, then designed and built a drag-and-drop, plain-language PDF-to-JSON tool in 2 weeks.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Under 10 seconds to first output with zero setup, and 2 clicks from upload to export.</dd></div>
+          </dl>
+        </div>
 
-      {/* Project Details */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
+        {/* Project Details */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12">
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
             <p className="text-gray-900">Founder</p>
@@ -92,18 +83,24 @@ export default function PDFPenguinCaseStudy() {
             <p className="text-gray-900">Frontend Dev</p>
           </div>
         </div>
-      </section>
 
-      {/* TL;DR */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl pb-16">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
-          <dl className="grid md:grid-cols-3 gap-6 text-sm">
-            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Getting structured data out of PDFs means technical tools, manual area selection, or 15+ minutes of setup.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">Working solo, I tested Tabula, Acrobat, and DocParser as a first-time user, then designed and built a drag-and-drop, plain-language PDF-to-JSON tool in 2 weeks.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Under 10 seconds to first output with zero setup, and 2 clicks from upload to export.</dd></div>
-          </dl>
-        </div>
+        {/* Hero Image */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full"
+        >
+          <Image 
+            src="/mockuuups-macknook-air.png"
+            alt="PDF Penguin Interface"
+            width={2400}
+            height={1552}
+            className="w-full h-auto"
+            sizes="(min-width: 1536px) 1376px, 100vw"
+            priority
+          />
+        </motion.div>
       </section>
 
       {/* Content */}
@@ -331,10 +328,18 @@ export default function PDFPenguinCaseStudy() {
                 </div>
 
             <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <Image src="/pengu1lowfi.png" alt="PDF Penguin lo-fi wireframe: upload interface" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
-              <Image src="/pengu2lowfi.png" alt="PDF Penguin lo-fi wireframe: JSON output" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
-              <Image src="/pengu3lowfi.png" alt="PDF Penguin lo-fi wireframe: library view" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
-              <Image src="/pengu4lowfi.png" alt="PDF Penguin lo-fi wireframe: document view" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              <FullSizeLink src="/pengu1lowfi.png" className="max-w-lg w-full">
+                <Image src="/pengu1lowfi.png" alt="PDF Penguin lo-fi wireframe: upload interface" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/pengu2lowfi.png" className="max-w-lg w-full">
+                <Image src="/pengu2lowfi.png" alt="PDF Penguin lo-fi wireframe: JSON output" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/pengu3lowfi.png" className="max-w-lg w-full">
+                <Image src="/pengu3lowfi.png" alt="PDF Penguin lo-fi wireframe: library view" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/pengu4lowfi.png" className="max-w-lg w-full">
+                <Image src="/pengu4lowfi.png" alt="PDF Penguin lo-fi wireframe: document view" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
             </div>
 
             <div className="max-w-4xl">
@@ -355,10 +360,18 @@ export default function PDFPenguinCaseStudy() {
                 </div>
                 
             <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <Image src="/highfipengu1.png" alt="PDF Penguin hi-fi design: upload interface" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
-              <Image src="/highfipengu2.png" alt="PDF Penguin hi-fi design: JSON output" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
-              <Image src="/highfipengu3.png" alt="PDF Penguin hi-fi design: library view" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
-              <Image src="/highfipengu4.png" alt="PDF Penguin hi-fi design: document view" width={1728} height={1117} className="max-w-lg w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              <FullSizeLink src="/highfipengu1.png" className="max-w-lg w-full">
+                <Image src="/highfipengu1.png" alt="PDF Penguin hi-fi design: upload interface" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/highfipengu2.png" className="max-w-lg w-full">
+                <Image src="/highfipengu2.png" alt="PDF Penguin hi-fi design: JSON output" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/highfipengu3.png" className="max-w-lg w-full">
+                <Image src="/highfipengu3.png" alt="PDF Penguin hi-fi design: library view" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/highfipengu4.png" className="max-w-lg w-full">
+                <Image src="/highfipengu4.png" alt="PDF Penguin hi-fi design: document view" width={1728} height={1117} className="w-full h-auto" sizes="(min-width: 512px) 512px, 100vw" quality={95} />
+              </FullSizeLink>
                 </div>
                 
                 <div className="text-center">
@@ -541,7 +554,7 @@ export default function PDFPenguinCaseStudy() {
           </Link>
           <Link href="/work/spotify-loop" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: Spotify Loop →</Link>
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
             className="text-gray-600 hover:text-[#B5502F] transition-colors"
           >
             Back to Top ↑

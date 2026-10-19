@@ -4,16 +4,49 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent, FocusEvent as ReactFocusEvent } from 'react';
 
 export default function Navigation() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWorkDropdownOpen, setIsWorkDropdownOpen] = useState(false);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const workButtonRef = useRef<HTMLButtonElement | null>(null);
   const hamburgerRef = useRef<HTMLButtonElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const wasMobileMenuOpen = useRef(false);
+
+  // Make everything behind the open mobile menu inert
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    // Walk up from the menu and mark every sibling along the way, so only the menu stays live
+    const background: Element[] = [];
+    let node: Element | null = overlayRef.current;
+    while (node && node !== document.body) {
+      const parent: Element | null = node.parentElement;
+      if (!parent) break;
+      for (const sibling of Array.from(parent.children)) {
+        if (sibling !== node && !sibling.hasAttribute('inert')) background.push(sibling);
+      }
+      node = parent;
+    }
+    background.forEach((el) => el.setAttribute('inert', ''));
+    return () => {
+      background.forEach((el) => el.removeAttribute('inert'));
+    };
+  }, [isMobileMenuOpen]);
+
+  // Close the mobile menu if the viewport grows past the lg breakpoint
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 1024px)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setIsMobileMenuOpen(false);
+    };
+    query.addEventListener('change', handleChange);
+    return () => query.removeEventListener('change', handleChange);
+  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -49,6 +82,10 @@ export default function Navigation() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        // Return focus to WORK if it was inside the dropdown
+        if (isWorkDropdownOpen && dropdownRef.current?.contains(document.activeElement)) {
+          workButtonRef.current?.focus();
+        }
         setIsMobileMenuOpen(false);
         setIsWorkDropdownOpen(false);
       }
@@ -84,6 +121,35 @@ export default function Navigation() {
     { href: '/work/ez-recipe', label: 'EZ Recipe' },
   ];
 
+  // Keep Tab / Shift+Tab inside the mobile menu panel
+  const handlePanelKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'Tab' || !panelRef.current) return;
+    const focusable = Array.from(
+      panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || !panelRef.current.contains(active))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (active === last || !panelRef.current.contains(active))) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  // Close the dropdown when keyboard focus moves outside it
+  const handleDropdownBlur = (event: ReactFocusEvent<HTMLDivElement>) => {
+    const next = event.relatedTarget as Node | null;
+    if (!next || !event.currentTarget.contains(next)) {
+      setIsWorkDropdownOpen(false);
+    }
+  };
+
   // Mobile menu
   const mobileMenu = (
     <AnimatePresence>
@@ -93,6 +159,7 @@ export default function Navigation() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
+          ref={overlayRef}
           className="fixed inset-0 z-50 lg:hidden"
         >
           {/* Backdrop */}
@@ -105,8 +172,10 @@ export default function Navigation() {
           <motion.div
             role="dialog"
             aria-modal="true"
+            aria-labelledby="mobile-menu-title"
             id="mobile-menu"
             ref={panelRef}
+            onKeyDown={handlePanelKeyDown}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -116,7 +185,7 @@ export default function Navigation() {
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <span className="font-mono text-sm tracking-wide text-gray-900 font-medium">MENU</span>
+                <span id="mobile-menu-title" className="font-mono text-sm tracking-wide text-gray-900 font-medium">MENU</span>
                   <button
                     ref={closeButtonRef}
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -220,8 +289,10 @@ export default function Navigation() {
             className="relative"
             onMouseEnter={() => setIsWorkDropdownOpen(true)}
             onMouseLeave={() => setIsWorkDropdownOpen(false)}
+            onBlur={handleDropdownBlur}
           >
             <button
+              ref={workButtonRef}
               type="button"
               onClick={() => setIsWorkDropdownOpen(!isWorkDropdownOpen)}
               aria-haspopup="true"
@@ -247,18 +318,21 @@ export default function Navigation() {
         animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50"
+                  className="absolute top-full left-0 pt-2 z-50"
       >
-                  {projects.map((project) => (
-                    <Link
-                      key={project.href}
-                      href={project.href}
-                      onClick={() => setIsWorkDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#B5502F] transition-colors"
-                    >
-                      {project.label}
-                    </Link>
-                  ))}
+                  {/* pt-2 keeps the hover area continuous between WORK and the panel */}
+                  <div className="w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2">
+                    {projects.map((project) => (
+                      <Link
+                        key={project.href}
+                        href={project.href}
+                        onClick={() => setIsWorkDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#B5502F] transition-colors"
+                      >
+                        {project.label}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

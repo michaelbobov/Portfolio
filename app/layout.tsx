@@ -79,6 +79,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} ${caveat.variable} font-sans h-full flex flex-col`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg font-mono text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
+        >
+          Skip to content
+        </a>
         <MotionProvider>
           <div className="flex-1">
             {children}

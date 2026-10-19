@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
+import FullSizeLink from '@/app/components/FullSizeLink';
 
 export default function SpotifyLoopCaseStudy() {
   return (
@@ -19,7 +20,7 @@ export default function SpotifyLoopCaseStudy() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+      <section id="main-content" tabIndex={-1} className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16 focus:outline-none">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,35 +52,25 @@ export default function SpotifyLoopCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-12"
+          className="mb-8"
         >
           <div className="bg-gray-50 border border-gray-200 rounded-md p-3 text-xs text-gray-500">
             Conceptual exploration. Not affiliated with Spotify. Logos used for design critique only.
           </div>
         </motion.div>
 
-        {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex justify-center"
-        >
-          <Image 
-            src="/spotifyloopmockup.png"
-            alt="Spotify Loop Interface"
-            width={1500}
-            height={1125}
-            className="max-w-4xl w-full h-auto"
-            sizes="(min-width: 896px) 896px, 100vw"
-            priority
-          />
-        </motion.div>
-      </section>
+        {/* TL;DR */}
+        <div className="max-w-4xl bg-white border border-gray-200 rounded-lg p-6 md:p-8 mb-8">
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
+          <dl className="grid md:grid-cols-3 gap-6 text-sm">
+            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Spotify can’t loop part of a song, so musicians and fans scrub the progress bar imprecisely or leave the app for tools like Moises.ai.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">A 1-week, self-initiated concept: community and competitive research, journey mapping, then lo-fi to hi-fi prototypes of a native loop control.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Tap-to-loop in 2 taps from the main player, with saved loops and a second entry point in the ellipsis menu. Unofficial concept.</dd></div>
+          </dl>
+        </div>
 
-      {/* Project Details */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
+        {/* Project Details */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12">
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
             <p className="text-gray-900">Product Designer</p>
@@ -102,18 +93,24 @@ export default function SpotifyLoopCaseStudy() {
             <p className="text-gray-900">Prototyping</p>
           </div>
         </div>
-      </section>
 
-      {/* TL;DR */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl pb-16">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
-          <dl className="grid md:grid-cols-3 gap-6 text-sm">
-            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">Spotify can’t loop part of a song, so musicians and fans scrub the progress bar imprecisely or leave the app for tools like Moises.ai.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">A 1-week, self-initiated concept: community and competitive research, journey mapping, then lo-fi to hi-fi prototypes of a native loop control.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">Tap-to-loop in 2 taps from the main player, with saved loops and a second entry point in the ellipsis menu. Unofficial concept.</dd></div>
-          </dl>
-        </div>
+        {/* Hero Image */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="flex justify-center"
+        >
+          <Image 
+            src="/spotifyloopmockup.png"
+            alt="Spotify Loop Interface"
+            width={1500}
+            height={1125}
+            className="max-w-4xl w-full h-auto"
+            sizes="(min-width: 896px) 896px, 100vw"
+            priority
+          />
+        </motion.div>
       </section>
 
       {/* Content */}
@@ -348,11 +345,21 @@ export default function SpotifyLoopCaseStudy() {
               <p className="text-gray-600">Polished designs ready for user testing.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3">
-              <Image src="/Now Playing Screen.png" alt="Spotify Loop hi-fi: now playing screen with loop button" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/Loop Active.png" alt="Spotify Loop hi-fi: loop active" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/Loop Set.png" alt="Spotify Loop hi-fi: loop set" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/Loop Saved.png" alt="Spotify Loop hi-fi: loop saved" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
-              <Image src="/Saved Loops.png" alt="Spotify Loop hi-fi: saved loops library" width={393} height={852} className="max-w-[200px] w-full h-auto" sizes="200px" quality={95} />
+              <FullSizeLink src="/Now Playing Screen.png" className="max-w-[200px] w-full">
+                <Image src="/Now Playing Screen.png" alt="Spotify Loop hi-fi: now playing screen with loop button" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/Loop Active.png" className="max-w-[200px] w-full">
+                <Image src="/Loop Active.png" alt="Spotify Loop hi-fi: loop active" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/Loop Set.png" className="max-w-[200px] w-full">
+                <Image src="/Loop Set.png" alt="Spotify Loop hi-fi: loop set" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/Loop Saved.png" className="max-w-[200px] w-full">
+                <Image src="/Loop Saved.png" alt="Spotify Loop hi-fi: loop saved" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
+              <FullSizeLink src="/Saved Loops.png" className="max-w-[200px] w-full">
+                <Image src="/Saved Loops.png" alt="Spotify Loop hi-fi: saved loops library" width={393} height={852} className="w-full h-auto" sizes="200px" quality={95} />
+              </FullSizeLink>
             </div>
           </div>
         </div>
@@ -498,7 +505,7 @@ export default function SpotifyLoopCaseStudy() {
           </Link>
           <Link href="/work/ez-recipe" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: EZ Recipe →</Link>
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
             className="text-gray-600 hover:text-[#B5502F] transition-colors"
           >
             Back to Top ↑

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
+import FullSizeLink from '@/app/components/FullSizeLink';
 
 export default function VersumCaseStudy() {
   return (
@@ -19,7 +20,7 @@ export default function VersumCaseStudy() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16">
+      <section id="main-content" tabIndex={-1} className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16 focus:outline-none">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,7 +52,7 @@ export default function VersumCaseStudy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-12"
+          className="mb-8"
         >
           <a
             href="https://versumhealth.com/"
@@ -66,28 +67,18 @@ export default function VersumCaseStudy() {
           </a>
         </motion.div>
 
-        {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full"
-        >
-          <Image 
-            src="/versumheroimage.png"
-            alt="Versum Health Platform"
-            width={2400}
-            height={1161}
-            className="w-full h-auto"
-            sizes="(min-width: 1536px) 1376px, 100vw"
-            priority
-          />
-        </motion.div>
-      </section>
+        {/* TL;DR */}
+        <div className="max-w-4xl bg-white border border-gray-200 rounded-lg p-6 md:p-8 mb-8">
+          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
+          <dl className="grid md:grid-cols-3 gap-6 text-sm">
+            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">74 million Americans lack dental insurance, while dental students struggle to find patients for the procedures they need to graduate.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">As co-founder and product lead on a 2-person team, I spoke with people on both sides of the marketplace, then designed and built the patient and student experiences in code over 6 months.</dd></div>
+            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">MVP live at versumhealth.com with patient booking, student scheduling, and messaging. Outreach to dental schools is underway.</dd></div>
+          </dl>
+        </div>
 
-      {/* Project Details */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8">
+        {/* Project Details */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12">
           <div>
             <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
             <p className="text-gray-900">Co-founder</p>
@@ -111,18 +102,24 @@ export default function VersumCaseStudy() {
             <p className="text-gray-900">Prototyping</p>
           </div>
         </div>
-      </section>
 
-      {/* TL;DR */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl pb-16">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
-          <dl className="grid md:grid-cols-3 gap-6 text-sm">
-            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">74 million Americans lack dental insurance, while dental students struggle to find patients for the procedures they need to graduate.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">As co-founder and product lead on a 2-person team, I spoke with people on both sides of the marketplace, then designed and built the patient and student experiences in code over 6 months.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">MVP live at versumhealth.com with patient booking, student scheduling, and messaging. Outreach to dental schools is underway.</dd></div>
-          </dl>
-        </div>
+        {/* Hero Image */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full"
+        >
+          <Image 
+            src="/versumheroimage.png"
+            alt="Versum Health Platform"
+            width={2400}
+            height={1161}
+            className="w-full h-auto"
+            sizes="(min-width: 1536px) 1376px, 100vw"
+            priority
+          />
+        </motion.div>
       </section>
 
       {/* Content */}
@@ -344,15 +341,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">Patients search by specialty, filter by distance and availability, and view student profiles with credentials and ratings. Each listing shows the supervising faculty member and clinic location.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Screenshot 2025-12-01 114222.png"
-                alt="Find Dental Students Screen"
-                width={1885}
-                height={950}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Screenshot 2025-12-01 114222.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Screenshot 2025-12-01 114222.png"
+                  alt="Find Dental Students Screen"
+                  width={1885}
+                  height={950}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
               </div>
           
@@ -362,15 +361,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">A central hub for managing all appointments. Patients can view upcoming visits, track completion status, access visit history, and leave reviews. The interface emphasizes clarity with color-coded status indicators.</p>
               </div>
             <div className="flex justify-center">
-              <Image
-                src="/Screenshot 2025-12-01 114308.png"
-                alt="My Appointments Screen"
-                width={1885}
-                height={947}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Screenshot 2025-12-01 114308.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Screenshot 2025-12-01 114308.png"
+                  alt="My Appointments Screen"
+                  width={1885}
+                  height={947}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
 
@@ -380,15 +381,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">Direct, HIPAA-aware messaging between patients and dental students. Enables appointment coordination, pre-visit questions, and follow-up care discussions. Auto-saves conversation history for continuity.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Screenshot 2025-12-01 114342.png"
-                alt="Messages Screen"
-                width={1903}
-                height={948}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Screenshot 2025-12-01 114342.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Screenshot 2025-12-01 114342.png"
+                  alt="Messages Screen"
+                  width={1903}
+                  height={948}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
         </div>
@@ -410,15 +413,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">Students see all their booked appointments at a glance — upcoming visits, patient details, and procedure types. A clear overview to start each clinical day.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Student1.png"
-                alt="Student Dashboard - Booked Appointments"
-                width={1481}
-                height={877}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Student1.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Student1.png"
+                  alt="Student Dashboard - Booked Appointments"
+                  width={1481}
+                  height={877}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
           
@@ -428,15 +433,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">Students set when they're available for appointments. The interface shows existing time slots and makes it easy to add new availability windows.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Student2.png"
-                alt="Student Dashboard - Schedule Time Slots"
-                width={1470}
-                height={894}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Student2.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Student2.png"
+                  alt="Student Dashboard - Schedule Time Slots"
+                  width={1470}
+                  height={894}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
 
@@ -446,15 +453,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">The detailed scheduler for creating specific time slots. Students select dates, times, and which procedures they can perform during each window.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Student3.png"
-                alt="Student Dashboard - Time Slot Scheduler"
-                width={1466}
-                height={893}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Student3.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Student3.png"
+                  alt="Student Dashboard - Time Slot Scheduler"
+                  width={1466}
+                  height={893}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
 
@@ -464,15 +473,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">Direct communication with patients for appointment coordination, pre-visit questions, and follow-up care. Keeps all conversations organized in one place.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Student4.png"
-                alt="Student Dashboard - Messaging"
-                width={1576}
-                height={899}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Student4.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Student4.png"
+                  alt="Student Dashboard - Messaging"
+                  width={1576}
+                  height={899}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
 
@@ -482,15 +493,17 @@ export default function VersumCaseStudy() {
               <p className="text-gray-600">Students customize their profile with the services they offer, credentials, and pricing (including free cleanings option). This information displays on their card when patients browse.</p>
             </div>
             <div className="flex justify-center">
-              <Image
-                src="/Student5.png"
-                alt="Student Dashboard - Profile and Services"
-                width={1558}
-                height={902}
-                className="max-w-5xl w-full h-auto"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                quality={95}
-              />
+              <FullSizeLink src="/Student5.png" className="max-w-5xl w-full">
+                <Image
+                  src="/Student5.png"
+                  alt="Student Dashboard - Profile and Services"
+                  width={1558}
+                  height={902}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  quality={95}
+                />
+              </FullSizeLink>
             </div>
           </div>
         </div>
@@ -693,7 +706,7 @@ export default function VersumCaseStudy() {
           </Link>
           <Link href="/work/pdf-penguin" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: PDF Penguin →</Link>
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
             className="text-gray-600 hover:text-[#B5502F] transition-colors"
           >
             Back to Top ↑
