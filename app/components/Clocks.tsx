@@ -10,7 +10,7 @@ export default function Clocks() {
     <div
       role="group"
       aria-label="Local times"
-      className="flex gap-2.5 sm:gap-3.5 font-mono text-[11.5px] sm:text-[12.5px] text-wf-muted tabular-nums whitespace-nowrap"
+      className="wf-clocks flex gap-3 sm:gap-4 text-[13px] sm:text-sm text-wf-muted tabular-nums whitespace-nowrap"
     >
       {STATIONS.map((s) => (
         <span key={s.code}>

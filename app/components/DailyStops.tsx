@@ -9,12 +9,12 @@ export default function DailyStops() {
     <section className="wf-section" aria-labelledby="daily-stops-title">
       <div className="wf-head">
         <h2 id="daily-stops-title">Daily stops</h2>
-        <span>Exits · <span lang="ja" className="wf-jp">出口</span></span>
+        <p>Exits, <span lang="ja" className="wf-jp">出口</span></p>
       </div>
       <div className="wf-two">
         {cities.map((c) => (
           <div key={c.city}>
-            <div className="wf-city">{c.city} · {c.note}</div>
+            <div className="wf-city">{c.city}, {c.note}</div>
             <ul className="wf-exits">
               {c.stops.map((s) => (
                 <li key={`${s.exit}-${s.what}`}>

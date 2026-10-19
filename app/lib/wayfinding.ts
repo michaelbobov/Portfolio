@@ -11,12 +11,18 @@ export type Station = {
   kana: string;
   note: string;
   tz: string;
+  /** Line colour (sign bar, badge ring) and the ink that reads on it */
   color: string;
+  onColor: string;
+  /** The real line, as the platform LED shows it */
+  line: string;
+  /** Japanese line name shown before `line` */
+  lineJa?: string;
 };
 
 export const STATIONS: Station[] = [
-  { code: 'SEA', num: '01', en: 'Seattle', kana: 'シアトル', note: 'Home', tz: 'America/Los_Angeles', color: 'var(--wf-sea)' },
-  { code: 'TYO', num: '02', en: 'Tokyo', kana: 'とうきょう', note: 'Favorite place', tz: 'Asia/Tokyo', color: 'var(--wf-tyo)' },
+  { code: 'SEA', num: '01', en: 'Seattle', kana: 'シアトル', note: 'Home', tz: 'America/Los_Angeles', color: 'var(--wf-sea)', onColor: '#ffffff', line: '1 Line · Link light rail' },
+  { code: 'TYO', num: '02', en: 'Tokyo', kana: 'とうきょう', note: 'Favorite place', tz: 'Asia/Tokyo', color: 'var(--wf-tyo)', onColor: 'var(--wf-ink)', lineJa: '山手線', line: 'Yamanote Line' },
 ];
 
 const formatters = new Map<string, Intl.DateTimeFormat>();

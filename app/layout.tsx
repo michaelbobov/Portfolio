@@ -3,11 +3,10 @@ import { Playfair_Display, Noto_Sans_JP, DotGothic16 } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
-import SocialLinks from './components/SocialLinks'
 import Footer from './components/Footer'
 import MotionProvider from './components/MotionProvider'
 
-// Geist (sans + mono) is the site-wide type; Playfair stays for the case-study headings
+// Geist is the site-wide type (Geist Mono only for the case studies' own labels); Playfair stays for the case-study headings
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
   variable: '--font-playfair',
@@ -86,7 +85,7 @@ export default function RootLayout({
       <body className={`${GeistSans.variable} ${GeistMono.variable} ${playfair.variable} ${notoJp.variable} ${dotGothic.variable} font-sans h-full flex flex-col`}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-wf-sheet focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg font-mono text-sm text-wf-ink focus:outline-none focus:ring-2 focus:ring-wf-ink"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-wf-sheet focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg text-sm font-medium text-wf-ink focus:outline-none focus:ring-2 focus:ring-wf-ink"
         >
           Skip to content
         </a>
@@ -94,7 +93,6 @@ export default function RootLayout({
           <div className="flex-1">
             {children}
           </div>
-          <SocialLinks />
           <Footer />
         </MotionProvider>
       </body>

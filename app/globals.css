@@ -25,9 +25,10 @@
     --ring: 12 60% 50%;
     --radius: 0.5rem;
 
-    /* Wayfinding palette (light only, to match the case studies) */
+    /* Wayfinding palette (light only; the case studies share the same ground) */
     --wf-bg: #f3f3f0;
     --wf-sheet: #ffffff;
+    --wf-frame: #e7e7e2;    /* the train window's frame: one tone step off the ground */
     --wf-ink: #121417;
     --wf-muted: #696e76;
     --wf-line: #e2e2dd;
@@ -40,6 +41,7 @@
     --wf-xfer-ink: #0b4f9c;
     --wf-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --wf-ease-arrive: cubic-bezier(0.32, 0.72, 0, 1);
+    --wf-ease-depart: cubic-bezier(0.65, 0, 0.35, 1);
   }
 }
 
@@ -50,7 +52,7 @@
   
   body {
     @apply antialiased;
-    background-color: #FAFAF8; /* case-study paper; the homepage sets --wf-bg (home.css) */
+    background-color: var(--wf-bg);
     color: var(--wf-ink);
   }
   
@@ -75,18 +77,41 @@
   }
 }
 
-/* Page wrapper shared by the homepage, top bar and footer */
+/* Page wrapper shared by the homepage, top bar and footer: wide, with tight fluid margins */
 @layer components {
   .wf-wrap {
-    max-width: 1160px;
+    max-width: 1600px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: clamp(16px, 3.4vw, 48px);
+    padding-right: clamp(16px, 3.4vw, 48px);
   }
-  @media (min-width: 900px) {
-    .wf-wrap { padding-left: 48px; padding-right: 48px; }
-  }
+}
+
+/* Footer: the designed close (all pages). The name returns at full width. */
+.wf-foot { padding-top: 160px; padding-bottom: 56px; color: var(--wf-ink); }
+.wf-foot-name { margin: 0; font-weight: 600; font-size: clamp(40px, 11vw, 190px); line-height: 0.9; letter-spacing: -0.05em; white-space: nowrap; padding-bottom: 0.06em; }
+.wf-foot-links { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 32px; font-size: 17px; }
+.wf-foot-links a { display: inline-flex; align-items: center; gap: 10px; color: var(--wf-ink); text-decoration: none; transition: color 160ms ease; }
+.wf-foot-links a svg { color: var(--wf-muted); flex: none; transition: color 160ms ease, transform 200ms var(--wf-ease-out); }
+.wf-foot-links a:focus-visible { outline: 2px solid var(--wf-ink); outline-offset: 4px; border-radius: 6px; }
+@media (hover: hover) and (pointer: fine) {
+  .wf-foot-links a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+  .wf-foot-links a:hover svg { color: var(--wf-ink); transform: translateY(-1px); }
+}
+.wf-foot-cs { padding-top: 96px; }
+.wf-foot-credits { margin: 28px 0 0; max-width: 40em; font-size: 13px; line-height: 1.5; color: var(--wf-muted); }
+.wf-foot-credits a { color: inherit; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.wf-foot-credits a:focus-visible { outline: 2px solid var(--wf-ink); outline-offset: 2px; border-radius: 3px; }
+@media (hover: hover) and (pointer: fine) { .wf-foot-credits a:hover { color: var(--wf-ink); } }
+.wf-foot-note { margin: 20px 0 0; font-size: 15px; color: var(--wf-muted); }
+@media (max-width: 767px) {
+  .wf-foot { padding-top: 96px; padding-bottom: 40px; }
+  .wf-foot-name { font-size: 13.6vw; }
+  .wf-foot-links { margin-top: 28px; gap: 14px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wf-foot-links a svg { transition: color 160ms ease; transform: none !important; }
 }
 
 /* Typography refinements */

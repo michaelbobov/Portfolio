@@ -185,8 +185,8 @@ export default function Navigation() {
           >
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-wf-line">
-                <span id="mobile-menu-title" className="font-mono text-[12.5px] text-wf-muted">Menu</span>
+              <div className="flex items-center justify-between px-6 py-4">
+                <span id="mobile-menu-title" className="text-sm text-wf-muted">Menu</span>
                   <button
                     ref={closeButtonRef}
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -202,7 +202,7 @@ export default function Navigation() {
 
               {/* Menu Items */}
               <div className="flex-1 overflow-y-auto p-6">
-                <div className="space-y-6">
+                <div className="space-y-10">
                   {/* Main Links */}
                   <div className="space-y-4 text-lg font-medium tracking-[-0.01em]">
                     <Link
@@ -230,12 +230,9 @@ export default function Navigation() {
                     </a>
                     </div>
 
-                  {/* Divider */}
-                  <div className="h-px bg-wf-line" />
-
                   {/* Projects */}
                   <div>
-                    <span className="font-mono text-[12.5px] text-wf-muted">Projects</span>
+                    <span className="text-sm text-wf-muted">Projects</span>
                     <div className="mt-3 space-y-3">
                       {projects.map((project) => (
                         <Link
@@ -253,8 +250,8 @@ export default function Navigation() {
               </div>
 
               {/* Footer */}
-              <div className="p-6 border-t border-wf-line">
-                <span className="font-mono text-xs text-wf-muted">© {new Date().getFullYear()} Michael Bobov</span>
+              <div className="p-6">
+                <span className="text-[13px] text-wf-muted">© {new Date().getFullYear()} Michael Bobov</span>
               </div>
             </div>
           </motion.div>
@@ -268,7 +265,7 @@ export default function Navigation() {
     <button
       ref={hamburgerRef}
       onClick={() => setIsMobileMenuOpen(true)}
-      className="md:hidden -mr-2 p-2 rounded-lg hover:bg-wf-line/60 transition-colors"
+      className="wf-burger md:hidden -mr-2 p-2 rounded-lg hover:bg-wf-line/60 transition-colors"
       aria-label="Open menu"
       aria-expanded={isMobileMenuOpen}
       aria-controls="mobile-menu"
@@ -283,7 +280,7 @@ export default function Navigation() {
   return (
     <>
       <div className="flex items-center gap-3 sm:gap-4 md:gap-6 text-sm">
-        <div className="hidden md:flex items-center gap-[22px] text-wf-muted">
+        <div className="wf-navlinks hidden md:flex items-center gap-[22px] text-wf-muted">
           <div
             ref={dropdownRef}
             className="relative"
@@ -321,7 +318,7 @@ export default function Navigation() {
                   className="absolute top-full -left-3 pt-2 z-50"
       >
                   {/* pt-2 keeps the hover area continuous between Work and the panel */}
-                  <div className="w-52 bg-wf-sheet border border-wf-line rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_24px_48px_-28px_rgba(10,14,20,0.35)] p-1.5">
+                  <div className="w-52 bg-wf-sheet rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_24px_48px_-28px_rgba(10,14,20,0.35)] p-1.5">
                     {projects.map((project) => (
                       <Link
                         key={project.href}

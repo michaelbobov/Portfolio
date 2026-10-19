@@ -5,15 +5,16 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
 import FullSizeLink from '@/app/components/FullSizeLink';
+import { ArrowLeft } from '@/app/components/icons';
 
 export default function EZRecipeCaseStudy() {
   return (
-    <main className="bg-[#FAFAF8] min-h-screen">
+    <main className="bg-wf-bg min-h-screen">
       {/* Navigation */}
-      <nav className="container mx-auto px-6 md:px-12 lg:px-20 py-8">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="font-mono text-sm tracking-wide text-gray-900 font-medium hover:text-[#B5502F] transition-colors">
-            MICHAEL BOBOV
+      <nav aria-label="Primary" className="container mx-auto px-6 md:px-12 lg:px-20 py-[22px]">
+        <div className="flex justify-between items-center gap-4 text-sm">
+          <Link href="/" className="font-semibold text-wf-ink whitespace-nowrap">
+            Michael Bobov
           </Link>
           <Navigation />
         </div>
@@ -573,9 +574,9 @@ export default function EZRecipeCaseStudy() {
       {/* Footer Navigation */}
       <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-          <Link href="/" className="text-gray-600 hover:text-[#B5502F] transition-colors flex items-center gap-2">
-            <span>←</span>
-            <span>Back to Home</span>
+          <Link href="/#work" className="text-gray-600 hover:text-[#B5502F] transition-colors inline-flex items-center gap-2">
+            <ArrowLeft size={18} />
+            <span>All work</span>
           </Link>
           <Link href="/work/versum" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: Versum Health →</Link>
           <button
