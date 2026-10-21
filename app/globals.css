@@ -25,15 +25,26 @@
     --ring: 12 60% 50%;
     --radius: 0.5rem;
 
-    /* Site palette (light only; the case studies share the same ground). Ink is also the accent. */
-    --wf-bg: #f3f3f0;
+    /* Grape palette (light only). The case studies take only the ground and ink. */
+    --wf-bg: #f1eefb;
     --wf-sheet: #ffffff;
-    --wf-frame: #e7e7e2;    /* the work window's frame: one tone step off the ground */
-    --wf-ink: #121417;
-    --wf-muted: #696e76;
-    --wf-line: #e2e2dd;
-    --wf-live: #1f9d63;     /* the one semantic colour: a live project */
+    --wf-ink: #1d1233;
+    --wf-muted: #6d6488;
+    --wf-line: #ddd6f1;
+    --wf-accent: #6a35e8;   /* grape: focus, offset shadows, the character */
+    --wf-yellow: #ffd84d;   /* comic yellow: bursts, caption boxes, halftone */
+    --wf-glove: #ff4d4d;
+    --wf-cheek: #ff8fb8;
+    --wf-live: #1f9d63;     /* a live project */
+    /* Pop colours for reactions, bubbles and bursts */
+    --wf-pop-1: #ffd84d;
+    --wf-pop-2: #ff8fb8;
+    --wf-pop-3: #7ce0b3;
+    --wf-pop-4: #7cc8ff;
+    --wf-pop-5: #ffa45c;
+    --wf-pop-6: #c9b6ff;
     --wf-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --wf-spring: cubic-bezier(0.34, 1.7, 0.64, 1);
   }
 }
 
@@ -64,7 +75,7 @@
 
   /* Custom selection color */
   ::selection {
-    background-color: rgba(18, 20, 23, 0.14);
+    background-color: rgba(106, 53, 232, 0.2);
     color: var(--wf-ink);
   }
 }
@@ -83,6 +94,8 @@
 /* Footer: the designed close (all pages). The name returns at full width. */
 .wf-foot { padding-top: 160px; padding-bottom: 56px; color: var(--wf-ink); }
 .wf-foot-name { margin: 0; font-weight: 600; font-size: clamp(40px, 11vw, 190px); line-height: 0.9; letter-spacing: -0.05em; white-space: nowrap; padding-bottom: 0.06em; }
+/* Homepage only: the name returns in the display face with a grape offset shadow (case studies keep Geist) */
+.wf-foot:not(.wf-foot-cs) .wf-foot-name { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; letter-spacing: -0.03em; line-height: 0.95; text-shadow: 0.04em 0.04em 0 var(--wf-accent); padding-bottom: 0.08em; }
 .wf-foot-links { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 32px; font-size: 17px; }
 .wf-foot-links a { display: inline-flex; align-items: center; gap: 10px; color: var(--wf-ink); text-decoration: none; transition: color 160ms ease; }
 .wf-foot-links a svg { color: var(--wf-muted); flex: none; transition: color 160ms ease, transform 200ms var(--wf-ease-out); }
