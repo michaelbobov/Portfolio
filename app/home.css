@@ -1,327 +1,262 @@
 /*
-  Homepage, grape comic layer. A punchable character beside a big staggered headline, a sticker
-  cloud of real skills, featured work laid out as comic-page panels, a "MORE ABOUT ME!" panel link
-  and a small "Today" block.
-  Type: Bricolage Grotesque for display (headline, giant titles, "More about me", footer name),
-  Geist for body and UI, Bangers only for sound effects and comic labels, and Instrument Serif,
-  Silkscreen and Geist Mono as accents in the stickers (Silkscreen also in the panel tickers).
-  Motion: transform and opacity (plus small blurs), springs for the comic pops, hover only on fine
-  pointers, and a reduced-motion fallback for every move at the end. Tokens live in globals.css.
+  Homepage. One loud thing, the matryoshka family in the hero; everything around it is quiet and
+  set from one small system:
+  Type: Bricolage Grotesque for display (headline, section titles, "More about me", footer name)
+  and Geist for everything else. Two faces, nothing else on this page.
+  Colour: grape ground, ink, one grape accent. The dolls are painted in the same family (grape,
+  lilac, folk red, yellow, pink) and the khokhloma plate behind them sits on deep grape.
+  Comic ink as a system, not decoration: ink outlines with flat offset shadows on things you can
+  press (panels, pills, the button), straight, never tilted.
+  Motion: transform and opacity only, hover only on fine pointers, and a reduced-motion fallback
+  for every move at the end. Tokens live in globals.css.
 */
 
 .wf-home { overflow-x: clip; }
 .wf-home :focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 4px; border-radius: 8px; }
-/* The starburst shape behind the cycling keyword */
-.wf-home { --burst: polygon(50.0% 1.3%, 56.9% 10.6%, 66.9% 3.6%, 70.0% 15.4%, 80.5% 13.7%, 80.6% 24.3%, 93.1% 25.1%, 87.6% 36.3%, 97.1% 41.7%, 90.0% 50.0%, 97.8% 58.4%, 87.6% 63.7%, 93.1% 74.9%, 80.6% 75.7%, 80.8% 86.7%, 70.0% 84.6%, 67.0% 96.8%, 56.9% 89.4%, 50.0% 98.3%, 43.1% 89.4%, 33.0% 96.7%, 30.0% 84.6%, 18.1% 88.0%, 19.4% 75.7%, 8.2% 74.2%, 12.4% 63.7%, 4.0% 58.1%, 10.0% 50.0%, 1.2% 41.4%, 12.4% 36.3%, 7.5% 25.4%, 19.4% 24.3%, 19.5% 13.6%, 30.0% 15.4%, 34.2% 6.6%, 43.1% 10.6%); }
 
-/* ---------- hero: only the headline, the MEANWHILE caption and the character, with room ---------- */
-.wf-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; padding-top: 56px; }
+/* ---------- hero: the headline, one line on what he does, one button; the dolls beside it ---------- */
+.wf-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; padding-top: 56px; }
 @media (min-width: 1100px) {
-  .wf-hero { grid-template-columns: minmax(0, 58fr) minmax(0, 42fr); column-gap: 40px; align-items: center; align-content: center; min-height: min(88vh, 900px); min-height: min(88svh, 900px); padding-top: 96px; padding-bottom: 32px; }
+  .wf-hero { grid-template-columns: minmax(0, 58fr) minmax(0, 42fr); column-gap: 40px; align-items: center; align-content: center; min-height: min(78vh, 800px); min-height: min(78svh, 800px); padding-top: 64px; padding-bottom: 0; }
 }
 .wf-hero-copy { min-width: 0; }
-/* The headline as an editorial mix: Instrument Serif italic for the small words, Bricolage
-   (wdth 85) for the key words, one Silkscreen sticker for Seattle, then the comic keyword. Calm:
-   no letter effects here, only the word-by-word pop on load. */
-.wf-ed-h1 { margin: 0; font-size: clamp(48px, 7vw, 116px); line-height: 1; letter-spacing: -0.02em; font-weight: 400; color: var(--wf-ink); transform: rotate(-1deg); transform-origin: 0 50%; }
-.wf-ed { display: block; }
+.wf-h1 { margin: 0; max-width: 11.5em; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(46px, 7vw, 120px); line-height: 0.98; letter-spacing: -0.035em; color: var(--wf-ink); }
 .wf-w { display: inline-block; }
-.ed-nowrap { display: inline-block; white-space: nowrap; }
-.ed-s { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: 1.05em; line-height: 1; }
-.ed-g { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; letter-spacing: -0.035em; }
+/* The name carries the grape offset that returns on the footer name */
 .ed-shadow { text-shadow: 0.045em 0.045em 0 var(--wf-accent); }
 /* "messy ideas": letters set askew from a fixed list (page.tsx); hovering tidies them up */
 .ed-messy { white-space: nowrap; }
 .ed-messy .mc { display: inline-block; transform: translateY(var(--my)) rotate(var(--mr)); transition: transform 400ms var(--wf-spring); }
 @media (hover: hover) and (pointer: fine) { .ed-messy:hover .mc { transform: none; } }
-
-/* The cycling keyword in a yellow starburst. All words share one cell, so the line never reflows. */
-.wf-kw { display: inline-grid; margin: 0 1em 0 1.15em; font-family: var(--font-comic), Impact, sans-serif; font-weight: 400; font-size: 0.62em; letter-spacing: 0.03em; vertical-align: 0.06em; text-shadow: none; }
-.wf-kw-word { grid-area: 1 / 1; justify-self: start; position: relative; z-index: 0; padding: 0 0.06em; color: #fff; -webkit-text-stroke: 0.045em var(--wf-ink); paint-order: stroke fill; text-shadow: 0.07em 0.07em 0 var(--wf-ink); opacity: 0; transform: rotate(var(--k0, -18deg)) scale(0.2); }
-/* The burst grows with the phrase, and its fill cycles colour on every swap (ComicKeyword sets --kb) */
-.wf-kw-word::before { content: ""; position: absolute; z-index: -1; inset: -0.6em -1em; background: var(--kb, var(--wf-yellow)); clip-path: var(--burst); }
-/* In: a slam with a spring overshoot (about 1.18) and a rotation snap */
-.wf-kw-word.is-on { opacity: 1; transform: rotate(var(--kr, -4deg)) scale(1); transition: transform 520ms var(--wf-spring), opacity 100ms ease-out; }
-/* Out: a quick squash */
-.wf-kw-word.is-out { opacity: 0; transform: rotate(var(--kr, -4deg)) scale(1.15, 0.7); transition: transform 120ms cubic-bezier(0.77, 0, 0.175, 1), opacity 120ms cubic-bezier(0.77, 0, 0.175, 1); }
-/* The landing FX (fixed, removed after use): ink rays, stars and a BAM!/POW! flash, above the glove */
-.kw-ray { position: fixed; z-index: 65; left: 0; top: 0; width: 26px; height: 4px; border-radius: 2px; background: var(--wf-ink); pointer-events: none; transform-origin: 0 50%; }
-.kw-star { position: fixed; z-index: 65; left: 0; top: 0; width: 18px; height: 18px; pointer-events: none; }
-.kw-flash { position: fixed; z-index: 70; padding: 4px 9px 3px; font: 400 18px/1 var(--font-comic), Impact, sans-serif; letter-spacing: 0.05em; color: var(--wf-yellow); background: var(--wf-ink); pointer-events: none; animation: kw-flash 380ms var(--wf-spring) both; }
-@keyframes kw-flash { 0% { opacity: 0; transform: scale(0.5) rotate(-6deg); } 30% { opacity: 1; transform: scale(1.12) rotate(8deg); } 75% { opacity: 1; transform: scale(1) rotate(6deg); } 100% { opacity: 0; transform: scale(1.05) rotate(6deg); } }
-
-/* "MEANWHILE…": a comic narration caption */
-.wf-caption { display: inline-flex; flex-direction: column; gap: 4px; margin-top: 40px; padding: 12px 18px 14px; background: var(--wf-yellow); color: var(--wf-ink); border: 3px solid var(--wf-ink); box-shadow: 5px 5px 0 var(--wf-ink); transform: rotate(1deg); text-decoration: none; transition: transform 160ms var(--wf-ease-out), box-shadow 160ms var(--wf-ease-out); }
-.wf-caption-kicker { font-family: var(--font-comic), Impact, sans-serif; font-size: 18px; line-height: 1; letter-spacing: 0.06em; }
-.wf-caption-text { display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
-.wf-caption:focus-visible { border-radius: 2px; }
-.wf-caption:active { transform: rotate(1deg) translate(3px, 3px); box-shadow: 2px 2px 0 var(--wf-ink); }
+/* The rolling end of the line: phrases share one cell and rise through a clipped slot */
+.wf-roll { display: inline-grid; vertical-align: top; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; color: var(--wf-accent); }
+.wf-roll-word { grid-area: 1 / 1; white-space: nowrap; opacity: 0; transform: translateY(105%); transition: transform 560ms var(--wf-ease-out), opacity 240ms ease; }
+.wf-roll-word.is-on { opacity: 1; transform: none; }
+.wf-roll-word.is-out { opacity: 0; transform: translateY(-105%); }
+.wf-lede { display: block; margin: 32px 0 0; max-width: 32em; font-size: clamp(19px, 1.5vw, 23px); line-height: 1.45; letter-spacing: -0.01em; color: var(--wf-ink); }
+/* The one button style on the page: an ink pill with a grape offset (the panels' button matches) */
+.wf-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 36px; padding: 15px 22px; border-radius: 999px; background: var(--wf-ink); color: #fff; font-size: 17px; font-weight: 600; text-decoration: none; white-space: nowrap; box-shadow: 4px 4px 0 var(--wf-accent); transition: transform 140ms var(--wf-ease-out), box-shadow 140ms var(--wf-ease-out); }
+.wf-lede a { color: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--wf-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .wf-lede a:hover { color: var(--wf-accent); } }
+.wf-btn svg { transition: transform 200ms var(--wf-ease-out); }
+.wf-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--wf-accent); }
 @media (hover: hover) and (pointer: fine) {
-  .wf-caption:hover { transform: rotate(1deg) translateY(-2px); box-shadow: 7px 7px 0 var(--wf-ink); }
-  .wf-caption:hover:active { transform: rotate(1deg) translate(3px, 3px); box-shadow: 2px 2px 0 var(--wf-ink); }
+  .wf-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--wf-accent); }
+  .wf-btn:hover svg { transform: translateY(3px); }
+  .wf-btn:hover:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--wf-accent); }
 }
 
-/* ---------- the character (PunchBuddy) ---------- */
-.pb-stage { position: relative; min-height: 560px; display: grid; place-items: center; }
-@media (min-width: 900px) and (max-width: 1099px) { .pb-stage { width: 100%; max-width: 620px; margin-inline: auto; } }
-/* What he does and where, slapped on the stage */
-.pb-tag { position: absolute; z-index: 2; top: 12%; left: 4%; margin: 0; padding: 7px 12px 6px; font-family: var(--font-pixel), monospace; font-weight: 700; font-size: 13px; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; background: var(--wf-yellow); border: 2.5px solid var(--wf-ink); box-shadow: 3px 3px 0 var(--wf-ink); transform: rotate(-6deg); }
-@media (hover: hover) and (pointer: fine) { .pb-stage.gloved, .pb-stage.gloved * { cursor: none; } }
-.pb-halftone { position: absolute; z-index: 0; width: 440px; height: 440px; border-radius: 50%; pointer-events: none; background-image: radial-gradient(var(--wf-yellow) 28%, transparent 30%); background-size: 14px 14px; -webkit-mask-image: radial-gradient(circle, #000 35%, transparent 70%); mask-image: radial-gradient(circle, #000 35%, transparent 70%); }
-.pb-stage.shake { animation: pb-shake 220ms linear; }
-@keyframes pb-shake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-5px, 2px); } 40% { transform: translate(4px, -3px); } 60% { transform: translate(-3px, 3px); } 80% { transform: translate(2px, -1px); } }
-.pb-buddy { position: relative; z-index: 2; appearance: none; border: 0; background: none; padding: 0; width: 300px; cursor: pointer; color: var(--wf-ink); -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-.pb-buddy:focus-visible { border-radius: 32px; outline-offset: 6px; }
-.pb-buddy svg { width: 100%; height: auto; aspect-ratio: 1; overflow: visible; display: block; }
-.pb-body { transform-origin: 120px 222px; transform-box: view-box; }
-.pb-face-hit { opacity: 0; }
-.pb-buddy.hurt .pb-face-ok { opacity: 0; }
-.pb-buddy.hurt .pb-face-hit { opacity: 1; }
-.pb-lid { transform-origin: center; transform-box: fill-box; transform: scaleY(0); }
-.pb-buddy.blink .pb-lid { transform: scaleY(1); }
-.pb-label { display: block; margin-top: 4px; font: 400 24px/1 var(--font-comic), Impact, sans-serif; letter-spacing: 0.06em; text-align: center; }
-.pb-list { display: none; }
-/* The glove cursor (fixed; it lives outside the stage so the shake never moves it) */
-.pb-glove { position: fixed; left: 0; top: 0; z-index: 50; width: 84px; height: 84px; margin: -42px 0 0 -42px; pointer-events: none; opacity: 0; transition: opacity 120ms ease; }
-.pb-glove.on { opacity: 1; }
-.pb-glove svg { width: 100%; height: 100%; display: block; overflow: visible; }
+/* ---------- the character (Matryoshka) ---------- */
+.md-stage { position: relative; min-height: 560px; display: grid; place-items: center; }
+@media (min-width: 900px) and (max-width: 1099px) { .md-stage { width: 100%; max-width: 620px; margin-inline: auto; } }
+.md-buddy { position: relative; z-index: 2; appearance: none; border: 0; background: none; padding: 0; width: 320px; cursor: pointer; color: var(--wf-ink); -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.md-buddy:focus-visible { border-radius: 32px; outline-offset: 6px; }
+/* All five dolls (and the hollow insides of the four that open) share one box. It clips only at
+   the floor, the base of the dolls, so a doll rising out of a shell never shows below it, while a
+   flying top half can leave freely. */
+.md-dolls { position: relative; display: block; transition: transform 140ms var(--wf-ease-out); }
+.md-buddy:active .md-dolls { transform: scale(0.97); }
+.md-stack { position: relative; display: block; aspect-ratio: 200 / 260; clip-path: inset(-100vh -100vw 2.1% -100vw); }
+/* The shadow under whichever doll is out; it shrinks as the next one rises */
+/* The khokhloma plate, centred behind the biggest doll's middle; it turns a little on hover */
+.md-plate { position: absolute; left: 50%; top: 47%; width: 128%; height: auto; aspect-ratio: 1; transform: translate(-50%, -50%) rotate(0deg); transition: transform 1200ms var(--wf-ease-out); pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .md-buddy:hover .md-plate { transform: translate(-50%, -50%) rotate(14deg); } }
+.md-floor { position: absolute; left: 50%; bottom: 0; width: calc(var(--fs, 1) * 72%); height: 4.6%; border-radius: 50%; background: var(--wf-ink); opacity: 0.18; transform: translateX(-50%); transition: width 420ms var(--wf-ease-out) 300ms; }
+.md-doll, .md-hollow { position: absolute; bottom: 0; height: auto; aspect-ratio: 200 / 260; overflow: visible; display: block; transform-origin: 50% 100%; }
+.md-top, .md-bot, .md-in { transform-box: view-box; transform-origin: 100px 150px; }
+.md-lid { visibility: hidden; }
+.md-buddy.blink .md-lid { visibility: visible; }
+/* Hover (mouse): the open doll's top half lifts a little and turns, to show where it twists open;
+   the littlest is solid, so hers stays put */
+.md-top { transition: transform 360ms var(--wf-spring); }
+@media (hover: hover) and (pointer: fine) {
+  .md-buddy:hover .md-doll:not(.is-solid) .md-top { transform: translateY(-5px) rotate(-3deg); }
+}
+/* The twist cursor: a badge that follows the mouse over the dolls and turns when pressed */
+.md-buddy.has-cursor, .md-buddy.has-cursor * { cursor: none; }
+.md-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 52px; height: 52px; margin: -26px 0 0 -26px; pointer-events: none; }
+.md-cursor-badge { display: grid; place-items: center; width: 100%; height: 100%; box-sizing: border-box; border: 2.5px solid var(--wf-ink); border-radius: 50%; background: var(--wf-sheet); box-shadow: 3px 3px 0 var(--wf-ink); color: var(--wf-accent); opacity: 0; scale: 0.6; transition: opacity 140ms ease, scale 200ms var(--wf-spring); }
+.md-cursor.on .md-cursor-badge { opacity: 1; scale: 1; }
+.md-cursor svg { grid-area: 1 / 1; width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: rotate 260ms var(--wf-ease-out), opacity 160ms ease; }
+.md-cursor-stack { opacity: 0; }
+.md-cursor.stack .md-cursor-twist { opacity: 0; }
+.md-cursor.stack .md-cursor-stack { opacity: 1; }
+/* Press: the badge squeezes and the arrow twists, like turning the doll */
+.md-cursor.press .md-cursor-badge { scale: 0.88; }
+.md-cursor.press .md-cursor-twist { rotate: -70deg; }
+.md-cursor.press .md-cursor-stack { translate: 0 -2px; }
+/* Where you are: the little set, the open doll in colour and lifted, and the open layer's name */
+.md-meter { display: flex; align-items: flex-end; justify-content: center; gap: 12px; margin-top: 16px; }
+.md-meter-set { display: flex; align-items: flex-end; gap: 5px; }
+.md-meter-doll { display: block; width: auto; overflow: visible; opacity: 0.28; transition: opacity 240ms ease, transform 320ms var(--wf-spring); }
+.md-meter-doll.is-on { opacity: 1; transform: translateY(-3px); }
+.md-meter-name { min-width: 8.5em; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-size: 18px; line-height: 1; letter-spacing: -0.02em; text-align: left; }
+/* The call to action: a small white pill */
+.md-label { position: relative; display: table; margin: 14px auto 0; padding: 7px 16px 8px; border: 2.5px solid var(--wf-ink); border-radius: 999px; background: var(--wf-sheet); box-shadow: 3px 3px 0 var(--wf-ink); font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-size: 19px; line-height: 1; letter-spacing: -0.01em; }
+.md-list { display: none; }
 /* Speech and thought bubbles */
-.pb-bubble { position: absolute; z-index: 3; width: max-content; max-width: 250px; padding: 14px 18px; border-radius: 24px; background: var(--bc, #fff9db); color: var(--wf-ink); border: 3px solid var(--wf-ink); font: 700 17px/1.3 var(--font-geist-sans), sans-serif; letter-spacing: -0.01em; box-shadow: 5px 5px 0 var(--wf-ink); transform-origin: var(--ox) var(--oy); animation: pb-pop-in 520ms var(--wf-spring) both; }
-.pb-bubble a { color: var(--wf-accent); font-weight: 800; text-underline-offset: 2px; }
-.pb-bubble::after { content: ""; position: absolute; width: 20px; height: 20px; background: var(--bc, #fff9db); border-right: 3px solid var(--wf-ink); border-bottom: 3px solid var(--wf-ink); left: var(--tx); top: var(--ty); transform: rotate(var(--tr)); }
-.pb-bubble.think { border-radius: 40px; }
-.pb-bubble.think::after { width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--wf-ink); transform: none; left: var(--cx1); top: var(--cy1); }
-.pb-bubble.think::before { content: ""; position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--bc); border: 3px solid var(--wf-ink); left: var(--cx2); top: var(--cy2); }
-.pb-bubble.out { animation: pb-pop-out 200ms var(--wf-ease-out) both; }
-@keyframes pb-pop-in {
+.md-bubble { position: absolute; z-index: 3; width: max-content; max-width: 250px; padding: 14px 18px; border-radius: 24px; background: var(--bc, #fff9db); color: var(--wf-ink); border: 3px solid var(--wf-ink); font: 700 17px/1.3 var(--font-geist-sans), sans-serif; letter-spacing: -0.01em; box-shadow: 5px 5px 0 var(--wf-ink); transform-origin: var(--ox) var(--oy); animation: md-pop-in 520ms var(--wf-spring) both; }
+.md-bubble a { color: var(--wf-accent); font-weight: 800; text-underline-offset: 2px; }
+.md-bubble::after { content: ""; position: absolute; width: 20px; height: 20px; background: var(--bc, #fff9db); border-right: 3px solid var(--wf-ink); border-bottom: 3px solid var(--wf-ink); left: var(--tx); top: var(--ty); transform: rotate(var(--tr)); }
+.md-bubble.think { border-radius: 40px; }
+.md-bubble.think::after { width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--wf-ink); transform: none; left: var(--cx1); top: var(--cy1); }
+.md-bubble.think::before { content: ""; position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--bc); border: 3px solid var(--wf-ink); left: var(--cx2); top: var(--cy2); }
+.md-bubble.out { animation: md-pop-out 200ms var(--wf-ease-out) both; }
+@keyframes md-pop-in {
   0% { opacity: 0; transform: scale(0.4) rotate(var(--r0)); }
   55% { opacity: 1; transform: scale(1.08) rotate(var(--r)); }
   75% { transform: scale(0.97) rotate(var(--r)); }
   100% { opacity: 1; transform: scale(1) rotate(var(--r)); }
 }
-@keyframes pb-pop-out { to { opacity: 0; transform: scale(0.8) rotate(var(--r)); } }
-/* Impact FX (fixed, appended to <body> while they play) */
-.pb-boom { position: fixed; z-index: 70; pointer-events: none; padding: 32px 42px; font: 400 46px/1 var(--font-comic), Impact, sans-serif; letter-spacing: 0.05em; color: #fff; background: var(--bc, var(--wf-yellow)); -webkit-text-stroke: 1.5px var(--wf-ink); text-shadow: 3px 3px 0 var(--wf-ink); clip-path: polygon(50% 0, 61% 28%, 98% 18%, 74% 46%, 100% 70%, 66% 70%, 60% 100%, 46% 74%, 8% 92%, 26% 60%, 0 32%, 38% 32%); animation: pb-boom 560ms var(--wf-spring) both; }
-@keyframes pb-boom { 0% { opacity: 0; transform: scale(calc(var(--sc, 1) * 0.3)) rotate(calc(var(--rot, 0deg) - 18deg)); } 35% { opacity: 1; transform: scale(calc(var(--sc, 1) * 1.1)) rotate(calc(var(--rot, 0deg) + 4deg)); } 70% { opacity: 1; transform: scale(var(--sc, 1)) rotate(var(--rot, 0deg)); } 100% { opacity: 0; transform: scale(calc(var(--sc, 1) * 1.15)) rotate(calc(var(--rot, 0deg) + 6deg)); } }
-.pb-ray { position: fixed; z-index: 65; left: 0; top: 0; width: 34px; height: 5px; border-radius: 3px; background: var(--wf-ink); pointer-events: none; transform-origin: 0 50%; }
-.pb-bit { position: fixed; z-index: 65; left: 0; top: 0; pointer-events: none; border: 2px solid var(--wf-ink); }
-.pb-star { position: fixed; z-index: 65; left: 0; top: 0; width: 22px; height: 22px; pointer-events: none; }
-.pb-dizzy { position: absolute; z-index: 4; left: 50%; top: 6%; width: 150px; height: 40px; margin-left: -75px; pointer-events: none; }
-.pb-dizzy span { position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px; }
-/* Phones: tap to punch, bubbles stack under it, no glove */
+@keyframes md-pop-out { to { opacity: 0; transform: scale(0.8) rotate(var(--r)); } }
+/* Phones: bubbles stack under it */
 @media (max-width: 899px) {
-  .pb-stage { min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 52px; }
-  .pb-tag { top: 0; left: 0; }
-  .pb-halftone { width: 300px; height: 300px; top: 0; }
-  .pb-buddy { width: 200px; }
-  .pb-list { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 420px; }
-  .pb-bubble { position: relative; width: auto; max-width: none; left: auto !important; top: auto !important; }
-  .pb-bubble::after { left: 34px !important; top: -12px !important; transform: rotate(225deg) !important; }
-}
-
-/* ---------- What I bring: a slim page break ---------- */
-/* A full-bleed grape band tilted across the page like tape; heading and stickers in one row */
-.wf-skills { padding: 120px 0 8px; overflow-x: clip; margin-inline: calc(50% - 50vw); }
-.stk-band { width: 106vw; margin-left: -3vw; transform: rotate(-2deg); background: var(--wf-accent); border-block: 4px solid var(--wf-ink); box-shadow: 0 10px 0 var(--wf-ink); }
-.stk-band-inner { max-width: 1320px; margin: 0 auto; padding: 26px 24px 30px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 28px; }
-.stk-title { margin: 0; font-size: 40px; line-height: 1; font-weight: 400; letter-spacing: -0.02em; color: #fff; white-space: nowrap; }
-.stk-title .ed-g { color: var(--wf-yellow); text-shadow: 3px 3px 0 var(--wf-ink); }
-.stk-cloud { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 4px; }
-.wf-more-sec { padding-top: 112px; }
-.stk { margin: 0 -2px; padding: 9px 18px; border: 2.5px solid var(--wf-ink); border-radius: 999px; background: var(--fill, var(--wf-sheet)); box-shadow: 3px 3px 0 var(--wf-ink); color: var(--wf-ink); font-size: 19px; line-height: 1.1; white-space: nowrap; transform: rotate(var(--tilt)); transition: transform 320ms var(--wf-spring), box-shadow 200ms ease; }
-.stk-display { font-family: var(--font-display), sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
-.stk-serif { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: 24px; }
-.stk-pixel { font-family: var(--font-pixel), monospace; font-size: 14px; }
-.stk-mono { font-family: var(--font-geist-mono), monospace; font-size: 17px; letter-spacing: -0.02em; }
-.stk-comic { font-family: var(--font-comic), Impact, sans-serif; font-size: 23px; letter-spacing: 0.04em; }
-.stk-sans { font-weight: 600; font-size: 19px; letter-spacing: -0.02em; }
-.stk-amp { display: grid; place-items: center; width: 52px; height: 52px; padding: 0; border-radius: 50%; background: var(--wf-ink); color: var(--wf-yellow); font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: 32px; line-height: 1; }
-@media (hover: hover) and (pointer: fine) {
-  /* hover: the sticker peels up off the tape */
-  .stk:hover { transform: rotate(calc(var(--tilt) - 4deg)) translateY(-5px) scale(1.08); box-shadow: 5px 7px 0 var(--wf-ink); }
-}
-@media (max-width: 599px) {
-  .wf-skills { padding-top: 88px; }
-  .wf-more-sec { padding-top: 80px; }
-  .stk-band { transform: rotate(-1.5deg); }
-  .stk-band-inner { padding: 22px 16px 24px; gap: 14px; }
-  .stk-title { font-size: 32px; }
-  .stk { padding: 8px 14px; font-size: 16px; }
-  .stk-display, .stk-serif, .stk-comic { font-size: 19px; }
-  .stk-pixel { font-size: 12px; }
-  .stk-mono { font-size: 14px; }
-  .stk-sans { font-size: 16px; }
-  .stk-amp { width: 44px; height: 44px; font-size: 27px; }
+  .md-stage { min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .md-buddy { width: 200px; }
+  .md-list { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 420px; }
+  .md-bubble { position: relative; width: auto; max-width: none; left: auto !important; top: auto !important; }
+  .md-bubble::after { left: 34px !important; top: -12px !important; transform: rotate(225deg) !important; }
 }
 
 /* ---------- sections ---------- */
 .wf-section { padding-top: 160px; }
+#work { padding-top: 72px; }
 @media (max-width: 767px) { .wf-section { padding-top: 96px; } }
-/* The one huge-type moment: fills the content width */
-.wf-giant { margin: 0 0 40px; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; font-size: calc((min(100vw, 1600px) - 2 * clamp(16px, 3.4vw, 48px)) / 6.35); line-height: 0.95; letter-spacing: -0.03em; white-space: nowrap; color: var(--wf-ink); }
+/* The section title: large, about two-thirds of the content width, so the hero stays the loud moment */
+.wf-giant { margin: 0 0 36px; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; font-size: calc((min(100vw, 1600px) - 2 * clamp(16px, 3.4vw, 48px)) / 9.5); line-height: 0.95; letter-spacing: -0.03em; white-space: nowrap; color: var(--wf-ink); }
 /* Living type: each letter's weight and width follow the cursor (LivingTitle); bold at rest */
 .lt-word { white-space: nowrap; }
 .lt-ch { display: inline-block; font-variation-settings: "wght" 800, "wdth" 100, "opsz" 96; transition: font-variation-settings 260ms var(--wf-ease-out), color 260ms ease; }
 .lt-ch.is-near { color: var(--wf-accent); }
 
-/* ---------- featured work: comic-page panels ---------- */
+/* ---------- featured work: ink-framed panels ---------- */
 .cp-page { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.cp-panel { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--wf-sheet); border: 4px solid var(--wf-ink); border-radius: 6px; box-shadow: 8px 8px 0 var(--wf-ink); overflow: hidden; transition: transform 220ms var(--wf-ease-out), box-shadow 220ms var(--wf-ease-out); }
+.cp-panel { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--wf-sheet); border: 3px solid var(--wf-ink); border-radius: 6px; box-shadow: 6px 6px 0 var(--wf-ink); overflow: hidden; transition: transform 220ms var(--wf-ease-out), box-shadow 220ms var(--wf-ease-out); }
 .cp-wide { grid-column: 1 / -1; }
 @media (max-width: 767px) { .cp-page { grid-template-columns: minmax(0, 1fr); } }
 .cp-panel:has(.cp-link:focus-visible) { outline: 3px solid var(--wf-accent); outline-offset: 6px; }
-.cp-panel:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0 var(--wf-ink); }
+.cp-panel:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--wf-ink); }
 @media (hover: hover) and (pointer: fine) {
-  .cp-panel:hover { transform: translate(-3px, -3px) rotate(0.4deg); box-shadow: 11px 11px 0 var(--wf-ink); }
-  .cp-panel:hover:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0 var(--wf-ink); }
+  .cp-panel:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--wf-ink); }
+  .cp-panel:hover:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--wf-ink); }
 }
-/* Ticker strip: a seamless marquee of the project's real meta */
-.cp-ticker { order: 0; flex: none; height: 32px; display: flex; align-items: center; overflow: hidden; background: var(--wf-ink); color: var(--wf-yellow); font-family: var(--font-pixel), monospace; font-size: 12px; line-height: 1; letter-spacing: 0.06em; white-space: nowrap; }
-.cp-ticker-track { display: flex; width: max-content; animation: cp-marquee 18s linear infinite; }
-.cp-ticker-run > span { padding-right: 18px; }
-@keyframes cp-marquee { to { transform: translateX(-50%); } }
-.cp-panel:hover .cp-ticker-track { animation-play-state: paused; }
-/* The image, with a zoom and a grape halftone on hover */
-.cp-media { order: 1; position: relative; overflow: hidden; aspect-ratio: 4 / 3; }
+/* The stage: the product's real screens on a soft tint of its colour, cropped where they run off */
+.cp-media { order: 1; position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-bottom: 3px solid var(--wf-ink); }
 .cp-wide .cp-media { aspect-ratio: 16 / 8; }
-.cp-img { transition: transform 420ms var(--wf-ease-out); }
-.cp-dots { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(var(--wf-accent) 30%, transparent 34%); background-size: 10px 10px; opacity: 0; transition: opacity 240ms ease; }
+.cp-shot { position: absolute; display: block; overflow: hidden; background: var(--wf-sheet); border: 2.5px solid var(--wf-ink); box-shadow: 5px 5px 0 var(--wf-ink); transition: translate 420ms var(--wf-ease-out); transition-delay: calc(var(--k) * 50ms); }
+.cp-shot-browser { border-radius: 10px; }
+.cp-shot-phone { border-radius: 22px; }
+.cp-half .cp-shot-phone { border-radius: 18px; }
+.cp-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+/* The Loop demo is a wide recording with the phone in the middle: scale it so the phone fills the frame */
+.cp-video { position: absolute; left: 50%; top: 50%; height: 159%; width: auto; max-width: none; transform: translate(-50%, -55.5%); }
 @media (hover: hover) and (pointer: fine) {
-  .cp-panel:hover .cp-img { transform: scale(1.03); }
-  .cp-panel:hover .cp-dots { opacity: 0.2; }
+  .cp-panel:hover .cp-shot { translate: 0 -8px; }
 }
-/* Pills on the image: separate links, layered above the panel's stretched link */
-.cp-pills { position: absolute; z-index: 2; right: 16px; bottom: 16px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+@media (max-width: 767px) {
+  .cp-shot { border-width: 2px; box-shadow: 3px 3px 0 var(--wf-ink); }
+  .cp-shot-phone { border-radius: 14px; }
+  .cp-shot-browser { border-radius: 7px; }
+}
+/* The live-site pill on the image: a separate link, layered above the panel's stretched link */
+.cp-pills { position: absolute; z-index: 2; right: 16px; bottom: 16px; display: flex; }
 .cp-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px 7px 16px; border: 2.5px solid var(--wf-ink); border-radius: 999px; background: var(--wf-sheet); box-shadow: 3px 3px 0 var(--wf-ink); color: var(--wf-ink); font-size: 14px; font-weight: 600; text-decoration: none; transition: transform 140ms var(--wf-ease-out), box-shadow 140ms var(--wf-ease-out); }
 .cp-pill:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--wf-ink); }
 @media (hover: hover) and (pointer: fine) { .cp-pill:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--wf-ink); } }
-/* Caption area */
-.cp-body { order: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "tag tag" "title title" "meta btn"; align-items: end; column-gap: 24px; padding: 22px 28px 26px; }
-.cp-tag { grid-area: tag; justify-self: start; padding: 4px 10px 3px; background: var(--wf-yellow); border: 2.5px solid var(--wf-ink); box-shadow: 2px 2px 0 var(--wf-ink); font-family: var(--font-comic), Impact, sans-serif; font-size: 16px; line-height: 1; letter-spacing: 0.06em; transform: rotate(-1deg); }
-.cp-title { grid-area: title; margin: 16px 0 0; max-width: 30em; font-size: clamp(24px, 2.3vw, 34px); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; }
+/* Caption */
+.cp-body { order: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title title" "meta btn"; align-items: end; column-gap: 24px; padding: 24px 28px 26px; }
+.cp-title { grid-area: title; margin: 0; max-width: 30em; font-size: clamp(24px, 2.3vw, 34px); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; }
 .cp-half .cp-title { font-size: clamp(22px, 1.8vw, 28px); }
 .cp-title b { font-weight: 700; }
 .cp-link { color: inherit; text-decoration: none; }
 .cp-link:focus-visible { outline: none; }
 /* The whole panel is the link */
 .cp-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.cp-meta { grid-area: meta; margin: 12px 0 0; font-size: 14px; color: var(--wf-muted); }
+.cp-meta { grid-area: meta; margin: 14px 0 0; font-size: 15px; color: var(--wf-muted); font-variant-numeric: tabular-nums; }
 .cp-btn { grid-area: btn; display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 11px 18px; border-radius: 999px; background: var(--wf-ink); color: #fff; font-size: 15px; font-weight: 600; white-space: nowrap; box-shadow: 4px 4px 0 var(--wf-accent); transition: transform 140ms var(--wf-ease-out), box-shadow 140ms var(--wf-ease-out); }
 .cp-panel:active .cp-btn { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--wf-accent); }
 @media (max-width: 599px) {
-  .cp-body { grid-template-areas: "tag tag" "title title" "meta meta" "btn btn"; padding: 18px 18px 22px; }
+  .cp-body { grid-template-areas: "title title" "meta meta" "btn btn"; padding: 18px 18px 22px; }
   .cp-btn { justify-self: start; }
-  .cp-pills { right: 10px; bottom: 10px; gap: 8px; }
+  .cp-pills { right: 10px; bottom: 10px; }
   .cp-pill { padding: 6px 12px 6px 13px; font-size: 13px; }
 }
 
-/* ---------- "MORE ABOUT ME!": a comic panel link ---------- */
-.wf-more { display: inline-flex; flex-direction: column; gap: 14px; max-width: 100%; padding: 36px 44px 32px; background: var(--wf-sheet); border: 4px solid var(--wf-ink); border-radius: 6px; box-shadow: 8px 8px 0 var(--wf-ink); color: var(--wf-ink); text-decoration: none; transition: transform 160ms var(--wf-ease-out), box-shadow 160ms var(--wf-ease-out); }
-.wf-more:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0 var(--wf-ink); }
+/* ---------- the close: how he works on the left; today and the way to more of him on the right ---------- */
+.wf-close { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px 80px; align-items: start; }
+@media (max-width: 899px) { .wf-close { grid-template-columns: minmax(0, 1fr); } }
+.wf-close h2 { margin: 0 0 20px; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
+.wf-how-sub { max-width: 34em; margin: -6px 0 16px; font-size: 17px; line-height: 1.5; color: var(--wf-ink); }
+.wf-now .wf-now-sub { margin-top: 48px; }
+.wf-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.wf-list li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 15px 0; font-size: 19px; letter-spacing: -0.01em; }
+.wf-list li + li { box-shadow: 0 -2px 0 var(--wf-line); }
+.wf-list-note { color: var(--wf-muted); font-variant-numeric: tabular-nums; text-align: right; }
+/* Each layer gets its little doll, biggest to smallest, standing on one line */
+.wf-how-name { display: inline-flex; align-items: center; gap: 14px; font-weight: 600; }
+.wf-how-doll { display: inline-flex; align-items: flex-end; justify-content: center; flex: none; width: 22px; height: 24px; }
+.wf-how-doll svg { display: block; width: auto; overflow: visible; }
+.wf-side { display: grid; gap: 56px; }
+.wf-more { display: flex; flex-direction: column; gap: 28px; padding: 28px 32px 26px; background: var(--wf-sheet); border: 3px solid var(--wf-ink); border-radius: 6px; box-shadow: 6px 6px 0 var(--wf-ink); color: var(--wf-ink); text-decoration: none; transition: transform 220ms var(--wf-ease-out), box-shadow 220ms var(--wf-ease-out), background-color 220ms ease, color 220ms ease; }
 .wf-more:focus-visible { outline-offset: 6px; }
-.wf-more-line { position: relative; display: inline-flex; align-items: center; gap: 20px; }
-.wf-more-text { display: inline-block; font-size: clamp(48px, 5.4vw, 80px); line-height: 1; color: var(--wf-ink); white-space: nowrap; transform-origin: 50% 60%; transition: color 160ms ease; }
-/* A small sticker mix: MORE as a pixel sticker, "about" in serif italic, "me!" as an outline */
-.mx-x { display: inline-block; padding: 0.1em 0.3em; font-family: var(--font-pixel), monospace; font-weight: 700; font-size: 0.5em; line-height: 1; background: var(--wf-yellow); border: 3px solid var(--wf-ink); box-shadow: 4px 4px 0 var(--wf-ink); transform: rotate(-3deg); vertical-align: 0.2em; }
-.mx-y { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; }
-.mx-z { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; letter-spacing: -0.02em; color: transparent; -webkit-text-stroke: 0.03em var(--wf-ink); transition: color 160ms ease; }
-/* Letters jelly on hover, here only */
-.wf-more-text .ch { display: inline-block; transition: transform 360ms var(--wf-spring); }
-@media (hover: hover) and (pointer: fine) { .wf-more-text .ch:hover { transform: translateY(-0.08em) rotate(-6deg) scale(1.12); } }
+.wf-more:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--wf-ink); }
+.wf-more-line { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.wf-more-text { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; font-size: clamp(34px, 3.4vw, 54px); line-height: 0.95; letter-spacing: -0.035em; }
 .wf-more-arrow { flex: none; transition: transform 220ms var(--wf-ease-out); }
-.wf-more-url { font-size: 17px; color: var(--wf-muted); }
-/* Three short speed lines to the left of the words */
-.wf-more-speed { position: absolute; left: -40px; top: 50%; display: grid; gap: 7px; justify-items: end; transform: translateY(-50%); }
-.wf-more-speed i { display: block; height: 4px; border-radius: 2px; background: var(--wf-ink); transform: scaleX(0); transform-origin: 100% 50%; transition: transform 200ms var(--wf-ease-out); }
-.wf-more-speed i:nth-child(1) { width: 26px; }
-.wf-more-speed i:nth-child(2) { width: 34px; transition-delay: 40ms; }
-.wf-more-speed i:nth-child(3) { width: 22px; transition-delay: 80ms; }
-@keyframes wf-wiggle { 33% { transform: rotate(-2deg); } 66% { transform: rotate(2deg); } 100% { transform: rotate(0deg); } }
-.wf-more:focus-visible .wf-more-text { animation: wf-wiggle 300ms var(--wf-ease-out); }
-.wf-more:focus-visible .wf-more-arrow { transform: translateX(8px); }
-.wf-more:focus-visible .wf-more-speed i { transform: scaleX(1); }
+.wf-more-url { font-size: 16px; color: var(--wf-muted); transition: color 220ms ease; }
 @media (hover: hover) and (pointer: fine) {
-  .wf-more:hover .wf-more-text { animation: wf-wiggle 300ms var(--wf-ease-out); }
-  .wf-more:hover .wf-more-arrow { transform: translateX(8px); }
-  .wf-more:hover .wf-more-speed i { transform: scaleX(1); }
+  .wf-more:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--wf-ink); background: var(--wf-accent); color: #fff; }
+  .wf-more:hover .wf-more-url { color: rgba(255, 255, 255, 0.82); }
+  .wf-more:hover .wf-more-arrow { transform: translate(5px, -5px) rotate(-45deg); }
+  .wf-more:hover:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--wf-ink); }
 }
+.wf-more:focus-visible .wf-more-arrow { transform: translate(5px, -5px) rotate(-45deg); }
 @media (max-width: 599px) {
-  .wf-more { padding: 26px 24px 24px 34px; }
-  .wf-more-text { font-size: clamp(30px, 9.4vw, 48px); }
-  .wf-more-line { gap: 12px; }
-  .wf-more-arrow { width: 36px; height: 36px; }
-  .wf-more-speed { left: -30px; }
-  .wf-more-speed i:nth-child(2) { width: 24px; }
-  .wf-more-speed i:nth-child(1), .wf-more-speed i:nth-child(3) { width: 18px; }
+  .wf-close h2 { font-size: 34px; }
+  .wf-list li { font-size: 17px; align-items: flex-start; }
+  .wf-more { padding: 22px 22px 20px; }
+  .wf-more-arrow { width: 30px; height: 30px; }
 }
 
-/* ---------- Today (and Off the clock, once it has entries) ---------- */
-.wf-now { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 64px; align-items: start; }
-.wf-now h2 { margin: 0 0 22px; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-size: 34px; line-height: 1; letter-spacing: -0.02em; text-shadow: 2px 2px 0 var(--wf-accent); }
-.wf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.wf-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: 17px; }
-.wf-list-note { color: var(--wf-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-@media (max-width: 767px) { .wf-now { grid-template-columns: minmax(0, 1fr); } }
+/* ---------- intro: the hero rises in line by line (a timer removes .wf-intro) ---------- */
+.wf-intro .wf-w { animation: wf-rise 700ms var(--wf-ease-out) both; animation-delay: calc(var(--i) * 80ms + 80ms); }
+@keyframes wf-rise { from { opacity: 0; transform: translateY(24px); } }
 
-/* ---------- intro: the headline's words pop up one after another (a timer removes .wf-intro) ---------- */
-.wf-intro .wf-w { animation: wf-word-pop 620ms var(--wf-spring) both; animation-delay: calc(var(--i) * 50ms + 80ms); }
-@keyframes wf-word-pop { from { opacity: 0; transform: translateY(0.45em) scale(0.92); } }
-
-/* Scroll reveals pop in with a little overshoot, only where view timelines exist (else nothing is hidden) */
+/* Scroll reveals rise in, only where view timelines exist (else nothing is hidden) */
 @supports (animation-timeline: view()) {
-  .wf-giant, .cp-panel, .wf-more, .wf-now > div {
-    animation: wf-pop var(--wf-spring) both;
+  .wf-giant, .cp-panel, .wf-how, .wf-now, .wf-more {
+    animation: wf-rise linear both;
     animation-timeline: view();
-    animation-range: entry 0% entry 50%;
+    animation-range: entry 0% entry 45%;
   }
-  /* The second panel of a pair lands a beat later */
-  .cp-half + .cp-half { animation-range: entry 8% entry 58%; }
-  @keyframes wf-pop { from { opacity: 0; transform: translateY(28px) scale(0.96); } }
-  /* Stickers pop one after another as the cloud scrolls in */
-  /* The band sweeps in, then the stickers slap onto it one after another (only the individual
-     scale/rotate/opacity properties animate, so hover keeps using transform) */
-  .stk-band { animation: stk-band-in var(--wf-spring) both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
-  @keyframes stk-band-in { from { opacity: 0; translate: -6% 0; } }
-  .stk {
-    animation: stk-slap linear both;
-    animation-timeline: view();
-    animation-range: entry calc(20% + var(--i) * 6%) entry calc(50% + var(--i) * 6%);
-  }
-  @keyframes stk-slap {
-    0% { opacity: 0; scale: 1.8; rotate: 16deg; }
-    55% { opacity: 1; scale: 0.92; rotate: -2deg; }
-    75% { scale: 1.04; rotate: 1deg; }
-    100% { opacity: 1; scale: 1; rotate: 0deg; }
-  }
+  /* The second panel of a pair, and the right side of the close, land a beat later */
+  .cp-half + .cp-half, .wf-now, .wf-more { animation-range: entry 8% entry 53%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .wf-intro .wf-w { animation: wf-fade 400ms ease both; }
   @keyframes wf-fade { from { opacity: 0; } }
-  .wf-giant, .cp-panel, .wf-more, .wf-now > div, .stk, .stk:hover { animation: none !important; }
-  /* The keyword stays on DESIGN! (ComicKeyword never cycles) and simply shows */
-  .wf-kw-word, .wf-kw-word.is-on, .wf-kw-word.is-out { transform: rotate(var(--kr, -4deg)); transition: opacity 200ms ease; }
-  .kw-ray, .kw-star, .kw-flash { display: none; }
-  /* Character: no FX, no shake; bubbles fade */
-  .pb-stage.shake { animation: none; }
-  .pb-bubble { animation: wf-fade 200ms ease both; transform: rotate(var(--r)); }
-  .pb-bubble.out { animation: pb-fade-out 150ms ease both; }
-  @keyframes pb-fade-out { to { opacity: 0; } }
-  .pb-boom, .pb-star, .pb-ray, .pb-bit, .pb-dizzy { display: none; }
-  /* Panels: static tickers, no lift, zoom or tilt; the dots still fade in */
-  .cp-ticker-track { animation: none; }
-  .cp-panel, .cp-panel:hover, .cp-panel:active, .cp-img, .cp-panel:hover .cp-img, .cp-btn, .cp-pill { transform: none !important; transition-property: opacity, color, background-color, box-shadow; }
-  /* Links and stickers: colour changes only, nothing travels */
-  .stk, .stk:hover { transform: rotate(var(--tilt)) !important; transition: none; }
-  .stk-band { animation: none !important; }
-  .wf-caption, .wf-more, .wf-more-arrow, .wf-more-speed i { transition-property: opacity, color, background-color; }
-  .wf-more-arrow, .wf-more:active { transform: none !important; }
-  .wf-caption, .wf-caption:hover, .wf-caption:active { transform: rotate(1deg) !important; }
-  .wf-more-speed { display: none; }
-  .wf-more .wf-more-text { animation: none !important; }
-  .wf-more-text .ch, .wf-more-text .ch:hover { transform: none !important; transition: none; }
+  .wf-giant, .cp-panel, .wf-how, .wf-now, .wf-more { animation: none !important; }
+  .md-plate, .md-meter-doll, .md-top, .md-cursor-badge, .md-cursor svg { transition: none; }
+  .cp-shot { transition: none; translate: none !important; }
+  .md-buddy:hover .md-doll .md-top { transform: none !important; }
+  /* The rolling phrase stays on the first one and simply shows */
+  .wf-roll-word { transition: opacity 200ms ease; transform: none !important; }
+  /* Character: bubbles fade */
+  .md-dolls, .md-floor { transition: none; }
+  .md-bubble { animation: wf-fade 200ms ease both; transform: rotate(var(--r)); }
+  .md-bubble.out { animation: md-fade-out 150ms ease both; }
+  @keyframes md-fade-out { to { opacity: 0; } }
+  /* Panels, pills, the button: colour changes only, nothing travels */
+  .cp-panel, .cp-panel:hover, .cp-panel:active, .cp-btn, .cp-pill,
+  .wf-btn, .wf-btn svg, .wf-more, .wf-more-arrow { transform: none !important; transition-property: opacity, color, background-color, box-shadow; }
   .lt-ch { transition: none; }
   .ed-messy .mc, .ed-messy:hover .mc { transition: none; transform: translateY(var(--my)) rotate(var(--mr)); }
-  .wf-more:hover .wf-more-text, .wf-more:focus-visible .wf-more-text { color: var(--wf-accent); }
-  .wf-more:hover .mx-z, .wf-more:focus-visible .mx-z { -webkit-text-stroke-color: var(--wf-accent); }
 }
+
+/* ---------- /lab/matryoshka: the doll's looks side by side (not linked from the site) ---------- */
+.lab { padding-block: 48px 120px; }
+.lab-title { margin: 0 0 32px; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
+.lab-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.lab-name { margin: 0; font-size: 19px; font-weight: 600; }
+@media (max-width: 899px) { .lab-grid { grid-template-columns: minmax(0, 1fr); gap: 64px; } }

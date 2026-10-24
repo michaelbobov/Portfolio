@@ -10,7 +10,6 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-geist-sans)', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        serif: ['var(--font-playfair)', 'Georgia', 'serif'],
         mono: ['var(--font-geist-mono)', 'ui-monospace', 'SF Mono', 'Menlo', 'monospace'],
       },
       transitionTimingFunction: {

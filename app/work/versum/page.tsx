@@ -1,716 +1,152 @@
-'use client';
-
-import Link from 'next/link';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 import Navigation from '@/app/components/Navigation';
-import FullSizeLink from '@/app/components/FullSizeLink';
-import { ArrowLeft } from '@/app/components/icons';
+import {
+  CaseHero,
+  CaseShell,
+  Decision,
+  Decisions,
+  Figure,
+  MetaGrid,
+  NextCase,
+  ProcessDetails,
+  Prose,
+  Quote,
+  Section,
+  Tldr,
+} from '@/app/components/case/Case';
+import '../case.css';
 
+// Versum Health case study. Copy follows the PM review (case-study-pm-review.md §3.1), keeping
+// only what the page itself supports; open questions for Michael are left out, not shown.
 export default function VersumCaseStudy() {
   return (
-    <main className="bg-wf-bg min-h-screen">
-      {/* Navigation */}
-      <nav aria-label="Primary" className="container mx-auto px-6 md:px-12 lg:px-20 py-[22px]">
-        <div className="flex justify-between items-center gap-4 text-sm">
-          <Link href="/" className="font-semibold text-wf-ink whitespace-nowrap">
-            Michael Bobov
-          </Link>
-          <Navigation />
-        </div>
-      </nav>
+    <CaseShell nav={<Navigation />}>
+      <CaseHero
+        kicker="Healthcare · Marketplace · 2025"
+        name="Versum Health"
+        claim="helping uninsured patients and dental students find each other"
+        summary="I co-founded Versum and designed and built its booking marketplace, which connects uninsured patients with supervised dental students who need patients to graduate."
+        link={{ href: 'https://versumhealth.com/', label: 'versumhealth.com' }}
+      />
+      <MetaGrid
+        items={[
+          { label: 'Role', lines: ['Co-founder', 'Product Lead', 'Frontend Developer'] },
+          { label: 'Timeline', lines: ['6 months', 'Research to MVP'] },
+          { label: 'Team', lines: ['2-person team', 'Frontend & Backend'] },
+          { label: 'Skills', lines: ['UX Research', 'Product Design', 'Prototyping'] },
+        ]}
+      />
+      <Tldr
+        status="LIVE MVP"
+        rows={[
+          { label: 'Problem', text: 'Uninsured patients delay dental care because of cost. Dental students can’t find the patients they need to graduate. Neither side can find the other.' },
+          { label: 'How I found it', text: 'I’d seen friends skip dental care over cost. Then I talked to people on both sides. A hygienist almost didn’t graduate; she paid strangers to take free cleanings.' },
+          { label: 'Solution and why', text: 'A booking marketplace: patients search by need or by student, see free cleanings, and book; students post availability. Finding each other was the blocker, so search leads.' },
+          { label: 'Outcome', text: 'MVP live at versumhealth.com with booking, scheduling and messaging. Outreach to dental schools started. No usage data yet; usability tests and pilots are next.' },
+        ]}
+      />
+      <Figure
+        size="hero"
+        priority
+        img={{ src: '/versumheroimage.png', alt: 'The Versum Health website on a laptop: “Creating Universal Access to Free Healthcare”, with Get Free Care and Provide Care buttons.', width: 2400, height: 1161 }}
+        caption="Two front doors on the live site: get care as a patient, or provide care as a student."
+      />
 
-      {/* Hero Section */}
-      <section id="main-content" tabIndex={-1} className="container mx-auto px-6 md:px-12 lg:px-20 pt-16 md:pt-24 mb-16 focus:outline-none">
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4"
-        >
-          Healthcare • Marketplace • 2025
-        </motion.p>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl md:text-5xl lg:text-6xl font-serif text-gray-900 mb-6"
-        >
-          Versum Health
-        </motion.h1>
-
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-600 max-w-2xl mb-6"
-        >
-          A marketplace connecting uninsured patients with supervised dental students for accessible, affordable care.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-8"
-        >
-          <a
-            href="https://versumhealth.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[#B5502F] hover:text-[#A84A2E] transition-colors font-medium"
-        >
-            <span>View Live Site</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        </motion.div>
-
-        {/* TL;DR */}
-        <div className="max-w-4xl bg-white border border-gray-200 rounded-lg p-6 md:p-8 mb-8">
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4">TL;DR</h2>
-          <dl className="grid md:grid-cols-3 gap-6 text-sm">
-            <div><dt className="text-gray-900 font-medium mb-1">Problem</dt><dd className="text-gray-600">74 million Americans lack dental insurance, while dental students struggle to find patients for the procedures they need to graduate.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">What I did</dt><dd className="text-gray-600">As co-founder and product lead on a 2-person team, I spoke with people on both sides of the marketplace, then designed and built the patient and student experiences in code over 6 months.</dd></div>
-            <div><dt className="text-gray-900 font-medium mb-1">Outcome</dt><dd className="text-gray-600">MVP live at versumhealth.com with patient booking, student scheduling, and messaging. Outreach to dental schools is underway.</dd></div>
-          </dl>
-        </div>
-
-        {/* Project Details */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12">
-          <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Role</p>
-            <p className="text-gray-900">Co-founder</p>
-            <p className="text-gray-900">Product Lead</p>
-            <p className="text-gray-900">Frontend Developer</p>
-      </div>
-          <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Timeline</p>
-            <p className="text-gray-900">6 months</p>
-            <p className="text-gray-600 text-sm">Research to MVP</p>
-            </div>
-          <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Team</p>
-            <p className="text-gray-900">2-person team</p>
-            <p className="text-gray-600 text-sm">Frontend & Backend</p>
-            </div>
-          <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Skills</p>
-            <p className="text-gray-900">UX Research</p>
-            <p className="text-gray-900">Product Design</p>
-            <p className="text-gray-900">Prototyping</p>
-          </div>
-        </div>
-
-        {/* Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full"
-        >
-          <Image 
-            src="/versumheroimage.png"
-            alt="Versum Health Platform"
-            width={2400}
-            height={1161}
-            className="w-full h-auto"
-            sizes="(min-width: 1536px) 1376px, 100vw"
-            priority
-          />
-        </motion.div>
-      </section>
-
-      {/* Content */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
-        
-        {/* Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Overview</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            Versum Health connects uninsured patients seeking affordable dental care with dental students who need supervised clinical hours to graduate.
+      <Section id="problem" label="The problem" title="Patients can’t afford care, students can’t find patients, and neither can find the other.">
+        <Prose>
+          <p>
+            Without insurance, a routine dental visit is expensive, so many people wait until it’s an emergency. Dental students need specific procedures to graduate, and finding patients who qualify takes time. Schools, students and patients all exist, but there’s no single place to find and book care with a supervised student. Patients who do find one worry about being treated by a student, so supervision has to be obvious.
           </p>
-          <p className="text-gray-600 leading-relaxed">
-            Patients get care. Students gain experience. Supervisors oversee quality. The platform eliminates the discovery problem that keeps both sides from connecting efficiently.
+        </Prose>
+      </Section>
+
+      <Section id="found" label="How I found it" title="Both sides described the same gap: they couldn’t find each other.">
+        <Prose>
+          <p>This started with friends who avoided the dentist because of cost. Then I talked with people on both sides of the marketplace.</p>
+        </Prose>
+        <Quote who="Practicing dental hygienist">
+          “I really struggled to get patients to fulfill my clinical hours and almost didn’t graduate. I had to pay people off the street a lot of money just to get them a free cleaning.”
+        </Quote>
+        <Prose>
+          <p>A potential patient books cleanings through a friend who’s a hygienist. She knows most people don’t have that connection.</p>
+          <p>
+            On the patient side, the pain points were finding affordable options, not knowing the price before a visit, and worrying about quality. On the student side: finding qualifying cases, frequent no-shows and logging hours by hand. Under both lists was the same gap: no shared place to meet. Price and trust decide whether a match becomes a booking.
           </p>
-        </motion.div>
+        </Prose>
+      </Section>
 
-        {/* Problem */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Problem</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            74 million Americans lack dental insurance. Meanwhile, dental students struggle to find enough qualifying cases to complete their required clinical hours.
+      <Section id="solution" label="Solution and why" title="Search first, with trust and price visible before anyone books." decisions>
+        <Prose>
+          <p>
+            Think Zocdoc, but for care from supervised dental students. Patients search, filter and book in one place instead of calling schools or relying on word of mouth. Students set availability, accept or decline requests and manage their schedule. Supervisor tools are planned.
           </p>
-          <div className="space-y-6 mb-8">
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">01</span>
-              <div>
-                <p className="text-gray-900 font-medium">Patients can't afford care</p>
-                <p className="text-gray-600 text-sm mt-1">Without insurance, routine dental visits cost $200-500+. Many postpone care until emergencies.</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">02</span>
-              <div>
-                <p className="text-gray-900 font-medium">Students can't find cases</p>
-                <p className="text-gray-600 text-sm mt-1">Dental students need specific procedure types to graduate. Finding qualifying patients is time-consuming.</p>
-            </div>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">03</span>
-              <div>
-                <p className="text-gray-900 font-medium">No centralized platform exists</p>
-                <p className="text-gray-600 text-sm mt-1">Dental schools, students, and patients all exist, but there’s no single place to find and book student-supervised dental care.</p>
-          </div>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">04</span>
-              <div>
-                <p className="text-gray-900 font-medium">Trust and safety concerns</p>
-                <p className="text-gray-600 text-sm mt-1">Patients worry about student competency. The platform must clearly communicate supervision protocols.</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg">
-            <p className="text-gray-900 italic">"I haven't been to the dentist in 3 years. I know I need to go, but I can't afford it without insurance."</p>
-            <p className="text-gray-500 text-sm mt-2">— Research participant, age 34</p>
-          </div>
-        </motion.div>
+        </Prose>
+        <Decisions>
+          <Decision n={1} title="Two ways to search, by need or by person.">
+            <p>Some patients know what they need (“I need a cleaning”); others pick a provider. The Find tab supports both, which removes friction for each.</p>
+          </Decision>
+          <Decision n={2} title="Separate tabs for Find, Appointments and Messages.">
+            <p>I considered one dashboard. People arrive with different goals, so each screen does one job.</p>
+          </Decision>
+          <Decision n={3} title="Free cleanings shown on the student’s card.">
+            <p>Cost anxiety is a major barrier for uninsured patients. Students say at onboarding whether they offer free cleanings, and patients see it before they book.</p>
+          </Decision>
+          <Decision n={4} title="Past and upcoming visits in one view.">
+            <p>Patients often need context from earlier visits when booking the next one. Keeping both together also saves clicks.</p>
+          </Decision>
+        </Decisions>
+      </Section>
 
-        {/* Research */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Research</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            I spoke with people on both sides of the marketplace to understand the real pain points.
+      <Section id="screens" label="Screens" title="On the student side, availability and services are set up once.">
+        <Figure
+          img={{ src: '/Student2.png', alt: 'Versum student schedule: a January calendar with a legend for available slots, patient bookings, confirmed and pending appointments, and a hint to click a future date to add time slots.', width: 1470, height: 894 }}
+          caption="Students manage availability on a calendar: click a future date to add time slots."
+        />
+        <Figure
+          img={{ src: '/Student5.png', alt: 'Versum student profile: name, school and graduation year, an About Me paragraph, and a Services Offered list including dental cleaning, fluoride treatment and preventive care.', width: 1558, height: 902 }}
+          caption="Students list the services they offer on their profile."
+        />
+      </Section>
+
+      <Section id="outcome" label="Outcome" title="Live, and not measured yet.">
+        <Prose>
+          <p>
+            The MVP is live at versumhealth.com with patient search and booking, student scheduling and messaging. Supervisor tools are planned. We’ve started outreach to dental schools; usability testing and pilot partnerships are next. In pilots I’ll measure time to book (target under 5 minutes), task completion (target 90%+), satisfaction (target 4.5/5) and no-show rate.
           </p>
-          
-          <div className="space-y-8 mb-12">
-            <div>
-              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Conversations</p>
-              <div className="space-y-4 text-gray-600">
-                <p><span className="text-gray-900 font-medium">Practicing dental hygienist:</span> "I really struggled to get patients to fulfill my clinical hours and almost didn't graduate. I had to pay people off the street a lot of money just to get them a free cleaning."</p>
-                <p><span className="text-gray-900 font-medium">Potential patient:</span> She goes to dental clinics through a friend who's a dental hygienist — easy for her to book because she knows someone. But she knows her friends can't do that. The connection problem is real.</p>
-              </div>
-            </div>
-              </div>
+        </Prose>
+      </Section>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="border-l-2 border-[#B5502F] pl-6">
-              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Patient Pain Points</p>
-              <ul className="text-gray-600 space-y-2">
-                <li>• Can't find affordable options</li>
-                <li>• Unclear pricing before visits</li>
-                <li>• Scheduling is difficult</li>
-                <li>• Worried about quality of care</li>
-              </ul>
-            </div>
-            <div className="border-l-2 border-[#B5502F] pl-6">
-              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Student Pain Points</p>
-              <ul className="text-gray-600 space-y-2">
-                <li>• Hard to find qualifying cases</li>
-                <li>• Patients frequently no-show</li>
-                <li>• Manual hour logging is tedious</li>
-                <li>• Limited case diversity</li>
-                </ul>
-              </div>
-            </div>
-
-            <div>
-              <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Key Insight</p>
-              <p className="text-gray-900 text-lg mb-4">
-                The primary friction point is <span className="text-[#B5502F] font-medium">"finding each other"</span> — not availability, not scheduling, not payment.
-              </p>
-              <p className="text-gray-600">
-                Dental schools have students who need clinical hours, and millions of uninsured patients need affordable care, but the two sides have no shared place to discover each other. Versum Health creates that missing marketplace.
-              </p>
-            </div>
-        </motion.div>
-
-        {/* Personas */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Personas</h2>
-            
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <p className="text-[#B5502F] font-mono text-xs uppercase tracking-widest mb-2">Patient</p>
-              <p className="text-xl text-gray-900 mb-4">Alicia, 34</p>
-              <div className="space-y-3 text-gray-600 text-sm">
-                <p><span className="text-gray-900">Situation:</span> Uninsured gig worker, hasn't seen a dentist in 2+ years</p>
-                <p><span className="text-gray-900">Goal:</span> Get a cleaning and checkup without spending $300+</p>
-                <p><span className="text-gray-900">Frustration:</span> "I don't even know where to start looking for affordable care"</p>
-                <p><span className="text-gray-900">Needs:</span> Transparent pricing, easy booking, appointment reminders</p>
-              </div>
-            </div>
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <p className="text-[#B5502F] font-mono text-xs uppercase tracking-widest mb-2">Student</p>
-              <p className="text-xl text-gray-900 mb-4">Noah, D3 Student</p>
-              <div className="space-y-3 text-gray-600 text-sm">
-                <p><span className="text-gray-900">Situation:</span> Third-year dental student, needs 50+ supervised procedures to graduate</p>
-                <p><span className="text-gray-900">Goal:</span> Find reliable patients for specific procedure types</p>
-                <p><span className="text-gray-900">Frustration:</span> "Patients cancel last minute and I lose the whole day"</p>
-                <p><span className="text-gray-900">Needs:</span> Case pipeline, automated logging, patient reliability signals</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Solution */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Solution</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            A centralized marketplace — think ZocDoc for student-supervised dental care — where patients browse and book, students manage their pipeline, and all procedures are confirmed under direct supervision.
+      <Section id="learned" label="What I learned" title="A marketplace only works if both sides show up.">
+        <Prose>
+          <p>
+            Every screen has to remove friction for patients and for students, and in healthcare every UI choice builds or erodes trust. Next: a supervisor console for verification and approvals, then eligibility screening and partnerships with community health centers.
           </p>
-          
-          <p className="text-gray-600 leading-relaxed mb-4">
-            Patients can search, filter, and book in one place. No more calling individual dental schools or hoping to find availability through word-of-mouth.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-8">
-            After validating the problem through research, we moved directly to prototyping in Cursor — iterating on the design through code rather than static mockups. This let us ship faster and make design decisions based on real interactions.
-          </p>
-          
-          <div className="space-y-6 mb-12">
-            <div>
-              <p className="text-gray-900 font-medium mb-2">Patient Portal</p>
-              <p className="text-gray-600">Browse availability → Filter by procedure type → Request appointment → Confirm supervision acknowledgment → Receive reminders</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium mb-2">Student Dashboard</p>
-              <p className="text-gray-600">View case pipeline → Accept/decline requests → Manage schedule → Log treatments → Track clinical hours automatically</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium mb-2">Supervisor Oversight <span className="text-gray-500 font-normal">(planned)</span></p>
-              <p className="text-gray-600">Review scheduled procedures → Verify supervision → Approve hour logs → Manage student portfolios</p>
-            </div>
-          </div>
+        </Prose>
+      </Section>
 
-          <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Design Principles</p>
-            <div className="space-y-3 text-gray-600">
-              <p><span className="text-gray-900 font-medium">Safety first:</span> Consent, scope, and supervision confirmation are required before any booking.</p>
-              <p><span className="text-gray-900 font-medium">Low friction:</span> Minimal form fields, progressive disclosure for medical details.</p>
-              <p><span className="text-gray-900 font-medium">Trust signals:</span> Clear supervision badges, student credentials, and ratings visible throughout.</p>
-            </div>
-          </div>
-        </motion.div>
-      </section>
+      <ProcessDetails list="proto-personas · product flows · roadmap">
+        <h3>Proto-personas</h3>
+        <p className="cs-muted">Synthesized from the conversations above, not individual participants.</p>
+        <ul className="cs-list">
+          <li><strong>Alicia, patient.</strong> An uninsured gig worker who hasn’t seen a dentist in years. Wants a cleaning and checkup she can afford. “I don’t even know where to start looking for affordable care.” Needs transparent pricing, easy booking and appointment reminders.</li>
+          <li><strong>Noah, third-year dental student.</strong> Needs supervised procedures to graduate and reliable patients for specific procedure types. “Patients cancel last minute and I lose the whole day.” Needs a case pipeline, automated logging and patient reliability signals.</li>
+        </ul>
+        <h3>Product flows</h3>
+        <ul className="cs-list">
+          <li><strong>Patient:</strong> browse availability → filter by procedure type → request an appointment.</li>
+          <li><strong>Student:</strong> view case pipeline → accept or decline requests → manage schedule → log treatments.</li>
+          <li><strong>Supervisor (planned):</strong> review scheduled procedures → verify supervision → approve hour logs.</li>
+        </ul>
+        <h3>Further out</h3>
+        <p>The model could work for other healthcare training programs, such as optometry, physical therapy and mental health counseling.</p>
+      </ProcessDetails>
 
-      {/* Full-width Screens */}
-      <section className="py-16 border-t border-gray-200">
-        <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
-          <h2 className="font-mono text-xs text-[#B5502F] uppercase tracking-widest mb-6">Patient Booking Flow</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
-            The patient experience prioritizes simplicity and trust. Three core screens cover finding a student, managing appointments, and messaging before a visit.
-            </p>
-        </div>
-            
-        <div className="space-y-16">
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Find Dental Students</h3>
-              <p className="text-gray-600">Patients search by specialty, filter by distance and availability, and view student profiles with credentials and ratings. Each listing shows the supervising faculty member and clinic location.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Screenshot 2025-12-01 114222.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Screenshot 2025-12-01 114222.png"
-                  alt="Find Dental Students Screen"
-                  width={1885}
-                  height={950}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-              </div>
-          
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">My Appointments</h3>
-              <p className="text-gray-600">A central hub for managing all appointments. Patients can view upcoming visits, track completion status, access visit history, and leave reviews. The interface emphasizes clarity with color-coded status indicators.</p>
-              </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Screenshot 2025-12-01 114308.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Screenshot 2025-12-01 114308.png"
-                  alt="My Appointments Screen"
-                  width={1885}
-                  height={947}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Messages</h3>
-              <p className="text-gray-600">Direct, HIPAA-aware messaging between patients and dental students. Enables appointment coordination, pre-visit questions, and follow-up care discussions. Auto-saves conversation history for continuity.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Screenshot 2025-12-01 114342.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Screenshot 2025-12-01 114342.png"
-                  alt="Messages Screen"
-                  width={1903}
-                  height={948}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Student Dashboard */}
-      <section className="py-16 border-t border-gray-200">
-        <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl mb-12">
-          <h2 className="font-mono text-xs text-[#B5502F] uppercase tracking-widest mb-6">Student Dashboard</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed">
-            The student experience focuses on managing their patient pipeline and availability.
-          </p>
-        </div>
-            
-        <div className="space-y-16">
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Dashboard</h3>
-              <p className="text-gray-600">Students see all their booked appointments at a glance — upcoming visits, patient details, and procedure types. A clear overview to start each clinical day.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Student1.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Student1.png"
-                  alt="Student Dashboard - Booked Appointments"
-                  width={1481}
-                  height={877}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-          
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Availability Management</h3>
-              <p className="text-gray-600">Students set when they're available for appointments. The interface shows existing time slots and makes it easy to add new availability windows.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Student2.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Student2.png"
-                  alt="Student Dashboard - Schedule Time Slots"
-                  width={1470}
-                  height={894}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Time Slot Scheduler</h3>
-              <p className="text-gray-600">The detailed scheduler for creating specific time slots. Students select dates, times, and which procedures they can perform during each window.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Student3.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Student3.png"
-                  alt="Student Dashboard - Time Slot Scheduler"
-                  width={1466}
-                  height={893}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Messages</h3>
-              <p className="text-gray-600">Direct communication with patients for appointment coordination, pre-visit questions, and follow-up care. Keeps all conversations organized in one place.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Student4.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Student4.png"
-                  alt="Student Dashboard - Messaging"
-                  width={1576}
-                  height={899}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-
-          <div className="container mx-auto px-6 md:px-12 lg:px-20">
-            <div className="max-w-4xl mb-6">
-              <h3 className="text-gray-900 font-medium text-lg mb-2">Profile & Services</h3>
-              <p className="text-gray-600">Students customize their profile with the services they offer, credentials, and pricing (including free cleanings option). This information displays on their card when patients browse.</p>
-            </div>
-            <div className="flex justify-center">
-              <FullSizeLink src="/Student5.png" className="max-w-5xl w-full">
-                <Image
-                  src="/Student5.png"
-                  alt="Student Dashboard - Profile and Services"
-                  width={1558}
-                  height={902}
-                  className="w-full h-auto"
-                  sizes="(min-width: 1024px) 1024px, 100vw"
-                  quality={95}
-                />
-              </FullSizeLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Design Decisions */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Design Decisions</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            Key trade-offs and rationale behind the design choices.
-          </p>
-          
-          <div className="space-y-8">
-          <div>
-              <p className="text-gray-900 font-medium mb-2">Task separation over unified dashboard</p>
-              <p className="text-gray-600">I considered a single-page dashboard, but users come with different goals. Separating Find, Appointments, and Messages reduces cognitive load and lets each screen focus on one job well.</p>
-          </div>
-          <div>
-              <p className="text-gray-900 font-medium mb-2">Dual entry points for discovery</p>
-              <p className="text-gray-600">Some patients know what they need ("I need a cleaning"). Others browse by provider. Supporting both mental models in the Find tab removes friction for different user types.</p>
-          </div>
-          <div>
-              <p className="text-gray-900 font-medium mb-2">Transparent pricing from day one</p>
-              <p className="text-gray-600">Cost anxiety is a major barrier for uninsured patients. Students indicate during onboarding if they offer free cleanings — this displays directly on their card. No hidden fees, no surprises at checkout.</p>
-          </div>
-          <div>
-              <p className="text-gray-900 font-medium mb-2">History and future in one view</p>
-              <p className="text-gray-600">Patients often need context from past visits when scheduling new ones. Combining appointment history with upcoming visits creates continuity and reduces clicks.</p>
-          </div>
-          </div>
-        </motion.div>
-
-        {/* Results & Learnings */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Success Metrics</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            The metrics we're designing for and will measure as the platform grows.
-          </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <p className="text-3xl font-serif text-[#B5502F] mb-2">&lt;5 min</p>
-              <p className="text-gray-600 text-sm">Target time to book</p>
-            </div>
-            <div>
-              <p className="text-3xl font-serif text-[#B5502F] mb-2">90%+</p>
-              <p className="text-gray-600 text-sm">Target task completion</p>
-            </div>
-            <div>
-              <p className="text-3xl font-serif text-[#B5502F] mb-2">4.5/5</p>
-              <p className="text-gray-600 text-sm">Target satisfaction</p>
-            </div>
-            <div>
-              <p className="text-3xl font-serif text-[#B5502F] mb-2">↓</p>
-              <p className="text-gray-600 text-sm">No-show rate reduction</p>
-            </div>
-          </div>
-
-          <div>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">Current Status</p>
-            <div className="space-y-3 text-gray-600">
-              <p><span className="text-gray-900 font-medium">MVP:</span> Live at versumhealth.com</p>
-              <p><span className="text-gray-900 font-medium">Outreach:</span> Beginning conversations with dental schools</p>
-              <p><span className="text-gray-900 font-medium">Next:</span> Usability testing and pilot partnerships</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Learnings</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            This project pushed me to think deeply about designing for trust in healthcare contexts.
-          </p>
-          
-          <div className="space-y-6">
-            <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">01</span> Simplicity scales</p>
-              <p className="text-gray-600 mt-1">The most powerful platforms do one thing exceptionally well. Versum Health's success will come from nailing the discovery-to-booking flow, not from feature bloat.</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">02</span> Healthcare + UX = Impact</p>
-              <p className="text-gray-600 mt-1">Thoughtful design makes healthcare feel accessible rather than intimidating. Every UI decision either builds or erodes trust.</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">03</span> Real problems, real solutions</p>
-              <p className="text-gray-600 mt-1">Building for a pain point I'd witnessed firsthand — friends avoiding dental care due to cost — led to solutions that resonated with every user I interviewed.</p>
-            </div>
-            <div>
-              <p className="text-gray-900 font-medium"><span className="text-[#B5502F]">04</span> Two-sided marketplaces are hard</p>
-              <p className="text-gray-600 mt-1">You need both sides to show up. The platform design must reduce friction for both patients AND students, or the marketplace never reaches critical mass.</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Next Steps */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Next Steps</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            The MVP is complete. Here's the roadmap for what comes next.
-          </p>
-          
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">01</span>
-              <div>
-                <p className="text-gray-900 font-medium">Supervisor Console</p>
-                <p className="text-gray-600 text-sm mt-1">Verification tools, bulk approvals, and compliance dashboards for clinic administrators.</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">02</span>
-              <div>
-                <p className="text-gray-900 font-medium">Eligibility Screening</p>
-                <p className="text-gray-600 text-sm mt-1">Pre-visit questionnaires to match patients with appropriate procedure types and student skill levels.</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">03</span>
-              <div>
-                <p className="text-gray-900 font-medium">Community Partner Integration</p>
-                <p className="text-gray-600 text-sm mt-1">Partnerships with community health centers and nonprofits to widen patient reach.</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <span className="text-[#B5502F] font-mono text-sm">04</span>
-              <div>
-                <p className="text-gray-900 font-medium">Expand to Other Specialties</p>
-                <p className="text-gray-600 text-sm mt-1">The model works for any healthcare training program — optometry, physical therapy, mental health counseling.</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Final Reflection */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="py-16 border-t border-gray-200"
-        >
-          <h2 className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6">Final Thoughts</h2>
-          <p className="text-xl md:text-2xl text-gray-900 leading-relaxed mb-8">
-            Versum Health isn't just about booking appointments — it's about making healthcare accessible to everyone, regardless of insurance status.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-6">
-            This project reminded me why I love product design: the ability to solve real problems for real people. Every decision — from the booking flow to transparent pricing on student cards — was grounded in research and empathy.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-6">
-            Versum Health is now live at <a href="https://versumhealth.com/" target="_blank" rel="noopener noreferrer" className="text-[#B5502F] hover:text-[#A84A2E] underline">versumhealth.com</a>, and I'm excited to measure its real-world impact on patients and students alike.
-          </p>
-          <a
-            href="https://versumhealth.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#B5502F] hover:bg-[#A84A2E] text-white px-6 py-3 rounded-lg transition-colors font-medium"
-          >
-            <span>Visit Live Site</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        </motion.div>
-      </section>
-
-      {/* Footer Navigation */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-16 border-t border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-          <Link href="/#work" className="text-gray-600 hover:text-[#B5502F] transition-colors inline-flex items-center gap-2">
-            <ArrowLeft size={18} />
-            <span>All work</span>
-          </Link>
-          <Link href="/work/pdf-penguin" className="text-gray-600 hover:text-[#B5502F] transition-colors">Next: PDF Penguin →</Link>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
-            className="text-gray-600 hover:text-[#B5502F] transition-colors"
-          >
-            Back to Top ↑
-          </button>
-        </div>
-      </section>
-    </main>
+      <NextCase
+        href="/work/ez-recipe"
+        name="EZ Recipe,"
+        line="recipes from what’s already in your kitchen."
+        img="/ezrecipehero.png"
+        bg="#cfe8de"
+      />
+    </CaseShell>
   );
 }

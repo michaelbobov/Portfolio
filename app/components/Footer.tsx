@@ -4,11 +4,13 @@ import { usePathname } from 'next/navigation';
 import { Document, External, Mail } from '@/app/components/icons';
 
 // The close: the name returns at full width, one row of ways to reach Michael, one plain line.
-// On case studies it lines up with their content container instead of the homepage wrap.
+// The same everywhere; case studies only sit a little closer to their last panel.
 export default function Footer() {
   const pathname = usePathname();
   const caseStudy = pathname?.startsWith('/work/') ?? false;
-  const wrap = caseStudy ? 'container mx-auto px-6 md:px-12 lg:px-20 wf-foot-cs' : 'wf-wrap';
+  // The homepage closes with its own invitation and footer row
+  if (pathname === '/') return null;
+  const wrap = caseStudy ? 'wf-wrap wf-foot-cs' : 'wf-wrap';
 
   return (
     <footer className={`${wrap} w-full wf-foot`}>

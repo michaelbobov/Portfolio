@@ -11,14 +11,9 @@ export default function FullSizeLink({
   children: ReactNode;
 }) {
   return (
-    <a
-      href={encodeURI(src)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`group block ${className}`}
-    >
+    <a href={encodeURI(src)} target="_blank" rel="noopener noreferrer" className={`cs-full ${className}`}>
       {children}
-      <span className="mt-2 block font-mono text-xs text-gray-500 group-hover:text-[#B5502F] transition-colors">
+      <span className="cs-full-label">
         Open full size ↗<span className="sr-only"> (opens in a new tab)</span>
       </span>
     </a>

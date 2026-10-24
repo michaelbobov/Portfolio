@@ -2,213 +2,208 @@ import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import Navigation from '@/app/components/Navigation';
 import IntroStage from '@/app/components/IntroStage';
-import ComicKeyword from '@/app/components/ComicKeyword';
-import PunchBuddy from '@/app/components/PunchBuddy';
-import SkillStickers from '@/app/components/SkillStickers';
+import DollSet from '@/app/components/DollSet';
+import AboutDoll from '@/app/components/AboutDoll';
 import FeaturedWork from '@/app/components/FeaturedWork';
-import LivingTitle from '@/app/components/LivingTitle';
 import type { Project } from '@/app/components/FeaturedWork';
-import { ArrowRight } from '@/app/components/icons';
-import { offTheClock } from '@/app/data/offTheClock';
-import './home.css';
+import { ArrowDown, ArrowUpRight } from '@/app/components/icons';
+import { SHAPE } from '@/app/data/layers';
+import './hp.css';
 
-// Featured work, laid out as a comic page: wide, two halves, wide. Every fact comes from the
-// project descriptions and case studies; live URLs only where the case study links one.
+// "Design, one layer deeper": Michael designs, then goes the layer further and builds it. The page
+// is a matryoshka opened in order: one doll in the hero that opens into the set, each project nested
+// in three layers, how he works as rings closing in on code, then the innermost layer (a doll that
+// opens onto his About site), and an invitation to open the next. Every fact comes from the case
+// studies.
+
+const EMAIL = 'mailto:michaelbobov@gmail.com';
+const RESUME = '/Michael Bobov - Product Designer.pdf';
+
 const projects: Project[] = [
   {
     id: 'versum',
     name: 'Versum Health',
-    number: 'CASE STUDY 01',
-    lead: 'Versum Health:',
-    rest: 'a two-sided marketplace connecting uninsured patients with supervised dental students.',
-    meta: 'Co-founder · Live MVP',
-    ticker: ['LIVE MVP', 'CO-FOUNDER', 'HEALTHCARE', 'MARKETPLACE', '6 MONTHS', '2025'],
+    meta: 'Co-founder · Product lead',
+    problem: 'Uninsured patients put off dental care, and dental students can’t find the patients they need to graduate.',
+    tags: ['Web', 'Healthcare marketplace'],
+    year: '2025',
+    insight: 'I had to pay people off the street a lot of money just to get them a free cleaning.',
+    quote: { who: 'A practicing dental hygienist, on getting through school' },
+    core: 'Live MVP',
+    coreLine: 'Patients search and book; students manage schedules and messages.',
+    tint: '#dde8fb',
+    shots: [
+      { src: '/Student2.png', w: 1470, h: 894, kind: 'browser', at: [6, 13, 58] },
+      { src: '/Student5.png', w: 1558, h: 902, kind: 'browser', at: [40, 33, 54] },
+    ],
     link: '/work/versum',
     live: 'https://versumhealth.com/',
-    heroImage: '/versumheroimage.png',
-    bg: '#020401',
-    fit: 'contain',
-    size: 'wide',
   },
   {
     id: 'ez-recipe',
     name: 'EZ Recipe',
-    number: 'CASE STUDY 02',
-    lead: 'EZ Recipe, live with 400+ recipes generated:',
-    rest: 'an AI recipe generator built around what’s already in your kitchen.',
-    meta: 'Founder · Live',
-    ticker: ['LIVE', 'FOUNDER', 'CONSUMER AI', '400+ RECIPES', '2 MONTHS', '2025'],
+    meta: 'Founder · Design and build',
+    problem: 'Recipe apps assume you’ll go shopping. Home cooks start from what’s already in the fridge.',
+    tags: ['Web app', 'Consumer AI'],
+    year: '2025',
+    insight: 'Cooking communities kept asking how to use what they already had.',
+    core: 'Live',
+    coreLine: 'At ezrecipe.app, reworked after real use so the recipe shows before its picture.',
+    tint: '#d5eee1',
+    shots: [
+      { src: '/HiFiHomeApp.png', w: 393, h: 852, kind: 'phone', at: [26, 9, 22] },
+      { src: '/HiFiViewRecipe.png', w: 393, h: 852, kind: 'phone', at: [53, 19, 22] },
+    ],
     link: '/work/ez-recipe',
     live: 'https://ezrecipe.app',
-    heroImage: '/ezrecipehero.png',
-    bg: '#cfe8de',
-    fit: 'cover',
-    size: 'half',
   },
   {
     id: 'pdf-penguin',
     name: 'PDF Penguin',
-    number: 'CASE STUDY 03',
-    lead: 'PDF Penguin turns messy PDFs into structured JSON',
-    rest: 'with drag-and-drop and plain-language prompts.',
-    meta: 'Founder · Pre-launch',
-    ticker: ['PRE-LAUNCH', 'FOUNDER', 'AI', 'DEVELOPER TOOLS', '2 WEEKS', '2025'],
+    meta: 'Founder · Design and build',
+    problem: 'Getting a table out of a PDF meant selecting areas by hand or writing parser rules first.',
+    tags: ['Web app', 'AI developer tool'],
+    year: '2025',
+    insight: 'I was the first user: every tool I tried asked for setup before it gave me anything.',
+    core: 'MVP in 2 weeks',
+    coreLine: 'Drop in a PDF, say what you need in plain words, get clean JSON.',
+    tint: '#ece2fc',
+    shots: [{ src: '/highfipengu2.png', w: 1728, h: 1117, kind: 'browser', at: [8, 12, 96] }],
     link: '/work/pdf-penguin',
-    heroImage: '/pdfpenguinhero.png',
-    bg: '#4a2a7a',
-    fit: 'cover',
-    size: 'half',
   },
   {
     id: 'spotify-loop',
     name: 'Spotify Loop',
-    number: 'CASE STUDY 04',
-    lead: 'Spotify Loop:',
-    rest: 'an unofficial concept for native song-section looping inside Spotify’s mobile player.',
-    meta: 'Product designer · Concept',
-    ticker: ['CONCEPT', 'UNOFFICIAL', 'MOBILE', 'FEATURE DESIGN', '1 WEEK', '2025'],
+    meta: 'Product designer · Unofficial concept',
+    problem: 'To replay one part of a song, people scrub by hand or leave Spotify altogether.',
+    tags: ['Mobile', 'Feature design'],
+    year: '2025',
+    insight: 'Musicians had already built their own workarounds.',
+    core: 'Loop in 2 taps',
+    coreLine: 'A hi-fi concept inside Spotify’s own design language, with saved loops.',
+    tint: '#e2f3e7',
+    shots: [
+      { src: '/Loop Set.png', w: 393, h: 852, kind: 'phone', at: [17, 18, 19] },
+      { src: '/Loop Active.png', w: 393, h: 852, kind: 'phone', at: [40.5, 9, 19], video: '/demospotifyloop.mp4' },
+      { src: '/Saved Loops.png', w: 393, h: 852, kind: 'phone', at: [64, 18, 19] },
+    ],
     link: '/work/spotify-loop',
-    heroImage: '/spotifyloophero.png',
-    bg: '#2b2b2b',
-    fit: 'cover',
-    size: 'wide',
   },
 ];
 
-// What Michael is doing now
-const today = [
-  { what: 'Co-founding Versum Health', when: '2025–' },
-  { what: 'Designing and building AI tools', when: 'Ongoing' },
+// How he works, outside in: four rings closing in on the smallest doll
+const RINGS = [
+  { name: 'Listen', line: 'Talk with the people who have the problem, on every side of it, before any sketch.' },
+  { name: 'Frame', line: 'Name the real problem, then agree on what better means.' },
+  { name: 'Design', line: 'Flows, states and prototypes, put in front of real people.' },
+  { name: 'Build', line: 'Then I ship it myself: React and AI APIs, down to the last detail.' },
 ];
 
-// Headline words pop up one after another (CSS reads --i for the stagger)
-const word = (i: number): CSSProperties => ({ '--i': i } as CSSProperties);
+// Load-in and ring order (CSS reads --i)
+const step = (i: number) => ({ '--i': i }) as CSSProperties;
 
-// "messy ideas": each letter gets a fixed tilt (deg) and nudge (em) from a seeded list, so the
-// mess is stable across renders; hovering tidies them into a straight line (home.css)
-const MESS = [
-  [-7, 0.04], [5, -0.05], [-3, 0.02], [9, -0.03], [-5, 0.06],
-  [6, -0.02], [-9, 0.05], [3, -0.06], [-6, 0.01], [8, 0.04], [-4, -0.04],
-];
-const messy = (text: string) =>
-  Array.from(text).map((ch, i) =>
-    ch === ' ' ? (
-      ' '
-    ) : (
-      <span key={i} className="mc" style={{ '--mr': `${MESS[i % MESS.length][0]}deg`, '--my': `${MESS[i % MESS.length][1]}em` } as CSSProperties}>
-        {ch}
-      </span>
-    )
-  );
-
-// Splits a short phrase into letter spans for the hover "jelly" on "More about me!"
-const letters = (text: string) =>
-  Array.from(text).map((ch, i) => (
-    <span key={i} className="ch">
-      {ch}
-    </span>
-  ));
+const Doll = ({ className, fill }: { className: string; fill: string }) => (
+  <svg className={className} viewBox="0 0 200 260" aria-hidden="true" focusable="false">
+    <path d={SHAPE} fill={fill} />
+  </svg>
+);
 
 export default function Home() {
   return (
-    <IntroStage className="wf-home">
-      <header className="wf-wrap">
-        <nav aria-label="Primary" className="flex justify-between items-center gap-4 py-[22px] text-sm">
-          <Link href="/" className="font-semibold whitespace-nowrap">
-            Michael Bobov
-          </Link>
+    <IntroStage className="hp">
+      <header className="hp-wrap hp-bar">
+        <Link href="/" className="hp-brand">
+          <Doll className="hp-brand-doll" fill="#8b5cf6" />
+          Michael Bobov
+        </Link>
+        <div className="hp-bar-end">
           <Navigation />
-        </nav>
+          <a className="hp-hello" href={EMAIL}>Say hello</a>
+        </div>
       </header>
 
-      <main id="main-content" tabIndex={-1} className="wf-wrap focus:outline-none">
-        <div className="wf-hero">
-          <div className="wf-hero-copy">
-            {/* An editorial mix: serif italics for the small words, heavy grotesk for the name, deliberately
-                messy letters for "messy ideas" (hover tidies them), and the comic burst at the end.
-                Screen readers get the full sentence; the drawn words are visual only. */}
-            <h1 className="wf-ed-h1">
-              <span className="sr-only">
-                Hi, I&apos;m Michael, a product designer in Seattle. I turn messy ideas into real products, live apps and shipped code.
-              </span>
-              <span className="wf-ed" aria-hidden="true">
-                <span className="wf-w ed-s" style={word(0)}>Hi,</span>{' '}
-                <span className="wf-w ed-g ed-shadow" style={word(1)}>I&apos;m Michael.</span>{' '}
-                <span className="wf-w ed-s" style={word(2)}>I turn</span>{' '}
-                <span className="wf-w ed-g ed-messy" style={word(3)}>{messy('messy ideas')}</span>{' '}
-                {/* "into" stays on the burst's line */}
-                <span className="ed-nowrap">
-                  <span className="wf-w ed-s" style={word(4)}>into</span>
-                  <span className="wf-w" style={word(5)}><ComicKeyword /></span>
-                </span>
-              </span>
+      <main id="main-content" tabIndex={-1} className="focus:outline-none">
+        <section className="hp-wrap hp-hero">
+          <div className="hp-hero-copy">
+            <h1 className="hp-h1">
+              <span className="hp-rise" style={step(0)}>Design,</span>{' '}
+              <em className="hp-rise" style={step(1)}>one layer</em>{' '}
+              <span className="hp-rise" style={step(2)}>deeper.</span>
             </h1>
-            {/* A comic narration caption */}
-            <Link href="/work/versum" className="wf-caption">
-              <span className="wf-caption-kicker">MEANWHILE…</span>
-              <span className="wf-caption-text">
-                Co-founding Versum Health
-                <ArrowRight size={20} />
-              </span>
-            </Link>
+            <p className="hp-lede hp-rise" style={step(3)}>
+              I design products, then go one layer further and build them, from the first conversation to shipped code.
+              Product designer in Seattle; I co-founded <Link href="/work/versum">Versum Health</Link>, and designed and built{' '}
+              <Link href="/work/ez-recipe">EZ Recipe</Link> and <Link href="/work/pdf-penguin">PDF Penguin</Link>.
+            </p>
+            <a href="#work" className="hp-btn hp-rise" style={step(4)}>
+              See the work <ArrowDown size={18} strokeWidth={2.25} />
+            </a>
           </div>
-          <PunchBuddy />
-        </div>
-
-        <section className="wf-skills" aria-labelledby="skills-title">
-          <SkillStickers />
+          <DollSet />
         </section>
 
-        <section id="work" className="wf-section scroll-mt-6" aria-labelledby="work-title">
-          <LivingTitle id="work-title" text="Featured Work" className="wf-giant" />
+        <section id="work" className="hp-wrap hp-section scroll-mt-6" aria-labelledby="work-title">
+          <div className="hp-head">
+            <h2 id="work-title" className="hp-h2 hp-h2-stack">Selected <em>work.</em></h2>
+            <p className="hp-head-note">Four projects, each opened in layers: the problem people had, the insight inside it, and the outcome at the core.</p>
+          </div>
           <FeaturedWork projects={projects} />
         </section>
 
-        <section className="wf-section wf-more-sec" aria-labelledby="more-title">
-          <h2 id="more-title" className="sr-only">About</h2>
-          <a className="wf-more" href="https://about.michaelbobov.com/">
-            <span className="wf-more-line">
-              <span className="wf-more-speed" aria-hidden="true"><i /><i /><i /></span>
-              <span className="sr-only">More about me</span>
-              {/* A small sticker mix; the letters jelly on hover */}
-              <span className="wf-more-text" aria-hidden="true">
-                <span className="mx-x">{letters('MORE')}</span>{' '}
-                <span className="mx-y">{letters('about')}</span>{' '}
-                <span className="mx-z">{letters('me!')}</span>
+        <section className="hp-wrap hp-section hp-how" aria-labelledby="how-title">
+          <div className="hp-rings" aria-hidden="true">
+            {RINGS.map((r, i) => (
+              <span key={r.name} className="hp-ring" style={step(i)}>
+                <span className="hp-ring-name">{r.name}</span>
               </span>
-              <ArrowRight size={48} strokeWidth={2.5} className="wf-more-arrow" />
-            </span>
-            <span className="wf-more-url">about.michaelbobov.com</span>
-          </a>
+            ))}
+            <span className="hp-ring-core"><em>Code</em></span>
+          </div>
+          <div>
+            <h2 id="how-title" className="hp-h2">Code is the <em>smallest</em> doll.</h2>
+            <p className="hp-how-lede">How I work, outside in: past the mockup, until it ships.</p>
+            <dl className="hp-how-list">
+              {RINGS.map((r) => (
+                <div key={r.name}>
+                  <dt>{r.name}</dt>
+                  <dd>{r.line}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </section>
 
-        <section className="wf-section wf-now">
-          <div>
-            <h2>Today</h2>
-            <ul className="wf-list">
-              {today.map((t) => (
-                <li key={t.what}>
-                  <span>{t.what}</span>
-                  <span className="wf-list-note">{t.when}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {offTheClock.length > 0 && (
-            <div>
-              <h2>Off the clock</h2>
-              <ul className="wf-list">
-                {offTheClock.map((t) => (
-                  <li key={t.what}>
-                    <span>{t.what}</span>
-                    {t.note && <span className="wf-list-note">{t.note}</span>}
-                  </li>
-                ))}
-              </ul>
+        {/* The innermost layer: a doll in a doll-shaped frame that opens onto his About site */}
+        <section className="hp-wrap hp-section" aria-labelledby="me-title">
+          <div className="hp-me">
+            <AboutDoll href="https://about.michaelbobov.com/" />
+            <div className="hp-me-copy">
+              <p className="hp-label">The innermost layer</p>
+              <h2 id="me-title" className="hp-me-title">Hi, I’m Michael. <em>There’s one more layer.</em></h2>
+              <p className="hp-me-text">The work is the outside. Open the doll to meet the person who made it.</p>
             </div>
-          )}
+          </div>
+        </section>
+
+        <section className="hp-wrap hp-section hp-end" aria-labelledby="end-title">
+          <h2 id="end-title" className="hp-end-title">Let’s open <em>something.</em></h2>
+          <div className="hp-end-actions">
+            <a className="hp-btn" href={EMAIL}>michaelbobov@gmail.com <ArrowUpRight size={18} strokeWidth={2.25} /></a>
+            <a className="hp-text-link" href="https://www.linkedin.com/in/michael-bobov-94b61b202/" target="_blank" rel="noopener noreferrer">
+              LinkedIn<span className="sr-only"> (opens in a new tab)</span> <ArrowUpRight size={16} strokeWidth={2.25} />
+            </a>
+          </div>
         </section>
       </main>
+
+      <footer className="hp-wrap hp-foot">
+        <p>© 2026 Michael Bobov · Product designer in Seattle</p>
+        <ul>
+          <li><a href="https://www.linkedin.com/in/michael-bobov-94b61b202/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href={RESUME} target="_blank" rel="noopener noreferrer">Résumé</a></li>
+          <li><a href={EMAIL}>Email</a></li>
+        </ul>
+      </footer>
     </IntroStage>
   );
 }

@@ -61,6 +61,11 @@
   
   html {
     scroll-behavior: smooth;
+    scrollbar-color: #c9b6ff transparent;
+  }
+
+  body {
+    caret-color: var(--wf-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -94,8 +99,8 @@
 /* Footer: the designed close (all pages). The name returns at full width. */
 .wf-foot { padding-top: 160px; padding-bottom: 56px; color: var(--wf-ink); }
 .wf-foot-name { margin: 0; font-weight: 600; font-size: clamp(40px, 11vw, 190px); line-height: 0.9; letter-spacing: -0.05em; white-space: nowrap; padding-bottom: 0.06em; }
-/* Homepage only: the name returns in the display face with a grape offset shadow (case studies keep Geist) */
-.wf-foot:not(.wf-foot-cs) .wf-foot-name { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; letter-spacing: -0.03em; line-height: 0.95; text-shadow: 0.04em 0.04em 0 var(--wf-accent); padding-bottom: 0.08em; }
+/* The name returns in the display face with the grape offset shadow, as on the homepage hero */
+.wf-foot .wf-foot-name { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; letter-spacing: -0.03em; line-height: 0.95; text-shadow: 0.04em 0.04em 0 var(--wf-accent); padding-bottom: 0.08em; }
 .wf-foot-links { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 32px; font-size: 17px; }
 .wf-foot-links a { display: inline-flex; align-items: center; gap: 10px; color: var(--wf-ink); text-decoration: none; transition: color 160ms ease; }
 .wf-foot-links a svg { color: var(--wf-muted); flex: none; transition: color 160ms ease, transform 200ms var(--wf-ease-out); }

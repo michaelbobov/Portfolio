@@ -37,6 +37,15 @@ export function ArrowRight({ size = 24, ...props }: IconProps) {
   );
 }
 
+/** ui/arrow-down.svg */
+export function ArrowDown({ size = 24, ...props }: IconProps) {
+  return (
+    <svg {...line(size, props)}>
+      <path d="M12 4v16m-6-6 6 6 6-6" />
+    </svg>
+  );
+}
+
 /** ui/arrow-left.svg */
 export function ArrowLeft({ size = 24, ...props }: IconProps) {
   return (

@@ -1,31 +1,16 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Bangers, Bricolage_Grotesque, Instrument_Serif, Silkscreen } from 'next/font/google'
+import { Bricolage_Grotesque, Instrument_Serif } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 import Footer from './components/Footer'
 import MotionProvider from './components/MotionProvider'
 
-// Geist is the site-wide type (Geist Mono only for the case studies' own labels); Playfair stays for the case-study headings
-const playfair = Playfair_Display({ 
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  weight: ['400', '500', '600', '700']
-})
-// Homepage type: Bricolage Grotesque for display (headline key words, the living "Featured Work"
-// title, "More about me" and the footer name); Bangers only for comic sound effects and labels;
-// Instrument Serif and Silkscreen as accents (headline small words and the Seattle sticker, the
-// skill stickers, the panel tickers, "More about me")
+// Geist for text and UI, Bricolage Grotesque for display (headlines, section and panel titles, the
+// footer name), and Instrument Serif italic for one accent phrase per homepage heading
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-display',
   axes: ['opsz', 'wdth'],
-  display: 'swap',
-})
-const bangers = Bangers({
-  subsets: ['latin'],
-  variable: '--font-comic',
-  weight: '400',
   display: 'swap',
 })
 const instrumentSerif = Instrument_Serif({
@@ -34,14 +19,6 @@ const instrumentSerif = Instrument_Serif({
   weight: '400',
   style: 'italic',
   display: 'swap',
-  preload: false,
-})
-const silkscreen = Silkscreen({
-  subsets: ['latin'],
-  variable: '--font-pixel',
-  weight: ['400', '700'],
-  display: 'swap',
-  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -97,7 +74,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${GeistSans.variable} ${GeistMono.variable} ${playfair.variable} ${bricolage.variable} ${bangers.variable} ${instrumentSerif.variable} ${silkscreen.variable} font-sans h-full flex flex-col`}>
+      <body className={`${GeistSans.variable} ${bricolage.variable} ${instrumentSerif.variable} font-sans h-full flex flex-col`}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-wf-sheet focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg text-sm font-medium text-wf-ink focus:outline-none focus:ring-2 focus:ring-wf-ink"
