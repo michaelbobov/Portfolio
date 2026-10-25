@@ -8,6 +8,7 @@ import FeaturedWork from '@/app/components/FeaturedWork';
 import type { Project } from '@/app/components/FeaturedWork';
 import { ArrowDown, ArrowUpRight } from '@/app/components/icons';
 import { SHAPE } from '@/app/data/layers';
+import { INTRO } from '@/app/data/intro';
 import './hp.css';
 
 // "Design, one layer deeper": Michael designs, then goes the layer further and builds it. The page
@@ -99,8 +100,9 @@ const RINGS = [
   { name: 'Build', line: 'Then I ship it myself: React and AI APIs, down to the last detail.' },
 ];
 
-// Load-in and ring order (CSS reads --i)
+// Ring order (CSS reads --i)
 const step = (i: number) => ({ '--i': i }) as CSSProperties;
+const at = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
 
 const Doll = ({ className, fill }: { className: string; fill: string }) => (
   <svg className={className} viewBox="0 0 200 260" aria-hidden="true" focusable="false">
@@ -125,17 +127,26 @@ export default function Home() {
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <section className="hp-wrap hp-hero">
           <div className="hp-hero-copy">
+            {/* One layer at a time: "Design," and "one layer" peel up from under their masks as a doll
+                comes out; "deeper." arrives from depth, letter by letter */}
             <h1 className="hp-h1">
-              <span className="hp-rise" style={step(0)}>Design,</span>{' '}
-              <em className="hp-rise" style={step(1)}>one layer</em>{' '}
-              <span className="hp-rise" style={step(2)}>deeper.</span>
+              <span className="hp-line"><span style={at(INTRO.design)}>Design,</span></span>{' '}
+              <span className="hp-line"><em style={at(INTRO.layer)}>one layer</em></span>{' '}
+              <span className="hp-line hp-deep">
+                <span aria-hidden="true">
+                  {Array.from('deeper.').map((ch, i) => (
+                    <span key={i} className="hp-ch" style={at(INTRO.deeper + i * INTRO.letter)}>{ch}</span>
+                  ))}
+                </span>
+                <span className="sr-only">deeper.</span>
+              </span>
             </h1>
-            <p className="hp-lede hp-rise" style={step(3)}>
+            <p className="hp-lede hp-rise" style={at(INTRO.lede)}>
               I design products, then go one layer further and build them, from the first conversation to shipped code.
               Product designer in Seattle; I co-founded <Link href="/work/versum">Versum Health</Link>, and designed and built{' '}
               <Link href="/work/ez-recipe">EZ Recipe</Link> and <Link href="/work/pdf-penguin">PDF Penguin</Link>.
             </p>
-            <a href="#work" className="hp-btn hp-rise" style={step(4)}>
+            <a href="#work" className="hp-btn hp-rise" style={at(INTRO.button)}>
               See the work <ArrowDown size={18} strokeWidth={2.25} />
             </a>
           </div>
