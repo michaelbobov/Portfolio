@@ -1,4 +1,3 @@
-import Navigation from '@/app/components/Navigation';
 import {
   CaseHero,
   CaseShell,
@@ -19,7 +18,7 @@ import '../case.css';
 // unattributed quote are left out; early artifacts that show a drag interaction are marked.
 export default function SpotifyLoopCaseStudy() {
   return (
-    <CaseShell nav={<Navigation />}>
+    <CaseShell>
       <CaseHero
         kicker="Mobile · Feature design · 2025"
         name="Spotify Loop"

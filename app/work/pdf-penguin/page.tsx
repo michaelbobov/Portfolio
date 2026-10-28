@@ -1,4 +1,3 @@
-import Navigation from '@/app/components/Navigation';
 import {
   CaseHero,
   CaseShell,
@@ -18,7 +17,7 @@ import '../case.css';
 // output, parse success, setup times, "2 clicks") are left out until their method is known.
 export default function PDFPenguinCaseStudy() {
   return (
-    <CaseShell nav={<Navigation />}>
+    <CaseShell>
       <CaseHero
         kicker="AI · Developer tools · 2025"
         name="PDF Penguin"

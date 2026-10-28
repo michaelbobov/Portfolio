@@ -1,4 +1,3 @@
-import Navigation from '@/app/components/Navigation';
 import {
   CaseHero,
   CaseShell,
@@ -19,7 +18,7 @@ import '../case.css';
 // rating, wait-time and survey percentages) are left out until their method is known.
 export default function EZRecipeCaseStudy() {
   return (
-    <CaseShell nav={<Navigation />}>
+    <CaseShell>
       <CaseHero
         kicker="Consumer · AI · 2025"
         name="EZ Recipe"

@@ -1,4 +1,3 @@
-import Navigation from '@/app/components/Navigation';
 import {
   CaseHero,
   CaseShell,
@@ -19,7 +18,7 @@ import '../case.css';
 // only what the page itself supports; open questions for Michael are left out, not shown.
 export default function VersumCaseStudy() {
   return (
-    <CaseShell nav={<Navigation />}>
+    <CaseShell>
       <CaseHero
         kicker="Healthcare · Marketplace · 2025"
         name="Versum Health"

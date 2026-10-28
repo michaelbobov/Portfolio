@@ -1,0 +1,46 @@
+/*
+  The frame every page shares (components/Site.tsx): the bar, the close, the page wrap and the one
+  button style. Dark grape ground; Bricolage for display, Geist for text, Instrument Serif italic for
+  the one accent phrase in a heading. Tokens live in globals.css.
+*/
+
+.site-wrap { max-width: 1440px; margin-inline: auto; padding-inline: clamp(16px, 3.4vw, 48px); }
+.site-btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border-radius: 999px; background: var(--wf-ink); color: var(--wf-bg); font-size: 16px; font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
+.site-btn svg { transition: transform 200ms var(--wf-ease-out); }
+.site-btn:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .site-btn:hover { background: #fff; }
+  .site-btn:hover svg { transform: translate(2px, -2px); }
+}
+.site-wrap em, .cs em { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--wf-accent); }
+
+/* ---------- the bar ---------- */
+.sb { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; font-size: 14px; }
+.sb-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; color: var(--wf-ink); text-decoration: none; white-space: nowrap; }
+.sb-doll { width: auto; height: 20px; transition: transform 320ms var(--wf-ease-out); }
+@media (hover: hover) and (pointer: fine) { .sb-brand:hover .sb-doll { transform: translateY(-2px) rotate(-6deg); } }
+.sb-end { display: flex; align-items: center; gap: 24px; }
+.sb-hello { padding: 8px 16px; border-radius: 999px; background: var(--wf-ink); color: var(--wf-bg); font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
+.sb-hello:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .sb-hello:hover { background: #fff; } }
+@media (max-width: 767px) { .sb-hello { display: none; } }
+
+/* ---------- the close ---------- */
+.sc { box-sizing: border-box; width: 100%; padding-top: 160px; }
+@media (max-width: 767px) { .sc { padding-top: 104px; } }
+.sc-end { padding-bottom: 96px; }
+.sc-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(56px, 8.6vw, 132px); line-height: 0.92; letter-spacing: -0.04em; color: var(--wf-ink); }
+.sc-title em { display: block; font-size: 1.04em; }
+.sc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 36px; }
+.sc-link { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .sc-link:hover { color: var(--wf-ink); } }
+.sc-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 24px 32px; border-top: 1px solid var(--wf-line); font-size: 14px; color: var(--wf-muted); }
+.sc-row p { margin: 0; }
+.sc-row ul { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 0; padding: 0; }
+.sc-row a { color: var(--wf-muted); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: color 160ms ease, text-decoration-color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .sc-row a:hover { color: var(--wf-ink); text-decoration-color: var(--wf-accent); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .site-btn, .site-btn svg, .sb-hello, .sb-doll { transition: none; }
+  .sb-brand:hover .sb-doll { transform: none; }
+}

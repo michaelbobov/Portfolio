@@ -1,24 +1,21 @@
 import type { CSSProperties } from 'react';
 import Link from 'next/link';
-import Navigation from '@/app/components/Navigation';
+import { SiteBar } from '@/app/components/Site';
 import IntroStage from '@/app/components/IntroStage';
 import DollSet from '@/app/components/DollSet';
 import AboutDoll from '@/app/components/AboutDoll';
 import FeaturedWork from '@/app/components/FeaturedWork';
 import type { Project } from '@/app/components/FeaturedWork';
-import { ArrowDown, ArrowUpRight } from '@/app/components/icons';
-import { SHAPE } from '@/app/data/layers';
+import { ArrowDown } from '@/app/components/icons';
 import { INTRO } from '@/app/data/intro';
 import './hp.css';
 
 // "Design, one layer deeper": Michael designs, then goes the layer further and builds it. The page
 // is a matryoshka opened in order: one doll in the hero that opens into the set, each project nested
 // in three layers, how he works as rings closing in on code, then the innermost layer (a doll that
-// opens onto his About site), and an invitation to open the next. Every fact comes from the case
-// studies.
+// opens onto his About site). The bar and the close ("Let's open something") are the shared ones
+// (Site.tsx). Every fact comes from the case studies.
 
-const EMAIL = 'mailto:michaelbobov@gmail.com';
-const RESUME = '/Michael Bobov - Product Designer.pdf';
 
 const projects: Project[] = [
   {
@@ -104,25 +101,10 @@ const RINGS = [
 const step = (i: number) => ({ '--i': i }) as CSSProperties;
 const at = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
 
-const Doll = ({ className, fill }: { className: string; fill: string }) => (
-  <svg className={className} viewBox="0 0 200 260" aria-hidden="true" focusable="false">
-    <path d={SHAPE} fill={fill} />
-  </svg>
-);
-
 export default function Home() {
   return (
     <IntroStage className="hp">
-      <header className="hp-wrap hp-bar">
-        <Link href="/" className="hp-brand">
-          <Doll className="hp-brand-doll" fill="#8b5cf6" />
-          Michael Bobov
-        </Link>
-        <div className="hp-bar-end">
-          <Navigation />
-          <a className="hp-hello" href={EMAIL}>Say hello</a>
-        </div>
-      </header>
+      <SiteBar />
 
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <section className="hp-wrap hp-hero">
@@ -196,25 +178,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="hp-wrap hp-section hp-end" aria-labelledby="end-title">
-          <h2 id="end-title" className="hp-end-title">Let’s open <em>something.</em></h2>
-          <div className="hp-end-actions">
-            <a className="hp-btn" href={EMAIL}>michaelbobov@gmail.com <ArrowUpRight size={18} strokeWidth={2.25} /></a>
-            <a className="hp-text-link" href="https://www.linkedin.com/in/michael-bobov-94b61b202/" target="_blank" rel="noopener noreferrer">
-              LinkedIn<span className="sr-only"> (opens in a new tab)</span> <ArrowUpRight size={16} strokeWidth={2.25} />
-            </a>
-          </div>
-        </section>
       </main>
 
-      <footer className="hp-wrap hp-foot">
-        <p>© 2026 Michael Bobov · Product designer in Seattle</p>
-        <ul>
-          <li><a href="https://www.linkedin.com/in/michael-bobov-94b61b202/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href={RESUME} target="_blank" rel="noopener noreferrer">Résumé</a></li>
-          <li><a href={EMAIL}>Email</a></li>
-        </ul>
-      </footer>
     </IntroStage>
   );
 }

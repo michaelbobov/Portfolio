@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { Bricolage_Grotesque, Instrument_Serif } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
-import Footer from './components/Footer'
+import './site.css'
+import { SiteClose } from './components/Site'
 import MotionProvider from './components/MotionProvider'
 
 // Geist for text and UI, Bricolage Grotesque for display (headlines, section and panel titles, the
@@ -85,7 +86,7 @@ export default function RootLayout({
           <div className="flex-1">
             {children}
           </div>
-          <Footer />
+          <SiteClose />
         </MotionProvider>
       </body>
     </html>

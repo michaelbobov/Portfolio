@@ -25,13 +25,13 @@
     --ring: 12 60% 50%;
     --radius: 0.5rem;
 
-    /* Grape palette (light only). The case studies take only the ground and ink. */
-    --wf-bg: #f1eefb;
-    --wf-sheet: #ffffff;
-    --wf-ink: #1d1233;
-    --wf-muted: #6d6488;
-    --wf-line: #ddd6f1;
-    --wf-accent: #6a35e8;   /* grape: focus, offset shadows, the character */
+    /* Dark grape palette, site-wide: the ground, a card one step up, near-white ink, a lilac accent */
+    --wf-bg: #140b24;
+    --wf-sheet: #1f1236;
+    --wf-ink: #f4efff;
+    --wf-muted: #b4a7d6;
+    --wf-line: rgba(233, 224, 255, 0.12);
+    --wf-accent: #a585f7;   /* lilac: links, labels, the one accent phrase */
     --wf-yellow: #ffd84d;   /* comic yellow: bursts, caption boxes, halftone */
     --wf-glove: #ff4d4d;
     --wf-cheek: #ff8fb8;
@@ -61,7 +61,7 @@
   
   html {
     scroll-behavior: smooth;
-    scrollbar-color: #c9b6ff transparent;
+    scrollbar-color: #4a2f80 var(--wf-bg);
   }
 
   body {
@@ -80,7 +80,7 @@
 
   /* Custom selection color */
   ::selection {
-    background-color: rgba(106, 53, 232, 0.2);
+    background-color: rgba(165, 133, 247, 0.35);
     color: var(--wf-ink);
   }
 }
@@ -94,30 +94,6 @@
     padding-left: clamp(16px, 3.4vw, 48px);
     padding-right: clamp(16px, 3.4vw, 48px);
   }
-}
-
-/* Footer: the designed close (all pages). The name returns at full width. */
-.wf-foot { padding-top: 160px; padding-bottom: 56px; color: var(--wf-ink); }
-.wf-foot-name { margin: 0; font-weight: 600; font-size: clamp(40px, 11vw, 190px); line-height: 0.9; letter-spacing: -0.05em; white-space: nowrap; padding-bottom: 0.06em; }
-/* The name returns in the display face with the grape offset shadow, as on the homepage hero */
-.wf-foot .wf-foot-name { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; letter-spacing: -0.03em; line-height: 0.95; text-shadow: 0.04em 0.04em 0 var(--wf-accent); padding-bottom: 0.08em; }
-.wf-foot-links { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 32px; font-size: 17px; }
-.wf-foot-links a { display: inline-flex; align-items: center; gap: 10px; color: var(--wf-ink); text-decoration: none; transition: color 160ms ease; }
-.wf-foot-links a svg { color: var(--wf-muted); flex: none; transition: color 160ms ease, transform 200ms var(--wf-ease-out); }
-.wf-foot-links a:focus-visible { outline: 2px solid var(--wf-ink); outline-offset: 4px; border-radius: 6px; }
-@media (hover: hover) and (pointer: fine) {
-  .wf-foot-links a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
-  .wf-foot-links a:hover svg { color: var(--wf-ink); transform: translateY(-1px); }
-}
-.wf-foot-cs { padding-top: 96px; }
-.wf-foot-note { margin: 20px 0 0; font-size: 15px; color: var(--wf-muted); }
-@media (max-width: 767px) {
-  .wf-foot { padding-top: 96px; padding-bottom: 40px; }
-  .wf-foot-name { font-size: 13.6vw; }
-  .wf-foot-links { margin-top: 28px; gap: 14px 24px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .wf-foot-links a svg { transition: color 160ms ease; transform: none !important; }
 }
 
 /* Typography refinements */

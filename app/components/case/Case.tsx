@@ -2,12 +2,12 @@ import type { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import FullSizeLink from '@/app/components/FullSizeLink';
+import { SiteBar } from '@/app/components/Site';
 import { ArrowLeft, ArrowUpRight } from '@/app/components/icons';
 
-// Building blocks for the case-study pages, set in the homepage's system: Bricolage for display,
-// Geist for everything else, the grape accent, and ink outlines with flat offset shadows on the
-// panels (the short version, decisions, figures, the next case). Nothing tilted, no numbering.
-// Styles live in app/work/case.css.
+// Building blocks for the case-study pages, in the homepage's world: the dark grape ground, panels
+// as steps in tone (no outlines, no hard shadows), Bricolage for display, Geist for text, and the
+// claim under the name as the one serif-italic accent. Styles live in app/work/case.css.
 
 export type Status = 'LIVE' | 'LIVE MVP' | 'PRE-LAUNCH' | 'CONCEPT';
 
@@ -255,19 +255,12 @@ export function NextCase({
   );
 }
 
-// Page shell: the site bar, then the article (the skip link's target)
-export function CaseShell({ nav, children }: { nav: ReactNode; children: ReactNode }) {
+// Page shell: the shared bar, then the article (the skip link's target); the shared close follows
+export function CaseShell({ children }: { children: ReactNode }) {
   return (
-    <main className="cs min-h-screen">
-      <nav aria-label="Primary" className="wf-wrap py-[22px]">
-        <div className="flex justify-between items-center gap-4 text-sm">
-          <Link href="/" className="font-semibold text-wf-ink whitespace-nowrap">
-            Michael Bobov
-          </Link>
-          {nav}
-        </div>
-      </nav>
-      <article id="main-content" tabIndex={-1} className="wf-wrap focus:outline-none">
+    <main className="cs">
+      <SiteBar />
+      <article id="main-content" tabIndex={-1} className="site-wrap focus:outline-none">
         {children}
       </article>
     </main>
