@@ -46,7 +46,8 @@
     --wf-pop-5: #ffa45c;
     --wf-pop-6: #c9b6ff;
     /* Type: a few sizes, far apart, used everywhere. The display titles size themselves; a heading is
-       the display face a notch wider and lighter; everything else is the text face. */
+       the display face at full width, at its own optical size (the display cut is too tight for it:
+       the letters touch); everything else is the text face. */
     --t-small: 14px;                       /* labels, meta, captions, the nav */
     --t-body: 17px;                        /* running text, links and buttons */
     --t-lead: 20px;                        /* the line under a title; small headings */

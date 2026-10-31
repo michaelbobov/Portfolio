@@ -1,9 +1,9 @@
 /*
   Case-study pages, in the homepage's world: the dark grape ground, panels as steps in tone (the
   short version, decisions, the quote, process details) with no outlines or hard shadows, the
-  product's own screens framed softly, Bricolage for display and Geist for text, and the claim under
-  the name as the page's one serif-italic accent. A calm, centred reading column carries the
-  argument. The only motion is hover and press feedback. Tokens live in globals.css.
+  product's own screens framed softly, Bricolage for headings (each at its own optical size, spaced
+  so the letters never touch) and Geist for text. One left edge runs down the page. The only motion
+  is hover and press feedback. Tokens live in globals.css.
 */
 
 .cs { --cs-card: #1f1236; --cs-inner: #2b1a4b; --cs-text: #e7dff8; padding-bottom: 32px; color: var(--wf-ink); }
@@ -21,8 +21,8 @@
 /* ---------- hero: the name, the claim as the one accent, then what it is ---------- */
 .cs-hero { padding-top: 72px; }
 .cs-kicker { margin: 0 0 20px; font-size: var(--t-small); font-weight: 500; color: var(--wf-muted); }
-.cs-h1 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; color: var(--wf-ink); }
-.cs-claim { display: block; margin-top: 16px; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; font-size: var(--t-head); line-height: 1.1; letter-spacing: -0.01em; color: var(--wf-accent); font-variation-settings: normal; }
+.cs-h1 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 96, "opsz" 96; font-size: var(--t-display); line-height: 0.98; letter-spacing: -0.022em; color: var(--wf-ink); }
+.cs-claim { display: block; margin-top: 18px; font-family: var(--font-geist-sans), sans-serif; font-weight: 400; font-size: var(--t-quote); line-height: 1.25; letter-spacing: -0.015em; color: var(--wf-accent); font-variation-settings: normal; text-wrap: balance; }
 .cs-disclaimer { margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; }
 .cs-summary { max-width: 700px; margin: 24px 0 0; font-size: var(--t-lead); line-height: 1.45; color: var(--cs-text); }
 .cs-live { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; font-size: var(--t-body); font-weight: 600; color: var(--wf-ink); text-decoration: underline; text-decoration-color: var(--wf-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
@@ -38,7 +38,7 @@
 .cs-section { padding-top: 112px; }
 @media (max-width: 767px) { .cs-section { padding-top: 80px; } }
 .cs-label { margin: 0 0 12px; font-size: var(--t-small); font-weight: 600; color: var(--wf-accent); }
-.cs-h2 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-head); line-height: 1.02; letter-spacing: -0.03em; color: var(--wf-ink); }
+.cs-h2 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 42; font-size: var(--t-head); line-height: 1.08; letter-spacing: -0.02em; color: var(--wf-ink); }
 .cs-prose { margin-top: 22px; }
 .cs-prose p { margin: 0 0 18px; font-size: var(--t-body); line-height: 1.65; color: var(--cs-text); }
 .cs-prose p:last-child { margin-bottom: 0; }
@@ -50,7 +50,7 @@
 .cs-glance-facts dt { font-size: var(--t-small); color: var(--wf-muted); }
 .cs-glance-facts dd { margin: 6px 0 0; font-size: var(--t-body); font-weight: 500; line-height: 1.4; color: var(--wf-ink); }
 .cs-glance-story { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 36px; padding-top: 24px; }
-.cs-glance-story h3 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-glance-story h3 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 20; font-size: var(--t-lead); line-height: 1.25; letter-spacing: -0.008em; }
 .cs-glance-story .is-outcome h3 { color: var(--wf-accent); }
 .cs-glance-story p { margin: 8px 0 0; font-size: var(--t-body); line-height: 1.55; color: var(--cs-text); text-wrap: pretty; }
 @media (max-width: 899px) {
@@ -78,7 +78,7 @@
 .cs-step-flows p { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--wf-muted); }
 .cs-step-flows ol { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .cs-step-flows li { padding: 4px 9px; border-radius: 999px; background: rgba(244, 239, 255, 0.1); font-size: 13px; font-weight: 500; color: var(--wf-ink); }
-.cs-step-name { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-step-name { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 20; font-size: var(--t-lead); line-height: 1.25; letter-spacing: -0.008em; }
 .cs-step:not(:last-child) .cs-step-name::after { content: ""; flex: 1; height: 2px; margin-right: -20px; border-radius: 1px; background: linear-gradient(90deg, rgba(165, 133, 247, 0.6), rgba(165, 133, 247, 0.12)); }
 .cs-step-did { margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--cs-text); text-wrap: pretty; }
 .cs-step-found { margin: 10px 0 0; font-size: var(--t-small); font-weight: 500; line-height: 1.45; color: var(--wf-ink); text-wrap: pretty; }
@@ -101,7 +101,7 @@
 .cs-choice { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 40px; align-items: center; padding: 28px; border-radius: 24px; background: var(--cs-card); }
 .cs-choice.is-text { grid-template-columns: minmax(0, 1fr); }
 .cs-choice-tag { margin: 0 0 8px; font-size: var(--t-small); font-weight: 600; color: var(--wf-accent); }
-.cs-choice-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 48; font-size: var(--t-quote); line-height: 1.1; letter-spacing: -0.025em; text-wrap: balance; }
+.cs-choice-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 28; font-size: var(--t-quote); line-height: 1.16; letter-spacing: -0.012em; text-wrap: balance; }
 .cs-choice-why { max-width: 34em; margin: 12px 0 0; font-size: var(--t-body); line-height: 1.55; color: var(--cs-text); text-wrap: pretty; }
 .cs-choice-media { margin: 0; }
 .cs-choice-shots { display: flex; justify-content: center; gap: 16px; }
@@ -164,12 +164,12 @@
 .cs-details summary::-webkit-details-marker { display: none; }
 .cs-details summary:active { transform: scale(0.995); }
 @media (hover: hover) and (pointer: fine) { .cs-details summary:hover { background: var(--cs-inner); } }
-.cs-details-label { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-details-label { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 20; font-size: var(--t-lead); line-height: 1.25; letter-spacing: -0.008em; }
 .cs-details-list { font-size: var(--t-small); color: var(--wf-muted); }
 .cs-details-chev { margin-left: auto; flex: none; color: var(--wf-accent); transition: transform 240ms var(--wf-ease-out); }
 .cs-details[open] .cs-details-chev { transform: rotate(180deg); }
 .cs-details-body { padding: 8px 0 0; }
-.cs-details-body h3 { margin: 48px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-details-body h3 { margin: 48px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 20; font-size: var(--t-lead); line-height: 1.25; letter-spacing: -0.008em; }
 .cs-details-body h3 + p, .cs-details-body p { max-width: 700px; margin: 10px 0 0; font-size: var(--t-body); line-height: 1.6; color: var(--cs-text); }
 .cs-details-body ul.cs-list { max-width: 700px; margin: 10px 0 0; padding-left: 20px; font-size: var(--t-body); line-height: 1.6; color: var(--cs-text); }
 .cs-note { display: inline-block; margin-top: 12px; padding: 10px 14px; font-size: var(--t-small); line-height: 1.45; border-radius: 12px; background: var(--cs-inner); color: var(--cs-text); }
@@ -188,7 +188,7 @@
 @media (hover: hover) and (pointer: fine) { .cs-next-panel:hover .cs-next-media img { transform: scale(1.03); } }
 .cs-next-body { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; padding: 22px 12px 8px; }
 .cs-next-title { flex: 1 1 360px; margin: 0; text-wrap: balance; font-size: var(--t-quote); line-height: 1.25; letter-spacing: -0.02em; }
-.cs-next-title b { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 48; letter-spacing: -0.03em; }
+.cs-next-title b { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 28; letter-spacing: -0.012em; }
 .cs-next-link { color: inherit; text-decoration: none; }
 .cs-next-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
 .cs-next-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; background: var(--wf-bg); color: #f4efff; font-size: var(--t-body); font-weight: 600; }

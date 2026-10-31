@@ -6,8 +6,8 @@ import { SiteBar } from '@/app/components/Site';
 import { ArrowLeft, ArrowUpRight } from '@/app/components/icons';
 
 // Building blocks for the case-study pages, in the homepage's world: the dark grape ground, panels
-// as steps in tone (no outlines, no hard shadows), Bricolage for display, Geist for text, and the
-// claim under the name as the one serif-italic accent. Styles live in app/work/case.css.
+// as steps in tone (no outlines, no hard shadows), Bricolage for headings, Geist for text. Styles live
+// in app/work/case.css.
 
 export type Status = 'LIVE' | 'LIVE MVP' | 'PRE-LAUNCH' | 'CONCEPT';
 
