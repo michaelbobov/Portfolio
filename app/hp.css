@@ -375,7 +375,8 @@ html:has(.hp) { scrollbar-color: #4a2f80 #100b1a; }
 
 .ab-title { margin: 12px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; }
 .ab-title em { font-size: 1.04em; }
-.ab-copy > p:not(.hp-label) { max-width: 34em; margin: 20px 0 0; font-size: var(--t-body); line-height: 1.6; color: #e7dff8; }
+.ab-copy > p:not(.hp-label) { max-width: 34em; margin: 20px 0 0; font-size: var(--t-body); line-height: 1.6; color: #e7dff8; text-wrap: pretty; }
+.ab-copy > p.ab-lead { font-size: var(--t-lead); line-height: 1.45; color: var(--hp-text); text-wrap: pretty; }
 .ab-copy > p a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
 @media (hover: hover) and (pointer: fine) { .ab-copy > p a:hover { color: var(--hp-accent); } }
 .ab-links { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 0; padding: 0; }

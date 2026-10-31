@@ -25,15 +25,18 @@ export default function AboutPage() {
           <div className="ab-copy">
             <p className="hp-label">The innermost layer</p>
             <h1 id="me-title" className="ab-title">Hi, I’m <em>Michael.</em></h1>
-            <p>I’m a product designer in Seattle, and I build what I design: from the first conversation with the people who need it to the code that ships.</p>
+            <p className="ab-lead">I’m a product designer in Seattle, and I like the whole job: talking with the people who have the problem, designing the answer, and writing the code that ships it.</p>
             <p>
-              I co-founded <Link href="/work/versum">Versum Health</Link>, a marketplace where uninsured patients book care from supervised dental
-              students. On the side I designed and built <Link href="/side-projects#ez-recipe">EZ Recipe</Link>, live at ezrecipe.app, and{' '}
-              <Link href="/side-projects#pdf-penguin">PDF Penguin</Link>, a PDF-to-JSON tool I made because EZ Recipe needed it.
+              <Link href="/work/versum">Versum Health</Link> started with friends skipping the dentist because of the cost. I co-founded it to connect
+              uninsured patients with supervised dental students who need them to graduate. <Link href="/side-projects#ez-recipe">EZ Recipe</Link> came
+              from home cooks asking what to make with what they already had; I shipped it on my own in two months. When it needed nutrition data
+              trapped in messy PDFs, I built <Link href="/side-projects#pdf-penguin">PDF Penguin</Link> in two weeks.
             </p>
             <p>
-              I’m Russian American, with a deep love for Japan, and above all a maker. My other About site is a Windows 3.1 desktop you can play
-              games on; it’s with my <Link href="/side-projects">side projects</Link>, and <Link href="/how-i-work">how I work</Link> is one doll over.
+              I’m Russian American, which is why there are matryoshkas everywhere here, and I have a deep love for Japan. For the less serious version
+              of me, my{' '}
+              <a href="https://about.michaelbobov.com/" target="_blank" rel="noopener noreferrer">other About site<span className="sr-only"> (opens in a new tab)</span></a>{' '}
+              is a Windows 3.1 desktop you can play Minesweeper on.
             </p>
             <ul className="ab-links">
               <li>
