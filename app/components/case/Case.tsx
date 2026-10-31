@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import FullSizeLink from '@/app/components/FullSizeLink';
@@ -44,22 +44,6 @@ export function CaseHero({
   );
 }
 
-// Role / Timeline / Team / Skills, kept near the top in a compact grid
-export function MetaGrid({ items }: { items: { label: string; lines: string[] }[] }) {
-  return (
-    <dl className="cs-meta cs-col">
-      {items.map((it) => (
-        <div key={it.label}>
-          <dt>{it.label}</dt>
-          {it.lines.map((l) => (
-            <dd key={l}>{l}</dd>
-          ))}
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 // How each status reads on the page
 const STATUS: Record<Status, { label: string; tone: 'live' | 'pre' | 'concept' }> = {
   LIVE: { label: 'Live', tone: 'live' },
@@ -68,43 +52,59 @@ const STATUS: Record<Status, { label: string; tone: 'live' | 'pre' | 'concept' }
   CONCEPT: { label: 'Concept', tone: 'concept' },
 };
 
-// The short version: four rows in one panel, its title and the status chip on top
-export function Tldr({ status, rows }: { status: Status; rows: { label: string; text: ReactNode }[] }) {
+// At a glance: what a reviewer needs in one screen. The facts (role, team, time, where it stands),
+// then the problem, what I did and the outcome, two or three sentences each.
+export function Glance({
+  facts,
+  status,
+  problem,
+  did,
+  outcome,
+}: {
+  facts: { label: string; value: ReactNode }[];
+  status: Status;
+  problem: ReactNode;
+  did: ReactNode;
+  outcome: ReactNode;
+}) {
   const { label, tone } = STATUS[status];
   return (
-    <section className="cs-tldr cs-col" aria-labelledby="tldr-title">
-      <div className="cs-tldr-head">
-        <h2 id="tldr-title" className="cs-tldr-title">The short version</h2>
-        <span className={`cs-chip cs-chip-${tone}`}>{label}</span>
-      </div>
-      <dl className="cs-tldr-rows">
-        {rows.map((r) => (
-          <div key={r.label} className="cs-tldr-row">
-            <dt>{r.label}</dt>
-            <dd>{r.text}</dd>
+    <section className="cs-glance cs-col-wide" aria-labelledby="glance-title">
+      <h2 id="glance-title" className="sr-only">At a glance</h2>
+      <dl className="cs-glance-facts">
+        {facts.map((f) => (
+          <div key={f.label}>
+            <dt>{f.label}</dt>
+            <dd>{f.value}</dd>
           </div>
         ))}
+        <div>
+          <dt>Status</dt>
+          <dd><span className={`cs-chip cs-chip-${tone}`}>{label}</span></dd>
+        </div>
       </dl>
+      <div className="cs-glance-story">
+        <div>
+          <h3>The problem</h3>
+          <p>{problem}</p>
+        </div>
+        <div>
+          <h3>What I did</h3>
+          <p>{did}</p>
+        </div>
+        <div className="is-outcome">
+          <h3>The outcome</h3>
+          <p>{outcome}</p>
+        </div>
+      </div>
     </section>
   );
 }
 
 // A section: a small grape label, then the claim as the H2
-export function Section({
-  id,
-  label,
-  title,
-  children,
-  decisions = false,
-}: {
-  id: string;
-  label: string;
-  title: string;
-  children: ReactNode;
-  decisions?: boolean;
-}) {
+export function Section({ id, label, title, children }: { id: string; label: string; title: string; children: ReactNode }) {
   return (
-    <section className="cs-section" id={id} aria-labelledby={`${id}-title`} data-decisions={decisions || undefined}>
+    <section className="cs-section" id={id} aria-labelledby={`${id}-title`}>
       <div className="cs-col">
         <p className="cs-label" aria-hidden="true">{label}</p>
         <h2 id={`${id}-title`} className="cs-h2">{title}</h2>
@@ -118,30 +118,121 @@ export function Prose({ children }: { children: ReactNode }) {
   return <div className="cs-prose cs-col">{children}</div>;
 }
 
-export function Decision({ n, title, children }: { n: number; title: string; children: ReactNode }) {
+type Pic = Img & { fit?: 'cover' | 'contain'; bg?: string; /** object-position, for a crop */ position?: string };
+type Step = {
+  name: string;
+  did: ReactNode;
+  /** What came out of it, marked in gold */
+  found?: ReactNode;
+  /** The step's artifact: pictures (each opens full size), a quote, or a flow as chips */
+  pics?: Pic[];
+  quote?: { text: string; who: string };
+  flows?: { who: string; steps: string[] }[];
+};
+
+// A picture that opens at full size, with no visible label (for small artifacts and decision screens)
+function Zoom({ img, className = '', sizes }: { img: Pic; className?: string; sizes: string }) {
   return (
-    <div className="cs-decision">
-      <p className="cs-decision-tag" aria-hidden="true">Decision {n}</p>
-      <h3 className="cs-decision-title">
-        <span className="sr-only">Decision {n}: </span>
-        {title}
-      </h3>
-      <div className="cs-decision-body">{children}</div>
+    <a className={`cs-zoom ${className}`} href={encodeURI(img.src)} target="_blank" rel="noopener noreferrer" style={img.bg ? { background: img.bg } : undefined}>
+      <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes={sizes} quality={90} className={img.fit === 'contain' ? 'is-contain' : undefined} style={img.position ? { objectPosition: img.position } : undefined} />
+      <span className="sr-only"> (opens full size in a new tab)</span>
+    </a>
+  );
+}
+
+// The process, kept in view: one row of steps, each with its artifact, what I did and what I found
+export function Process({ title, steps }: { title: string; steps: Step[] }) {
+  return (
+    <section className="cs-section" id="process" aria-labelledby="process-title">
+      <div className="cs-col">
+        <p className="cs-label" aria-hidden="true">Process</p>
+        <h2 id="process-title" className="cs-h2">{title}</h2>
+      </div>
+      <ol className="cs-steps cs-col-wide" style={{ '--n': steps.length } as CSSProperties}>
+        {steps.map((st) => (
+          <li key={st.name} className="cs-step">
+            <div className="cs-step-media">
+              {st.pics ? (
+                <div className={`cs-step-pics is-${st.pics.length}`}>
+                  {st.pics.map((p) => <Zoom key={p.src} img={p} sizes="(min-width: 1100px) 220px, (min-width: 600px) 45vw, 90vw" />)}
+                </div>
+              ) : st.quote ? (
+                <figure className="cs-step-quote">
+                  <blockquote>“{st.quote.text}”</blockquote>
+                  <figcaption>{st.quote.who}</figcaption>
+                </figure>
+              ) : st.flows ? (
+                <div className="cs-step-flows">
+                  {st.flows.map((f) => (
+                    <div key={f.who}>
+                      <p>{f.who}</p>
+                      <ol>{f.steps.map((x) => <li key={x}>{x}</li>)}</ol>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <h3 className="cs-step-name">{st.name}</h3>
+            <p className="cs-step-did">{st.did}</p>
+            {st.found && <p className="cs-step-found">{st.found}</p>}
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+// A key decision, shown with the screen it produced: the decision and why on one side, the screens
+// (and a caption) on the other
+export function Choice({ n, title, why, shots, caption }: { n: number; title: string; why: ReactNode; shots?: { img: Pic; phone?: boolean }[]; caption?: ReactNode }) {
+  const phones = shots?.some((x) => x.phone);
+  return (
+    <div className={`cs-choice${shots?.length ? '' : ' is-text'}`}>
+      <div className="cs-choice-text">
+        <p className="cs-choice-tag" aria-hidden="true">Decision {n}</p>
+        <h3 className="cs-choice-title">
+          <span className="sr-only">Decision {n}: </span>
+          {title}
+        </h3>
+        <p className="cs-choice-why">{why}</p>
+      </div>
+      {shots?.length ? (
+        <figure className={`cs-choice-media${phones ? ' is-phones' : ''}`}>
+          <div className="cs-choice-shots">
+            {shots.map((x) => <Zoom key={x.img.src} img={x.img} className="cs-frame" sizes={phones ? '(min-width: 900px) 220px, 42vw' : '(min-width: 900px) 600px, 90vw'} />)}
+          </div>
+          {caption && <figcaption className="cs-caption">{caption}</figcaption>}
+        </figure>
+      ) : null}
     </div>
   );
 }
 
-export function Decisions({ children }: { children: ReactNode }) {
-  return <div className="cs-decisions cs-col">{children}</div>;
+export function Choices({ children }: { children: ReactNode }) {
+  return <div className="cs-choices cs-col-wide">{children}</div>;
 }
 
-// A verbatim, attributed quote, as a quiet speech bubble (at most one per page)
-export function Quote({ children, who }: { children: ReactNode; who: string }) {
+// Where it stands: what shipped, what I'd measure, what's next, and the one thing I learned
+export function Outcome({ title, shipped, measure, next, learned }: { title: string; shipped: ReactNode[]; measure?: ReactNode[]; next: ReactNode[]; learned: ReactNode }) {
+  const col = (h: string, items: ReactNode[]) => (
+    <div>
+      <h3>{h}</h3>
+      <ul>{items.map((it, i) => <li key={i}>{it}</li>)}</ul>
+    </div>
+  );
   return (
-    <figure className="cs-quote">
-      <blockquote>{children}</blockquote>
-      <figcaption>{who}</figcaption>
-    </figure>
+    <section className="cs-section" id="outcome" aria-labelledby="outcome-title">
+      <div className="cs-col">
+        <p className="cs-label" aria-hidden="true">Outcome</p>
+        <h2 id="outcome-title" className="cs-h2">{title}</h2>
+      </div>
+      <div className={`cs-outcome cs-col-wide${measure ? ' has-3' : ''}`}>
+        {col('Shipped', shipped)}
+        {measure && col('What I’ll measure', measure)}
+        {col('Next', next)}
+      </div>
+      <p className="cs-learned cs-col-wide"><span>What I learned</span>{learned}</p>
+    </section>
   );
 }
 
@@ -198,7 +289,7 @@ export function ProcessDetails({ list, children }: { list: string; children: Rea
     <details className="cs-details cs-col-wide">
       <summary>
         <span className="cs-details-label">
-          Process details
+          More from the process
         </span>
         <span className="sr-only">: </span>
         <span className="cs-details-list">{list}</span>
@@ -220,6 +311,7 @@ export function NextCase({
   bg,
   fit = 'cover',
   position,
+  section = 'work',
 }: {
   href: string;
   name: string;
@@ -229,7 +321,10 @@ export function NextCase({
   fit?: 'contain' | 'cover';
   /** object-position for a cropped image, e.g. '50% 30%' */
   position?: string;
+  /** Where "back" goes: the section this case study lives in */
+  section?: 'work' | 'side';
 }) {
+  const back = section === 'side' ? { href: '/side-projects', label: 'All side projects' } : { href: '/work', label: 'All work' };
   return (
     <nav className="cs-next cs-col-wide" aria-label="Next case study">
       <div className="cs-next-panel">
@@ -247,9 +342,9 @@ export function NextCase({
           </span>
         </div>
       </div>
-      <Link href="/#work" className="cs-allwork">
+      <Link href={back.href} className="cs-allwork">
         <ArrowLeft size={18} />
-        All work
+        {back.label}
       </Link>
     </nav>
   );

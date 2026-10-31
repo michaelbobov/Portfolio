@@ -4,6 +4,8 @@ import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import './site.css'
 import { SiteClose } from './components/Site'
+import HideOnHome from './components/HideOnHome'
+import Dock from './components/Dock'
 import MotionProvider from './components/MotionProvider'
 
 // Geist for text and UI, Bricolage Grotesque for display (headlines, section and panel titles, the
@@ -74,7 +76,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full">
+    // The script marks that scripts run, before the first paint, so the flat dolls can wait unseen for
+    // the 3D ones (hp.css); it changes the class after the server's, hence suppressHydrationWarning
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body className={`${GeistSans.variable} ${bricolage.variable} ${instrumentSerif.variable} font-sans h-full flex flex-col`}>
         <a
           href="#main-content"
@@ -86,7 +93,8 @@ export default function RootLayout({
           <div className="flex-1">
             {children}
           </div>
-          <SiteClose />
+          <HideOnHome><SiteClose /></HideOnHome>
+          <HideOnHome><Dock /></HideOnHome>
         </MotionProvider>
       </body>
     </html>

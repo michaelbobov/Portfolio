@@ -25,13 +25,15 @@
     --ring: 12 60% 50%;
     --radius: 0.5rem;
 
-    /* Dark grape palette, site-wide: the ground, a card one step up, near-white ink, a lilac accent */
-    --wf-bg: #140b24;
+    /* Dark grape palette, site-wide: the ground (a quiet grape, nearly ink, so the purple of the dolls,
+       the cards and the accent stands out on it), a card one step up, near-white ink, a lilac accent */
+    --wf-bg: #100b1a;
     --wf-sheet: #1f1236;
     --wf-ink: #f4efff;
     --wf-muted: #b4a7d6;
     --wf-line: rgba(233, 224, 255, 0.12);
     --wf-accent: #a585f7;   /* lilac: links, labels, the one accent phrase */
+    --wf-gold: #f0bd5a;     /* folk gold, used sparingly: the dolls' flower hearts, pre-launch, the close */
     --wf-yellow: #ffd84d;   /* comic yellow: bursts, caption boxes, halftone */
     --wf-glove: #ff4d4d;
     --wf-cheek: #ff8fb8;
@@ -43,6 +45,14 @@
     --wf-pop-4: #7cc8ff;
     --wf-pop-5: #ffa45c;
     --wf-pop-6: #c9b6ff;
+    /* Type: a few sizes, far apart, used everywhere. The display titles size themselves; a heading is
+       the display face a notch wider and lighter; everything else is the text face. */
+    --t-small: 14px;                       /* labels, meta, captions, the nav */
+    --t-body: 17px;                        /* running text, links and buttons */
+    --t-lead: 20px;                        /* the line under a title; small headings */
+    --t-quote: clamp(22px, 2vw, 28px);     /* a person's words, set large */
+    --t-head: clamp(32px, 3.2vw, 46px);    /* card names, section headings */
+    --t-display: clamp(52px, 7.4vw, 116px); /* page titles and the close */
     --wf-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --wf-spring: cubic-bezier(0.34, 1.7, 0.64, 1);
   }

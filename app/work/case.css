@@ -10,86 +10,141 @@
 .cs :focus-visible { outline: 2px solid var(--wf-accent); outline-offset: 4px; border-radius: 6px; }
 .cs-col { max-width: 700px; }
 .cs-col-wide { max-width: 1120px; }
-/* From tablet up, the reading column sits in the middle and figures run a little wider around it */
+/* From tablet up, the wide column sits in the middle, and the reading column starts on its left edge,
+   so the whole page has one left edge to skim down */
 @media (min-width: 768px) {
-  .cs-col, .cs-col-wide, .cs-figure-hero, .cs-figure-media, .cs-figure-narrow, .cs-phones, .cs-grid2 { margin-left: auto !important; margin-right: auto !important; }
-  .cs-phones { max-width: 960px; }
+  .cs-col-wide, .cs-figure-hero, .cs-figure-media, .cs-phones, .cs-grid2 { margin-left: auto !important; margin-right: auto !important; }
+  .cs-col, .cs-figure-narrow { margin-left: max(0px, calc((100% - 1120px) / 2)) !important; margin-right: auto !important; }
+  .cs-phones { max-width: 1120px; }
 }
 
 /* ---------- hero: the name, the claim as the one accent, then what it is ---------- */
 .cs-hero { padding-top: 72px; }
-.cs-kicker { margin: 0 0 20px; font-size: 15px; font-weight: 500; color: var(--wf-muted); }
-.cs-h1 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(52px, 7.4vw, 116px); line-height: 0.92; letter-spacing: -0.04em; color: var(--wf-ink); }
-.cs-claim { display: block; margin-top: 16px; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(28px, 3vw, 42px); line-height: 1.1; letter-spacing: -0.01em; color: var(--wf-accent); font-variation-settings: normal; }
-.cs-disclaimer { margin: 16px 0 0; font-size: 15px; line-height: 1.5; }
-.cs-summary { max-width: 700px; margin: 24px 0 0; font-size: 20px; line-height: 1.5; color: var(--wf-muted); }
-.cs-live { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; font-size: 17px; font-weight: 600; color: var(--wf-ink); text-decoration: underline; text-decoration-color: var(--wf-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
+.cs-kicker { margin: 0 0 20px; font-size: var(--t-small); font-weight: 500; color: var(--wf-muted); }
+.cs-h1 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; color: var(--wf-ink); }
+.cs-claim { display: block; margin-top: 16px; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; font-size: var(--t-head); line-height: 1.1; letter-spacing: -0.01em; color: var(--wf-accent); font-variation-settings: normal; }
+.cs-disclaimer { margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; }
+.cs-summary { max-width: 700px; margin: 24px 0 0; font-size: var(--t-lead); line-height: 1.45; color: var(--cs-text); }
+.cs-live { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; font-size: var(--t-body); font-weight: 600; color: var(--wf-ink); text-decoration: underline; text-decoration-color: var(--wf-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
 @media (hover: hover) and (pointer: fine) { .cs-live:hover { color: var(--wf-accent); } }
 
-/* Role / Timeline / Team / Skills */
-.cs-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px 24px; margin: 36px 0 0; padding: 0; }
-.cs-meta dt { margin-bottom: 6px; font-size: 14px; font-weight: 600; color: var(--wf-accent); }
-.cs-meta dd { margin: 0; font-size: 15px; line-height: 1.45; color: var(--cs-text); }
-@media (max-width: 767px) { .cs-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-
-/* ---------- the short version: one panel, one step up in tone ---------- */
-.cs-tldr { margin-top: 40px; border-radius: 24px; background: var(--cs-card); }
-.cs-tldr-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 24px 28px 0; }
-.cs-tldr-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 96; font-size: 24px; line-height: 1; letter-spacing: -0.02em; }
-.cs-chip { flex: none; white-space: nowrap; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; line-height: 1.2; }
-.cs-chip-live { background: #1f9d63; color: #fff; }
-.cs-chip-pre { background: #c7b4fb; color: #140b24; }
-.cs-chip-concept { color: var(--wf-ink); box-shadow: inset 0 0 0 1.5px rgba(244, 239, 255, 0.45); }
-.cs-tldr-rows { margin: 0; padding: 10px 28px 18px; }
-.cs-tldr-row { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 16px; padding: 14px 0; }
-.cs-tldr-row + .cs-tldr-row { box-shadow: 0 -1px 0 var(--wf-line); }
-.cs-tldr-row dt { font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--wf-accent); }
-.cs-tldr-row dd { margin: 0; font-size: 16px; line-height: 1.55; color: var(--cs-text); }
-@media (max-width: 767px) {
-  .cs-tldr-head { padding: 20px 20px 0; }
-  .cs-tldr-rows { padding: 6px 20px 14px; }
-  .cs-tldr-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-}
+/* The same quiet status pill as the project cards: a dot says where it stands */
+.cs-chip { flex: none; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; padding: 5px 12px; border-radius: 999px; background: rgba(244, 239, 255, 0.07); color: var(--wf-ink); font-size: var(--t-small); font-weight: 600; line-height: 1.2; }
+.cs-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wf-muted); }
+.cs-chip-live::before { background: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18); }
+.cs-chip-pre::before { background: var(--wf-gold); }
 
 /* ---------- sections: a small lilac label, then the claim ---------- */
 .cs-section { padding-top: 112px; }
 @media (max-width: 767px) { .cs-section { padding-top: 80px; } }
-.cs-label { margin: 0 0 12px; font-size: 15px; font-weight: 600; color: var(--wf-accent); }
-.cs-h2 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.02; letter-spacing: -0.035em; color: var(--wf-ink); }
+.cs-label { margin: 0 0 12px; font-size: var(--t-small); font-weight: 600; color: var(--wf-accent); }
+.cs-h2 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-head); line-height: 1.02; letter-spacing: -0.03em; color: var(--wf-ink); }
 .cs-prose { margin-top: 22px; }
-.cs-prose p { margin: 0 0 18px; font-size: 18px; line-height: 1.65; color: var(--cs-text); }
+.cs-prose p { margin: 0 0 18px; font-size: var(--t-body); line-height: 1.65; color: var(--cs-text); }
 .cs-prose p:last-child { margin-bottom: 0; }
 .cs-muted { color: var(--wf-muted); }
 
-/* Decisions: stacked panels, one step up in tone */
-.cs-decisions { display: grid; gap: 16px; margin-top: 28px; }
-.cs-decision { padding: 22px 24px; border-radius: 20px; background: var(--cs-card); }
-.cs-decision-tag { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: var(--wf-accent); }
-.cs-decision-title { margin: 0 0 8px; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 48; font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
-.cs-decision-body p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--cs-text); }
-.cs-decision-body p + p { margin-top: 8px; }
+/* ---------- at a glance: the facts, then problem / what I did / outcome ---------- */
+.cs-glance { margin-top: 56px; padding: 26px 30px 30px; border-radius: 24px; background: var(--cs-card); }
+.cs-glance-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 28px; margin: 0; padding-bottom: 22px; border-bottom: 1px solid var(--wf-line); }
+.cs-glance-facts dt { font-size: var(--t-small); color: var(--wf-muted); }
+.cs-glance-facts dd { margin: 6px 0 0; font-size: var(--t-body); font-weight: 500; line-height: 1.4; color: var(--wf-ink); }
+.cs-glance-story { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 36px; padding-top: 24px; }
+.cs-glance-story h3 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-glance-story .is-outcome h3 { color: var(--wf-accent); }
+.cs-glance-story p { margin: 8px 0 0; font-size: var(--t-body); line-height: 1.55; color: var(--cs-text); text-wrap: pretty; }
+@media (max-width: 899px) {
+  .cs-glance { padding: 22px 22px 24px; }
+  .cs-glance-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cs-glance-story { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
 
-/* A verbatim quote, set like the insight on the homepage's cards (at most one per page) */
-.cs-quote { margin: 32px auto 8px; padding: 28px 30px; max-width: 700px; border-radius: 24px; background: var(--cs-inner); }
-.cs-quote blockquote { margin: 0; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.25; color: var(--wf-ink); text-wrap: pretty; }
-.cs-quote figcaption { margin-top: 12px; font-size: 14px; color: var(--wf-muted); }
+/* ---------- process: one row of steps, each with its artifact; a thin line runs on to the next ---------- */
+.cs-steps { list-style: none; display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 32px 20px; margin-top: 32px; padding: 0; }
+.cs-step { display: flex; flex-direction: column; min-width: 0; }
+.cs-step-media { overflow: hidden; aspect-ratio: 4 / 3; border-radius: 14px; background: var(--cs-card); }
+.cs-step-pics { display: grid; height: 100%; gap: 3px; }
+.cs-step-pics.is-2 { grid-template-columns: 1fr 1fr; }
+.cs-step-pics.is-3 { grid-template-columns: 1fr 1fr 1fr; }
+.cs-zoom { position: relative; display: block; overflow: hidden; background: #fff; }
+.cs-step-pics .cs-zoom { height: 100%; }
+.cs-zoom img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: scale 500ms var(--wf-ease-out); }
+.cs-zoom img.is-contain { object-fit: contain; }
+@media (hover: hover) and (pointer: fine) { .cs-step .cs-zoom:hover img { scale: 1.04; } }
+.cs-step-quote { display: flex; flex-direction: column; justify-content: space-between; height: 100%; margin: 0; padding: 16px 16px 14px; background: var(--cs-inner); }
+.cs-step-quote blockquote { margin: 0; font-size: 16px; line-height: 1.35; letter-spacing: -0.01em; color: var(--wf-ink); text-wrap: pretty; }
+.cs-step-quote figcaption { margin-top: 10px; font-size: 13px; line-height: 1.35; color: var(--wf-muted); }
+.cs-step-flows { display: grid; align-content: center; gap: 14px; height: 100%; padding: 16px; background: var(--cs-inner); }
+.cs-step-flows p { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--wf-muted); }
+.cs-step-flows ol { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.cs-step-flows li { padding: 4px 9px; border-radius: 999px; background: rgba(244, 239, 255, 0.1); font-size: 13px; font-weight: 500; color: var(--wf-ink); }
+.cs-step-name { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-step:not(:last-child) .cs-step-name::after { content: ""; flex: 1; height: 2px; margin-right: -20px; border-radius: 1px; background: linear-gradient(90deg, rgba(165, 133, 247, 0.6), rgba(165, 133, 247, 0.12)); }
+.cs-step-did { margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--cs-text); text-wrap: pretty; }
+.cs-step-found { margin: 10px 0 0; font-size: var(--t-small); font-weight: 500; line-height: 1.45; color: var(--wf-ink); text-wrap: pretty; }
+/* What came out of the step, led by a gold dot */
+.cs-step-found::before { content: ""; display: inline-block; width: 7px; height: 7px; margin: 0 8px 1px 0; border-radius: 50%; background: var(--wf-gold); vertical-align: middle; }
+@media (max-width: 1099px) { .cs-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } .cs-step:nth-child(3n) .cs-step-name::after { display: none; } }
+@media (max-width: 767px) { .cs-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cs-step:nth-child(3n) .cs-step-name::after { display: block; } .cs-step:nth-child(2n) .cs-step-name::after { display: none; } }
+/* On a phone the steps are a row you swipe through, each most of the screen wide (the line still points on) */
+@media (max-width: 599px) {
+  .cs-steps { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin-right: -16px; padding: 0 16px 6px 0; scrollbar-width: none; }
+  .cs-steps::-webkit-scrollbar { display: none; }
+  .cs-step { flex: 0 0 78%; scroll-snap-align: start; }
+  .cs-step-media { aspect-ratio: 16 / 10; }
+  .cs-step .cs-step-name::after { display: block !important; margin-right: -14px; }
+  .cs-step:last-child .cs-step-name::after { display: none !important; }
+}
+
+/* ---------- key decisions: each beside the screen it produced ---------- */
+.cs-choices { display: grid; gap: 16px; margin-top: 32px; }
+.cs-choice { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 40px; align-items: center; padding: 28px; border-radius: 24px; background: var(--cs-card); }
+.cs-choice.is-text { grid-template-columns: minmax(0, 1fr); }
+.cs-choice-tag { margin: 0 0 8px; font-size: var(--t-small); font-weight: 600; color: var(--wf-accent); }
+.cs-choice-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 48; font-size: var(--t-quote); line-height: 1.1; letter-spacing: -0.025em; text-wrap: balance; }
+.cs-choice-why { max-width: 34em; margin: 12px 0 0; font-size: var(--t-body); line-height: 1.55; color: var(--cs-text); text-wrap: pretty; }
+.cs-choice-media { margin: 0; }
+.cs-choice-shots { display: flex; justify-content: center; gap: 16px; }
+.cs-choice-shots .cs-frame { flex: 1 1 0; min-width: 0; border-radius: 12px; }
+.cs-choice-shots .cs-frame img { height: auto; }
+.cs-choice-media.is-phones .cs-frame { flex: 0 1 210px; border-radius: 22px; }
+.cs-choice-media .cs-caption { margin-top: 12px; text-align: center; margin-inline: auto; }
+@media (hover: hover) and (pointer: fine) { .cs-choice-shots .cs-frame:hover { transform: translateY(-3px); } }
+@media (max-width: 899px) {
+  .cs-choice { grid-template-columns: minmax(0, 1fr); padding: 22px; }
+  .cs-choice-media.is-phones .cs-frame { flex-basis: 46%; }
+}
+
+/* ---------- outcome: shipped / measure / next, then the one thing learned ---------- */
+.cs-outcome { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.cs-outcome.has-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cs-outcome > div { padding: 22px 24px 24px; border-radius: 20px; background: var(--cs-card); }
+.cs-outcome h3 { margin: 0; font-size: var(--t-small); font-weight: 600; color: var(--wf-accent); }
+.cs-outcome ul { margin: 12px 0 0; padding-left: 18px; font-size: var(--t-body); line-height: 1.5; color: var(--cs-text); }
+.cs-outcome li + li { margin-top: 6px; }
+.cs-outcome li::marker { color: var(--wf-muted); }
+.cs-learned { margin: 32px 0 0; font-size: var(--t-quote); line-height: 1.3; letter-spacing: -0.015em; color: var(--wf-ink); text-wrap: pretty; }
+.cs-learned span { display: block; margin-bottom: 10px; font-size: var(--t-small); font-weight: 600; letter-spacing: 0; color: var(--wf-gold); }
+@media (max-width: 899px) { .cs-outcome, .cs-outcome.has-3 { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- figures: the product's own screens, framed softly ---------- */
 .cs-figure { margin: 40px 0 0; }
-.cs-figure-hero { max-width: 900px; margin-top: 48px; }
-.cs-figure-media { max-width: 980px; }
+.cs-figure-hero { max-width: 1120px; margin-top: 48px; }
+.cs-figure-media { max-width: 1120px; }
 .cs-figure-narrow { max-width: 700px; }
 .cs-frame { display: block; overflow: hidden; border-radius: 16px; background: var(--cs-card); box-shadow: 0 0 0 1px var(--wf-line), 0 30px 60px -30px rgba(0, 0, 0, 0.7); transition: transform 320ms var(--wf-ease-out); }
 .cs-frame img { display: block; width: 100%; height: auto; }
-.cs-caption { max-width: 700px; margin-top: 14px; font-size: 15px; line-height: 1.5; color: var(--wf-muted); }
+.cs-caption { max-width: 700px; margin-top: 14px; font-size: var(--t-small); line-height: 1.5; color: var(--wf-muted); }
 .cs-full { position: relative; display: block; color: inherit; text-decoration: none; } /* keeps its sr-only text inside scroll rows */
-.cs-full-label { display: block; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--wf-accent); }
+.cs-full-label { display: block; margin-top: 10px; font-size: var(--t-small); font-weight: 600; color: var(--wf-accent); }
 @media (hover: hover) and (pointer: fine) {
   .cs-full:hover .cs-frame { transform: translateY(-3px); }
   .cs-full:hover .cs-full-label { text-decoration: underline; text-underline-offset: 3px; }
 }
 .cs-phones { list-style: none; margin: 40px 0 0; padding: 0 0 6px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 240px)); gap: 28px; }
 .cs-figure-phone { margin: 0; }
+/* A motion piece in the frame: wide, on its own colour */
+.cs-motion .mv { position: relative; display: block; aspect-ratio: 21 / 9; }
 .cs-figure-phone .cs-frame { border-radius: 24px; }
 @media (max-width: 599px) {
   .cs-phones { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; margin-right: -16px; padding-right: 16px; }
@@ -98,7 +153,7 @@
 
 /* Plain data table */
 .cs-table-wrap { margin-top: 24px; overflow-x: auto; }
-.cs-table { width: 100%; max-width: 700px; border-collapse: collapse; font-size: 15px; line-height: 1.45; font-variant-numeric: tabular-nums; color: var(--cs-text); }
+.cs-table { width: 100%; max-width: 700px; border-collapse: collapse; font-size: var(--t-small); line-height: 1.45; font-variant-numeric: tabular-nums; color: var(--cs-text); }
 .cs-table th, .cs-table td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--wf-line); }
 .cs-table thead th { font-weight: 600; color: var(--wf-ink); border-bottom-color: rgba(244, 239, 255, 0.35); }
 .cs-table tbody th { font-weight: 600; color: var(--wf-ink); }
@@ -109,16 +164,16 @@
 .cs-details summary::-webkit-details-marker { display: none; }
 .cs-details summary:active { transform: scale(0.995); }
 @media (hover: hover) and (pointer: fine) { .cs-details summary:hover { background: var(--cs-inner); } }
-.cs-details-label { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 48; font-size: 20px; letter-spacing: -0.02em; }
-.cs-details-list { font-size: 15px; color: var(--wf-muted); }
+.cs-details-label { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-details-list { font-size: var(--t-small); color: var(--wf-muted); }
 .cs-details-chev { margin-left: auto; flex: none; color: var(--wf-accent); transition: transform 240ms var(--wf-ease-out); }
 .cs-details[open] .cs-details-chev { transform: rotate(180deg); }
 .cs-details-body { padding: 8px 0 0; }
-.cs-details-body h3 { margin: 48px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 48; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; }
-.cs-details-body h3 + p, .cs-details-body p { max-width: 700px; margin: 10px 0 0; font-size: 17px; line-height: 1.6; color: var(--cs-text); }
-.cs-details-body ul.cs-list { max-width: 700px; margin: 10px 0 0; padding-left: 20px; font-size: 17px; line-height: 1.6; color: var(--cs-text); }
-.cs-note { display: inline-block; margin-top: 12px; padding: 10px 14px; font-size: 15px; line-height: 1.45; border-radius: 12px; background: var(--cs-inner); color: var(--cs-text); }
-.cs-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 980px; }
+.cs-details-body h3 { margin: 48px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.cs-details-body h3 + p, .cs-details-body p { max-width: 700px; margin: 10px 0 0; font-size: var(--t-body); line-height: 1.6; color: var(--cs-text); }
+.cs-details-body ul.cs-list { max-width: 700px; margin: 10px 0 0; padding-left: 20px; font-size: var(--t-body); line-height: 1.6; color: var(--cs-text); }
+.cs-note { display: inline-block; margin-top: 12px; padding: 10px 14px; font-size: var(--t-small); line-height: 1.45; border-radius: 12px; background: var(--cs-inner); color: var(--cs-text); }
+.cs-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 1120px; }
 .cs-grid2 .cs-figure { margin-top: 24px; }
 @media (max-width: 599px) { .cs-grid2 { grid-template-columns: minmax(0, 1fr); } }
 
@@ -132,14 +187,14 @@
 .cs-next-media img { transition: transform 600ms var(--wf-ease-out); }
 @media (hover: hover) and (pointer: fine) { .cs-next-panel:hover .cs-next-media img { transform: scale(1.03); } }
 .cs-next-body { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; padding: 22px 12px 8px; }
-.cs-next-title { flex: 1 1 360px; margin: 0; text-wrap: balance; font-size: clamp(22px, 2vw, 28px); line-height: 1.25; letter-spacing: -0.02em; }
-.cs-next-title b { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; letter-spacing: -0.03em; }
+.cs-next-title { flex: 1 1 360px; margin: 0; text-wrap: balance; font-size: var(--t-quote); line-height: 1.25; letter-spacing: -0.02em; }
+.cs-next-title b { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 48; letter-spacing: -0.03em; }
 .cs-next-link { color: inherit; text-decoration: none; }
 .cs-next-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.cs-next-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; background: #140b24; color: #f4efff; font-size: 15px; font-weight: 600; }
+.cs-next-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; background: var(--wf-bg); color: #f4efff; font-size: var(--t-body); font-weight: 600; }
 .cs-next-btn svg { transition: transform 200ms var(--wf-ease-out); }
 @media (hover: hover) and (pointer: fine) { .cs-next-panel:hover .cs-next-btn svg { transform: translate(2px, -2px); } }
-.cs-allwork { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; font-size: 16px; font-weight: 600; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
+.cs-allwork { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; font-size: var(--t-body); font-weight: 600; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
 @media (hover: hover) and (pointer: fine) { .cs-allwork:hover { color: var(--wf-ink); } }
 
 @media (prefers-reduced-motion: reduce) {

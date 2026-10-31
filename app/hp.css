@@ -13,7 +13,7 @@
 */
 
 .hp {
-  --hp-ground: #140b24;
+  --hp-ground: #100b1a;
   --hp-card: #1f1236;
   --hp-inner: #2b1a4b;
   --hp-text: #f4efff;
@@ -34,138 +34,200 @@
   color: var(--hp-text);
   overflow-x: clip;
 }
-html:has(.hp), html:has(.hp) body { background: #140b24; }
-html:has(.hp) { scrollbar-color: #4a2f80 #140b24; }
+html:has(.hp), html:has(.hp) body { background: #100b1a; }
+html:has(.hp) { scrollbar-color: #4a2f80 #100b1a; }
 .hp ::selection { background: rgba(165, 133, 247, 0.35); color: #fff; }
 .hp :focus-visible { outline: 2px solid var(--hp-accent); outline-offset: 4px; border-radius: 6px; }
 .hp em { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--hp-accent); }
 .hp-wrap { max-width: 1440px; margin-inline: auto; padding-inline: clamp(16px, 3.4vw, 48px); }
 
-/* ---------- hero: the headline and lede, the set of dolls beside it ---------- */
-.hp-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; padding-top: 72px; padding-bottom: 88px; }
-@media (min-width: 1000px) { .hp-hero { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; column-gap: 48px; padding-top: 120px; padding-bottom: 112px; } }
-.hp-h1 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(64px, 9.4vw, 144px); line-height: 0.9; letter-spacing: -0.04em; }
+/* ---------- the homepage: one sentence with the dolls in the middle of it ---------- */
+/* "Design," | the set | "one layer deeper.", in the middle of the screen; the nav floats under it all.
+   Phones stack the three, centred. */
+/* The sentence gets more room than the pages' text column on big screens, so each half keeps to its
+   lines ("one layer" never breaks) */
+.hp-wrap.hp-stage { max-width: 1640px; }
+.hp-stage { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: clamp(20px, 2.6vw, 44px); min-height: calc(100svh - 84px); padding-block: 24px 64px; box-sizing: border-box; }
+.hp-side-l { justify-self: end; text-align: right; }
+.hp-side-r { justify-self: start; }
+.hp-word { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(44px, 6vw, 100px); line-height: 0.9; letter-spacing: -0.04em; }
+.hp-word em { font-size: 1.04em; line-height: 0.95; letter-spacing: -0.03em; }
+@media (max-width: 899px) {
+  .hp-stage { grid-template-columns: minmax(0, 1fr); justify-items: center; row-gap: 28px; text-align: center; padding-top: 32px; }
+  .hp-side-l, .hp-side-r { justify-self: center; text-align: center; }
+  .hp-word { font-size: clamp(52px, 15vw, 76px); }
+}
 /* Each line sits in its own mask (with room for descenders and the italic's overhang) */
-.hp-line { display: block; overflow: hidden; padding: 0 0.12em 0.1em 0; margin: 0 -0.12em -0.1em 0; }
+.hp-line { display: block; overflow: hidden; white-space: nowrap; padding: 0 0.12em 0.1em 0; margin: 0 -0.12em -0.1em 0; }
+.hp-side-l .hp-line { padding: 0 0 0.1em 0.12em; margin: 0 0 -0.1em -0.12em; }
 .hp-line > * { display: block; }
+.hp-line > .sweep { display: inline-block; }
+/* Its mask reaches down to the tail of the y */
+.hp-line:has(> .sweep) { padding-bottom: 0.3em; margin-bottom: -0.3em; }
 .hp-line.hp-deep { overflow: visible; }
 .hp-ch { display: inline-block; transform-origin: 50% 60%; }
-.hp-h1 em { font-size: 1.04em; line-height: 0.95; letter-spacing: -0.03em; }
-.hp-lede { max-width: 34em; margin: 32px 0 0; font-size: clamp(18px, 1.4vw, 21px); line-height: 1.5; color: var(--hp-muted); }
-.hp-lede a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
-@media (hover: hover) and (pointer: fine) { .hp-lede a:hover { color: var(--hp-accent); } }
-.hp-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 36px; padding: 15px 22px; border-radius: 999px; background: var(--hp-text); color: var(--hp-ink); font-size: 16px; font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
-.hp-btn svg { transition: transform 200ms var(--wf-ease-out); }
-.hp-btn:active { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) {
-  .hp-btn:hover { background: #fff; }
-  .hp-btn[href="#work"]:hover svg { transform: translateY(3px); }
-  .hp-btn:not([href="#work"]):hover svg { transform: translate(2px, -2px); }
-}
 
-/* The doll: one button. Closed, the small dolls sit inside the big one and the row is shifted so the
-   big one stands in the middle; open, each stands in its own place. These are only the two resting
-   states (CSS arithmetic, right from the first frame); the hops between them are Web Animations. */
-.ds { --h: clamp(170px, 17vw, 280px); --g: clamp(8px, 1.2vw, 18px); position: relative; display: block; width: 100%; height: var(--h); margin: 0; padding: 0 0 38px; border: 0; background: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; box-sizing: content-box; transition: scale 160ms var(--wf-ease-out); }
-@media (max-width: 999px) { .ds { --h: min(40vw, 260px); } }
-.ds:active { scale: 0.98; }
-.ds:focus-visible { outline-offset: 10px; border-radius: 24px; }
+/* The set is the navigation: four dolls, each a link with its label underneath. Closed, the small
+   dolls sit inside the big one and the row is shifted so the big one stands in the middle; open,
+   each stands in its own place. These are only the two resting states (CSS arithmetic, right from
+   the first frame); the hops between them are Web Animations. */
+.ds { --h: clamp(190px, 18vw, 270px); --g: clamp(10px, 1.2vw, 18px); position: relative; display: block; width: calc(2 * var(--h) + 3 * var(--g)); height: var(--h); padding-bottom: 44px; box-sizing: content-box; -webkit-tap-highlight-color: transparent; }
+@media (max-width: 899px) { .ds { --h: min(38vw, 240px); --g: 10px; } }
+/* The real 3D set (DollScene) is drawn on this canvas, which reaches past the row for the hops and
+   the lids; once it's ready the flat dolls hide, but their links, captions and hit areas stay */
+.ds-3d { position: absolute; left: calc(-0.42 * var(--h)); top: calc(-0.95 * var(--h)); width: calc(100% + 0.84 * var(--h)); height: calc(2.1 * var(--h)); pointer-events: none; opacity: 0; transition: opacity 480ms ease; }
+.ds.is-3d .ds-3d { opacity: 1; }
+/* With script on, the flat set waits unseen until the 3D one is drawn, so it never shows first; it
+   shows if the 3D one is late or can't run (is-flat) */
+.js .ds:not(.is-3d):not(.is-flat) .ds-slot > :is(.ds-doll, .ds-in, .ds-shadow, .ds-cap) { visibility: hidden; }
+/* The flat set stays under the 3D one while it fades in, then goes */
+.ds.is-3d .ds-slot > :is(.ds-doll, .ds-in, .ds-shadow) { visibility: hidden; transition: visibility 0s 320ms; }
 .ds-track { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: var(--g); height: 100%; transform: translateX(calc(0.615385 * var(--h) + 1.5 * var(--g))); }
-/* A slot holds three layers of one doll, each moved on its own: its floor shadow, its inside (the
-   back of the cup) and the doll. They stack across the whole set so that every doll sits in front of
-   the inside of the doll it came from and behind that doll's front: inside 0 < inside 1 < inside 2 <
-   doll 3 < doll 2 < doll 1 < doll 0. Slots themselves stay put, so they don't break that stacking. */
-.ds-slot { position: relative; display: flex; align-items: flex-end; flex: none; --closed: calc((-0.615385 - var(--oh)) * var(--h) + (-1.5 - var(--og)) * var(--g)); }
+/* A slot (a link) holds the layers of one doll, each moved on its own: its floor shadow, its inside
+   (the back of the cup) and the doll. They stack across the whole
+   set so that every doll sits in front of the inside of the doll it came from and behind that doll's
+   front: inside 0 < inside 1 < inside 2 < doll 3 < doll 2 < doll 1 < doll 0. Slots themselves stay
+   put, so they don't break that stacking. */
+.ds-slot { position: relative; display: flex; align-items: flex-end; flex: none; color: inherit; text-decoration: none; border-radius: 18px; --closed: calc((-0.615385 - var(--oh)) * var(--h) + (-1.5 - var(--og)) * var(--g)); }
+.ds-slot:focus-visible { outline-offset: 8px; }
 .ds-slot > * { transform: translateX(var(--closed)); }
+/* Packed away or on the move, the small dolls can't be followed (the big one, Work, always can) */
+.ds:not(.is-open) .ds-slot:not(:first-child), .ds.is-moving .ds-slot:not(:first-child) { pointer-events: none; }
 /* Each doll is raised by the bit of space under its drawing that shrank with it, so all four bases
    sit on one floor line, and the inner ones 2px up, so a nested doll never shows under its edge */
 .ds-slot .ds-doll { position: relative; bottom: calc(var(--rise) * var(--h) + min(var(--i), 1) * 2px); z-index: calc(100 - var(--i) * 10); height: 100%; }
 .ds-in { position: absolute; left: 0; bottom: calc(var(--rise) * var(--h) + min(var(--i), 1) * 2px); z-index: calc(10 + var(--i) * 10); width: 100%; height: 100%; overflow: visible; }
-.ds-shadow { position: absolute; left: 50%; bottom: calc(var(--rise) * var(--h) - 0.024 * var(--h)); z-index: 1; width: 66%; height: calc(0.04 * var(--h)); margin-left: -33%; border-radius: 50%; background: #140b24; opacity: 0.45; }
+.ds-shadow { position: absolute; left: 50%; bottom: calc(var(--rise) * var(--h) - 0.024 * var(--h)); z-index: 1; width: 66%; height: calc(0.04 * var(--h)); margin-left: -33%; border-radius: 50%; background: #000; opacity: 0.45; }
 .ds-slot:not(:first-child) .ds-shadow { opacity: 0; }
+/* About me: on hover, a little double bounce (a hop, then a smaller one, each landing with a squash),
+   then a turn. A doll is round, so when it turns its outline doesn't change; only the painted front
+   travels round it: the face and the flower slide towards one side, narrowing as they go round,
+   vanish behind (leaving the back of the scarf), and come back round from the other side, while the
+   shine stays put because the light doesn't move. The bounce runs on the individual translate and
+   scale properties, so it adds to the hops of the opening instead of fighting them. */
+@keyframes ds-bounce {
+  0% { translate: 0 0; scale: 1 1; animation-timing-function: cubic-bezier(0.3, 0.6, 0.4, 1); }
+  22% { translate: 0 -18%; scale: 0.97 1.04; animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  42% { translate: 0 0; scale: 1.07 0.93; animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); }
+  50% { translate: 0 0; scale: 1 1; animation-timing-function: cubic-bezier(0.3, 0.6, 0.4, 1); }
+  64% { translate: 0 -9%; scale: 0.98 1.02; animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  80% { translate: 0 0; scale: 1.04 0.96; animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); }
+  100% { translate: 0 0; scale: 1 1; }
+}
+/* One full turn of the front: across goes as the sine of the angle, narrowing as its cosine */
+@keyframes ds-turn-x {
+  0% { translate: 0 0; animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1); }
+  25% { translate: var(--r) 0; }
+  49.9% { translate: var(--r) 0; }
+  50% { translate: calc(-1 * var(--r)) 0; }
+  75% { translate: calc(-1 * var(--r)) 0; animation-timing-function: cubic-bezier(0.12, 0, 0.39, 0); }
+  100% { translate: 0 0; }
+}
+@keyframes ds-turn-w {
+  0% { scale: 1 1; animation-timing-function: cubic-bezier(0.12, 0, 0.39, 0); }
+  25% { scale: 0 1; }
+  75% { scale: 0 1; animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1); }
+  100% { scale: 1 1; }
+}
+.ds-face, .ds-front { transform-box: fill-box; transform-origin: 50% 50%; }
+.ds-face { --r: 46px; }
+.ds-front { --r: 70px; }
+@media (hover: hover) and (pointer: fine) {
+  .ds:not(.is-moving) .ds-slot:nth-child(4):hover .ds-doll,
+  .ad:not(.is-opening):hover .ad-doll .ds-doll { animation: ds-bounce 760ms both; }
+  .ds:not(.is-moving) .ds-slot:nth-child(4):hover :is(.ds-face, .ds-front),
+  .ad:not(.is-opening):hover .ad-doll :is(.ds-face, .ds-front) { animation: ds-turn-x 640ms 700ms both, ds-turn-w 640ms 700ms both; }
+}
+
+/* The caption under each doll: one quiet size for all four, on one line just under the shadows; on the
+   small ones it shows once that doll has landed */
+.ds-cap { position: absolute; left: 50%; top: calc(100% + 18px); translate: -50% 0; font-size: var(--t-small); font-weight: 500; line-height: 1; letter-spacing: -0.01em; color: var(--hp-muted); white-space: nowrap; transition: color 200ms ease; }
+.ds-slot:not(:first-child) .ds-cap { opacity: 0; }
+.ds.is-open .ds-slot .ds-cap { opacity: 1; }
+/* On a phone the four sit close together, so their words go one size down to fit side by side */
+@media (max-width: 599px) { .ds-cap { font-size: 12px; top: calc(100% + 14px); } }
 .ds.is-open .ds-track, .ds.is-open .ds-slot > * { transform: none; }
 .ds.is-open .ds-slot .ds-shadow { opacity: 0.45; }
 .ds-doll { display: block; width: auto; overflow: visible; }
 .ds-top, .ds-bot { transform-box: view-box; transform-origin: 100px 150px; transition: transform 360ms var(--wf-ease-out); }
 /* Hover (mouse), only while the set is still: the doll under the pointer lifts a touch and its lid
-   lifts to show it opens (closed, that's the big doll). The littlest is solid, so it just lifts. */
+   lifts to show it opens (the littlest is solid, so it just lifts), and its word lights up */
 .ds-slot .ds-doll { scale: 1; transform-origin: 50% 100%; transition: scale 320ms var(--wf-ease-out); }
+.ds-slot:active .ds-doll { scale: 0.97; }
 @media (hover: hover) and (pointer: fine) {
-  .ds:not(.is-open):not(.is-moving):hover .ds-slot:first-child .ds-doll,
-  .ds.is-open:not(.is-moving) .ds-slot:hover .ds-doll { scale: 1.04; }
-  .ds:not(.is-open):not(.is-moving):hover .ds-slot:first-child .ds-top,
-  .ds.is-open:not(.is-moving) .ds-slot:hover .ds-doll:not(.is-solid) .ds-top { transform: translateY(-12px) rotate(-5deg); }
+  .ds:not(.is-moving) .ds-slot:hover .ds-doll { scale: 1.04; }
+  .ds:not(.is-moving) .ds-slot:hover .ds-doll:not(.is-solid) .ds-top { transform: translateY(-12px) rotate(-5deg); }
+  .ds:not(.is-moving) .ds-slot:hover .ds-cap { color: var(--hp-text); }
 }
-.ds-hint { position: absolute; left: 50%; bottom: 0; translate: -50% 0; padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--hp-line); font-size: 13px; font-weight: 600; color: var(--hp-muted); white-space: nowrap; transition: color 160ms ease; }
-@media (hover: hover) and (pointer: fine) { .ds:hover .ds-hint { color: var(--hp-text); } }
+
 
 /* ---------- sections ---------- */
 .hp-section { padding-top: 160px; }
 @media (max-width: 767px) { .hp-section { padding-top: 104px; } }
-.hp-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 48px; margin-bottom: 48px; }
-.hp-h2 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(44px, 5.6vw, 84px); line-height: 0.95; letter-spacing: -0.035em; }
+.hp-h2 { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-head); line-height: 1.02; letter-spacing: -0.03em; }
 .hp-h2 em { font-size: 1.06em; }
-.hp-head-note { max-width: 24em; margin: 0; font-size: 16px; line-height: 1.5; color: var(--hp-muted); }
-.hp-label { margin: 0; font-size: 14px; font-weight: 600; color: var(--hp-accent); }
+.hp-label { margin: 0; font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); }
 
-/* ---------- selected work: each card its own solid purple, opened in layers ---------- */
-.hp-h2-stack em { display: block; }
-.nw { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; }
-.nw-card { --c-card: #c6b2fb; --c-inner: #a98bf7; --c-text: #140b24; --c-muted: #3b2b66; --c-label: #2f1580; --c-line: rgba(20, 11, 36, 0.5); --c-core: #140b24; --c-core-text: #f4efff; --c-core-label: #b9a2f5;
-  position: relative; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 24px; padding: 22px; border-radius: 32px; background: var(--c-card); color: var(--c-text); transition: transform 300ms var(--wf-ease-out); }
-.nw-t2 { --c-card: #2e1a57; --c-inner: #3d2573; --c-text: #f4efff; --c-muted: #c9bcef; --c-label: #c7b4fb; --c-line: rgba(244, 239, 255, 0.5); --c-core: #f1ebff; --c-core-text: #140b24; --c-core-label: #5b2fd6; }
-.nw-t3 { --c-card: #f1ecfe; --c-inner: #ddd0fb; --c-text: #140b24; --c-muted: #4d4072; --c-label: #5b2fd6; --c-line: rgba(20, 11, 36, 0.4); --c-core: #6a35e8; --c-core-text: #ffffff; --c-core-label: #ddd0fb; }
-.nw-t4 { --c-card: #8b5cf6; --c-inner: #9d75f8; --c-text: #ffffff; --c-muted: #f1eaff; --c-label: #f6f1ff; --c-line: rgba(255, 255, 255, 0.6); --c-core: #140b24; --c-core-text: #f4efff; --c-core-label: #c7b4fb; }
-.nw-card:has(.nw-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
-.nw-card:active { transform: scale(0.995); }
-/* Layer 1: the project */
-.nw-l1 { display: flex; flex-direction: column; gap: 16px; padding: 18px 8px 10px 14px; }
-.nw-meta { margin: 0; font-size: 14px; font-weight: 500; color: var(--c-muted); }
-.nw-name { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(40px, 4.2vw, 64px); line-height: 0.92; letter-spacing: -0.04em; }
-.nw-link { color: inherit; text-decoration: none; }
-.nw-link:focus-visible { outline: none; }
-.nw-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 32px; }
-.nw-problem { max-width: 24em; margin: 0; font-size: 17px; line-height: 1.5; }
-.nw-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; padding: 0; }
-.nw-tags li { padding: 5px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--c-line); font-size: 13px; font-weight: 500; }
-.nw-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: auto; padding-top: 24px; }
-.nw-read { display: inline-flex; align-items: center; gap: 8px; padding-bottom: 4px; box-shadow: inset 0 -2px 0 currentColor; font-size: 15px; font-weight: 600; }
-.nw-read svg { transition: transform 220ms var(--wf-ease-out); }
-.nw-live { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 600; color: var(--c-muted); text-decoration: none; transition: color 160ms ease; }
+/* ---------- project cards: the product on a coloured stage, the words on the dark card below ---------- */
+.pc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; }
+.pc { position: relative; overflow: hidden; border-radius: 30px; background: #1b1030; box-shadow: inset 0 0 0 1px rgba(233, 224, 255, 0.07); transition: background-color 260ms ease; }
+.pc:has(.pc-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) { .pc:hover { background: #20133a; } }
+.pc:active { transform: scale(0.997); }
+/* The stage: wide, flush to the card's edges, in the project's own tone of purple (projects.ts), lit
+   softly from above. Where it stands and what it is ride on it, top left. */
+.pc-stage { position: relative; overflow: hidden; aspect-ratio: 21 / 9; background: var(--stage, #6d4aea); }
+.pc-stage::before { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 80% at 50% 0%, rgba(255, 255, 255, 0.22), transparent 70%); }
+.pc-tags { position: absolute; z-index: 1; left: 20px; top: 20px; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.pc-status, .pc-tag { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: rgba(16, 11, 26, 0.6); color: #f4efff; font-size: var(--t-small); font-weight: 500; line-height: 1.2; }
+.pc-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--hp-muted); }
+.pc-status.is-live::before { background: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.22); }
+.pc-status.is-pre::before { background: var(--wf-gold); box-shadow: 0 0 0 3px rgba(240, 189, 90, 0.22); }
+/* The screens sit on a 21:9 frame as tall as the stage: the stage itself on wide screens; on narrower
+   ones the frame overhangs both sides and is cropped, so the screens keep their size */
+.pc-shots { position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 21 / 9; translate: -50% 0; }
+.pc-shot { position: absolute; display: block; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(16, 11, 26, 0.1), 0 30px 60px -24px rgba(16, 11, 26, 0.6); transition: translate 480ms var(--wf-ease-out); transition-delay: calc(var(--k) * 50ms); }
+.pc-shot-browser { border-radius: 10px; }
+.pc-shot-phone { border-radius: 22px; }
+.pc-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+/* A motion piece fills the stage (21:9, cropped at the sides on narrower stages, where its action
+   stays in the middle) */
+.pc-stage .pc-motion { position: absolute; inset: 0; }
+@media (hover: hover) and (pointer: fine) { .pc:hover .pc-shot { translate: 0 -8px; } }
+/* The words: the project and role in the accent, the claim as the headline, one sentence; to the right,
+   three facts (the value large, what it counts under it) and the way in */
+.pc-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 28px 64px; align-items: end; padding: 30px 34px 34px; }
+.pc-meta { margin: 0; font-size: var(--t-small); font-weight: 500; color: var(--hp-accent); }
+.pc-name { max-width: 19em; margin: 12px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-head); line-height: 1.02; letter-spacing: -0.03em; text-wrap: balance; }
+.pc-link { color: inherit; text-decoration: none; }
+.pc-link:focus-visible { outline: none; }
+.pc-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.pc-summary { max-width: 34em; margin: 14px 0 0; font-size: var(--t-body); line-height: 1.5; color: #d3c9e8; text-wrap: pretty; }
+.pc-side { display: grid; gap: 26px; }
+.pc-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 0; }
+.pc-facts > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; }
+.pc-facts dd { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-quote); line-height: 1.05; letter-spacing: -0.02em; color: var(--hp-text); }
+.pc-facts dt { font-size: var(--t-small); line-height: 1.35; color: var(--hp-muted); }
+.pc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; }
+.pc-read { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-body); font-weight: 600; color: var(--hp-accent); }
+.pc-read svg { transition: transform 240ms var(--wf-ease-out); }
+.pc-live { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 5px; font-size: var(--t-body); font-weight: 500; color: var(--hp-muted); text-decoration: none; transition: color 160ms ease; }
 @media (hover: hover) and (pointer: fine) {
-  .nw-card:hover .nw-read svg { transform: translateX(4px); }
-  .nw-live:hover { color: var(--c-text); }
+  .pc:hover .pc-read svg { transform: translateX(4px); }
+  .pc-live:hover { color: var(--hp-text); }
 }
-/* Layer 2: a lighter panel holding the insight, and inside it the core */
-.nw-l2 { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 24px; background: var(--c-inner); }
-.nw-label { margin: 0; font-size: 13px; font-weight: 600; color: var(--c-label); }
-.nw-insight { margin: 0 0 6px; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: clamp(22px, 2vw, 28px); line-height: 1.25; text-wrap: pretty; }
-.nw-insight blockquote { margin: 0; }
-.nw-insight figcaption { margin-top: 8px; font-family: var(--font-geist-sans), sans-serif; font-style: normal; font-size: 14px; color: var(--c-muted); }
-/* Layer 3: the core, the outcome over the real product on its own tint */
-.nw-l3 { overflow: hidden; border-radius: 16px; color: #140b24; }
-.nw-core-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 0; padding: 16px 20px 0; }
-.nw-core-row .nw-label { flex-basis: 100%; color: #5b2fd6; }
-.nw-core { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(26px, 2.3vw, 34px); line-height: 1; letter-spacing: -0.03em; }
-.nw-core-line { font-size: 15px; line-height: 1.45; color: #3d3159; }
-.nw-stage { position: relative; aspect-ratio: 16 / 9; margin-top: 6px; }
-.nw-shot { position: absolute; display: block; overflow: hidden; background: #fff; box-shadow: 0 0 0 1.5px rgba(20, 11, 36, 0.9), 0 18px 34px -16px rgba(20, 11, 36, 0.5); transition: translate 420ms var(--wf-ease-out); transition-delay: calc(var(--k) * 50ms); }
-.nw-shot-browser { border-radius: 9px; }
-.nw-shot-phone { border-radius: 18px; }
-.nw-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-/* The Loop demo is a wide recording with the phone in the middle: scale it so the phone fills the frame */
-.nw-video { position: absolute; left: 50%; top: 50%; height: 159%; width: auto; max-width: none; transform: translate(-50%, -55.5%); }
-@media (hover: hover) and (pointer: fine) { .nw-card:hover .nw-shot { translate: 0 -8px; } }
 @media (max-width: 999px) {
-  .nw-card { grid-template-columns: minmax(0, 1fr); }
+  .pc-stage { aspect-ratio: 16 / 10; }
+  .pc-body { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 599px) {
-  .nw-card { padding: 14px; border-radius: 24px; gap: 14px; }
-  .nw-link::after { border-radius: 24px; }
-  .nw-l1 { padding: 10px 6px 4px; }
-  .nw-l2 { padding: 14px; border-radius: 18px; }
-  .nw-shot-phone { border-radius: 11px; }
-  .nw-shot-browser { border-radius: 6px; }
+  .pc { border-radius: 24px; }
+  .pc-stage { aspect-ratio: 5 / 4; }
+  .pc-tags { left: 14px; top: 14px; }
+  .pc-body { padding: 22px 20px 24px; }
+  .pc-facts { gap: 12px; }
+  .pc-shot-phone { border-radius: 14px; }
+  .pc-shot-browser { border-radius: 6px; }
 }
 
 /* ---------- how I work: rings closing in on code ---------- */
@@ -177,43 +239,150 @@ html:has(.hp) { scrollbar-color: #4a2f80 #140b24; }
 .hp-ring:nth-child(2) { background: #2b1a4b; }
 .hp-ring:nth-child(3) { background: #3c2569; }
 .hp-ring:nth-child(4) { background: #5a37a8; }
-.hp-ring-name { margin-top: clamp(10px, 2.4%, 16px); font-size: 13px; font-weight: 600; color: var(--hp-muted); }
+.hp-ring-name { margin-top: clamp(10px, 2.4%, 16px); font-size: var(--t-small); font-weight: 600; color: var(--hp-muted); }
 .hp-ring:nth-child(4) .hp-ring-name { color: #e6dcff; }
 .hp-ring-core { position: absolute; left: 50%; top: 50%; width: 22%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; background: var(--hp-pale); }
 .hp-ring-core em { font-size: clamp(20px, 2vw, 26px); color: var(--hp-ink); }
-.hp-how-lede { max-width: 32em; margin: 22px 0 0; font-size: 18px; line-height: 1.5; color: var(--hp-muted); }
+.hp-how-lede { max-width: 32em; margin: 22px 0 0; font-size: var(--t-lead); line-height: 1.45; color: #e7dff8; }
 .hp-how-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; margin: 36px 0 0; }
-.hp-how-list dt { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "opsz" 48; font-size: 22px; letter-spacing: -0.02em; }
-.hp-how-list dd { margin: 6px 0 0; font-size: 16px; line-height: 1.5; color: var(--hp-muted); }
+.hp-how-list dt { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 100, "opsz" 48; font-size: var(--t-lead); line-height: 1.2; letter-spacing: -0.015em; }
+.hp-how-list dd { margin: 6px 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--hp-muted); }
 @media (max-width: 599px) { .hp-how-list { grid-template-columns: minmax(0, 1fr); } }
 
-/* ---------- the innermost layer: a doll in a doll-shaped frame that opens onto the About site ---------- */
-.hp-me { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px 64px; align-items: center; padding: clamp(28px, 4vw, 56px); border-radius: 32px; background: var(--hp-pale); color: var(--hp-ink); }
-@media (max-width: 767px) { .hp-me { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; } }
-.hp-me .hp-label { color: #5b2fd6; }
-.hp-me-title { margin: 12px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(42px, 4.8vw, 72px); line-height: 0.95; letter-spacing: -0.035em; }
-.hp-me-title em { display: block; color: #5b2fd6; font-size: 1.04em; }
-.hp-me-text { max-width: 30em; margin: 18px 0 0; font-size: 18px; line-height: 1.5; color: #3d3159; }
-@media (max-width: 767px) { .hp-me-text { margin-inline: auto; } }
-.hp-me :focus-visible { outline-color: #5b2fd6; }
-/* The About doll: a frame the shape of a doll, the doll standing in it, a smaller one hidden inside */
-.ad { display: grid; justify-items: center; gap: 16px; color: var(--hp-ink); text-decoration: none; -webkit-tap-highlight-color: transparent; }
-.ad-frame { position: relative; display: flex; align-items: flex-end; justify-content: center; width: clamp(200px, 18vw, 250px); aspect-ratio: 5 / 6; padding-bottom: 22px; overflow: hidden; border-radius: 999px 999px 28px 28px; background: #ddd0fb; transition: scale 160ms var(--wf-ease-out); }
-.ad:active .ad-frame { scale: 0.97; }
-.ad-doll, .ad-inner { position: absolute; left: 0; right: 0; bottom: 22px; display: flex; justify-content: center; }
-.ad-doll { height: 70%; }
-.ad-inner { height: 50%; translate: 0 30%; opacity: 0; transition: translate 420ms var(--wf-ease-out) 140ms, opacity 160ms ease 140ms; }
-.ad .ds-doll { height: 100%; }
-.ad-label { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 999px; background: var(--hp-ink); color: var(--hp-pale); font-size: 15px; font-weight: 600; transition: background-color 160ms ease; }
-.ad-label svg { transition: transform 200ms var(--wf-ease-out); }
+/* ---------- section pages (Work, Side projects, How I work): the layer's doll beside its title ---------- */
+.sp-head { padding-top: 64px; }
+.sp-title-row { display: flex; align-items: flex-end; gap: clamp(16px, 2vw, 28px); }
+.sp-doll { flex: none; display: block; height: clamp(72px, 8vw, 116px); }
+.sp-doll .ds-doll { height: 100%; }
+.sp-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; }
+.sp-title em { font-size: 1.04em; }
+.sp-note { max-width: 34em; margin: 22px 0 0; font-size: var(--t-lead); line-height: 1.45; color: #e7dff8; }
+.sp-body { padding-top: 48px; }
+
+/* A group within a section page (Products, Experiments) */
+.sp-sub { margin: 0 0 20px; font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); }
+.sp-later { padding-top: 96px; }
+@media (max-width: 767px) { .sp-later { padding-top: 72px; } }
+
+/* ---------- side projects: a bento of colour, lighter than the case studies ---------- */
+/* Tiles of different sizes, each one colour all over with its words on it (white on the purples, ink on
+   the gold); the pictures tilt a little and run off the edges. Products on top, EZ Recipe the big one;
+   then the gold note and the two experiments. */
+.sx { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.sx-tile { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 500px; padding: 28px; border-radius: 28px; background: #1b1030; color: var(--hp-text); }
+.sx-tile:active { transform: scale(0.997); }
+.sx-ez-recipe { grid-column: span 7; min-height: 600px; background: #6d4aea; }
+.sx-pdf-penguin { grid-column: span 5; min-height: 600px; background: #2a1a55; }
+.sx-note { grid-column: span 4; justify-content: space-between; background: var(--wf-gold); color: #1a1030; }
+.sx-about-site { grid-column: span 4; padding: 0; }
+.sx-matryoshka { grid-column: span 4; padding: 0; }
+.sx-words { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; }
+.sx-ez-recipe .sx-words { max-width: 46%; }
+.sx-about-site .sx-words, .sx-matryoshka .sx-words { padding: 22px 26px 26px; }
+.sx-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.sx-status, .sx-tag { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: rgba(16, 11, 26, 0.32); font-size: var(--t-small); font-weight: 500; line-height: 1.2; }
+.sx-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+.sx-status.is-live::before { background: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24); }
+.sx-status.is-pre::before { background: var(--wf-gold); box-shadow: 0 0 0 3px rgba(240, 189, 90, 0.24); }
+.sx-about-site .sx-tag, .sx-matryoshka .sx-tag { padding: 0; background: none; color: var(--hp-accent); font-weight: 600; }
+.sx-name { margin: 18px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-quote); line-height: 1.05; letter-spacing: -0.025em; }
+.sx-ez-recipe .sx-name, .sx-pdf-penguin .sx-name { font-size: var(--t-head); letter-spacing: -0.03em; }
+.sx-link { color: inherit; text-decoration: none; }
+.sx-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+.sx-tile:has(.sx-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
+.sx-link:focus-visible { outline: none; }
+.sx-line { max-width: 30em; margin: 12px 0 0; font-size: var(--t-body); line-height: 1.5; color: rgba(244, 239, 255, 0.88); text-wrap: pretty; }
+.sx-fact { max-width: 30em; margin: 10px 0 0; font-size: var(--t-small); line-height: 1.45; color: rgba(244, 239, 255, 0.66); }
+.sx-cta { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 22px; font-size: var(--t-body); font-weight: 600; }
+.sx-cta svg { transition: transform 220ms var(--wf-ease-out); }
+/* The pictures */
+.sx-media { position: absolute; inset: 0; pointer-events: none; }
+.sx-shot { position: absolute; display: block; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(16, 11, 26, 0.12), 0 30px 60px -24px rgba(16, 11, 26, 0.7); transition: translate 480ms var(--wf-ease-out); }
+.sx-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.sx-ez-recipe .sx-shot { width: 25%; aspect-ratio: 1170 / 2532; border-radius: 22px; }
+.sx-ez-recipe .sx-shot-0 { right: 29%; bottom: -16%; rotate: -6deg; }
+.sx-ez-recipe .sx-shot-1 { right: 5%; bottom: -7%; rotate: 5deg; transition-delay: 50ms; }
+.sx-pdf-penguin .sx-shot { left: 28px; top: 56%; width: 118%; aspect-ratio: 1728 / 1117; border-radius: 12px; rotate: -4deg; }
+/* The experiments: the picture across the top, the words under it */
+.sx-about-site .sx-media, .sx-matryoshka .sx-media { position: relative; order: -1; inset: auto; aspect-ratio: 16 / 10; }
+.sx-about-site .sx-shot, .sx-matryoshka .sx-shot { position: static; width: 100%; height: 100%; box-shadow: none; background: none; }
+.sx-about-site .sx-shot img { transition: scale 600ms var(--wf-ease-out); }
+.sx-matryoshka .sx-media { background: radial-gradient(70% 70% at 50% 40%, rgba(165, 133, 247, 0.18), transparent 70%); }
+.sx-matryoshka .sx-shot img { object-fit: contain; padding: 8% 6% 2%; box-sizing: border-box; }
+/* The note */
+.sx-note-label { margin: 0; font-size: var(--t-small); font-weight: 600; }
+.sx-note-line { margin: 0; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: clamp(28px, 2.4vw, 36px); line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
 @media (hover: hover) and (pointer: fine) {
-  .ad:hover .ad-doll .ds-top { transform: translateY(-12px) rotate(-5deg); }
-  .ad:hover .ad-label { background: #5b2fd6; }
-  .ad:hover .ad-label svg { transform: translate(2px, -2px); }
+  .sx-tile.is-link:hover .sx-shot { translate: 0 -8px; }
+  .sx-about-site:hover .sx-shot, .sx-matryoshka:hover .sx-shot { translate: none; }
+  .sx-about-site:hover .sx-shot img { scale: 1.03; }
+  .sx-tile.is-link:hover .sx-cta svg { transform: translate(2px, -2px); }
 }
-/* Opening: the top twists off and away, and the next doll peeks up out of the bottom half */
-.ad.is-opening .ad-doll .ds-top { transform: translate(24px, -120px) rotate(20deg); opacity: 0; transition: transform 480ms var(--wf-ease-out), opacity 260ms ease 180ms; }
-.ad.is-opening .ad-inner { translate: 0 -18%; opacity: 1; z-index: 1; }
+@media (max-width: 999px) {
+  .sx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sx-ez-recipe, .sx-pdf-penguin, .sx-note { grid-column: span 2; }
+  .sx-about-site, .sx-matryoshka { grid-column: span 1; }
+  .sx-note { min-height: 260px; }
+}
+@media (max-width: 599px) {
+  .sx { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .sx-tile, .sx-about-site, .sx-matryoshka { grid-column: auto; min-height: 0; border-radius: 24px; }
+  .sx-tile { padding: 22px; }
+  .sx-about-site, .sx-matryoshka { padding: 0; }
+  .sx-ez-recipe .sx-words { max-width: none; }
+  /* The products' pictures get their own band under the words */
+  .sx-ez-recipe .sx-media, .sx-pdf-penguin .sx-media { position: relative; inset: auto; height: 300px; margin: 18px -22px -22px; }
+  .sx-ez-recipe .sx-shot { width: 40%; }
+  .sx-ez-recipe .sx-shot-0 { right: 46%; bottom: -26%; }
+  .sx-ez-recipe .sx-shot-1 { right: 8%; bottom: -14%; }
+  .sx-pdf-penguin .sx-shot { left: 22px; top: 12%; width: 130%; }
+}
+
+/* How I work: each step with an example from the work */
+.hw { list-style: none; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 767px) { .hw { grid-template-columns: minmax(0, 1fr); } }
+.hw-step { display: flex; flex-direction: column; gap: 10px; padding: 28px 28px 26px; border-radius: 24px; background: #1f1236; }
+.hw-name { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 96; font-size: var(--t-head); line-height: 1.02; letter-spacing: -0.03em; }
+.hw-line { margin: 0; font-size: var(--t-body); line-height: 1.5; color: var(--hp-muted); }
+.hw-example { margin: 8px 0 0; font-size: var(--t-lead); line-height: 1.4; letter-spacing: -0.012em; color: var(--hp-text); text-wrap: pretty; }
+.hw-from { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 14px; font-size: var(--t-body); font-weight: 600; color: var(--hp-accent); text-decoration: none; transition: color 160ms ease; }
+.hw-from svg { transition: transform 200ms var(--wf-ease-out); }
+@media (hover: hover) and (pointer: fine) { .hw-from:hover { color: var(--hp-text); } .hw-from:hover svg { transform: translateX(3px); } }
+
+/* ---------- About: the innermost layer ---------- */
+.ab { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px 72px; align-items: center; padding-top: 72px; }
+@media (max-width: 899px) { .ab { grid-template-columns: minmax(0, 1fr); padding-top: 48px; } }
+/* The doll in its half-round frame */
+.ab-photo { justify-self: center; }
+.ad { display: block; margin: 0; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 999px 999px 32px 32px; }
+.ad:focus-visible { outline-offset: 8px; }
+.ad-frame { position: relative; display: block; width: clamp(240px, 24vw, 340px); aspect-ratio: 5 / 6; overflow: hidden; border-radius: 999px 999px 32px 32px; background: #ddd0fb; transition: scale 160ms var(--wf-ease-out); }
+.ad:active .ad-frame { scale: 0.97; }
+.ad-doll, .ad-inner, .ad-cup { position: absolute; left: 0; right: 0; bottom: 10%; display: flex; justify-content: center; }
+.ad-doll, .ad-cup { height: 68%; }
+.ad-cup .ds-in { position: static; width: auto; height: 100%; }
+.ad-inner { height: 49%; translate: 0 30%; opacity: 0; transition: translate 420ms var(--wf-ease-out) 140ms, opacity 160ms ease 140ms; }
+.ad .ds-doll { height: 100%; transform-origin: 50% 100%; }
+.ad .ds-top { transition: transform 360ms var(--wf-ease-out), opacity 260ms ease; }
+/* Open: the top twists off and away, and the next doll peeks up out of the bottom half */
+.ad.is-opening .ad-doll .ds-top { transform: translate(24px, -150px) rotate(20deg); opacity: 0; transition: transform 480ms var(--wf-ease-out), opacity 260ms ease 180ms; }
+.ad.is-opening .ad-inner { translate: 0 -24%; opacity: 1; }
+/* The 3D doll (DollScene) over the flat one, which fades out under it */
+.ad-3d { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 320ms ease; }
+.ad.is-3d .ad-3d { opacity: 1; }
+.ad.is-3d :is(.ad-cup, .ad-inner, .ad-doll) { visibility: hidden; transition: visibility 0s 320ms; }
+.js .ad:not(.is-3d):not(.is-flat) :is(.ad-cup, .ad-inner, .ad-doll) { visibility: hidden; }
+
+.ab-title { margin: 12px 0 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; }
+.ab-title em { font-size: 1.04em; }
+.ab-copy > p:not(.hp-label) { max-width: 34em; margin: 20px 0 0; font-size: var(--t-body); line-height: 1.6; color: #e7dff8; }
+.ab-copy > p a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .ab-copy > p a:hover { color: var(--hp-accent); } }
+.ab-links { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 0; padding: 0; }
+.ab-links a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 999px; background: var(--hp-text); color: var(--hp-ink); font-size: var(--t-body); font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
+.ab-links a.is-quiet { background: transparent; color: var(--hp-text); box-shadow: inset 0 0 0 1.5px rgba(244, 239, 255, 0.4); }
+.ab-links a:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .ab-links a:hover { background: #fff; } .ab-links a.is-quiet:hover { background: rgba(244, 239, 255, 0.08); } }
 
 /* ---------- motion ---------- */
 /* Load: the hero rises in line by line and the dolls stand up one after another (once per visit) */
@@ -225,7 +394,12 @@ html:has(.hp) { scrollbar-color: #4a2f80 #140b24; }
 .wf-intro .hp-deep .hp-ch { animation: hp-depth 1500ms var(--wf-ease-out) both; animation-delay: var(--d); }
 @keyframes hp-depth { from { opacity: 0; transform: translateY(-0.12em) scale(1.7); filter: blur(10px); } 60% { filter: blur(0); } }
 .wf-intro .hp-rise { animation: hp-rise 760ms var(--wf-ease-out) both; animation-delay: var(--d); }
-.wf-intro .hp-hero .ds-track { animation: hp-stand-set 700ms var(--wf-ease-out) both; animation-delay: 80ms; }
+.wf-intro .hp-stage .ds-track { animation: hp-stand-set 700ms var(--wf-ease-out) both; animation-delay: 80ms; }
+/* The 3D set stands up the same way, with "Design," */
+.wf-intro .ds.is-3d .ds-3d { animation: hp-stand-set 700ms var(--wf-ease-out) both; animation-delay: 80ms; }
+/* Nothing starts until the set is shown (the 3D one drawn, or the flat fallback): the headline holds,
+   then it and the first doll arrive together (DollSet, IntroStage). Without script it all just plays. */
+.js .wf-intro .hp-stage:not(:has(.ds.is-3d, .ds.is-flat)) :is(.hp-line > *, .hp-deep .hp-ch, .ds-track) { animation-play-state: paused; }
 @keyframes hp-stand-set { from { opacity: 0; translate: 0 24px; } }
 @keyframes hp-peel { from { transform: translateY(108%); } }
 @keyframes hp-rise { from { opacity: 0; transform: translateY(28px); } }
@@ -238,17 +412,18 @@ html:has(.hp) { scrollbar-color: #4a2f80 #140b24; }
     animation-range: entry calc(5% + var(--i, 4) * 9%) entry calc(40% + var(--i, 4) * 9%);
   }
   @keyframes hp-ring { from { opacity: 0; scale: 1.12; } }
-  .nw-card, .hp-how > div:last-child, .hp-me, .sc-title {
+  .pc, .sx-tile, .hw-step, .hp-how > div:last-child, .sc-title {
     animation: hp-rise linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 40%;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .wf-intro .hp-rise, .wf-intro .hp-line > *, .wf-intro .hp-deep .hp-ch, .wf-intro .hp-hero .ds-track { animation: hp-fade 400ms ease both; }
+  .wf-intro .hp-rise, .wf-intro .hp-line > *, .wf-intro .hp-deep .hp-ch, .wf-intro .hp-stage .ds-track, .wf-intro .ds.is-3d .ds-3d { animation: hp-fade 400ms ease both; }
   @keyframes hp-fade { from { opacity: 0; } }
-  .nw-card, .hp-how > div:last-child, .hp-me, .sc-title, .hp-ring, .hp-ring-core { animation: none !important; }
+  .pc, .sx-tile, .hw-step, .hp-how > div:last-child, .sc-title, .hp-ring, .hp-ring-core { animation: none !important; }
   /* The doll still opens and closes, straight to the other state with no travel */
-  .ds-top, .ds-bot, .nw-shot, .nw-read svg, .hp-btn, .hp-btn svg, .ad-frame, .ad-inner, .ad-label svg, .nw-card { transition: none; }
-  .ds:hover .ds-top, .ad:hover .ds-top, .nw-card:hover .nw-shot { transform: none !important; translate: none !important; }
+  .ds-top, .ds-bot, .pc-shot, .pc-read svg, .sx-shot, .sx-shot img, .sx-cta svg, .ad-frame, .ad-inner, .ad .ds-top, .pc { transition: none; }
+  .ds-slot .ds-doll, .ad .ds-doll, .ds-face, .ds-front { animation: none !important; }
+  .ds:hover .ds-top, .pc:hover .pc-shot, .sx-tile:hover .sx-shot, .sx-tile:hover .sx-shot img { transform: none !important; translate: none !important; scale: none !important; }
 }

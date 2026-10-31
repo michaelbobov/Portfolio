@@ -5,7 +5,7 @@
 */
 
 .site-wrap { max-width: 1440px; margin-inline: auto; padding-inline: clamp(16px, 3.4vw, 48px); }
-.site-btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border-radius: 999px; background: var(--wf-ink); color: var(--wf-bg); font-size: 16px; font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
+.site-btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border-radius: 999px; background: var(--wf-ink); color: var(--wf-bg); font-size: var(--t-body); font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
 .site-btn svg { transition: transform 200ms var(--wf-ease-out); }
 .site-btn:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) {
@@ -14,33 +14,83 @@
 }
 .site-wrap em, .cs em { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--wf-accent); }
 
-/* ---------- the bar ---------- */
-.sb { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; font-size: 14px; }
-.sb-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; color: var(--wf-ink); text-decoration: none; white-space: nowrap; }
-.sb-doll { width: auto; height: 20px; transition: transform 320ms var(--wf-ease-out); }
-@media (hover: hover) and (pointer: fine) { .sb-brand:hover .sb-doll { transform: translateY(-2px) rotate(-6deg); } }
-.sb-end { display: flex; align-items: center; gap: 24px; }
-.sb-hello { padding: 8px 16px; border-radius: 999px; background: var(--wf-ink); color: var(--wf-bg); font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
-.sb-hello:active { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) { .sb-hello:hover { background: #fff; } }
-@media (max-width: 767px) { .sb-hello { display: none; } }
+/* ---------- the bar: the mark and the name, and three quiet outside links ---------- */
+.sb { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+.sb-brand { display: inline-flex; align-items: center; gap: 12px; color: var(--wf-ink); text-decoration: none; border-radius: 10px; }
+.sb-mark { display: block; width: auto; height: 30px; overflow: visible; }
+.sb-mark-small { transform-box: view-box; transform-origin: 238px 260px; transition: transform 380ms var(--wf-spring); }
+.sb-id { display: flex; flex-direction: column; gap: 3px; line-height: 1; }
+.sb-name { font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 700; font-variation-settings: "wdth" 92, "opsz" 32; font-size: var(--t-lead); letter-spacing: -0.025em; }
+.sb-role { font-size: var(--t-small); font-weight: 500; color: var(--wf-muted); letter-spacing: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .sb-brand:hover .sb-mark-small { transform: translateY(-46px) rotate(8deg); }
+}
+.sb-brand:active .sb-mark { scale: 0.96; }
+.sb-end { list-style: none; display: flex; align-items: center; gap: 24px; margin: 0; padding: 0; font-size: var(--t-small); }
+/* An underline that draws in from the left on hover */
+.sb-end a { position: relative; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
+.sb-end a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; border-radius: 1px; background: currentColor; transform: scaleX(0); transform-origin: 0 50%; transition: transform 300ms var(--wf-ease-out); }
+@media (hover: hover) and (pointer: fine) { .sb-end a:hover { color: var(--wf-ink); } .sb-end a:hover::after { transform: scaleX(1); } }
+@media (max-width: 599px) { .sb-end { gap: 16px; font-size: 13px; } .sb-role { display: none; } }
+
+/* ---------- the nav: a slim pill floating at the bottom of every page ---------- */
+.dock { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 40; translate: -50% 0; }
+.dock-pill { position: relative; padding: 5px; border-radius: 999px; background: #1c1132; box-shadow: 0 0 0 1px rgba(233, 224, 255, 0.12), 0 18px 40px -14px rgba(0, 0, 0, 0.85); }
+.dock-list { list-style: none; display: flex; margin: 0; padding: 0; }
+.dock-item { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px 0 13px; border-radius: 999px; font-size: var(--t-small); font-weight: 500; letter-spacing: -0.01em; color: var(--wf-muted); text-decoration: none; white-space: nowrap; transition: color 160ms ease; }
+.dock-mark { display: block; width: auto; height: 14px; flex: none; transition: transform 300ms var(--wf-ease-out); }
+/* Home: the house alone, in a round button the height of the others */
+.dock-item.is-home { width: 38px; padding: 0; justify-content: center; }
+.dock-home { display: block; width: 16px; height: 16px; flex: none; transition: transform 300ms var(--wf-ease-out); }
+.dock-list:first-child .dock-item:active .dock-home { transform: scale(0.85); }
+.dock-item:focus-visible { outline: 2px solid var(--wf-accent); outline-offset: 2px; }
+.dock-list:first-child .dock-item:active .dock-mark { transform: scale(0.85); }
+/* The lit copy: laid exactly over the list, clipped to one item; the clip glides between items */
+.dock-lit { position: absolute; inset: 5px; pointer-events: none; opacity: 0; transition: clip-path 320ms var(--wf-ease-out), opacity 200ms ease; }
+.dock-lit.is-shown { opacity: 1; }
+.dock-lit .dock-item { background: #f4efff; color: #140b24; }
+@media (max-width: 599px) { .dock-item { height: 36px; padding: 0 11px 0 9px; gap: 6px; font-size: 13px; } .dock-mark { height: 12px; } .dock-item.is-home { width: 36px; padding: 0; } }
+/* On a phone the words alone (the house stays), so all five fit across */
+@media (max-width: 459px) { .dock-pill { padding: 4px; } .dock-item { padding: 0 10px; } .dock-mark { display: none; } .dock-item.is-home { width: 34px; } }
+@media (max-width: 379px) { .dock-item { height: 34px; padding: 0 8px; font-size: 12px; } .dock-item.is-home { width: 30px; } .dock-home { width: 14px; height: 14px; } }
+@media (max-width: 339px) { .dock-item { padding: 0 6px; } .dock-item.is-home { width: 28px; } }
+/* Room under every page, so the nav never covers the end of it */
+body { padding-bottom: 96px; }
+/* The homepage has no dock to keep clear of */
+body:has(.hp-stage) { padding-bottom: 0; }
 
 /* ---------- the close ---------- */
 .sc { box-sizing: border-box; width: 100%; padding-top: 160px; }
 @media (max-width: 767px) { .sc { padding-top: 104px; } }
 .sc-end { padding-bottom: 96px; }
-.sc-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(56px, 8.6vw, 132px); line-height: 0.92; letter-spacing: -0.04em; color: var(--wf-ink); }
+.sc-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; color: var(--wf-ink); }
 .sc-title em { display: block; font-size: 1.04em; }
+/* The close's one warm moment: "something." runs from lilac through the dolls' gold */
+/* A motion piece (MotionVideo): the video fills its box; a small button pauses or plays it, above
+   any stretched link */
+.mv { display: block; }
+.mv video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mv-btn { position: absolute; right: 14px; bottom: 14px; z-index: 2; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; background: rgba(16, 11, 26, 0.55); color: #f4efff; cursor: pointer; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
+.mv-btn:active { transform: scale(0.94); }
+.mv-btn:focus-visible { outline: 2px solid var(--wf-accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .mv-btn:hover { background: rgba(16, 11, 26, 0.8); } }
+
+/* The sweep: lilac through the dolls' gold to rose, on the site's two bookend words, the hero's "one
+   layer" and the close's "something." (html raises it over the pages' own accent colour) */
+/* (the gradient only paints inside the box, so the box reaches past the italic letters on every side,
+   to the tails of the g and y below, and the negative margins keep the layout where it was) */
+html em.sweep { width: fit-content; padding: 0.06em 0.12em 0.26em 0.04em; margin: -0.06em 0 -0.26em -0.04em; background: linear-gradient(100deg, #c9b6ff 8%, var(--wf-gold) 52%, #e7b6d6 92%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .sc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 36px; }
-.sc-link { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
+.sc-link { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-body); font-weight: 600; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
 @media (hover: hover) and (pointer: fine) { .sc-link:hover { color: var(--wf-ink); } }
-.sc-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 24px 32px; border-top: 1px solid var(--wf-line); font-size: 14px; color: var(--wf-muted); }
+.sc-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 24px 32px; border-top: 1px solid var(--wf-line); font-size: var(--t-small); color: var(--wf-muted); }
 .sc-row p { margin: 0; }
 .sc-row ul { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 0; padding: 0; }
 .sc-row a { color: var(--wf-muted); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: color 160ms ease, text-decoration-color 160ms ease; }
 @media (hover: hover) and (pointer: fine) { .sc-row a:hover { color: var(--wf-ink); text-decoration-color: var(--wf-accent); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-btn, .site-btn svg, .sb-hello, .sb-doll { transition: none; }
+  .site-btn, .site-btn svg, .sb-mark-small, .sb-end a, .sb-end a::after, .dock-lit, .dock-mark, .dock-home { transition: none; }
+  .sb-brand:hover .sb-mark-small { transform: none; }
   .sb-brand:hover .sb-doll { transform: none; }
 }
