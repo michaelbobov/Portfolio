@@ -17,34 +17,34 @@ export type Shot = {
 export type Project = {
   id: string;
   name: string;
-  /** Role */
+  /** Role, exactly as the case study's header says it */
   meta: string;
+  /** Where it runs: Web, Mac, Mobile */
+  platform: string;
   year: string;
   /** Where it stands: Live, Live MVP, Pre-launch, Concept */
   status: string;
-  /** What kind of product it is */
-  tag: string;
   /** The claim, from the case study: the card's headline */
   headline: string;
   /** One sentence more */
   summary: string;
-  /** Three real facts from the case study, each a short value and what it counts */
-  facts: { value: string; label: string }[];
   /** The stage: its colour (the purple family, a different tone per project, picked for the app's own
       colours) and the product's real screens, back to front */
   stage: string;
   shots: Shot[];
-  /** A feature overview: a silent 21:9 loop on the stage's own colour, shown in place of the shots */
-  motion?: { src: string; poster: string; width: number; height: number; label: string };
+  /** A feature overview: a silent 21:9 loop on the stage's own colour, shown in place of the shots.
+      contain keeps all of it in view on narrower stages, for a wide subject like a browser window */
+  motion?: { src: string; poster: string; width: number; height: number; label: string; contain?: boolean };
   link: string;
   /** Only for projects with a real live URL (taken from the case study) */
   live?: string;
 };
 
-// A project card: the product on a coloured stage on top, the words below on the dark card. The stage
-// carries where it stands and what it is; below, the project and role in the accent, the claim as the
-// headline, one sentence, three facts and the way in. The whole card is one link (a stretched link on
-// the headline); "Live site" sits above it, so no anchors nest. Motion is CSS only (hp.css): on hover
+// A project card: the product on a coloured stage on top, the words below on the dark card. Below, one
+// two-tone headline (the project's name, then its claim in a softer tone), one sentence, then one plain
+// line with the same four fields on every card, matching the case study's header: role · platform ·
+// year · status. The way in sits at the bottom right. No stats: the details live in the case study. The
+// whole card is one link (a stretched link on the headline); "Live site" sits above it, so no anchors nest. Motion is CSS only (hp.css): on hover
 // the screens rise and the arrow moves.
 export default function FeaturedWork({ projects }: { projects: Project[] }) {
   return (
@@ -52,12 +52,15 @@ export default function FeaturedWork({ projects }: { projects: Project[] }) {
       {projects.map((p) => (
         <li key={p.id} className="pc">
           <div className="pc-stage" style={{ '--stage': p.stage } as CSSProperties}>
-            <p className="pc-tags">
-              <span className={`pc-status${/live/i.test(p.status) ? ' is-live' : /pre/i.test(p.status) ? ' is-pre' : ''}`}>{p.status}</span>
-              <span className="pc-tag">{p.tag}</span>
-            </p>
             {p.motion ? (
-              <MotionVideo className="pc-motion" {...p.motion} />
+              <MotionVideo
+                className={`pc-motion${p.motion.contain ? ' is-contain' : ''}`}
+                src={p.motion.src}
+                poster={p.motion.poster}
+                width={p.motion.width}
+                height={p.motion.height}
+                label={p.motion.label}
+              />
             ) : (
               // The screens, laid out on a wide frame as tall as the stage (cropped at the sides where
               // the stage is narrower, on phones, so they stay big)
@@ -76,21 +79,16 @@ export default function FeaturedWork({ projects }: { projects: Project[] }) {
           </div>
           <div className="pc-body">
             <div className="pc-words">
-              <p className="pc-meta">{p.name} · {p.meta} · {p.year}</p>
               <h3 className="pc-name">
-                <Link href={p.link} className="pc-link"><span className="sr-only">{p.name}: </span>{p.headline}</Link>
+                <Link href={p.link} className="pc-link"><span className="pc-title">{p.name}.</span> {p.headline}</Link>
               </h3>
               <p className="pc-summary">{p.summary}</p>
+              <p className="pc-meta">
+                {p.meta} · {p.platform} · {p.year} ·{' '}
+                <span className={`pc-state${/live/i.test(p.status) ? ' is-live' : /pre/i.test(p.status) ? ' is-pre' : ''}`}>{p.status}</span>
+              </p>
             </div>
             <div className="pc-side">
-              <dl className="pc-facts">
-                {p.facts.map((f) => (
-                  <div key={f.label}>
-                    <dt>{f.label}</dt>
-                    <dd>{f.value}</dd>
-                  </div>
-                ))}
-              </dl>
               <span className="pc-actions">
                 <span className="pc-read" aria-hidden="true">Read the case study <ArrowRight size={16} strokeWidth={2.25} /></span>
                 {p.live && (

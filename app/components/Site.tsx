@@ -3,7 +3,7 @@ import { ArrowUpRight } from '@/app/components/icons';
 import { SHAPE } from '@/app/data/layers';
 
 // The frame every page shares: the bar on top (the mark and the name; LinkedIn, Email and the résumé)
-// and the close at the bottom (an invitation to open something, then one slim row). The sections are
+// and the close at the bottom (an invitation to build something, then one slim row). The sections are
 // in the floating nav (Dock.tsx), not the bar. Styles: site.css.
 export const EMAIL = 'mailto:michaelbobov@gmail.com';
 export const RESUME = '/Michael Bobov - Product Designer.pdf';
@@ -42,7 +42,7 @@ export function SiteClose() {
   return (
     <footer className="site-wrap sc">
       <section className="sc-end" aria-labelledby="end-title">
-        <h2 id="end-title" className="sc-title">Let’s open <em className="sweep">something.</em></h2>
+        <h2 id="end-title" className="sc-title">Let’s build <em className="sweep">something.</em></h2>
         <div className="sc-actions">
           <a className="site-btn" href={EMAIL}>michaelbobov@gmail.com <ArrowUpRight size={18} strokeWidth={2.25} /></a>
           <a className="sc-link" href={LINKEDIN} target="_blank" rel="noopener noreferrer">

@@ -6,39 +6,50 @@ export const PROJECTS: Project[] = [
   {
     id: 'versum',
     name: 'Versum Health',
-    meta: 'Co-founder, product lead',
+    meta: 'Co-founder, product lead, frontend',
+    platform: 'Web',
     year: '2025',
     status: 'Live MVP',
-    tag: 'Healthcare marketplace',
     headline: 'Helping uninsured patients and dental students find each other.',
     summary: 'A booking marketplace where uninsured patients get care from supervised dental students.',
-    facts: [
-      { value: '6 months', label: 'research to MVP' },
-      { value: '2', label: 'people, design to code' },
-      { value: 'Live', label: 'at versumhealth.com' },
-    ],
     stage: '#6d4aea', // violet: its white, blue-edged screens stand out on it
-    shots: [
-      { src: '/Student2.png', w: 1470, h: 894, kind: 'browser', at: [14, 15, 44] },
-      { src: '/Student5.png', w: 1558, h: 902, kind: 'browser', at: [43, 34, 43] },
-    ],
+    shots: [],
+    motion: {
+      src: '/versum-overview.mp4',
+      poster: '/versum-overview.jpg',
+      width: 2100,
+      height: 900,
+      label: 'Versum feature overview: the live site in English and Spanish, then a student’s dashboard, calendar, time slots and services',
+      contain: true,
+    },
     link: '/work/versum',
     live: 'https://versumhealth.com/',
   },
   {
+    id: 'inkling',
+    name: 'Inkling',
+    meta: 'Designer and developer',
+    platform: 'Mac',
+    year: '2026',
+    status: 'Pre-launch',
+    headline: 'For everything you text yourself and forget.',
+    summary: 'A Mac app that files a thought the way you’d text it to yourself, typos and all: an event, a to-do, an idea to develop or a note to keep, with the AI running on the Mac.',
+    stage: '#8f6ee0', // a mid violet: the app's white windows and pastel popup stand out on it
+    shots: [
+      { src: '/inkling-today.png', w: 1030, h: 1444, kind: 'browser', at: [10, 12, 30] },
+      { src: '/inkling-followup.png', w: 920, h: 380, kind: 'browser', at: [36, 30, 54] },
+    ],
+    link: '/work/inkling',
+  },
+  {
     id: 'spotify-loop',
     name: 'Spotify Loop',
-    meta: 'Product designer',
+    meta: 'Product designer, UX research',
+    platform: 'Mobile',
     year: '2025',
     status: 'Concept',
-    tag: 'Mobile feature design',
     headline: 'Replay one part of a song without leaving Spotify.',
     summary: 'A self-initiated concept for looping a section of a song inside Spotify’s player, with a library of saved loops.',
-    facts: [
-      { value: '2 taps', label: 'to set a loop' },
-      { value: '1 week', label: 'concept to prototype' },
-      { value: 'Tapping', label: 'beat dragging, in lo-fi tests' },
-    ],
     stage: '#c4b8ed', // lavender: the dark player and its gold album art stand out on it
     shots: [],
     motion: {
@@ -46,14 +57,14 @@ export const PROJECTS: Project[] = [
       poster: '/spotify-loop-overview.jpg',
       width: 2100,
       height: 900,
-      label: 'Spotify Loop feature overview: turning on loop, tapping a start and an end, fine-tuning, saving, and the Saved Loops library',
+      label: 'Spotify Loop feature overview: turning on loop, dragging the start and end handles to the part that repeats, adjusting it, saving, and the Saved Loops library',
     },
     link: '/work/spotify-loop',
   },
 ];
 
 const byId = (ids: string[]) => ids.map((id) => PROJECTS.find((p) => p.id === id) as Project);
-export const WORK = byId(['versum', 'spotify-loop']);
+export const WORK = byId(['versum', 'inkling', 'spotify-loop']);
 
 // How he works, outside in: four rings closing in on the smallest doll. Each step has an example
 // from the work or the side projects, with a link to where it comes from.
@@ -73,7 +84,7 @@ export const RINGS = [
   {
     name: 'Design',
     line: 'Flows, states and prototypes, put in front of real people.',
-    example: 'For Spotify Loop, lo-fi testers found tapping more precise than dragging, so setting a loop became two taps.',
+    example: 'For Spotify Loop, friends who tried the lo-fi prototype found the loop button easily next to Bluetooth, so that’s where it went.',
     from: { label: 'Spotify Loop', href: '/work/spotify-loop' },
   },
   {
