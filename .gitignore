@@ -13,3 +13,7 @@ yarn-error.log*
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Claude/Codex review handoff: request and response files, not part of the site
+agent-handoff/*
+!agent-handoff/.gitkeep

@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/case-study-check.mjs\" --hook",
+            "timeout": 60,
+            "statusMessage": "Checking the case study…"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/codex-auto-review.mjs\"",
+            "timeout": 900,
+            "statusMessage": "Codex is reviewing the case-study changes…"
+          }
+        ]
+      }
+    ]
+  }
+}
