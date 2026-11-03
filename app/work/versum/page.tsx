@@ -1,163 +1,132 @@
-import {
-  CaseHero,
-  CaseShell,
-  Choice,
-  Choices,
-  Figure,
-  Glance,
-  NextCase,
-  Outcome,
-  Process,
-  ProcessDetails,
-  Section,
-} from '@/app/components/case/Case';
-import '../case.css';
+import { CaseHeader, CaseShell, Choice, Choices, NextCase, Outcome, Prose, Quote, Section, Step, Steps } from '@/app/components/case/Study';
+import MotionVideo from '@/app/components/MotionVideo';
+import '../study.css';
 
-// Versum Health case study, laid out to be skimmed: the work first, then everything a reviewer needs
-// at a glance, the process as one visible row, each decision beside its screen, and where it stands.
-// Every fact is from the case study as written; nothing is measured that wasn't.
+// Versum Health case study: what it is and the facts, the live site in motion, then the problem, the
+// process, four decisions and where it stands. Every fact is from the author's own write-ups
+// (versum-case-study.md and the earlier page); nothing is measured that wasn't.
 export default function VersumCaseStudy() {
   return (
     <CaseShell>
-      <CaseHero
-        kicker="Healthcare · Marketplace · 2025"
+      <CaseHeader
         name="Versum Health"
-        claim="helping uninsured patients and dental students find each other"
-        summary="I co-founded Versum and designed and built its booking marketplace, which connects uninsured patients with supervised dental students who need patients to graduate."
-        link={{ href: 'https://versumhealth.com/', label: 'versumhealth.com' }}
-      />
-      <Figure
-        size="hero"
-        priority
-        img={{ src: '/versumheroimage.png', alt: 'The Versum Health website on a laptop: “Creating Universal Access to Free Healthcare”, with Get Free Care and Provide Care buttons.', width: 2400, height: 1161 }}
-        caption="Two front doors on the live site: get care as a patient, or provide care as a student."
-      />
-
-      <Glance
+        subtitle="Helping uninsured patients and dental students find each other."
         facts={[
           { label: 'Role', value: 'Co-founder, product lead, frontend' },
-          { label: 'Team', value: '2 people: frontend and backend' },
-          { label: 'Timeline', value: '6 months, research to MVP' },
+          { label: 'Team', value: '2 co-founders' },
+          { label: 'Timeline', value: '6 months, 2025' },
+          { label: 'Platform', value: 'Web' },
         ]}
         status="LIVE MVP"
-        problem="Uninsured patients put off dental care because of cost. Dental students need patients to graduate and can’t find them. Neither side can find the other."
-        did="I talked with patients and students, framed the gap, then designed and built the frontend of a booking marketplace: patients search and book, students post availability."
-        outcome="The MVP is live at versumhealth.com with booking, scheduling and messaging. Outreach to dental schools has started; there’s no usage data yet."
+        link={{ href: 'https://versumhealth.com/', label: 'versumhealth.com' }}
+        media={
+          <MotionVideo
+            src="/versum-overview.mp4"
+            poster="/versum-overview.jpg"
+            width={2100}
+            height={900}
+            label="Versum feature overview: the live site in English and Spanish, then a student’s dashboard, calendar, time slots and services"
+          />
+        }
       />
 
-      <Process
-        title="Six months, from conversations to a live MVP."
-        steps={[
-          {
-            name: 'Listen',
-            quote: { text: 'I had to pay people off the street a lot of money just to get them a free cleaning.', who: 'A dental hygienist, on getting through school' },
-            did: 'Talked with uninsured patients and dental students about how they find each other today.',
-            found: 'Both sides had the same gap: no shared place to meet.',
-          },
-          {
-            name: 'Frame',
-            pics: [
-              { src: '/versumpersona1.jpg', alt: 'Proto-persona Alicia, a financially stretched caregiver who needs affordable, transparent dental care.', width: 1024, height: 1024 },
-              { src: '/versumpersona2.jpg', alt: 'Proto-persona Noah, a third-year dental student who needs qualifying patients and fewer no-shows.', width: 1024, height: 1024 },
-              { src: '/versumpersona3.jpg', alt: 'Proto-persona Elena, a Spanish-speaking senior who needs care explained in her language.', width: 1024, height: 1024 },
-            ],
-            did: 'Turned the conversations into three proto-personas: a patient, a student and a Spanish-speaking senior.',
-            found: 'Price and trust decide whether a match becomes a booking.',
-          },
-          {
-            name: 'Map',
-            flows: [
+      <Section n={1} id="overview" title="Overview">
+        <Prose>
+          <p>Versum Health is a booking marketplace that connects uninsured patients with dental students, who need patients for the supervised procedures they must complete to graduate. Patients get affordable care, students get the cases they need, and supervisors oversee the work.</p>
+          <p>I co-founded Versum with a backend developer. I led the product, designed it and built the frontend. The MVP is live at versumhealth.com with booking, scheduling and messaging. Outreach to dental schools has started, and there’s no usage data yet.</p>
+        </Prose>
+      </Section>
+
+      <Section n={2} id="problem" title="The problem">
+        <Prose>
+          <p>Uninsured patients often put off dental care until it becomes an emergency, because they can’t afford it. Dental students need specific procedures to graduate and struggle to find patients for them.</p>
+          <p>The students and patients I talked to had no shared place to find each other. Versum is meant to be that place, the way ZocDoc is for regular doctors.</p>
+        </Prose>
+      </Section>
+
+      <Section n={3} id="process" title="Process">
+        <Steps>
+          <Step title="Talking to both sides">
+            <p>I talked with uninsured patients and dental students about how they find each other today. A practicing dental hygienist told me they almost didn’t graduate because they couldn’t find enough patients. One potential patient books through a friend who’s a dental hygienist, and knows most people don’t have that connection.</p>
+            <Quote text="I had to pay people off the street a lot of money just to get them a free cleaning." who="A practicing dental hygienist, on getting through school" />
+            <p>On both sides, the biggest problem was finding each other. Availability, scheduling and payment mattered too, but that came first, so it became the focus of the MVP.</p>
+          </Step>
+          <Step
+            title="Proto-personas"
+            pics={[
+              { src: '/versumpersona1.jpg', alt: 'Proto-persona Alicia, a financially stretched caregiver who needs affordable, transparent dental care.', width: 1024, height: 1024, caption: 'Alicia, 34, uninsured: needs to know the price up front.' },
+              { src: '/versumpersona2.jpg', alt: 'Proto-persona Noah, a third-year dental student who needs qualifying patients and fewer no-shows.', width: 1024, height: 1024, caption: 'Noah, 23, dental student: needs patients who show up.' },
+              { src: '/versumpersona3.jpg', alt: 'Proto-persona Elena, a Spanish-speaking senior who needs care explained in her language.', width: 1024, height: 1024, caption: 'Elena, 70, speaks only Spanish: needs care explained in it.' },
+            ]}
+          >
+            <p>I turned what I heard into three proto-personas. Together they showed that price and trust decide whether a match turns into a booking.</p>
+          </Step>
+          <Step
+            title="User flows"
+            flows={[
               { who: 'Patient', steps: ['Find', 'Filter', 'Request'] },
               { who: 'Student', steps: ['Accept', 'Schedule', 'Log'] },
-            ],
-            did: 'Mapped the flows for patients and students, with supervisor approvals planned.',
-            found: 'Both flows meet at one step: the booking request.',
-          },
-          {
-            name: 'Design',
-            pics: [{ src: '/Student2.png', alt: 'Versum student schedule: a January calendar for setting availability.', width: 1470, height: 894 }],
-            did: 'Designed it search-first, with price and supervision visible before anyone books.',
-            found: 'Four decisions shaped it, below.',
-          },
-          {
-            name: 'Build',
-            pics: [{ src: '/Student1.png', alt: 'Versum student dashboard: total, upcoming and past appointments.', width: 1481, height: 877 }],
-            did: 'Built the frontend and shipped the MVP.',
-            found: 'Live at versumhealth.com.',
-          },
-        ]}
-      />
+            ]}
+          >
+            <p>I mapped one flow for each side. The two flows meet at the booking request. Supervisor approvals are planned for a later version.</p>
+          </Step>
+          <Step
+            title="Design and build"
+            pics={[
+              { src: '/Student2.png', alt: 'Versum student schedule: a January calendar with a legend for available slots, patient bookings, confirmed and pending appointments.', width: 1470, height: 894, caption: 'Students click a future date on their calendar to add time slots.' },
+              { src: '/Student3.png', alt: 'Versum: the Manage Time Slots dialog for a day, with a start and end time and an Add Time Slot button.', width: 1466, height: 893, caption: 'Adding time slots for one day.' },
+            ]}
+          >
+            <p>I designed it search-first, with price and supervision visible before anyone books, then built the frontend in React, TypeScript and Tailwind while my co-founder built the backend.</p>
+          </Step>
+        </Steps>
+      </Section>
 
-      <Section id="decisions" label="Key decisions" title="Search first, with trust and price visible before anyone books.">
+      <Section n={4} id="decisions" title="Design decisions">
         <Choices>
-          <Choice
-            n={1}
-            title="Two ways to search: by need, or by student."
-            why="Some patients know what they need (“I need a cleaning”); others pick a person. Supporting both removes friction for each."
-          />
+          <Choice n={1} title="Two ways to search: by need or by student">
+            <p>Some patients know what they need, like a cleaning; others want to choose a person. The Find tab supports both, so neither group has to work around the other’s way of searching.</p>
+          </Choice>
           <Choice
             n={2}
-            title="A tab for each job, not one dashboard."
-            why="People arrive with different goals, so Find, Appointments and Messages each do one thing."
-            shots={[{ img: { src: '/Student4.png', alt: 'Versum Messages tab: a list of conversations beside the selected one.', width: 1576, height: 899 } }]}
-            caption="Messages has its own tab (student side)."
-          />
+            title="A tab for each job instead of one dashboard"
+            shots={[{ img: { src: '/versum-messages.png', alt: 'Versum Messages tab: a list of conversations beside the selected one.', width: 1576, height: 899 } }]}
+            caption="Messages has its own tab (student side; the name is blurred)."
+          >
+            <p>I considered a single dashboard, but people come to Versum with different goals. Find, Appointments and Messages each do one job, which keeps every screen focused.</p>
+          </Choice>
           <Choice
             n={3}
-            title="Free cleanings, shown before booking."
-            why="Cost is the biggest worry for uninsured patients. Students say at onboarding whether they offer free cleanings, and patients see it on the student’s card."
+            title="Show free cleanings before booking"
             shots={[{ img: { src: '/Student5.png', alt: 'Versum student profile: school and graduation year, About Me, and a Services Offered list including dental cleaning.', width: 1558, height: 902 } }]}
-            caption="Services are set once, on the student’s profile."
-          />
+            caption="A student’s profile, where they list services such as cleanings. The patient’s view of the card isn’t shown."
+          >
+            <p>Cost is a major barrier for uninsured patients. Students say during onboarding whether they offer free cleanings, and patients see it on the student’s card, so there are no surprises later.</p>
+          </Choice>
           <Choice
             n={4}
-            title="Upcoming and past visits in one view."
-            why="Booking the next visit often needs context from the last one, and it saves clicks."
+            title="Upcoming and past visits on one screen"
             shots={[{ img: { src: '/Student1.png', alt: 'Versum dashboard with Upcoming Appointments and Past Appointments tabs side by side.', width: 1481, height: 877 } }]}
-            caption="The same pattern on the student dashboard."
-          />
+            caption="The same pattern on the student dashboard: Upcoming and Past are tabs on one screen."
+          >
+            <p>Booking the next visit often needs context from the last one. Upcoming and past appointments sit side by side as tabs on the same screen, so history is one click away instead of on a separate page.</p>
+          </Choice>
         </Choices>
       </Section>
 
-      <Section id="screens" label="Screens" title="Students set their availability once.">
-        <div className="cs-grid2">
-          <Figure
-            img={{ src: '/Student2.png', alt: 'Versum student schedule: a January calendar with a legend for available slots, patient bookings, confirmed and pending appointments.', width: 1470, height: 894 }}
-            caption="A calendar of their availability: click a future date to add time slots."
-          />
-          <Figure
-            img={{ src: '/Student3.png', alt: 'Versum: the Manage Time Slots dialog for a day, with a start and end time and an Add Time Slot button.', width: 1466, height: 893 }}
-            caption="Adding time slots for a day."
-          />
-        </div>
-      </Section>
-
       <Outcome
-        title="Live, and ready to measure."
+        n={5}
         shipped={['Patient search and booking', 'Student scheduling and messaging', 'Live at versumhealth.com']}
-        measure={['Time to book: under 5 minutes', 'Task completion: 90% or more', 'Satisfaction: 4.5 out of 5', 'No-show rate']}
-        next={['Usability tests and pilots with dental schools', 'A supervisor console for verification and approvals', 'Eligibility screening, and partnerships with community health centers']}
-        learned="A marketplace only works if both sides show up, and in healthcare every screen builds or erodes trust."
+        measure={['Time to book a first appointment, aiming for under 5 minutes', 'Task completion, aiming for 90% or more', 'Satisfaction, aiming for 4.5 out of 5', 'No-show rate']}
+        next={[
+          'Usability tests with 8 to 10 people from each group, then pilots at partner dental schools',
+          'A supervisor console for verification and approvals',
+          'Eligibility screening, and partnerships with community health centers',
+        ]}
+        learned="I started Versum because I’d watched friends skip the dentist over cost. I didn’t expect the dental students to be just as stuck, trying to find patients so they could graduate."
       />
 
-      <ProcessDetails list="proto-personas · further out">
-        <h3>Proto-personas</h3>
-        <p className="cs-muted">Synthesized from the conversations, not individual participants.</p>
-        <ul className="cs-list">
-          <li><strong>Alicia, patient.</strong> An uninsured gig worker who hasn’t seen a dentist in years. Wants a cleaning and checkup she can afford. “I don’t even know where to start looking for affordable care.” Needs transparent pricing, easy booking and appointment reminders.</li>
-          <li><strong>Noah, third-year dental student.</strong> Needs supervised procedures to graduate and reliable patients for specific procedure types. “Patients cancel last minute and I lose the whole day.” Needs a case pipeline, automated logging and patient reliability signals.</li>
-        </ul>
-        <h3>Further out</h3>
-        <p>The model could work for other healthcare training programs, such as optometry, physical therapy and mental health counseling.</p>
-      </ProcessDetails>
-
-      <NextCase
-        href="/work/spotify-loop"
-        name="Spotify Loop,"
-        line="replay one part of a song without leaving Spotify."
-        img="/spotifyloophero.png"
-        bg="#2f2f2f"
-      />
+      <NextCase href="/work/inkling" name="Inkling" line="For everything you text yourself and forget." img={{ src: "/inkling-tour.jpg", width: 2100, height: 900 }} />
     </CaseShell>
   );
 }

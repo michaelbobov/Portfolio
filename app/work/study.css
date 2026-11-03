@@ -1,0 +1,177 @@
+/*
+  Case-study pages (Versum, Spotify Loop) on the dark grape ground, laid out like a well-made article:
+  a centered header, the work in motion, then numbered sections in one centered reading column, with
+  pictures breaking out wider than the text and design decisions alternating picture and text. The
+  page ends on a card for the next project. One typeface, Geist. No folds, no new tabs, no sideways
+  scrolling. Tokens live in globals.css.
+*/
+
+.st {
+  --st-wide: 1120px;
+  --st-col: 680px;
+  --st-text: #d6cee8;
+  --st-soft: #b9aed1;
+  padding-bottom: 32px;
+  color: var(--wf-ink);
+}
+.st :focus-visible { outline: 2px solid var(--wf-accent); outline-offset: 4px; border-radius: 6px; }
+/* The reading column */
+.st-text { max-width: var(--st-col); margin-inline: auto; }
+
+/* ---------- the top: name, one line, the facts, then the work ---------- */
+.st-head { max-width: var(--st-wide); margin-inline: auto; padding-top: 80px; text-align: center; }
+.st-title { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 600; line-height: 1; letter-spacing: -0.04em; color: var(--wf-ink); }
+.st-subtitle { max-width: 26em; margin: 18px auto 0; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.4; letter-spacing: -0.012em; color: var(--st-soft); text-wrap: balance; }
+.st-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 48px; margin: 40px 0 0; }
+.st-meta dt { font-size: 13px; line-height: 1.5; color: var(--wf-muted); }
+.st-meta dd { margin: 4px 0 0; font-size: 15px; line-height: 1.45; color: var(--wf-ink); }
+.st-meta a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: rgb(255 255 255 / 0.35); transition: text-decoration-color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .st-meta a:hover { text-decoration-color: currentColor; } }
+.st-chip { display: inline-flex; align-items: center; gap: 7px; }
+.st-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wf-muted); }
+.st-chip-live::before { background: #34d399; }
+.st-chip-pre::before { background: var(--wf-gold); }
+.st-note { max-width: 40em; margin: 24px auto 0; font-size: 13px; line-height: 1.5; color: var(--wf-muted); }
+.st-hero { margin-top: 56px; text-align: left; }
+.st-frame { display: block; overflow: hidden; border-radius: 16px; }
+.st-motion { position: relative; }
+.st-motion .mv { position: relative; display: block; aspect-ratio: 21 / 9; }
+/* A decision's motion piece keeps its own proportions (the 21:9 frame is for the hero) */
+.st-motion-natural { width: 100%; }
+.st-motion-natural .mv { aspect-ratio: auto; }
+.st-motion-natural .mv video { height: auto; object-fit: contain; }
+@media (max-width: 599px) {
+  .st-head { padding-top: 56px; }
+  .st-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; margin-top: 32px; }
+  .st-hero { margin-top: 40px; }
+  .st-frame { border-radius: 12px; }
+}
+
+/* ---------- sections: a number, a plain heading, then short paragraphs ---------- */
+.st-section { padding-top: 136px; }
+.st-h2 { display: flex; align-items: baseline; gap: 16px; margin-top: 0; margin-bottom: 20px; font-size: clamp(28px, 2.6vw, 36px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; color: var(--wf-ink); }
+.st-num { flex: none; font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--wf-accent); font-variant-numeric: tabular-nums; }
+.st-h3 { margin-top: 0; margin-bottom: 10px; font-size: 22px; font-weight: 600; line-height: 1.3; letter-spacing: -0.018em; color: var(--wf-ink); text-wrap: balance; }
+.st-n { color: var(--wf-muted); font-weight: 500; }
+.st-prose { font-size: 18px; line-height: 1.7; color: var(--st-text); text-wrap: pretty; }
+.st-prose p { margin: 0; }
+.st-prose p + p, .st-prose p + ul, .st-prose ul + p, .st-prose figure + p { margin-top: 16px; }
+.st-prose strong { font-weight: 600; color: var(--wf-ink); }
+.st-prose a { color: var(--wf-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: rgb(255 255 255 / 0.35); transition: text-decoration-color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .st-prose a:hover { text-decoration-color: currentColor; } }
+.st-prose ul, .st-list { margin: 0; padding: 0; list-style: none; }
+.st-prose li, .st-list li { position: relative; padding-left: 22px; }
+.st-prose li + li, .st-list li + li { margin-top: 8px; }
+.st-prose li::before, .st-list li::before { content: ""; position: absolute; left: 5px; top: 0.75em; width: 5px; height: 5px; border-radius: 50%; background: var(--wf-accent); }
+.st-list { font-size: 17px; line-height: 1.55; color: var(--st-text); }
+.st-quote { margin: 28px auto; padding-left: 22px; border-left: 2px solid var(--wf-accent); }
+.st-quote:last-child { margin-bottom: 0; }
+.st-quote blockquote { margin: 0; font-size: 24px; font-weight: 500; line-height: 1.4; letter-spacing: -0.015em; color: var(--wf-ink); text-wrap: pretty; }
+.st-quote figcaption { margin-top: 8px; font-size: var(--t-small); line-height: 1.4; color: var(--wf-muted); }
+@media (max-width: 599px) {
+  .st-section { padding-top: 96px; }
+  .st-prose { font-size: 17px; }
+  .st-quote blockquote { font-size: 21px; }
+}
+
+/* ---------- the process: one step after another, each with its artifact ---------- */
+.st-steps { display: grid; gap: 80px; margin-top: 48px; }
+.st-flows { margin-top: 16px; }
+.st-flows p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--wf-ink); }
+.st-flows span { display: inline-block; min-width: 5em; font-size: var(--t-small); color: var(--wf-muted); }
+/* Pictures break out of the reading column, up to the width of the hero */
+.st-pics { display: grid; justify-items: center; gap: 16px; max-width: var(--st-wide); margin: 36px auto 0; }
+.st-pics figure { margin: 0; max-width: 100%; }
+.st-pics.is-many { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); justify-items: stretch; max-width: 1000px; }
+.st-pics.is-stack { gap: 36px; }
+.st-pics.is-stack figure { width: 100%; }
+.st-pics.is-many .st-zoom, .st-pics.is-stack .st-zoom { width: 100%; }
+/* On phones, several pictures become rows: a small picture beside its caption */
+@media (max-width: 599px) {
+  .st-pics.is-many { grid-template-columns: minmax(0, 1fr); }
+  .st-pics.is-many figure { display: grid; grid-template-columns: 112px minmax(0, 1fr); column-gap: 16px; align-items: center; }
+  .st-pics.is-many .st-caption { margin: 0; }
+}
+
+/* ---------- pictures: open larger in place on a click ---------- */
+.st-zoom { display: block; max-width: 100%; padding: 0; border: 0; border-radius: 12px; overflow: hidden; background: #fff; cursor: zoom-in; transition: transform 320ms var(--wf-ease-out); }
+.st-zoom img { display: block; width: 100%; height: auto; }
+@media (hover: hover) and (pointer: fine) { .st-zoom:hover { transform: translateY(-3px); } }
+.st-zoom:active { transform: scale(0.99); }
+.st-caption { margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--wf-muted); text-wrap: pretty; }
+/* The enlarged picture: fitted to the window, or zoomed into detail and panned by scrolling. The
+   dialog is the scroller; auto margins centre the picture when it fits and pin it to the start when
+   it doesn't, so every part can be scrolled to. */
+.st-lightbox { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 64px 24px 56px; overflow: auto; overscroll-behavior: contain; border: 0; background: transparent; }
+.st-lightbox[open] { display: grid; animation: st-fade 200ms var(--wf-ease-out); }
+.st-lightbox::backdrop { background: rgb(12 8 22 / 0.96); }
+.st-lightbox-pic { display: block; margin: auto; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.st-lightbox-pic img { display: block; width: auto; height: auto; max-width: calc(100vw - 48px); max-height: calc(100dvh - 120px); border-radius: 8px; }
+.st-lightbox.is-detail .st-lightbox-pic { cursor: zoom-out; }
+.st-lightbox.is-detail .st-lightbox-pic img { max-width: none; max-height: none; height: auto; }
+.st-lightbox-close { position: fixed; top: 16px; right: 16px; z-index: 1; padding: 8px 16px; border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.1); color: var(--wf-ink); font: inherit; font-size: var(--t-small); cursor: pointer; transition: background-color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .st-lightbox-close:hover { background: rgb(255 255 255 / 0.18); } }
+.st-lightbox-hint { position: fixed; bottom: 18px; left: 50%; margin: 0; translate: -50% 0; font-size: 13px; color: var(--wf-muted); white-space: nowrap; pointer-events: none; }
+html.st-locked { overflow: hidden; }
+@keyframes st-fade { from { opacity: 0; } }
+
+/* ---------- design decisions: picture and text side by side, alternating ---------- */
+.st-choices { display: grid; gap: 112px; margin-top: 56px; }
+.st-choice.is-split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: center; gap: 64px; max-width: var(--st-wide); margin-inline: auto; }
+/* Text first in reading order; the picture leads on screen, then swaps sides on even decisions */
+.st-choice.is-split .st-media { order: -1; }
+.st-choice.is-split.is-flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+.st-choice.is-split.is-flip .st-media { order: 1; }
+.st-choice-copy { max-width: 30em; }
+.st-media { margin: 0; }
+.st-shots { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.st-media.is-phones .st-zoom { max-width: calc(50% - 8px); border-radius: 22px; }
+.st-media.is-phones .st-zoom:only-child { max-width: 100%; }
+.st-media .st-caption { text-align: center; }
+@media (max-width: 799px) {
+  .st-choices { gap: 80px; }
+  .st-choice.is-split, .st-choice.is-split.is-flip { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .st-choice.is-split .st-media, .st-choice.is-split.is-flip .st-media { order: 1; }
+  .st-media.is-phones .st-zoom { border-radius: 14px; }
+}
+
+/* ---------- outcome: short lists side by side, then what I learned ---------- */
+.st-outcome { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 48px; margin-top: 8px; }
+.st-learned { margin-top: 56px; }
+.st-learned p { margin: 0; font-size: 22px; line-height: 1.5; letter-spacing: -0.012em; color: var(--wf-ink); text-wrap: pretty; }
+@media (max-width: 599px) {
+  .st-outcome { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .st-learned p { font-size: 19px; }
+}
+
+/* ---------- next project: a card with its picture ---------- */
+.st-next { max-width: var(--st-wide); margin: 160px auto 0; }
+.st-next-card { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); overflow: hidden; border-radius: 20px; background: rgb(255 255 255 / 0.045); color: inherit; text-decoration: none; transition: background-color 220ms ease; }
+.st-next-copy { display: flex; flex-direction: column; justify-content: center; padding: 48px; }
+.st-next-label { font-size: var(--t-small); color: var(--wf-muted); }
+.st-next-name { margin-top: 10px; font-size: clamp(30px, 3vw, 44px); font-weight: 600; line-height: 1.08; letter-spacing: -0.03em; color: var(--wf-ink); }
+.st-next-line { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--st-soft); text-wrap: pretty; }
+.st-next-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; font-size: 15px; font-weight: 500; color: var(--wf-ink); }
+.st-next-cta svg { transition: transform 220ms var(--wf-ease-out); }
+.st-next-pic { position: relative; min-height: 340px; overflow: hidden; }
+.st-next-pic img { object-fit: cover; transition: scale 700ms var(--wf-ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .st-next-card:hover { background: rgb(255 255 255 / 0.07); }
+  .st-next-card:hover .st-next-pic img { scale: 1.03; }
+  .st-next-card:hover .st-next-cta svg { transform: translateX(4px); }
+}
+.st-allwork { display: flex; width: fit-content; align-items: center; gap: 6px; margin: 28px auto 0; font-size: var(--t-small); color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .st-allwork:hover { color: var(--wf-ink); } }
+@media (max-width: 799px) {
+  .st-next { margin-top: 112px; }
+  .st-next-card { grid-template-columns: minmax(0, 1fr); }
+  .st-next-pic { order: -1; min-height: 0; aspect-ratio: 16 / 9; }
+  .st-next-copy { padding: 28px 24px 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-zoom, .st-next-pic img, .st-next-cta svg { transition: none; }
+  .st-zoom:hover, .st-zoom:active, .st-next-card:hover .st-next-cta svg { transform: none; }
+  .st-next-card:hover .st-next-pic img { scale: none; }
+  .st-lightbox[open] { animation: none; }
+}
