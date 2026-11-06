@@ -4,27 +4,23 @@ import type { CSSProperties } from 'react';
 import { useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SHAPE } from '@/app/data/layers';
 
 // The site's navigation on every page but the homepage (where the dolls are the way in): a slim pill
-// floating at the bottom, a home button first, then one word per doll of the homepage set, each with
-// a tiny doll in that doll's colour. A highlight glides to the item under the pointer (or keyboard
+// floating at the bottom, in the same glass as the homepage's labels: a home button first, then one word
+// per section, each with that section's painted doll's head (public/dolls/head-*.png). A highlight glides to the item under the pointer (or keyboard
 // focus) and rests on the page you're on. The highlight is a second copy of the list, clipped to one
 // item, so text and fill change colour together and nothing reflows; the clip is a CSS transition,
 // so it retargets smoothly mid-move.
 const ITEMS = [
-  { href: '/', label: 'Home', color: '', match: [] as string[] },
-  { href: '/work', label: 'Work', color: '#8b5cf6', match: ['/work/versum', '/work/spotify-loop'] },
-  { href: '/side-projects', label: 'Side projects', color: '#a78bfa', match: [] as string[] },
-  { href: '/how-i-work', label: 'How I work', color: '#c4b5fd', match: [] as string[] },
-  { href: '/about', label: 'About me', color: '#ede7fe', match: [] as string[] },
+  { href: '/', label: 'Home', icon: '', match: [] as string[] },
+  { href: '/work', label: 'Work', icon: '/dolls/head-1.png', match: ['/work/versum', '/work/spotify-loop', '/work/inkling'] },
+  { href: '/side-projects', label: 'Side projects', icon: '/dolls/head-2.png', match: [] as string[] },
+  { href: '/how-i-work', label: 'How I work', icon: '/dolls/head-3.png', match: [] as string[] },
+  { href: '/about', label: 'About me', icon: '/dolls/head-4.png', match: [] as string[] },
 ];
 
-const Mark = ({ color }: { color: string }) => (
-  <svg className="dock-mark" viewBox="0 0 200 260" aria-hidden="true" focusable="false">
-    <path d={SHAPE} fill={color} />
-  </svg>
-);
+// eslint-disable-next-line @next/next/no-img-element
+const Mark = ({ src }: { src: string }) => <img className="dock-mark" src={src} alt="" width={18} height={18} decoding="async" />;
 // Home: a little house, in the item's own colour
 const House = () => (
   <svg className="dock-home" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
@@ -75,7 +71,7 @@ export default function Dock() {
                 onFocus={() => setOver(i)}
                 onBlur={() => setOver(null)}
               >
-                {isHome(t) ? <><House /><span className="sr-only">{t.label}</span></> : <><Mark color={t.color} />{t.label}</>}
+                {isHome(t) ? <><House /><span className="sr-only">{t.label}</span></> : <><Mark src={t.icon} />{t.label}</>}
               </Link>
             </li>
           ))}
@@ -85,7 +81,7 @@ export default function Dock() {
           {ITEMS.map((t) => (
             <li key={t.href}>
               <span className={`dock-item${isHome(t) ? ' is-home' : ''}`}>
-                {isHome(t) ? <House /> : <><Mark color={t.color} />{t.label}</>}
+                {isHome(t) ? <House /> : <><Mark src={t.icon} />{t.label}</>}
               </span>
             </li>
           ))}

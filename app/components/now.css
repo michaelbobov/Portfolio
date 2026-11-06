@@ -1,0 +1,16 @@
+/* The live line under the name on the homepage (NowLine): one small lowercase sentence with a soft
+   "live" dot */
+.hp-now { display: block; max-width: 46em; margin: 16px auto 0; text-align: center; font-size: 15px; font-weight: 500; line-height: 1.4; letter-spacing: -0.005em; color: var(--hp-muted, #4f5f86); font-variant-numeric: tabular-nums; text-wrap: balance; }
+.hp-now-time { color: var(--hp-text, #13224a); white-space: nowrap; }
+/* (inline, so it leads the first line however the sentence wraps) */
+.hp-now-dot { position: relative; display: inline-block; vertical-align: 0.08em; margin-right: 8px; width: 7px; height: 7px; border-radius: 50%; background: #1f9d63; box-shadow: 0 0 0 3px rgba(31, 157, 99, 0.16); }
+/* The dot breathes, slowly */
+.hp-now-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: #1f9d63; animation: hp-now-pulse 2.6s ease-out infinite; }
+@keyframes hp-now-pulse { from { opacity: 0.6; transform: scale(1); } to { opacity: 0; transform: scale(2.6); } }
+/* It arrives a moment after the name (the homepage intro) */
+.wf-intro .hp-now { animation: hp-now-in 700ms cubic-bezier(0.23, 1, 0.32, 1) both; animation-delay: var(--d); }
+.js .wf-intro:not(:has(.ds.is-3d, .ds.is-flat)) .hp-now { animation-play-state: paused; }
+@keyframes hp-now-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .hp-now-dot::after { animation: none; opacity: 0; }
+}

@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteBar, EMAIL, RESUME } from '@/app/components/Site';
 import AboutDoll from '@/app/components/AboutDoll';
-import { ArrowUpRight } from '@/app/components/icons';
+import { ArrowRight, ArrowUpRight } from '@/app/components/icons';
 import '../hp.css';
 
 // Me, behind the littlest doll: the innermost layer. A doll in a half-round frame (it bounces and
-// spins on hover, and opens on a click), who he is, and the ways to reach him.
+// spins on hover, and opens on a click), who he is, and the ways to reach him; then why the dolls, in
+// the site's one sentence.
 export const metadata: Metadata = {
   title: 'About',
   description: 'Michael Bobov, a product designer in Seattle who builds what he designs.',
@@ -54,6 +55,15 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Why the dolls: the site's one sentence, told where the dolls are explained */}
+        <section className="hp-wrap ab-why" aria-labelledby="why-title">
+          <h2 id="why-title" className="ab-why-title">Design, <em className="sweep">one layer</em> deeper.</h2>
+          <p className="ab-why-note">
+            That’s what the dolls are for. Each one opens into the next, the way I work: on the outside, a live product; one layer in, how it
+            feels; deeper, the prototypes and the product design; at the core, the people it’s for.
+          </p>
+          <Link className="ab-why-link" href="/how-i-work">How I work <ArrowRight size={16} strokeWidth={2.25} /></Link>
+        </section>
       </main>
     </div>
   );

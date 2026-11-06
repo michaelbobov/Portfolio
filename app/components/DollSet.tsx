@@ -6,12 +6,12 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DOLL_INTRO } from '@/app/data/intro';
-import { DOLLS } from '@/app/data/dolls';
-import { DollInside, FLAT_AFTER, FlatDoll } from '@/app/components/FlatDoll';
+import { DOLLS, DOLL_ART, SET_SIZE } from '@/app/data/dolls';
+import { DollInside, FLAT_AFTER, FlatDoll, canWebGL } from '@/app/components/FlatDoll';
 import type { DollScene as DollSceneT } from '@/app/components/DollScene';
 
-// The hero's matryoshka, and a way into the site: four dolls, each a link (Work, Side projects, How
-// I work, and the littlest, About me), mirrored by the nav at the bottom of every other page. It starts as
+// The hero's matryoshka, and a way into the site: three dolls, each a link (Work, Side projects, and the
+// littlest, About me), mirrored by the nav at the bottom of every other page. It starts as
 // one doll and opens by itself as the headline lands, the way a real set does: the big doll stays put, its lid lifts clear, and the next doll rises
 // up out of the cup (carrying the smaller ones inside) and lands beside it, then opens in turn, in
 // one cascade down to the littlest. Following a doll plays a little opening, then the page. Web
@@ -20,10 +20,11 @@ import type { DollScene as DollSceneT } from '@/app/components/DollScene';
 // The dolls' art (colours, scarf, fringe) is shared with the 3D set in data/dolls. The seam at the
 // waist is only a step in tone (the bottom half a shade deeper). The littlest is solid.
 // Where each slot's centre sits relative to the middle of the open row, as (row height × oh) +
-// (gap × og). Each doll is 200/260 as wide as it is tall, so with heights 1, .72, .52, .36 the row is
-// 2 heights plus 3 gaps wide. Closed, the small dolls sit over the big one and the row is shifted so
-// the big one stands in the middle: worked out in CSS, so the very first frame is already right.
-const OFFSETS = [[-0.615385, -1.5], [0.046154, -0.5], [0.523077, 0.5], [0.861538, 1.5]] as const;
+// (gap × og). Each doll is 200/260 as wide as it is tall, so with heights 1, .72, .52 the row is
+// 1.723077 heights plus 2 gaps wide (hp.css). Closed, the small dolls sit over the big one and the row is
+// shifted so the big one stands in the middle: worked out in CSS, so the very first frame is already right.
+const OFFSETS = [[-0.476923, -1], [0.184615, 0], [0.661538, 1]] as const;
+const SET = DOLLS.slice(0, SET_SIZE);
 // The opening runs on the headline's timeline (data/intro)
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 const EASE_IN_OUT = 'cubic-bezier(0.65, 0, 0.35, 1)';
@@ -39,13 +40,16 @@ let autoOpened = false;
 // (hp.css), so the flat one never shows first; it shows only if the 3D one is late, or can't run.
 let sceneModule: Promise<typeof import('@/app/components/DollScene')> | null = null;
 const loadScene = () => (sceneModule ??= import('@/app/components/DollScene'));
-if (typeof window !== 'undefined' && window.location.pathname === '/') loadScene().catch(() => {});
+// The set's paintings are fetched at the same moment, so the 3D set isn't kept waiting for them after.
+if (typeof window !== 'undefined' && window.location.pathname === '/') {
+  loadScene().catch(() => {});
+  DOLL_ART.slice(0, SET_SIZE).forEach((a) => { if (a) [a.front, a.back].forEach((src) => { new Image().src = src; }); });
+}
 
 // Where each doll takes you, biggest first. The littlest is Michael.
 const PLACES = [
   { href: '/work', label: 'Work' },
   { href: '/side-projects', label: 'Side projects' },
-  { href: '/how-i-work', label: 'How I work' },
   { href: '/about', label: 'About me' },
 ];
 // How long a doll's little opening plays before the page changes
@@ -119,7 +123,9 @@ export default function DollSet() {
         ], { ...span((r - 1) * step, d), fill: 'none' }));
       }
     }
-    list.push(track.animate([{ transform: `translateX(${track.clientWidth / 2 - xs[0]}px)` }, { transform: 'translateX(0px)' }], { ...span(0, total), easing: EASE_IN_OUT }));
+    // (closed, the big doll stands centred on the page: the set itself is shifted by --mid, hp.css)
+    const mid = -(parseFloat(getComputedStyle(row).translate) || 0);
+    list.push(track.animate([{ transform: `translateX(${track.clientWidth / 2 - xs[0] + mid}px)` }, { transform: 'translateX(0px)' }], { ...span(0, total), easing: EASE_IN_OUT }));
     // Keep every layer once it finishes: the browser otherwise drops finished animations it thinks are
     // covered, and a doll would lose all but its last hop and end up a hop too far along
     list.forEach((a) => a.persist());
@@ -184,6 +190,7 @@ export default function DollSet() {
     if (!root || !canvas) return;
     const late = window.setTimeout(() => setFlat(true), FLAT_AFTER);
     const fail = () => { window.clearTimeout(late); setFlat(true); };
+    if (!canWebGL()) { fail(); return () => window.clearTimeout(late); }
     loadScene().then(({ createDollScene }) => {
       if (dead) return;
       try {
@@ -224,7 +231,7 @@ export default function DollSet() {
     >
       <canvas ref={canvasRef} className="ds-3d" aria-hidden="true" />
       <span className="ds-track">
-        {DOLLS.map((d, i) => (
+        {SET.map((d, i) => (
           <Link
             key={i}
             href={PLACES[i].href}
@@ -233,7 +240,7 @@ export default function DollSet() {
             style={{ '--i': i, '--oh': OFFSETS[i][0], '--og': OFFSETS[i][1], '--rise': ((1 - d.size) * 8) / 260, height: `${d.size * 100}%` } as CSSProperties}
           >
             <span className="ds-shadow" aria-hidden="true" />
-            {i < DOLLS.length - 1 && <DollInside i={i} />}
+            <DollInside i={i} />
             <FlatDoll i={i} prefix="ds" shadow={false} />
             <span className="ds-cap">{PLACES[i].label}</span>
           </Link>

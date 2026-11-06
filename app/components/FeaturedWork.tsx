@@ -79,9 +79,10 @@ export default function FeaturedWork({ projects }: { projects: Project[] }) {
           </div>
           <div className="pc-body">
             <div className="pc-words">
-              <h3 className="pc-name">
+              {/* (h2: the cards sit straight under the Work page's h1) */}
+              <h2 className="pc-name">
                 <Link href={p.link} className="pc-link"><span className="pc-title">{p.name}.</span> {p.headline}</Link>
-              </h3>
+              </h2>
               <p className="pc-summary">{p.summary}</p>
               <p className="pc-meta">
                 {p.meta} · {p.platform} · {p.year} ·{' '}

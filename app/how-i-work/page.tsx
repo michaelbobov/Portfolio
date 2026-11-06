@@ -22,7 +22,7 @@ export default function HowIWorkPage() {
     <div className="hp">
       <SiteBar />
       <main id="main-content" tabIndex={-1} className="focus:outline-none" aria-labelledby="how-title">
-        <SectionHead doll={2} id="how-title" title={<>How I <em>work.</em></>} note="Outside in, like the dolls: past the mockup, until it ships." />
+        <SectionHead doll={3} id="how-title" title={<>How I <em>work.</em></>} note="Outside in, like the dolls: past the mockup, until it ships." />
         <section className="hp-wrap sp-body hp-how" aria-labelledby="rings-title">
           <div className="hp-rings" aria-hidden="true">
             {RINGS.map((r, i) => (

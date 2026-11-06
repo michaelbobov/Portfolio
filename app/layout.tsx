@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Bricolage_Grotesque, Instrument_Serif } from 'next/font/google'
+import { Bricolage_Grotesque, DM_Sans, Instrument_Serif } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import './site.css'
@@ -7,6 +7,7 @@ import { SiteClose } from './components/Site'
 import HideOnHome from './components/HideOnHome'
 import Dock from './components/Dock'
 import MotionProvider from './components/MotionProvider'
+import { SEASON_SCRIPT } from './data/season'
 
 // Geist for text and UI, Bricolage Grotesque for display (headlines, section and panel titles, the
 // footer name), and Instrument Serif italic for one accent phrase per homepage heading
@@ -14,6 +15,13 @@ const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-display',
   axes: ['opsz', 'wdth'],
+  display: 'swap',
+})
+// DM Sans for the name and the section pages' titles and headings (its optical sizes follow the size)
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  axes: ['opsz'],
+  variable: '--font-title',
   display: 'swap',
 })
 const instrumentSerif = Instrument_Serif({
@@ -77,12 +85,14 @@ export default function RootLayout({
 }) {
   return (
     // The script marks that scripts run, before the first paint, so the flat dolls can wait unseen for
-    // the 3D ones (hp.css); it changes the class after the server's, hence suppressHydrationWarning
+    // the 3D ones (hp.css), brings back the homepage's snow if it was switched on (SnowToggle), and sets
+    // the season for the dolls' seasonal touches (data/season.ts); it
+    // changes the class after the server's, hence suppressHydrationWarning
     <html lang="en" className="h-full" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');try{if(localStorage.getItem('mb-snow')==='on')document.documentElement.dataset.snow='on'}catch(e){}" + SEASON_SCRIPT }} />
       </head>
-      <body className={`${GeistSans.variable} ${bricolage.variable} ${instrumentSerif.variable} font-sans h-full flex flex-col`}>
+      <body className={`${GeistSans.variable} ${dmSans.variable} ${bricolage.variable} ${instrumentSerif.variable} font-sans h-full flex flex-col`}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-wf-sheet focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg text-sm font-medium text-wf-ink focus:outline-none focus:ring-2 focus:ring-wf-ink"

@@ -12,7 +12,7 @@ export const PROJECTS: Project[] = [
     status: 'Live MVP',
     headline: 'Helping uninsured patients and dental students find each other.',
     summary: 'A booking marketplace where uninsured patients get care from supervised dental students.',
-    stage: '#6d4aea', // violet: its white, blue-edged screens stand out on it
+    stage: '#2a4fae', // Gzhel cobalt: its white screens stand out on it
     shots: [],
     motion: {
       src: '/versum-overview.mp4',
@@ -34,7 +34,7 @@ export const PROJECTS: Project[] = [
     status: 'Pre-launch',
     headline: 'For everything you text yourself and forget.',
     summary: 'A Mac app that files a thought the way you’d text it to yourself, typos and all: an event, a to-do, an idea to develop or a note to keep, with the AI running on the Mac.',
-    stage: '#8f6ee0', // a mid violet: the app's white windows and pastel popup stand out on it
+    stage: '#7f9aa6', // slate teal, like the third doll: the app's white windows and pastel popup stand out on it
     shots: [
       { src: '/inkling-today.png', w: 1030, h: 1444, kind: 'browser', at: [10, 12, 30] },
       { src: '/inkling-followup.png', w: 920, h: 380, kind: 'browser', at: [36, 30, 54] },
@@ -50,7 +50,7 @@ export const PROJECTS: Project[] = [
     status: 'Concept',
     headline: 'Replay one part of a song without leaving Spotify.',
     summary: 'A self-initiated concept for looping a section of a song inside Spotify’s player, with a library of saved loops.',
-    stage: '#c4b8ed', // lavender: the dark player and its gold album art stand out on it
+    stage: '#c9d9ee', // ice: the dark player and its gold album art stand out on it
     shots: [],
     motion: {
       src: '/spotify-loop-overview.mp4',

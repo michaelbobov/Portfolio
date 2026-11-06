@@ -1,5 +1,5 @@
 /*
-  Case-study pages (Versum, Spotify Loop) on the dark grape ground, laid out like a well-made article:
+  Case-study pages (Versum, Spotify Loop) on the snow ground, laid out like a well-made article:
   a centered header, the work in motion, then numbered sections in one centered reading column, with
   pictures breaking out wider than the text and design decisions alternating picture and text. The
   page ends on a card for the next project. One typeface, Geist. No folds, no new tabs, no sideways
@@ -9,8 +9,8 @@
 .st {
   --st-wide: 1120px;
   --st-col: 680px;
-  --st-text: #d6cee8;
-  --st-soft: #b9aed1;
+  --st-text: #24345e;
+  --st-soft: #4f5f86;
   padding-bottom: 32px;
   color: var(--wf-ink);
 }
@@ -29,7 +29,7 @@
 @media (hover: hover) and (pointer: fine) { .st-meta a:hover { text-decoration-color: currentColor; } }
 .st-chip { display: inline-flex; align-items: center; gap: 7px; }
 .st-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wf-muted); }
-.st-chip-live::before { background: #34d399; }
+.st-chip-live::before { background: #1f9d63; }
 .st-chip-pre::before { background: var(--wf-gold); }
 .st-note { max-width: 40em; margin: 24px auto 0; font-size: 13px; line-height: 1.5; color: var(--wf-muted); }
 .st-hero { margin-top: 56px; text-align: left; }
@@ -101,17 +101,19 @@
 .st-caption { margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--wf-muted); text-wrap: pretty; }
 /* The enlarged picture: fitted to the window, or zoomed into detail and panned by scrolling. The
    dialog is the scroller; auto margins centre the picture when it fits and pin it to the start when
-   it doesn't, so every part can be scrolled to. */
+   it doesn't, so every part can be scrolled to. It stays dark on the light site, so its controls
+   carry their own light colours. */
 .st-lightbox { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 64px 24px 56px; overflow: auto; overscroll-behavior: contain; border: 0; background: transparent; }
 .st-lightbox[open] { display: grid; animation: st-fade 200ms var(--wf-ease-out); }
-.st-lightbox::backdrop { background: rgb(12 8 22 / 0.96); }
+.st-lightbox::backdrop { background: rgb(9 16 36 / 0.96); }
 .st-lightbox-pic { display: block; margin: auto; padding: 0; border: 0; background: none; cursor: zoom-in; }
 .st-lightbox-pic img { display: block; width: auto; height: auto; max-width: calc(100vw - 48px); max-height: calc(100dvh - 120px); border-radius: 8px; }
 .st-lightbox.is-detail .st-lightbox-pic { cursor: zoom-out; }
 .st-lightbox.is-detail .st-lightbox-pic img { max-width: none; max-height: none; height: auto; }
-.st-lightbox-close { position: fixed; top: 16px; right: 16px; z-index: 1; padding: 8px 16px; border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.1); color: var(--wf-ink); font: inherit; font-size: var(--t-small); cursor: pointer; transition: background-color 160ms ease; }
-@media (hover: hover) and (pointer: fine) { .st-lightbox-close:hover { background: rgb(255 255 255 / 0.18); } }
-.st-lightbox-hint { position: fixed; bottom: 18px; left: 50%; margin: 0; translate: -50% 0; font-size: 13px; color: var(--wf-muted); white-space: nowrap; pointer-events: none; }
+.st-lightbox-close { position: fixed; top: 16px; right: 16px; z-index: 1; padding: 8px 16px; border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.14); color: #f4f7fc; font: inherit; font-size: var(--t-small); cursor: pointer; transition: background-color 160ms ease; }
+.st-lightbox-close:focus-visible { outline: 2px solid #a9c2f0; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .st-lightbox-close:hover { background: rgb(255 255 255 / 0.24); } }
+.st-lightbox-hint { position: fixed; bottom: 18px; left: 50%; margin: 0; translate: -50% 0; font-size: 13px; color: #bccbe4; white-space: nowrap; pointer-events: none; }
 html.st-locked { overflow: hidden; }
 @keyframes st-fade { from { opacity: 0; } }
 
@@ -128,7 +130,11 @@ html.st-locked { overflow: hidden; }
 .st-media.is-phones .st-zoom { max-width: calc(50% - 8px); border-radius: 22px; }
 .st-media.is-phones .st-zoom:only-child { max-width: 100%; }
 .st-media .st-caption { text-align: center; }
+/* A recording under its text: capped about 620px tall for the app recordings (1680×1206), like a
+   stacked screen, so it fits a laptop screen along with its caption */
+.st-choice.is-wide .st-media { max-width: 880px; margin: 32px auto 0; }
 @media (max-width: 799px) {
+  .st-choice.is-wide .st-media { margin-top: 24px; }
   .st-choices { gap: 80px; }
   .st-choice.is-split, .st-choice.is-split.is-flip { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .st-choice.is-split .st-media, .st-choice.is-split.is-flip .st-media { order: 1; }

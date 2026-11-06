@@ -1,5 +1,5 @@
 /*
-  Case-study pages: one grid on the dark grape ground. A narrow margin holds small labels; a single
+  Case-study pages: one grid on the snow ground. A narrow margin holds small labels; a single
   column holds everything else, so one line runs down the whole page. Two voices only: a serif for the
   sentences and Geist for the detail. No cards, no panels, no sideways scrolling; space does the
   separating. The only motion is hover and press feedback. Tokens live in globals.css.
@@ -9,8 +9,8 @@
   --cs-w: 1000px;
   --cs-rail: 220px;
   --cs-gap: 30px;
-  --cs-sentence: #ece6f8;
-  --cs-text: #cfc6e2;
+  --cs-sentence: #13224a;
+  --cs-text: #24345e;
   --cs-serif: var(--font-serif-accent), Georgia, serif;
   padding-bottom: 32px;
   color: var(--wf-ink);
@@ -50,7 +50,7 @@
 .cs-note { max-width: 15em; margin: 24px 0 0; font-size: 13px; line-height: 1.5; color: var(--wf-muted); }
 .cs-chip { display: inline-flex; align-items: center; gap: 7px; }
 .cs-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wf-muted); }
-.cs-chip-live::before { background: #34d399; }
+.cs-chip-live::before { background: #1f9d63; }
 .cs-chip-pre::before { background: var(--wf-gold); }
 .cs-story dt { font-size: var(--t-small); line-height: 1.5; color: var(--wf-muted); }
 .cs-story dd { margin: 4px 0 0; font-size: 16px; line-height: 1.6; color: var(--cs-text); text-wrap: pretty; }

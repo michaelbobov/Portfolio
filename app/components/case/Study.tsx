@@ -5,15 +5,17 @@ import { SiteBar } from '@/app/components/Site';
 import { ArrowLeft, ArrowRight } from '@/app/components/icons';
 import Zoom, { type Pic } from '@/app/components/case/StudyZoom';
 
-// Building blocks for the Versum and Spotify Loop case studies (Inkling still uses Case.tsx), laid out
-// like a well-made article. A centered header (name, one line, the facts), the work in motion, then
+// Building blocks for the Versum, Inkling and Spotify Loop case studies, laid out like a well-made
+// article. A centered header (name, one line, the facts), the work in motion, then
 // numbered sections in one centered reading column. Pictures break out wider than the text; design
 // decisions alternate picture and text; the page ends on a card for the next project, with its picture.
 // Pictures open larger in place. One typeface, Geist. Styles: app/work/study.css.
 
 export type Status = 'LIVE' | 'LIVE MVP' | 'PRE-LAUNCH' | 'CONCEPT';
 
-type StudyPic = Pic & { caption?: ReactNode };
+// `size` caps a small piece of UI (a popup, a notification) at about its real width in CSS pixels,
+// so it isn't blown up to the width of the column
+type StudyPic = Pic & { caption?: ReactNode; size?: number };
 
 // How each status reads on the page
 const STATUS: Record<Status, { label: string; tone: 'live' | 'pre' | 'concept' }> = {
@@ -103,18 +105,22 @@ export function Quote({ text, who }: { text: string; who: string }) {
 }
 
 // Pictures under a block of text, wider than the text: one, centered; several square-ish ones side by
-// side; several wide screens stacked
+// side; several wide screens stacked. A stacked screen is capped at 620px tall like a single one; the
+// cap goes on its figure, so the screen and its caption stay centered together.
 function Pics({ pics }: { pics: StudyPic[] }) {
   const many = pics.length > 1;
   const stack = many && pics.every((p) => p.width / p.height > 1.3);
   return (
     <div className={`st-pics${stack ? ' is-stack' : many ? ' is-many' : ''}`}>
-      {pics.map((p) => (
-        <figure key={p.src}>
-          <Zoom img={p} sizes={many && !stack ? '(min-width: 900px) 330px, 50vw' : '(min-width: 1180px) 1120px, 100vw'} fit={many && !stack ? undefined : 620} />
-          {p.caption && <figcaption className="st-caption">{p.caption}</figcaption>}
-        </figure>
-      ))}
+      {pics.map((p) => {
+        const width = p.size ?? (stack ? Math.round((620 * p.width) / p.height) : undefined);
+        return (
+          <figure key={p.src} style={width ? { width: `min(100%, ${width}px)` } : undefined}>
+            <Zoom img={p} sizes={p.size ? `${p.size}px` : many && !stack ? '(min-width: 900px) 330px, 50vw' : '(min-width: 1180px) 1120px, 100vw'} fit={width || many ? undefined : 620} />
+            {p.caption && <figcaption className="st-caption">{p.caption}</figcaption>}
+          </figure>
+        );
+      })}
     </div>
   );
 }
@@ -145,8 +151,9 @@ export function Choices({ children }: { children: ReactNode }) {
   return <div className="st-choices">{children}</div>;
 }
 
-// A design decision, numbered. With a screen, the screen and the text sit side by side, alternating
-// sides from one decision to the next; without one, the text sits in the reading column.
+// A design decision, numbered. A recording goes under the text, wider than the column, so a whole app
+// window reads at a real size. Screens sit beside the text, alternating sides from one decision to the
+// next. Without either, the text sits in the reading column.
 export function Choice({ n, title, shots, media, caption, children }: { n: number; title: string; shots?: { img: Pic; phone?: boolean }[]; media?: ReactNode; caption?: ReactNode; children: ReactNode }) {
   const phones = shots?.some((x) => x.phone);
   const heading = (
@@ -154,7 +161,22 @@ export function Choice({ n, title, shots, media, caption, children }: { n: numbe
       <span className="st-n">{n}.</span> {title}
     </h3>
   );
-  if (!media && !shots?.length) {
+  const figcaption = caption && <figcaption className="st-caption">{caption}</figcaption>;
+  if (media) {
+    return (
+      <div className="st-choice is-wide">
+        <div className="st-text">
+          {heading}
+          <div className="st-prose">{children}</div>
+        </div>
+        <figure className="st-media">
+          <div className="st-frame st-motion st-motion-natural">{media}</div>
+          {figcaption}
+        </figure>
+      </div>
+    );
+  }
+  if (!shots?.length) {
     return (
       <div className="st-choice st-text">
         {heading}
@@ -170,9 +192,9 @@ export function Choice({ n, title, shots, media, caption, children }: { n: numbe
       </div>
       <figure className={`st-media${phones ? ' is-phones' : ''}`}>
         <div className="st-shots">
-          {media ? <div className="st-frame st-motion st-motion-natural">{media}</div> : shots?.map((x) => <Zoom key={x.img.src} img={x.img} sizes={phones ? '(min-width: 900px) 260px, 45vw' : '(min-width: 900px) 620px, 100vw'} fit={phones ? 460 : 540} />)}
+          {shots.map((x) => <Zoom key={x.img.src} img={x.img} sizes={phones ? '(min-width: 900px) 260px, 45vw' : '(min-width: 900px) 620px, 100vw'} fit={phones ? 460 : 540} />)}
         </div>
-        {caption && <figcaption className="st-caption">{caption}</figcaption>}
+        {figcaption}
       </figure>
     </div>
   );

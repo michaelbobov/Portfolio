@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { DollInside, FLAT_AFTER, FlatDoll } from '@/app/components/FlatDoll';
+import { DollInside, FLAT_AFTER, FlatDoll, canWebGL } from '@/app/components/FlatDoll';
 import type { AboutScene } from '@/app/components/DollScene';
 
 // The About page's doll, standing in a half-round, doll-shaped frame. On hover it does a little
@@ -23,6 +23,7 @@ export default function AboutDoll() {
     if (!root || !canvas) return;
     const late = window.setTimeout(() => setFlat(true), FLAT_AFTER);
     const fail = () => { window.clearTimeout(late); setFlat(true); };
+    if (!canWebGL()) { fail(); return () => window.clearTimeout(late); }
     import('@/app/components/DollScene').then(({ createAboutScene }) => {
       if (dead) return;
       try {

@@ -25,14 +25,14 @@
     --ring: 12 60% 50%;
     --radius: 0.5rem;
 
-    /* Dark grape palette, site-wide: the ground (a quiet grape, nearly ink, so the purple of the dolls,
-       the cards and the accent stands out on it), a card one step up, near-white ink, a lilac accent */
-    --wf-bg: #100b1a;
-    --wf-sheet: #1f1236;
-    --wf-ink: #f4efff;
-    --wf-muted: #b4a7d6;
-    --wf-line: rgba(233, 224, 255, 0.12);
-    --wf-accent: #a585f7;   /* lilac: links, labels, the one accent phrase */
+    /* Snow and Gzhel cobalt, site-wide: a pale cold ground (snow), porcelain-white cards, cobalt-navy
+       ink, and the cobalt of Gzhel painting as the accent */
+    --wf-bg: #eef3f9;
+    --wf-sheet: #ffffff;
+    --wf-ink: #13224a;
+    --wf-muted: #4f5f86;
+    --wf-line: rgba(19, 34, 74, 0.1);
+    --wf-accent: #2a4fae;   /* Gzhel cobalt: links, labels, the one accent phrase */
     --wf-gold: #f0bd5a;     /* folk gold, used sparingly: the dolls' flower hearts, pre-launch, the close */
     --wf-yellow: #ffd84d;   /* comic yellow: bursts, caption boxes, halftone */
     --wf-glove: #ff4d4d;
@@ -72,7 +72,7 @@
   
   html {
     scroll-behavior: smooth;
-    scrollbar-color: #4a2f80 var(--wf-bg);
+    scrollbar-color: #b5c6df var(--wf-bg);
   }
 
   body {

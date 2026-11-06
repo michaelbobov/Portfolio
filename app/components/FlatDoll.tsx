@@ -1,12 +1,17 @@
 import { SHAPE } from '@/app/data/layers';
-import { DOLLS, FRINGE, GOLD, INK, SCARF } from '@/app/data/dolls';
+import { DOLLS, DOLL_ART, FRINGE, GOLD, INK, SCARF } from '@/app/data/dolls';
 
 // The flat (SVG) matryoshka: the homepage set before its 3D one is drawn (or without WebGL), the
 // About page's doll, and the doll beside each section title. Plain markup, so it renders on the
 // server and pulls in nothing else.
 
-/** How long a flat doll stays hidden waiting for its 3D one (DollSet, AboutDoll) before it shows */
-export const FLAT_AFTER = 1600;
+/** How long a flat doll stays hidden waiting for its 3D one (DollSet, AboutDoll) before it shows: long
+ *  enough for a first visit to fetch three.js and the paintings, so the flat set doesn't flash first */
+export const FLAT_AFTER = 4500;
+/** Whether this browser can draw the 3D dolls at all; if not, the flat ones show at once */
+export const canWebGL = () => {
+  try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
+};
 
 // A five-petal folk flower in the doll's deepest tone
 const Flower = ({ y, r, fill, heart }: { y: number; r: number; fill: string; heart: string }) => (
@@ -26,7 +31,27 @@ const Flower = ({ y, r, fill, heart }: { y: number; r: number; fill: string; hea
 const LIP = 'A70 11 0 0 0 170 150';
 export function FlatDoll({ i, prefix, className = '', shadow = true }: { i: number; prefix: string; className?: string; shadow?: boolean }) {
   const { body, shade, scarf, apron, deep } = DOLLS[i];
-  const id = `${prefix}-${i}`, solid = apron === null;
+  const id = `${prefix}-${i}`, solid = apron === null, art = DOLL_ART[i];
+  // A painted doll shows its painting, cut at the waist the same way
+  if (art) return (
+    <svg className={`ds-doll${solid ? ' is-solid' : ''} ${className}`} viewBox="0 0 200 260" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id={`${id}-t`}><path d="M-20 -40H220V150H170A70 11 0 0 1 30 150H-20Z" /></clipPath>
+        <clipPath id={`${id}-b`}><path d={`M-20 150H30${LIP}H220V280H-20Z`} /></clipPath>
+        <clipPath id={`${id}-s`}><path d={SHAPE} /></clipPath>
+      </defs>
+      {shadow && <ellipse cx="100" cy="255" rx="66" ry="5" fill={INK} opacity=".3" />}
+      <g className="ds-bot">
+        <g clipPath={`url(#${id}-s)`}><image href={art.front} width="200" height="260" clipPath={`url(#${id}-b)`} /></g>
+        {!solid && <path d={`M30 150${LIP}`} fill="none" stroke={body} strokeWidth="3" />}
+        <path d="M30 222c-3-14 0-28 8-40" fill="none" stroke="#fff" strokeOpacity=".22" strokeWidth="7" strokeLinecap="round" />
+      </g>
+      <g className="ds-top">
+        <g clipPath={`url(#${id}-s)`}><image href={art.front} width="200" height="260" clipPath={`url(#${id}-t)`} /></g>
+        <path d="M58 46c8-15 20-24 34-28" fill="none" stroke="#fff" strokeOpacity=".35" strokeWidth="7" strokeLinecap="round" />
+      </g>
+    </svg>
+  );
   return (
     <svg className={`ds-doll${solid ? ' is-solid' : ''} ${className}`} viewBox="0 0 200 260" aria-hidden="true" focusable="false">
       <defs>
@@ -36,7 +61,7 @@ export function FlatDoll({ i, prefix, className = '', shadow = true }: { i: numb
         <clipPath id={`${id}-s`}><path d={SHAPE} /></clipPath>
         <clipPath id={`${id}-h`}><path d={SCARF} /></clipPath>
       </defs>
-      {shadow && <ellipse cx="100" cy="255" rx="66" ry="5" fill={INK} opacity=".45" />}
+      {shadow && <ellipse cx="100" cy="255" rx="66" ry="5" fill={INK} opacity=".3" />}
       <g className="ds-bot">
         <path d={SHAPE} fill={solid ? body : shade} clipPath={`url(#${id}-b)`} />
         {/* The front lip of the rim, catching the light */}
