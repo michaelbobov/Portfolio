@@ -689,7 +689,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     vcam.position.copy(cur.pos);
     vcam.lookAt(cur.tgt);
     vcam.updateProjectionMatrix(); vcam.updateMatrixWorld();
-    village.step(dt, zp >= 1 ? hoverHouse : -1, []);
+    village.step(dt, zp >= 1 ? hoverHouse : -1, zp >= 1 ? focus : -1);
     // the labels hang over their places, kept inside the screen, and nudged apart where two would overlap
     // (the further one, higher on the screen, moves up)
     const spots = village.houses.map((h, i) => {
@@ -864,18 +864,21 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     gourd = { group: p.object, r: 132 / Math.max(p.size.x, p.size.z) };
     scene.add(p.object); disposables.push(...p.parts); apply(); kick();
   });
-  // His doll (data/me) wears the outfit he published last, as 3D clothes over its painting (Outfit3D);
-  // they arrive when the outfit has loaded, and fade with the doll when the camera flies into the village
-  fetch('/api/outfit').then((r) => r.json()).then(async (d) => {
-    const me = dolls[ME];
-    if (!me || gone || !Array.isArray(d?.current?.outfit) || !d.current.outfit.length) return;
-    const { wearOutfit } = await import('@/app/components/Outfit3D');
-    if (gone) return;
-    const worn = wearOutfit(me, d.current.outfit, true, () => { apply(); kick(); });
-    const fade = me.fade;
-    me.fade = (a: number) => { fade(a); worn.fade(a); };
-    disposables.push(worn); apply(); kick();
-  }).catch(() => undefined);
+  // His doll (data/me) wears his hair and the outfit he published last, as 3D toy pieces over its
+  // painting (Outfit3D); with no outfit (or no answer), just his hair. They fade with the doll when the
+  // camera flies into the village.
+  fetch('/api/outfit').then((r) => r.json())
+    .then((d) => (Array.isArray(d?.current?.outfit) ? d.current.outfit : []), () => [])
+    .then(async (outfit) => {
+      const me = dolls[ME];
+      if (!me || gone) return;
+      const { wearOutfit } = await import('@/app/components/Outfit3D');
+      if (gone) return;
+      const worn = wearOutfit(me, outfit, true);
+      const fade = me.fade;
+      me.fade = (a: number) => { fade(a); worn.fade(a); };
+      disposables.push(worn); apply(); kick();
+    }).catch(() => undefined);
 
   const go = (open: boolean, s: number, l: number, elapsed = 0) => {
     if (reduce.matches) { t = open ? total : 0; dir = 0; kick(); return; }

@@ -10,9 +10,10 @@ import { HOUSES, PAINTING_ASPECT, SKY } from '@/app/data/village';
 //
 // Everything is Gzhel porcelain painted with Codex's image tool in the Side projects doll's style
 // (public/village). The cabin, the hut on chicken legs and the penguin are 3D models made from their
-// paintings (Hunyuan3D 2.1's shapes, public/village/models); the firs, SkillTree's among them, are turned
-// on a lathe from their painting's outline, like the dolls. Each wears its painting, projected onto it
-// from the front, under a soft porcelain glaze.
+// paintings (Hunyuan3D 2.1's shapes, public/village/models); the firs are turned on a lathe from their
+// painting's outline, like the dolls. Each wears its painting, projected onto it from the front, under a
+// soft porcelain glaze. SkillTree's landmark is built here: a bare porcelain tree that is its own diagram,
+// every fork and tip a glowing node in a cobalt ring, snow along its branches.
 //
 // It is painted on the doll's belly by rendering it from its postcard camera (DollScene), so what shows
 // in her window is this world itself, and flying in is seamless.
@@ -25,18 +26,26 @@ export type Village = {
   houses: House[];
   /** the camera the doll's painting is rendered with (her window's shape), so the handoff starts exactly there */
   postcard: THREE.PerspectiveCamera;
-  /** the hovered island's lift */
-  step: (dt: number, hover: number, pop: number[]) => void;
+  /** the hovered island's lift, and SkillTree's light climbing its nodes while it's pointed at or visited */
+  step: (dt: number, hover: number, focus: number) => void;
   pick: (ray: THREE.Raycaster) => number;
   dispose: () => void;
 };
 
 /** The pieces, how tall each stands (world units), and how each is made solid: a model, or turned from its outline */
-const PIECES = { cabin: 2.6, skilltree: 4.6, hut: 3.4, penguin: 1.1, fir1: 4.4 } as const;
+const PIECES = { cabin: 2.6, hut: 3.4, penguin: 1.1, fir1: 4.4 } as const;
 type Piece = keyof typeof PIECES;
 const MODELLED: Piece[] = ['cabin', 'hut', 'penguin'];
-const TURNED: Piece[] = ['skilltree', 'fir1'];
-const KIND: Record<string, Piece> = { house: 'cabin', tree: 'skilltree', hut: 'hut' };
+const TURNED: Piece[] = ['fir1'];
+const KIND: Record<string, Piece | 'skilltree'> = { house: 'cabin', tree: 'skilltree', hut: 'hut' };
+/** SkillTree's tree, as a diagram: its nodes (x, y, depth, level) in front view, and the branches between them */
+const SKILL_NODES: [number, number, number, number][] = [
+  [0, 1.45, 0, 0],
+  [-1.3, 2.55, 0.2, 1], [0, 2.95, -0.15, 1], [1.3, 2.55, 0.2, 1],
+  [-2.0, 3.45, 0.1, 2], [-0.85, 3.95, 0.3, 2], [0, 4.35, 0, 2], [0.85, 3.95, 0.3, 2], [2.0, 3.45, 0.1, 2],
+];
+const SKILL_LINKS: [number, number][] = [[0, 1], [0, 2], [0, 3], [1, 4], [1, 5], [2, 6], [3, 7], [3, 8]];
+const SKILL_H = 4.6;
 /** The lake: its middle and radius; the islands' height and radius */
 const LAKE = { x: 0, z: -3, r: 13 }, ISLAND = { h: 0.36, r: 1.95 };
 /** Laid out for a tall screen (a phone)? Decided once, when the world is built: the islands zigzag back
@@ -170,6 +179,64 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
     if (!f) { f = MODELLED.includes(k) ? modelled(k) : new THREE.Mesh(lathed(k), glazeOf(k)); made.set(k, f); }
     return f.clone();
   };
+  // SkillTree's tree: porcelain branches curving up from the trunk to each node, snow lying along their
+  // tops, a glowing node in a thin cobalt ring at every fork and tip
+  // (pale cobalt porcelain, so the white snow on it shows, and it stands out against the white sky)
+  const bark = own(new THREE.MeshPhysicalMaterial({ color: '#b9c9e8', roughness: 0.4, clearcoat: 0.9, clearcoatRoughness: 0.12 }));
+  const cobalt = own(new THREE.MeshPhysicalMaterial({ color: '#1b3a8f', roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.1 }));
+  const snowCap = own(new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9 }));
+  const haloTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const x = c.getContext('2d') as CanvasRenderingContext2D, gr = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(140,175,255,0.9)'); gr.addColorStop(0.4, 'rgba(110,150,255,0.35)'); gr.addColorStop(1, 'rgba(110,150,255,0)');
+    x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
+    return own(new THREE.CanvasTexture(c));
+  })();
+  const skillNodes: { mat: THREE.MeshPhysicalMaterial; halo: THREE.Sprite; level: number }[] = [];
+  const skillTree = () => {
+    const g = new THREE.Group(), pt = SKILL_NODES.map(([x, y, z]) => new THREE.Vector3(x, y, z));
+    const blob = own(new THREE.SphereGeometry(1, 20, 12));
+    const branch = (a: THREE.Vector3, b: THREE.Vector3, r: number, r1 = r * 0.6) => {
+      // (it leaves upward, then bends out toward the node, tapering from r to r1)
+      const curve = new THREE.QuadraticBezierCurve3(a, new THREE.Vector3(a.x + (b.x - a.x) * 0.1, (a.y + b.y) / 2 + 0.32, (a.z + b.z) / 2), b);
+      const N = 24, R = 12, tube = own(new THREE.TubeGeometry(curve, N, 1, R, false)), pos = tube.attributes.position;
+      for (let i = 0; i <= N; i++) {
+        const c = curve.getPointAt(i / N), w = r + (r1 - r) * (i / N);
+        for (let j = 0; j <= R; j++) { const k = i * (R + 1) + j; pos.setXYZ(k, c.x + (pos.getX(k) - c.x) * w, c.y + (pos.getY(k) - c.y) * w, c.z + (pos.getZ(k) - c.z) * w); }
+      }
+      tube.computeVertexNormals();
+      g.add(new THREE.Mesh(tube, bark));
+      // the snow on it: soft lumps along its top, thinning toward the end
+      for (let k = 1; k < 6; k++) {
+        const t = k / 6, p = curve.getPoint(t), tan = curve.getTangent(t);
+        if (Math.abs(tan.y) > 0.92) continue;
+        const lump = new THREE.Mesh(blob, snowCap);
+        const w = r + (r1 - r) * t;
+        lump.position.copy(p).add(new THREE.Vector3(0, w * 0.8, 0));
+        lump.scale.set(w * 2.6, w * 0.95, w * 1.7);
+        lump.rotation.z = Math.atan2(tan.y, tan.x);
+        g.add(lump);
+      }
+    };
+    // the trunk, flaring into the snow at its foot
+    branch(new THREE.Vector3(0, 0, 0), pt[0], 0.26, 0.13);
+    const foot = new THREE.Mesh(blob, bark); foot.scale.set(0.42, 0.2, 0.42); g.add(foot);
+    for (const [i, j] of SKILL_LINKS) SKILL_NODES[j][3] === 1 ? branch(pt[i], pt[j], 0.15, 0.1) : branch(pt[i], pt[j], 0.095, 0.06);
+    // the nodes
+    SKILL_NODES.forEach(([, , , level], i) => {
+      const r = level === 2 ? 0.2 : level === 1 ? 0.17 : 0.24;
+      // (a cobalt glazed bead, like a painted Gzhel dot; it lights up bright blue when the light reaches it)
+      const mat = own(new THREE.MeshPhysicalMaterial({ color: '#2f58d6', emissive: '#4f86ff', emissiveIntensity: 0, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.05 }));
+      const node = new THREE.Mesh(blob, mat); node.scale.setScalar(r); node.position.copy(pt[i]);
+      const ring = new THREE.Mesh(own(new THREE.TorusGeometry(r * 1.5, 0.03, 10, 40)), cobalt); ring.position.copy(pt[i]);
+      const halo = new THREE.Sprite(own(new THREE.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false, opacity: 0 })));
+      halo.position.copy(pt[i]); halo.scale.setScalar(r * 6);
+      g.add(node, ring, halo);
+      skillNodes.push({ mat, halo, level });
+    });
+    return g;
+  };
+
   // (turned to face the camera's side of the lake from where it stands)
   const facing = (x: number, z: number) => Math.atan2(EYE.x - x, EYE.z - z) * 0.85;
 
@@ -180,15 +247,16 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
   ));
   const islandMat = own(new THREE.MeshPhysicalMaterial({ color: '#f8fafd', roughness: 0.75, clearcoat: 0.2, clearcoatRoughness: 0.5 }));
   const houses: House[] = HOUSES.map((h0) => {
-    const hs = { ...h0, x: portrait ? h0.px : h0.x, z: portrait ? h0.pz : h0.z };
+    // (on a tall screen the wide tree is a little smaller, so it fits across)
+    const hs = { ...h0, x: portrait ? h0.px : h0.x, z: portrait ? h0.pz : h0.z, scale: portrait && h0.kind === 'tree' ? 0.78 : h0.scale };
     const group = new THREE.Group();
     group.position.set(hs.x, 0, hs.z);
     group.add(new THREE.Mesh(islandGeo, islandMat), shadow(ISLAND.r * 2.6, ISLAND.r * 1.9, 0.015));
-    const k = KIND[hs.kind], fig = figure(k);
+    const k = KIND[hs.kind], tall = k === 'skilltree' ? SKILL_H : PIECES[k], fig = k === 'skilltree' ? skillTree() : figure(k);
     fig.position.y = ISLAND.h * 0.92; fig.rotation.y = facing(hs.x, hs.z); fig.scale.setScalar(hs.scale);
-    group.add(fig, shadow(PIECES[k] * 0.9, PIECES[k] * 0.6, ISLAND.h + 0.01));
+    group.add(fig, shadow(tall * (k === 'skilltree' ? 0.5 : 0.9), tall * (k === 'skilltree' ? 0.35 : 0.6), ISLAND.h + 0.01));
     scene.add(group);
-    const height = ISLAND.h + PIECES[k] * hs.scale;
+    const height = ISLAND.h + tall * hs.scale;
     const front = new THREE.Vector3(EYE.x - hs.x, 0, EYE.z - hs.z).normalize();
     return { id: hs.id, group, anchor: new THREE.Vector3(hs.x, height + 0.4, hs.z), base: group.position.clone(), front, height };
   });
@@ -232,12 +300,25 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
   postcard.lookAt(LOOK);
   postcard.updateMatrixWorld();
 
-  // ---------- motion: only the hovered island lifts, a little ----------
-  const step = (dt: number, hover: number) => {
+  // ---------- motion: the hovered island lifts a little; SkillTree's light climbs its nodes ----------
+  const skillAt = houses.findIndex((h) => HOUSES.find((x) => x.id === h.id)?.kind === 'tree');
+  let wave = -1, glow = 0;
+  const step = (dt: number, hover: number, focus: number) => {
     houses.forEach((h, i) => {
       const lift = i === hover ? 0.12 : 0;
       h.group.position.y += (lift - h.group.position.y) * (1 - Math.exp(-dt / 90));
     });
+    // While it's pointed at or visited, a light runs up from the root through each level of nodes, again
+    // every few seconds; otherwise the nodes rest at a soft glow
+    const on = skillAt >= 0 && (hover === skillAt || focus === skillAt);
+    glow += ((on ? 1 : 0) - glow) * (1 - Math.exp(-dt / 300));
+    if (on && wave < 0) wave = 0;
+    if (wave >= 0) { wave += dt; if (wave > 2600) wave = on ? 0 : -1; }
+    for (const n of skillNodes) {
+      const u = wave < 0 ? 0 : Math.max(0, 1 - Math.abs(wave - 250 - n.level * 380) / 360);
+      n.mat.emissiveIntensity = glow * 0.35 + u * 1.6;
+      n.halo.material.opacity = glow * 0.25 + u * 0.7;
+    }
   };
   const hit = houses.map((h) => h.group);
   const pick = (ray: THREE.Raycaster) => {
