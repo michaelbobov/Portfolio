@@ -229,23 +229,9 @@ html[data-snow="on"] .hp-scene .hp-flakes { display: none; }
   .hp-title.gt-about { --name: 13vw; }
 }
 
-/* ---------- snow on the other pages (Site.tsx, PageWinter) ---------- */
-/* With the snow on, the homepage's winter rises behind the top of the page, the picture with its snow
-   falling, and fades out into the page before the content starts, so the reading stays on the plain
-   ground. The page is its own layer stack, so the winter sits over its ground and under everything else. */
-:is(.hp, .st):has(> .pg-winter) { position: relative; isolation: isolate; }
-.pg-winter { display: none; position: absolute; inset: 0 0 auto; z-index: -1; height: clamp(620px, 92svh, 900px); overflow: hidden; pointer-events: none;
-  -webkit-mask: linear-gradient(180deg, #000 0 56%, transparent 100%); mask: linear-gradient(180deg, #000 0 56%, transparent 100%); }
-html[data-snow="on"] .pg-winter { display: block; animation: hp-fade 700ms ease both; }
-.pg-winter-pic { position: absolute; inset: 0; background: url(/snow/backdrop.webp) 50% 78% / cover no-repeat; }
-@media (orientation: portrait) { .pg-winter-pic { background-image: url(/snow/backdrop-tall.webp); background-position: 50% 60%; } }
-/* The switch in the bar, with the links (on phones, the switch alone; its word stays for screen readers) */
-.sb-snow { display: flex; }
-.sb .hp-snow-switch { position: relative; top: auto; left: auto; z-index: auto; padding-block: 0; }
-@media (max-width: 599px) { .sb .hp-snow-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 /* About: while it snows, the doll's half-round frame looks out on the same winter, the doll standing in its
    snowfield */
-html[data-snow="on"] .ad-frame { background: url(/snow/backdrop-tall.webp) 50% 39% / cover no-repeat #c9d7ee; }
+
 
 /* The credit for the December hats' model (CC BY 3.0): tiny, in the first screen's bottom corner, only
    in December (data/season.ts) */

@@ -1,20 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from '@/app/components/icons';
-import SnowToggle from '@/app/components/SnowToggle';
 
-// The frame every page shares: the bar on top (the MB mark and the name; the Snow switch, LinkedIn, Email and the résumé)
+// The frame every page shares: the bar on top (the MB mark and the name; LinkedIn, Email and the résumé)
 // and the close at the bottom (an invitation to build something, then one slim row). The sections are
 // in the floating nav (Dock.tsx), not the bar. Styles: site.css.
 export const EMAIL = 'mailto:michaelbobov@gmail.com';
 export const RESUME = '/Michael Bobov - Product Designer.pdf';
 const LINKEDIN = 'https://www.linkedin.com/in/michael-bobov-94b61b202/';
 
-/** `brand`: off on the homepage, where the name is the hero (and the snow and its switch are its own) */
+/** `brand`: off on the homepage, where the name is the hero. Snow is the homepage's alone (its switch and its
+ *  winter live there); the other pages keep the plain cool ground. */
 export function SiteBar({ brand = true }: { brand?: boolean }) {
   return (
     <>
-      {brand && <PageWinter />}
       <header className="site-wrap sb">
         {brand && (
           <Link href="/" className="sb-brand" aria-label="Michael Bobov: home">
@@ -24,25 +23,12 @@ export function SiteBar({ brand = true }: { brand?: boolean }) {
           </Link>
         )}
         <ul className="sb-end">
-          {brand && <li className="sb-snow"><SnowToggle /></li>}
           <li><a href={LINKEDIN} target="_blank" rel="noopener noreferrer">LinkedIn<span className="sr-only"> (opens in a new tab)</span></a></li>
           <li><a href={EMAIL}>Email</a></li>
           <li><a href={RESUME} target="_blank" rel="noopener noreferrer">Résumé<span className="sr-only"> (PDF, opens in a new tab)</span></a></li>
         </ul>
       </header>
     </>
-  );
-}
-
-// The winter behind the top of every page but the homepage, when it's snowing (SnowToggle): the homepage's
-// picture and its snow, fading out into the page before the content starts (hp.css). Off, it isn't shown,
-// so the picture isn't fetched.
-function PageWinter() {
-  return (
-    <div className="pg-winter" aria-hidden="true">
-      <div className="pg-winter-pic" />
-      <div className="hp-flakes"><i className="is-far" /><i className="is-mid" /></div>
-    </div>
   );
 }
 
