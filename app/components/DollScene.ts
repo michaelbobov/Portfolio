@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { SHAPE } from '@/app/data/layers';
 import { CHEEK, DOLLS, DOLL_ART, FRINGE, GOLD, INK, SCARF, SET_SIZE, SKIN, WAIST, flowerOf, type Doll } from '@/app/data/dolls';
-import { ME } from '@/app/data/me';
 import { DOLL_INTRO } from '@/app/data/intro';
 import { currentSeason } from '@/app/data/season';
 import { CROP, PAINTING_ASPECT, PLAQUE, SKY, VILLAGE_DOLL, ZOOM, artRect, seg } from '@/app/data/village';
@@ -638,7 +637,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   // settles; it never backs out to show more)
   const overviewShot = (W: number, H: number): Shot => {
     const a = handoffShot(W, H), dir = a.tgt.clone().sub(a.pos).normalize();
-    const on = W < H ? 1.5 : 4;
+    const on = 3.5;
     return { pos: a.pos.clone().addScaledVector(dir, on), tgt: a.tgt.clone().addScaledVector(dir, on), fov: a.fov };
   };
   // A stop on the tour: the place seen from the front of the village, filling most of the height, off to
@@ -864,21 +863,6 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     gourd = { group: p.object, r: 132 / Math.max(p.size.x, p.size.z) };
     scene.add(p.object); disposables.push(...p.parts); apply(); kick();
   });
-  // His doll (data/me) wears his hair and the outfit he published last, as 3D toy pieces over its
-  // painting (Outfit3D); with no outfit (or no answer), just his hair. They fade with the doll when the
-  // camera flies into the village.
-  fetch('/api/outfit').then((r) => r.json())
-    .then((d) => (Array.isArray(d?.current?.outfit) ? d.current.outfit : []), () => [])
-    .then(async (outfit) => {
-      const me = dolls[ME];
-      if (!me || gone) return;
-      const { wearOutfit } = await import('@/app/components/Outfit3D');
-      if (gone) return;
-      const worn = wearOutfit(me, outfit, true);
-      const fade = me.fade;
-      me.fade = (a: number) => { fade(a); worn.fade(a); };
-      disposables.push(worn); apply(); kick();
-    }).catch(() => undefined);
 
   const go = (open: boolean, s: number, l: number, elapsed = 0) => {
     if (reduce.matches) { t = open ? total : 0; dir = 0; kick(); return; }

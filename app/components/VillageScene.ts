@@ -3,10 +3,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { HOUSES, PAINTING_ASPECT, SKY } from '@/app/data/village';
 
-// The side-projects world: a frozen lake in the taiga, seen at eye level, with one snowy island per side
-// project in a gentle arc across the ice, a dotted skating trail linking them in the tour's order, and a
-// porcelain penguin out on the ice. Round the lake, a deep forest of snowy firs in front of a painted taiga
-// panorama: the background is rich, and the islands stand clear of it on the open ice.
+// The side-projects world: a snowy village seen from above, one winding path running up through it past a
+// landmark for each side project, in the tour's order: EZ Recipe's cabin with its steaming pot, SkillTree's
+// tree, and at the end of the path the about-site's hut on chicken legs. A porcelain penguin stands by the
+// frozen pond, and a few plain white firs give it rhythm; the places are the only painted things.
 //
 // Everything is Gzhel porcelain painted with Codex's image tool in the Side projects doll's style
 // (public/village). The cabin, the hut on chicken legs and the penguin are 3D models made from their
@@ -18,7 +18,7 @@ import { HOUSES, PAINTING_ASPECT, SKY } from '@/app/data/village';
 // It is painted on the doll's belly by rendering it from its postcard camera (DollScene), so what shows
 // in her window is this world itself, and flying in is seamless.
 
-/** One side project's island: where it stands, which way the camera sees it from, where its label hangs */
+/** One side project's place: where it stands, which way the camera sees it from, where its label hangs */
 export type House = { id: string; group: THREE.Group; anchor: THREE.Vector3; base: THREE.Vector3; front: THREE.Vector3; height: number };
 
 export type Village = {
@@ -33,10 +33,10 @@ export type Village = {
 };
 
 /** The pieces, how tall each stands (world units), and how each is made solid: a model, or turned from its outline */
-const PIECES = { cabin: 2.6, hut: 3.4, penguin: 1.1, fir1: 4.4 } as const;
+const PIECES = { cabin: 3.0, hut: 4.0, penguin: 1.7, fir1: 4.4, fir2: 2.3 } as const;
 type Piece = keyof typeof PIECES;
 const MODELLED: Piece[] = ['cabin', 'hut', 'penguin'];
-const TURNED: Piece[] = ['fir1'];
+const TURNED: Piece[] = ['fir1', 'fir2'];
 const KIND: Record<string, Piece | 'skilltree'> = { house: 'cabin', tree: 'skilltree', hut: 'hut' };
 /** SkillTree's tree, as a diagram: its nodes (x, y, depth, level) in front view, and the branches between them */
 const SKILL_NODES: [number, number, number, number][] = [
@@ -46,14 +46,13 @@ const SKILL_NODES: [number, number, number, number][] = [
 ];
 const SKILL_LINKS: [number, number][] = [[0, 1], [0, 2], [0, 3], [1, 4], [1, 5], [2, 6], [3, 7], [3, 8]];
 const SKILL_H = 4.6;
-/** The lake: its middle and radius; the islands' height and radius */
-const LAKE = { x: 0, z: -3, r: 13 }, ISLAND = { h: 0.36, r: 1.95 };
-/** Laid out for a tall screen (a phone)? Decided once, when the world is built: the islands zigzag back
- *  across the lake there, and the camera stands higher to see down the lake */
-const tall = () => typeof window !== 'undefined' && window.innerWidth < window.innerHeight;
+/** The ground painting covers G × G world units round the middle; beyond it, plain snow */
+const G = 24;
+/** Where the camera that paints her window stands, and looks */
+const EYE = new THREE.Vector3(0, 17, 35), LOOK = new THREE.Vector3(0, 0.9, -3.1);
 
 const loadTex = (src: string) => new THREE.TextureLoader().loadAsync(src).then((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; });
-type Assets = { paint: Record<Piece, THREE.Texture>; outline: Partial<Record<Piece, THREE.Texture>>; models: Partial<Record<Piece, THREE.Object3D>>; taiga: THREE.Texture; ice: THREE.Texture };
+type Assets = { paint: Record<Piece, THREE.Texture>; outline: Partial<Record<Piece, THREE.Texture>>; models: Partial<Record<Piece, THREE.Object3D>>; ground: THREE.Texture };
 let assets: Promise<Assets> | null = null;
 const keyed = <T,>(keys: Piece[], list: T[]) => Object.fromEntries(keys.map((k, i) => [k, list[i]]));
 /** Fetch the paintings and models (once); call early to warm the cache */
@@ -61,20 +60,16 @@ export const loadVillageAssets = () => (assets ??= Promise.all([
   Promise.all((Object.keys(PIECES) as Piece[]).map((k) => loadTex(`/village/${k}-paint.webp`))),
   Promise.all(TURNED.map((k) => loadTex(`/village/${k}.webp`))),
   Promise.all(MODELLED.map((k) => new GLTFLoader().loadAsync(`/village/models/${k}.glb`).then((g) => g.scene))),
-  loadTex('/village/taiga.webp'),
-  loadTex('/village/ice.webp'),
-]).then(([paint, outline, models, taiga, ice]) => ({
+  loadTex('/village/ground.webp'),
+]).then(([paint, outline, models, ground]) => ({
   paint: keyed(Object.keys(PIECES) as Piece[], paint) as Record<Piece, THREE.Texture>,
-  outline: keyed(TURNED, outline), models: keyed(MODELLED, models), taiga, ice,
+  outline: keyed(TURNED, outline), models: keyed(MODELLED, models), ground,
 })));
 
 export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Village> {
-  const { paint, outline, models, taiga, ice } = await loadVillageAssets();
+  const { paint, outline, models, ground } = await loadVillageAssets();
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(SKY, 34, 80);
-  const portrait = tall();
-  // Where the camera that paints her window stands, and looks
-  const EYE = portrait ? new THREE.Vector3(0, 9.5, 24) : new THREE.Vector3(0, 5.8, 30), LOOK = portrait ? new THREE.Vector3(0, 1.4, -3.5) : new THREE.Vector3(0, 2.6, -4);
+  scene.fog = new THREE.Fog(SKY, 48, 110);
   const disposables: { dispose: () => void }[] = [];
   const own = <T extends { dispose: () => void }>(x: T) => { disposables.push(x); return x; };
 
@@ -86,32 +81,20 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
   sun.position.set(-4, 7, 6);
   scene.add(sun, new THREE.HemisphereLight('#ffffff', '#c9d7f0', 1.35));
 
-  // ---------- the snow, and the lake in it ----------
-  const snow = own(new THREE.MeshStandardMaterial({ color: '#f6f8fc', roughness: 0.95 }));
-  const field = new THREE.Mesh(own(new THREE.PlaneGeometry(260, 260)), snow);
+  // ---------- the snowfield: the ground painting in the middle, its edges fading into plain snow ----------
+  const span = 90;
+  ground.wrapS = ground.wrapT = THREE.ClampToEdgeWrapping;
+  ground.repeat.set(span / G, span / G);
+  ground.offset.set(-(span / G - 1) / 2, -(span / G - 1) / 2);
+  const fieldMat = own(new THREE.MeshBasicMaterial({ map: ground, toneMapped: false }));
+  fieldMat.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
+      vec2 e = min(vMapUv, 1.0 - vMapUv);
+      diffuseColor.rgb = mix(vec3(0.97, 0.98, 0.995), diffuseColor.rgb, smoothstep(0.0, 0.07, min(e.x, e.y)));`);
+  };
+  const field = new THREE.Mesh(own(new THREE.PlaneGeometry(span, span)), fieldMat);
   field.rotation.x = -Math.PI / 2;
   scene.add(field);
-  ice.wrapS = ice.wrapT = THREE.RepeatWrapping;
-  ice.repeat.set(3, 3);
-  const iceMat = own(new THREE.MeshPhysicalMaterial({ map: ice, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05, transparent: true }));
-  // (its shore is soft: the ice thins into the snow over its outer edge)
-  iceMat.onBeforeCompile = (sh) => {
-    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vDisc;').replace('#include <uv_vertex>', '#include <uv_vertex>\nvDisc = position.xy;');
-    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec2 vDisc;').replace('#include <map_fragment>', `#include <map_fragment>
-      diffuseColor.a *= 1.0 - smoothstep(${(LAKE.r * 0.82).toFixed(2)}, ${LAKE.r.toFixed(2)}, length(vDisc));`);
-  };
-  const lake = new THREE.Mesh(own(new THREE.CircleGeometry(LAKE.r, 96)), iceMat);
-  lake.rotation.x = -Math.PI / 2; lake.position.set(LAKE.x, 0.01, LAKE.z); lake.scale.set(1.25, 1, 1);
-  scene.add(lake);
-
-  // ---------- the taiga: the painted panorama round the back, like a theatre's backcloth ----------
-  const R = 46, arc = 3.0, tw = (taiga.image as { width: number }).width, th = (taiga.image as { height: number }).height, h = (R * arc * th) / tw;
-  const clothMat = own(new THREE.MeshBasicMaterial({ map: taiga, side: THREE.BackSide, toneMapped: false, fog: false, transparent: true }));
-  // (its sky fades into the real one at the top)
-  clothMat.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\n diffuseColor.a *= 1.0 - smoothstep(0.82, 1.0, vMapUv.y);'); };
-  const cloth = new THREE.Mesh(own(new THREE.CylinderGeometry(R, R, h, 96, 1, true, Math.PI - arc / 2, arc)), clothMat);
-  cloth.position.set(0, h / 2 - 0.6, LAKE.z);
-  scene.add(cloth);
 
   // ---------- a soft shadow under each piece ----------
   const blob = (() => {
@@ -237,62 +220,34 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
     return g;
   };
 
-  // (turned to face the camera's side of the lake from where it stands)
-  const facing = (x: number, z: number) => Math.atan2(EYE.x - x, EYE.z - z) * 0.85;
 
-  // ---------- the islands: a snowy mound each, its landmark on top ----------
-  const islandGeo = own(new THREE.LatheGeometry(
-    Array.from({ length: 13 }, (_, i) => { const t = i / 12; return new THREE.Vector2(t === 1 ? 0.001 : ISLAND.r * (1.08 - 0.28 * Math.pow(t, 2.2)), ISLAND.h * Math.sin((t * Math.PI) / 2)); }),
-    64,
-  ));
-  const islandMat = own(new THREE.MeshPhysicalMaterial({ color: '#f8fafd', roughness: 0.75, clearcoat: 0.2, clearcoatRoughness: 0.5 }));
-  const houses: House[] = HOUSES.map((h0) => {
-    // (on a tall screen the wide tree is a little smaller, so it fits across)
-    const hs = { ...h0, x: portrait ? h0.px : h0.x, z: portrait ? h0.pz : h0.z, scale: portrait && h0.kind === 'tree' ? 0.78 : h0.scale };
+  // ---------- the places, one per side project, standing on the snow, turned to the front of the village ----------
+  const houses: House[] = HOUSES.map((hs) => {
     const group = new THREE.Group();
     group.position.set(hs.x, 0, hs.z);
-    group.add(new THREE.Mesh(islandGeo, islandMat), shadow(ISLAND.r * 2.6, ISLAND.r * 1.9, 0.015));
     const k = KIND[hs.kind], tall = k === 'skilltree' ? SKILL_H : PIECES[k], fig = k === 'skilltree' ? skillTree() : figure(k);
-    fig.position.y = ISLAND.h * 0.92; fig.rotation.y = facing(hs.x, hs.z); fig.scale.setScalar(hs.scale);
-    group.add(fig, shadow(tall * (k === 'skilltree' ? 0.5 : 0.9), tall * (k === 'skilltree' ? 0.35 : 0.6), ISLAND.h + 0.01));
+    fig.rotation.y = Math.atan2(-hs.x * 0.5, 22 - hs.z); fig.scale.setScalar(hs.scale);
+    group.add(fig, shadow(tall * (k === 'skilltree' ? 0.5 : 0.95), tall * (k === 'skilltree' ? 0.35 : 0.7)));
     scene.add(group);
-    const height = ISLAND.h + tall * hs.scale;
-    const front = new THREE.Vector3(EYE.x - hs.x, 0, EYE.z - hs.z).normalize();
-    return { id: hs.id, group, anchor: new THREE.Vector3(hs.x, height + 0.4, hs.z), base: group.position.clone(), front, height };
+    const height = tall * hs.scale;
+    // (seen from the front of the village; the hut at the end of the path from the front left, so the places
+    // before it on the path aren't in the way)
+    const front = hs.kind === 'hut' ? new THREE.Vector3(-0.5, 0, 1).normalize() : new THREE.Vector3(-hs.x * 0.4, 0, 22 - hs.z).normalize();
+    return { id: hs.id, group, anchor: new THREE.Vector3(hs.x, height + 0.35, hs.z), base: group.position.clone(), front, height };
   });
 
-  // ---------- the trail: a dotted line skated across the ice, from the near shore to each island in turn ----------
-  const trail = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0, LAKE.z + LAKE.r * 0.95), ...houses.map((h) => h.base.clone().add(new THREE.Vector3(0, 0, ISLAND.r * 1.15)))]);
-  const dots = 64, dotGeo = own(new THREE.CircleGeometry(0.07, 12)), dotMat = own(new THREE.MeshBasicMaterial({ color: '#3a5fba', transparent: true, opacity: 0.55, toneMapped: false }));
-  const dotMesh = new THREE.InstancedMesh(dotGeo, dotMat, dots), m4 = new THREE.Matrix4(), flat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2), one = new THREE.Vector3(1, 1, 1);
-  for (let i = 0; i < dots; i++) { const p = trail.getPointAt(i / (dots - 1)); m4.compose(new THREE.Vector3(p.x, 0.025, p.z), flat, one); dotMesh.setMatrixAt(i, m4); }
-  scene.add(dotMesh);
-
-  // ---------- the penguin, out on the ice ----------
-  const [px, pz] = portrait ? [2.6, 5.6] : [-6.4, 5.4];
-  const pg = figure('penguin'); pg.position.set(px, 0, pz); pg.rotation.y = facing(px, pz) + 0.4;
-  const pgShadow = shadow(1.2, 0.8); pgShadow.position.set(px, 0.02, pz);
-  scene.add(pg, pgShadow);
-
-  // ---------- the forest round the lake: deep rows of firs, painted and plain, nearer ones larger ----------
-  const firGeo = lathed('fir1');
-  const rand = (() => { let s = 7; return () => ((s = (s * 16807) % 2147483647) / 2147483647); })();
-  const firs: { x: number; z: number; s: number; painted: boolean }[] = [];
-  for (let i = 0; i < 160 && firs.length < 84; i++) {
-    const a = -Math.PI * 0.62 + rand() * Math.PI * 1.24, d = LAKE.r * 1.35 + 2 + rand() * 13;
-    const x = LAKE.x + Math.sin(a) * d * 1.25, z = LAKE.z - Math.cos(a) * d;
-    if (z > EYE.z - 8) continue;
-    firs.push({ x, z, s: 0.75 + rand() * 0.75 - (d - LAKE.r * 1.35) * 0.012, painted: rand() < 0.62 });
-  }
-  // (and a few on the near shores, framing the view)
-  for (const [x, z, s] of [[-13, 9, 1.3], [-15.5, 6, 1.1], [13.5, 8.5, 1.25], [16, 5, 1.05], [-11, 12.5, 0.9], [11.5, 12, 0.85]]) firs.push({ x, z, s, painted: true });
-  const up = new THREE.Vector3(0, 1, 0);
-  for (const painted of [true, false]) {
-    const list = firs.filter((f) => f.painted === painted);
-    const inst = new THREE.InstancedMesh(firGeo, painted ? glazeOf('fir1') : plain, list.length);
-    list.forEach((f, i) => { m4.compose(new THREE.Vector3(f.x, 0, f.z), new THREE.Quaternion().setFromAxisAngle(up, facing(f.x, f.z)), new THREE.Vector3(f.s, f.s, f.s)); inst.setMatrixAt(i, m4); });
-    scene.add(inst);
-  }
+  // ---------- the penguin by the frozen pond, and a few plain white firs, for rhythm and depth ----------
+  const stand = (k: Piece, x: number, z: number, sc: number) => {
+    const f = MODELLED.includes(k) ? figure(k) : new THREE.Mesh(lathed(k), plain);
+    f.position.set(x, 0, z); f.rotation.y = Math.atan2(-x * 0.5, 22 - z); f.scale.setScalar(sc);
+    const sh = shadow(PIECES[k] * 0.6 * sc, PIECES[k] * 0.45 * sc); sh.position.set(x, 0.02, z);
+    scene.add(f, sh);
+  };
+  stand('penguin', 4.4, 5.2, 1);
+  const FIRS: [Piece, number, number, number][] = [
+    ['fir1', -8.2, -3, 1.1], ['fir2', -6.6, 5.4, 0.9], ['fir1', 8.6, -7.6, 1.2], ['fir2', 7.6, 1.2, 0.85], ['fir1', -3.4, -14, 1],
+  ];
+  FIRS.forEach(([k, x, z, sc]) => stand(k, x, z, sc));
 
   // ---------- the camera the painting is made with ----------
   const postcard = new THREE.PerspectiveCamera(34, PAINTING_ASPECT, 0.1, 300);
@@ -300,7 +255,7 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
   postcard.lookAt(LOOK);
   postcard.updateMatrixWorld();
 
-  // ---------- motion: the hovered island lifts a little; SkillTree's light climbs its nodes ----------
+  // ---------- motion: the hovered place lifts a little; SkillTree's light climbs its nodes ----------
   const skillAt = houses.findIndex((h) => HOUSES.find((x) => x.id === h.id)?.kind === 'tree');
   let wave = -1, glow = 0;
   const step = (dt: number, hover: number, focus: number) => {
@@ -330,6 +285,6 @@ export async function createVillage(renderer: THREE.WebGLRenderer): Promise<Vill
   await renderer.compileAsync(scene, postcard).catch(() => {});
   return {
     scene, houses, postcard, step, pick,
-    dispose: () => { disposables.forEach((d) => d.dispose()); Object.values(paint).forEach((t) => t.dispose()); Object.values(outline).forEach((t) => t?.dispose()); taiga.dispose(); ice.dispose(); },
+    dispose: () => { disposables.forEach((d) => d.dispose()); Object.values(paint).forEach((t) => t.dispose()); Object.values(outline).forEach((t) => t?.dispose()); ground.dispose(); },
   };
 }

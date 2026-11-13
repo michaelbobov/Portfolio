@@ -4,18 +4,18 @@
 
 /** Which doll wears the village: the Side projects doll, the middle of the set */
 export const VILLAGE_DOLL = 1;
-/** The winter sky over the lake: the soft white of the taiga panorama's own sky, so the painting's top
- *  edge melts into it */
-export const SKY = '#f4f7fc';
+/** The winter sky over the village: the pale blue her window is painted with, so on the doll the world's
+ *  sky runs on into the window's */
+export const SKY = '#b4d2fd';
 
-/** The islands, by side project (ids as in data/projects SIDE), left to right across the lake in the
- *  guided tour's order: EZ Recipe's cabin and steaming pot, SkillTree's fir in the middle and further out,
- *  the about-site's hut on chicken legs. Where each stands (world units, the near shore toward +z); on a
- *  tall screen (px, pz) they zigzag back across the lake instead, so all three fit; and its landmark's size. */
+/** The places, by side project (ids as in data/projects SIDE), in the order the painted path passes them,
+ *  front to back, which is the guided tour's order: EZ Recipe's cabin and steaming pot on the left,
+ *  SkillTree's tree on the right, and at the end of the path the about-site's hut on chicken legs. Where
+ *  each stands (world units, the front of the village toward +z), and its size. */
 export const HOUSES = [
-  { id: 'ez-recipe', kind: 'house', x: -4.3, z: -1.2, px: -1.7, pz: 3.2, scale: 1 },
-  { id: 'skilltree', kind: 'tree', x: 0, z: -5.6, px: 1.9, pz: -2.4, scale: 1 },
-  { id: 'about-site', kind: 'hut', x: 4.3, z: -1.2, px: -1.4, pz: -8.2, scale: 1 },
+  { id: 'ez-recipe', kind: 'house', x: -3.6, z: 1.8, scale: 1 },
+  { id: 'skilltree', kind: 'tree', x: 3.5, z: -4.4, scale: 1 },
+  { id: 'about-site', kind: 'hut', x: 0.4, z: -10.4, scale: 1 },
 ] as const;
 
 /** Where the world shows on the doll's belly, in the doll's 200 × 260 box: the simple arched window on her

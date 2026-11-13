@@ -684,9 +684,9 @@ html.vz-lock { overflow: hidden; }
 @media (hover: hover) and (pointer: fine) { .vz-pin:hover { scale: 1.06; } }
 .vz-pin:active { scale: 0.97; }
 .vz.has-focus .vz-pin { opacity: 0 !important; pointer-events: none; }
-/* (every island's name stays up, so each is read at once; the one you point at, or its step, lifts) */
+/* (one navigation: the tour bar; a place's label shows only while you point at it, or at its step) */
 .hz.has-village .vz-pin { transition: opacity 200ms ease, scale 260ms var(--wf-ease-out), box-shadow 220ms ease; }
-.hz.has-village .vz.is-in .vz-pin { opacity: 1; }
+.hz.has-village .vz-pin:not(.is-hover):not(:focus-visible) { opacity: 0 !important; pointer-events: none; }
 .hz.has-village .vz-all { display: none; }
 
 /* The card: beside its house (right), or a sheet from the bottom on a phone */
@@ -751,7 +751,7 @@ html.vz-lock { overflow: hidden; }
 .tf-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(19, 34, 74, 0.06); color: #13224a; font-size: 20px; line-height: 1; cursor: pointer; }
 .tf-pics { display: grid; grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 16px; border-radius: 16px; background: linear-gradient(#f3f6fb, #e4ecf6); }
 .tf-pics.has-photo { grid-template-columns: 1fr 1fr; align-items: center; }
-.tf-doll { display: block; width: 100%; aspect-ratio: 4 / 5; }
+.tf-doll { display: block; width: 100%; aspect-ratio: 1; border-radius: 12px; }
 .tf-pics img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; }
 .tf-pieces { margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.5; color: #24345e; }
 .tf-pieces li + li { margin-top: 4px; }
