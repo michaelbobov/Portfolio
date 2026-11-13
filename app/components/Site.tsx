@@ -17,7 +17,7 @@ export function SiteBar({ brand = true }: { brand?: boolean }) {
       <header className="site-wrap sb">
         {brand && (
           <Link href="/" className="sb-brand" aria-label="Michael Bobov: home">
-            <Image className="sb-mark" src="/mb-mark.png" alt="" width={131} height={160} priority />
+            <Image className="sb-mark" src="/mb-mark.png" alt="" width={129} height={160} priority />
             {/* The name, in the titles' face */}
             <span className="sb-name" aria-hidden="true">Michael Bobov</span>
           </Link>
