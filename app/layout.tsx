@@ -6,7 +6,6 @@ import './site.css'
 import { SiteClose } from './components/Site'
 import HideOnHome from './components/HideOnHome'
 import Dock from './components/Dock'
-import MotionProvider from './components/MotionProvider'
 import { SEASON_SCRIPT } from './data/season'
 
 // Geist for text and UI, Bricolage Grotesque for display (headlines, section and panel titles, the
@@ -99,13 +98,11 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <MotionProvider>
-          <div className="flex-1">
-            {children}
-          </div>
-          <HideOnHome><SiteClose /></HideOnHome>
-          <HideOnHome><Dock /></HideOnHome>
-        </MotionProvider>
+        <div className="flex-1">
+          {children}
+        </div>
+        <HideOnHome><SiteClose /></HideOnHome>
+        <HideOnHome><Dock /></HideOnHome>
       </body>
     </html>
   )

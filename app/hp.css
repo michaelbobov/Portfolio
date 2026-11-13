@@ -369,11 +369,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 
 
 /* ---------- sections ---------- */
-.hp-section { padding-top: 160px; }
-@media (max-width: 767px) { .hp-section { padding-top: 104px; } }
-.hp-h2 { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-head); line-height: 1.08; letter-spacing: -0.025em; }
 /* (the accent word stays in the same face, in cobalt) */
-.hp-h2 em { font: inherit; letter-spacing: inherit; color: var(--hp-accent); }
 .hp-label { margin: 0; font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); }
 
 /* ---------- section pages (Work, Side projects) ---------- */
@@ -384,9 +380,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sp-body { padding-top: 48px; }
 
 /* A group within a section page (Products, Experiments) */
-.sp-sub { margin: 0 0 20px; font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); }
-.sp-later { padding-top: 96px; }
-@media (max-width: 767px) { .sp-later { padding-top: 72px; } }
 
 /* ---------- side projects: a bento of colour, lighter than the case studies ---------- */
 /* Tiles of different sizes, each one colour all over with its words on it (white on the cobalts, ink on
@@ -431,8 +424,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx-matryoshka .sx-media { background: radial-gradient(70% 70% at 50% 40%, rgba(42, 79, 174, 0.1), transparent 70%); }
 .sx-matryoshka .sx-shot img { object-fit: contain; padding: 8% 6% 2%; box-sizing: border-box; }
 /* The note */
-.sx-note-label { margin: 0; font-size: var(--t-small); font-weight: 600; }
-.sx-note-line { margin: 0; font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-size: clamp(28px, 2.4vw, 36px); line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
 @media (hover: hover) and (pointer: fine) {
   .sx-tile.is-link:hover .sx-shot { translate: 0 -8px; }
   .sx-about-site:hover .sx-shot, .sx-matryoshka:hover .sx-shot { translate: none; }
@@ -443,7 +434,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .sx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sx-ez-recipe { grid-column: span 2; }
   .sx-about-site, .sx-matryoshka { grid-column: span 1; }
-  .sx-note { min-height: 260px; }
 }
 @media (max-width: 599px) {
   .sx { grid-template-columns: minmax(0, 1fr); gap: 12px; }
@@ -502,7 +492,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
    stand up and the set opens (DollSet) */
 .wf-intro .hp-title { animation: hp-up 800ms var(--wf-ease-out) both; animation-delay: var(--d); }
 @keyframes hp-up { from { opacity: 0; translate: 0 10px; } }
-.wf-intro .hp-rise { animation: hp-rise 760ms var(--wf-ease-out) both; animation-delay: var(--d); }
 .wf-intro .hp-stage .ds-track { animation: hp-stand-set 700ms var(--wf-ease-out) both; animation-delay: 80ms; }
 /* The 3D set stands up the same way */
 .wf-intro .ds.is-3d .ds-3d { animation: hp-stand-set 700ms var(--wf-ease-out) both; animation-delay: 80ms; }
@@ -521,7 +510,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .wf-intro .hp-rise, .wf-intro .hp-stage .ds-track, .wf-intro .ds.is-3d .ds-3d { animation: hp-fade 400ms ease both; }
+  .wf-intro .hp-stage .ds-track, .wf-intro .ds.is-3d .ds-3d { animation: hp-fade 400ms ease both; }
   .wf-intro .hp-title { animation: hp-fade 400ms ease both; animation-delay: var(--d); }
   .sx-tile, .sc-title { animation: none !important; }
   /* The doll still opens and closes, straight to the other state with no travel */
