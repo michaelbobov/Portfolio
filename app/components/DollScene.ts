@@ -2,8 +2,12 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { SHAPE } from '@/app/data/layers';
 import { CHEEK, DOLLS, DOLL_ART, FRINGE, GOLD, INK, SCARF, SET_SIZE, SKIN, WAIST, flowerOf, type Doll } from '@/app/data/dolls';
+import { ME } from '@/app/data/me';
 import { DOLL_INTRO } from '@/app/data/intro';
 import { currentSeason } from '@/app/data/season';
+import { CROP, PAINTING_ASPECT, PLAQUE, SKY, VILLAGE_DOLL, ZOOM, artRect, seg } from '@/app/data/village';
+import { zoomBus } from '@/app/components/zoomBus';
+import type { Village } from '@/app/components/VillageScene';
 
 // The homepage matryoshka set in real 3D. Each doll is the flat drawing's own outline spun round its
 // axis (a lathe), cut at the waist into a hollow base and a hollow lid, so a doll put inside another
@@ -25,11 +29,11 @@ const SEGS = [
   [[154, 116], [158, 136], [184, 160], [184, 200]],
   [[184, 200], [184, 236], [166, 252], [150, 252]],
 ] as const;
-const FLOOR = 252; // the shape's base, as y in the box
+export const FLOOR = 252; // the shape's base, as y in the box
 const WALL = 4.5; // shell thickness, box units
 const BOX_H = 260;
 
-const OUTLINE: { r: number; y: number }[] = [];
+export const OUTLINE: { r: number; y: number }[] = [];
 for (const [p0, p1, p2, p3] of SEGS) {
   for (let i = OUTLINE.length ? 1 : 0; i <= 40; i++) {
     const t = i / 40, u = 1 - t;
@@ -39,7 +43,7 @@ for (const [p0, p1, p2, p3] of SEGS) {
   }
 }
 // The outline's radius at a height (y in the box); it runs top to bottom with y always increasing
-function radiusAt(y: number) {
+export function radiusAt(y: number) {
   if (y <= OUTLINE[0].y) return 0;
   for (let i = 1; i < OUTLINE.length; i++) {
     const a = OUTLINE[i - 1], b = OUTLINE[i];
@@ -150,6 +154,74 @@ const loadArt = () => (artLoad ??= Promise.all(DOLL_ART.map((a) => (a
   ? Promise.all([loadImage(a.front), loadImage(a.back)]).then(([front, back]) => ({ front, back })).catch(() => null)
   : null))));
 
+// ---------- the village painted on the Work doll (data/village, VillageScene) ----------
+// The village (porcelain figurines, VillageScene), rendered from its postcard camera into a texture and
+// laid on the doll's belly in her arched window (her painting, doll-2-front, leaves it as a pale sky; the
+// mask is that window's interior, traced off her painting): what shows in her window is the world itself.
+// (the window's interior, traced off her painting: white inside, black outside)
+const maskTexture = () => new THREE.TextureLoader().loadAsync('/village/window-mask.png');
+// Its mesh: a grid over the painting's place that lies on the doll's curve (a hair outside it) and can
+// flatten into a plane in front of it, the view the village then takes over from. Flat, a point at (fx, fy)
+// in the doll's box sits at fx - 100 across, so the plane keeps the painting's proportions exactly; on the
+// curve it sits where the body's painting has the same point (paint() wraps at 0.985 of the radius).
+const PLAQUE_Z = Math.max(...Array.from({ length: 31 }, (_, j) => radiusAt(PLAQUE.y + (PLAQUE.h * j) / 30))) + 0.6;
+function bellyMesh(mask: THREE.Texture) {
+  const NX = 48, NY = 30, n = (NX + 1) * (NY + 1);
+  const curved = new Float32Array(n * 3), flat = new Float32Array(n * 3), nCurved = new Float32Array(n * 3);
+  const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2), index: number[] = [];
+  for (let j = 0; j <= NY; j++) {
+    for (let i = 0; i <= NX; i++) {
+      const k = j * (NX + 1) + i, fx = PLAQUE.x + (PLAQUE.w * i) / NX, fy = PLAQUE.y + (PLAQUE.h * j) / NY;
+      const r = radiusAt(fy), X = (fx - 100) / 0.985, Z = Math.sqrt(Math.max(0, r * r - X * X));
+      curved.set([X, FLOOR - fy, Z + 0.35], k * 3);
+      flat.set([fx - 100, FLOOR - fy, PLAQUE_Z], k * 3);
+      // (the body's own normal there: outward, tipped up or down by the slope of the outline, so the painting
+      // takes the light exactly as the porcelain round it does)
+      const l = Math.hypot(X, Z) || 1, slope = (radiusAt(fy + 0.5) - radiusAt(fy - 0.5)), nl = Math.hypot(1, slope);
+      nCurved.set([X / l / nl, slope / nl, Z / l / nl], k * 3);
+      uv.set([i / NX, 1 - j / NY], k * 2);
+      if (i < NX && j < NY) { const b = k + NX + 1; index.push(k, b, k + 1, k + 1, b, b + 1); }
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  g.setIndex(index);
+  // Three passes, back to front: the painting glazed like the body (it's on the doll); then, as it
+  // flattens, a plain sky of the same cobalt and the plain picture over it (unlit, not tone-mapped), so at
+  // the handoff the screen shows exactly what the village's own render will
+  const off = { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, transparent: true, depthWrite: false, alphaMap: mask };
+  const glazed = new THREE.MeshPhysicalMaterial({ roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.1, sheen: 0.25, sheenColor: new THREE.Color('#ffffff'), opacity: 0, ...off });
+  const sky = new THREE.MeshBasicMaterial({ color: SKY, toneMapped: false, opacity: 0, ...off });
+  const plain = new THREE.MeshBasicMaterial({ toneMapped: false, opacity: 0, ...off });
+  const meshes = [glazed, sky, plain].map((m, i) => { const me = new THREE.Mesh(g, m); me.renderOrder = 1 + i; return me; });
+  const group = new THREE.Group();
+  group.add(...meshes);
+  let at = -1, shown = 0;
+  const setFlat = (f: number) => {
+    sky.opacity = plain.opacity = f * shown;
+    glazed.opacity = shown;
+    if (f === at) return;
+    at = f;
+    for (let k = 0; k < n * 3; k++) pos[k] = curved[k] + (flat[k] - curved[k]) * f;
+    for (let k = 0; k < n; k++) {
+      const nx = nCurved[k * 3] * (1 - f), ny = nCurved[k * 3 + 1] * (1 - f), nz = nCurved[k * 3 + 2] * (1 - f) + f, l = Math.hypot(nx, ny, nz) || 1;
+      nor[k * 3] = nx / l; nor[k * 3 + 1] = ny / l; nor[k * 3 + 2] = nz / l;
+    }
+    g.attributes.position.needsUpdate = true; g.attributes.normal.needsUpdate = true;
+    g.computeBoundingSphere();
+  };
+  setFlat(0);
+  return {
+    group, setFlat,
+    /** put the painting on (its texture), and how much of it shows (it fades in once, when first painted) */
+    paint: (tex: THREE.Texture) => { glazed.map = plain.map = tex; glazed.needsUpdate = plain.needsUpdate = true; },
+    show: (a: number) => { shown = a; at = -1; },
+    disposables: [g, glazed, sky, plain] as { dispose: () => void }[],
+  };
+}
+
 // A soft round contact shadow, drawn once
 function shadowTexture() {
   const c = document.createElement('canvas');
@@ -174,6 +246,9 @@ function bezier(x1: number, y1: number, x2: number, y2: number) {
   };
 }
 const EASE_OUT = bezier(0.23, 1, 0.32, 1), EASE_IN_OUT = bezier(0.65, 0, 0.35, 1), GLIDE = bezier(0.45, 0, 0.25, 1);
+// The dive is one move: it gathers speed into the doll's window (DIVE_IN) and carries it on into the
+// village, slowing to a stop there (DIVE_OUT), so it never halts at the handoff
+const DIVE_IN = bezier(0.45, 0, 0.8, 0.55), DIVE_OUT = bezier(0.2, 0.45, 0.35, 1);
 // A hop: a soft take-off, not a jolt, and a soft landing, not a thud. A lid comes away smoothly, not
 // with a snap.
 const RISE = bezier(0.3, 0.45, 0.45, 1), FALL = bezier(0.55, 0, 0.6, 0.75), LIFT = bezier(0.4, 0, 0.2, 1);
@@ -190,7 +265,7 @@ const blend = (a: Pose, b: Pose, t: number): Pose => ({ x: mix(a.x, b.x, t), y: 
 
 // ---------- the studio, a doll, a camera: shared by the set and the About page's doll ----------
 // The renderer, its light and the lens
-function studio(canvas: HTMLCanvasElement) {
+export function studio(canvas: HTMLCanvasElement) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -219,7 +294,7 @@ function studio(canvas: HTMLCanvasElement) {
 const LOOK = (4 * Math.PI) / 180;
 // The contact shadow's depth, as a share of its width: deep enough to read from that low
 const SHADOW_D = 0.9;
-function aim(camera: THREE.PerspectiveCamera, W: number, Hc: number, floorPx: number) {
+export function aim(camera: THREE.PerspectiveCamera, W: number, Hc: number, floorPx: number) {
   camera.aspect = W / Hc;
   const e = LOOK, D = Hc / 2 / Math.tan(((camera.fov / 2) * Math.PI) / 180);
   let ty = 0;
@@ -232,6 +307,7 @@ function aim(camera: THREE.PerspectiveCamera, W: number, Hc: number, floorPx: nu
     // The floor shows below the centre by the target's height: move the target to put it on the line
     ty += (floorPx - py) / Math.cos(e);
   }
+  camera.userData.target = new THREE.Vector3(0, ty, 0);
   const a = new THREE.Vector3(0, 0, 0).project(camera), b = new THREE.Vector3(100, 0, 0).project(camera);
   return ((b.x - a.x) / 2) * W / 100;
 }
@@ -285,10 +361,12 @@ function wearHat(head: THREE.Group, hat: SeasonModel) {
 
 // One doll standing on its floor at the origin: a hollow base and a lid that turns about the rim
 // (the littlest is one solid piece), and a contact shadow to lay on the floor under it
-function buildDoll(d: Doll, shadowTex: THREE.Texture) {
+// (a doll that can fade is made transparent from the start, at full opacity: three.js builds a different
+// shader for opaque materials, so switching later would stall a frame recompiling it)
+export function buildDoll(d: Doll, shadowTex: THREE.Texture, fadable = false) {
   let map = paint(d);
-  const lacquer = new THREE.MeshPhysicalMaterial({ map, roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.1, sheen: 0.25, sheenColor: new THREE.Color('#ffffff') });
-  const inside = new THREE.MeshStandardMaterial({ color: new THREE.Color(d.deep).multiplyScalar(0.55), roughness: 0.85, side: THREE.DoubleSide });
+  const lacquer = new THREE.MeshPhysicalMaterial({ map, roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.1, sheen: 0.25, sheenColor: new THREE.Color('#ffffff'), transparent: fadable });
+  const inside = new THREE.MeshStandardMaterial({ color: new THREE.Color(d.deep).multiplyScalar(0.55), roughness: 0.85, side: THREE.DoubleSide, transparent: fadable });
   const group = new THREE.Group();
   let lid: THREE.Group | null = null;
   const geos: THREE.BufferGeometry[] = [];
@@ -335,7 +413,17 @@ function buildDoll(d: Doll, shadowTex: THREE.Texture) {
     eyes.forEach((e) => { e.visible = false; });
   };
   const disposables: { dispose: () => void }[] = [{ dispose: () => map.dispose() }, lacquer, inside, eyeGeo, eyeMat, shadow.geometry, shadow.material as THREE.Material, ...geos];
-  return { group, lid, head, shadow, disposables, look, repaint };
+  // Fading out (the other dolls, as the camera flies past them into the Work doll's village)
+  let faded = 1;
+  const fade = (a: number) => {
+    if (a === faded) return;
+    faded = a;
+    if (!fadable) return;
+    // (the dark inside goes almost at once, or it shows through the fading shell as a blue ghost)
+    lacquer.opacity = a; lacquer.depthWrite = a > 0.98;
+    inside.opacity = a ** 6; inside.depthWrite = a > 0.98;
+  };
+  return { group, lid, head, shadow, disposables, look, repaint, fade };
 }
 
 const poseLid = (lid: THREE.Group, pose: Pose) => {
@@ -450,11 +538,11 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   // ---------- the dolls ----------
   const SET = DOLLS.slice(0, SET_SIZE);
   const n = SET.length;
-  const dolls = SET.map((d) => {
-    const { group, lid, head, shadow, disposables: own, look, repaint } = buildDoll(d, shadowTex);
+  const dolls = SET.map((d, i) => {
+    const { group, lid, head, shadow, disposables: own, look, repaint, fade } = buildDoll(d, shadowTex, i !== VILLAGE_DOLL);
     scene.add(group, shadow);
     disposables.push(...own);
-    return { d, group, lid, head, shadow, look, repaint, gaze: gaze(), hover: 0, hoverTo: 0, peek: 0, visit: -1, play: -1 };
+    return { d, group, lid, head, shadow, look, repaint, fade, gaze: gaze(), hover: 0, hoverTo: 0, peek: 0, visit: -1, play: -1 };
   });
   // The season's touches (data/season.ts): in December a hat on every doll, in October a pumpkin beside
   // the set, a little in front of the littlest doll. They arrive when their model has loaded.
@@ -463,7 +551,23 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
 
   // ---------- where the slots are ----------
   let X: number[] = [], S: number[] = [], closedShift = 0, k = 1;
+  // On the homepage the set sits in the zoom's pinned screen (VillageZoom): the canvas covers all of that
+  // screen, not just the set, so the camera can fly into the Work doll's village. Its place is worked
+  // out without transforms (offsets up to the pinned screen, less the set's own shift), so the dolls
+  // stand exactly where their slots are.
+  const pin = root.closest<HTMLElement>('.hz-pin');
+  // (only once the village is there to fly into: then the first screen is a fixed-height stage)
+  const zoomable = () => !!pin?.parentElement?.classList.contains('has-village');
+  const cover = () => {
+    if (!pin || !zoomable()) { canvas.style.cssText = ''; return; }
+    let left = 0, top = 0, el: HTMLElement | null = root;
+    while (el && el !== pin) { left += el.offsetLeft; top += el.offsetTop; el = el.offsetParent as HTMLElement | null; }
+    if (el !== pin) { canvas.style.cssText = ''; return; }
+    const tx = parseFloat(getComputedStyle(root).translate) || 0;
+    Object.assign(canvas.style, { left: `${-left - tx}px`, top: `${-top}px`, width: `${pin.clientWidth}px`, height: `${pin.clientHeight}px` });
+  };
   const layout = () => {
+    cover();
     const W = canvas.clientWidth, Hc = canvas.clientHeight;
     if (!W || !Hc) return;
     renderer.setSize(W, Hc, false);
@@ -474,6 +578,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     const cx = (s: HTMLElement) => track.offsetLeft + s.offsetLeft + s.offsetWidth / 2 - canvas.offsetLeft;
     const floorPx = track.offsetTop + slots[0].offsetTop + slots[0].offsetHeight - (8 / BOX_H) * slots[0].offsetHeight - canvas.offsetTop;
     k = aim(camera, W, Hc, floorPx);
+    base.pos.copy(camera.position); base.target.copy(camera.userData.target);
     X = slots.map((s) => (cx(s) - W / 2) / k);
     S = slots.map((s) => s.offsetHeight / BOX_H / k);
     // (closed, the big doll stands centred on the page: the set is shifted by --mid, hp.css)
@@ -489,8 +594,149 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   // How open a doll should be under the pointer: shut while its lid is thrown (it opens once it's back on)
   const peekTo = (o: { hover: number; play: number }, i: number) => (MOVES[i] === 'flip' && o.play >= 0 ? 0 : o.hover);
   const liftOf = (i: number) => heightOf(n - 1) * 0.18 + (heightOf(i) - heightOf(n - 1)) * 0.05;
+  // ---------- the zoom into the Work doll's village (VillageZoom drives it, data/village times it) ----------
+  let zp = zoomBus.get().p, focus = zoomBus.get().focus, hoverHouse = -1;
+  const base = { pos: new THREE.Vector3(), target: new THREE.Vector3() };
+  let village: Village | null = null, belly: ReturnType<typeof bellyMesh> | null = null, rt: THREE.WebGLRenderTarget | null = null, bellyIn = 0;
+  const v3 = new THREE.Vector3(), q3 = new THREE.Vector3(), d3 = new THREE.Vector3();
+  // The camera flies from where it stands to straight in front of the painting, ending where the village
+  // will take over (artRect): it turns toward the painting first, while the distance shrinks evenly in
+  // proportion (so the approach feels steady, not slow then sudden), easing in and out
+  const flyCamera = () => {
+    const o = dolls[VILLAGE_DOLL], f = seg(zp, ZOOM.fly), W = canvas.clientWidth, Hc = canvas.clientHeight;
+    if (f <= 0 || !W || !Hc || !S[VILLAGE_DOLL]) { camera.position.copy(base.pos); camera.lookAt(base.target); camera.updateMatrixWorld(); return; }
+    const s0 = S[VILLAGE_DOLL], ar = artRect(W, Hc), tan = Math.tan((camera.fov * Math.PI) / 360);
+    const d1 = (PLAQUE.h * s0 * Hc) / (2 * tan * ar.h), wpp = (2 * d1 * tan) / Hc;
+    v3.set(
+      o.group.position.x - (ar.x + ar.w / 2 - W / 2) * wpp,
+      o.group.position.y + (FLOOR - (PLAQUE.y + PLAQUE.h / 2)) * s0 + (ar.y + ar.h / 2 - Hc / 2) * wpp,
+      PLAQUE_Z * s0,
+    );
+    const pan = EASE_IN_OUT(clamp(f / 0.6)), z = DIVE_IN(f);
+    q3.copy(base.target).lerp(v3, pan);
+    d3.copy(base.pos).sub(base.target);
+    const d0 = d3.length();
+    d3.normalize().lerp(v3.set(0, 0, 1), pan).normalize();
+    camera.position.copy(q3).addScaledVector(d3, Math.exp(mix(Math.log(d0), Math.log(d1), z)));
+    camera.lookAt(q3);
+    camera.updateMatrixWorld();
+  };
+
+  // ---------- inside the village ----------
+  // Its camera moves between shots: the handoff (the postcard view, narrowed to what's on screen, so it
+  // starts exactly where the painting was), the overview (every house in view, at any screen shape), and
+  // one per house (it, to the left of the case-study card; above it, on a phone)
+  type Shot = { pos: THREE.Vector3; tgt: THREE.Vector3; fov: number };
+  const vcam = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
+  const deg = (r: number) => (r * 180) / Math.PI, rad = (d: number) => (d * Math.PI) / 180;
+  const handoffShot = (W: number, H: number): Shot => {
+    const pc = village!.postcard, ar = artRect(W, H);
+    const dir = pc.getWorldDirection(new THREE.Vector3());
+    return { pos: pc.position.clone(), tgt: pc.position.clone().addScaledVector(dir, 12), fov: deg(2 * Math.atan(Math.tan(rad(pc.fov / 2)) * (H / ar.h))) };
+  };
+  // The overview: the handoff's own view, carried a little further in (the dive keeps going forward and
+  // settles; it never backs out to show more)
+  const overviewShot = (W: number, H: number): Shot => {
+    const a = handoffShot(W, H), dir = a.tgt.clone().sub(a.pos).normalize();
+    const on = W < H ? 1.5 : 4;
+    return { pos: a.pos.clone().addScaledVector(dir, on), tgt: a.tgt.clone().addScaledVector(dir, on), fov: a.fov };
+  };
+  // A stop on the tour: the place seen from the front of the village, filling most of the height, off to
+  // the left of its card (above its card, on a phone)
+  const focusShot = (i: number, W: number, H: number): Shot => {
+    const h = village!.houses[i], aspect = W / H, portrait = aspect < 1;
+    const fov = portrait ? 46 : 34, t = Math.tan(rad(fov / 2));
+    const tgt = h.base.clone().add(new THREE.Vector3(0, h.height * 0.48, 0));
+    const dist = h.height / ((portrait ? 0.46 : 0.62) * 2 * t);
+    const pos = tgt.clone().addScaledVector(h.front, dist).add(new THREE.Vector3(0, dist * 0.22, 0));
+    const right = new THREE.Vector3().crossVectors(h.front, new THREE.Vector3(0, 1, 0)).normalize().negate();
+    if (portrait) tgt.y -= dist * t * 0.5; else tgt.addScaledVector(right, dist * t * aspect * 0.4);
+    return { pos, tgt, fov };
+  };
+  const cur: Shot = { pos: new THREE.Vector3(), tgt: new THREE.Vector3(), fov: 30 };
+  let curSet = false;
+  // Between stops the camera glides on a timed arc, up over the village and down to the next place
+  let glide: { from: Shot; t: number; key: number } | null = null, shotKey = -2;
+  const ray = new THREE.Raycaster();
+  const stage = pin?.querySelector<HTMLElement>('.vz-stage') ?? null;
+  const pins = Array.from(pin?.querySelectorAll<HTMLElement>('.vz-pin') ?? []);
+  const anchor = new THREE.Vector3(), mid = new THREE.Vector3();
+  // One frame of the village: where its camera is, the places popping, the snow, the labels
+  const shootVillage = (dt: number) => {
+    if (!village) return;
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    if (!W || !H) return;
+    const en = seg(zp, ZOOM.enter), e = DIVE_OUT(en);
+    if (zp < 1 || !curSet) {
+      const a = handoffShot(W, H), b = overviewShot(W, H);
+      // (the lens widens late, after the camera has moved in, so the frame keeps closing in)
+      cur.pos.copy(a.pos).lerp(b.pos, e); cur.tgt.copy(a.tgt).lerp(b.tgt, e); cur.fov = mix(a.fov, b.fov, EASE_IN_OUT(en));
+      curSet = zp >= 1; shotKey = -1; glide = null;
+    } else {
+      const g = focus >= 0 ? focusShot(focus, W, H) : overviewShot(W, H);
+      if (focus !== shotKey) { glide = { from: { pos: cur.pos.clone(), tgt: cur.tgt.clone(), fov: cur.fov }, t: 0, key: focus }; shotKey = focus; }
+      if (glide && !reduce.matches) {
+        glide.t = Math.min(1, glide.t + dt / 1500);
+        const k = EASE_IN_OUT(glide.t), f = glide.from;
+        // (a quadratic arc: its middle raised by a quarter of the distance travelled)
+        mid.copy(f.pos).lerp(g.pos, 0.5).add(new THREE.Vector3(0, f.pos.distanceTo(g.pos) * 0.25, 0));
+        cur.pos.copy(f.pos).multiplyScalar((1 - k) * (1 - k)).addScaledVector(mid, 2 * (1 - k) * k).addScaledVector(g.pos, k * k);
+        cur.tgt.copy(f.tgt).lerp(g.tgt, k); cur.fov = mix(f.fov, g.fov, k);
+        if (glide.t >= 1) glide = null;
+      } else { cur.pos.copy(g.pos); cur.tgt.copy(g.tgt); cur.fov = g.fov; glide = null; }
+    }
+    vcam.aspect = W / H; vcam.fov = cur.fov;
+    vcam.position.copy(cur.pos);
+    vcam.lookAt(cur.tgt);
+    vcam.updateProjectionMatrix(); vcam.updateMatrixWorld();
+    village.step(dt, zp >= 1 ? hoverHouse : -1, []);
+    // the labels hang over their places, kept inside the screen, and nudged apart where two would overlap
+    // (the further one, higher on the screen, moves up)
+    const spots = village.houses.map((h, i) => {
+      const el = pins[i];
+      if (!el) return null;
+      anchor.copy(h.anchor); anchor.y += h.group.position.y;
+      anchor.project(vcam);
+      const w = el.offsetWidth, hh = el.offsetHeight, half = w / 2 + 10;
+      return { el, w, h: hh, x: Math.min(W - half, Math.max(half, ((anchor.x + 1) / 2) * W)), y: ((1 - anchor.y) / 2) * H };
+    });
+    const live = spots.filter((v): v is NonNullable<typeof v> => !!v).sort((a, b) => b.y - a.y);
+    for (let i = 0; i < live.length; i++) for (let j = 0; j < i; j++) {
+      const a = live[j], b = live[i];
+      if (Math.abs(a.x - b.x) < (a.w + b.w) / 2 + 6 && b.y > a.y - a.h - 6) b.y = a.y - a.h - 6;
+    }
+    live.forEach((v) => { v.el.style.transform = `translate3d(${v.x.toFixed(1)}px, ${v.y.toFixed(1)}px, 0)`; });
+  };
+  const renderVillage = () => {
+    if (!village) return;
+    const tm = renderer.toneMapping;
+    renderer.toneMapping = THREE.NoToneMapping;
+    renderer.setClearColor(SKY, 1);
+    renderer.render(village.scene, vcam);
+    renderer.setClearColor(0x000000, 0);
+    renderer.toneMapping = tm;
+  };
+  // The painting on the doll: the village from its postcard camera, sky left clear
+  const paintBelly = () => {
+    if (!village || !rt) return;
+    renderer.setRenderTarget(rt);
+    renderer.setClearColor(SKY, 0);
+    renderer.clear();
+    renderer.render(village.scene, village.postcard);
+    renderer.setRenderTarget(null);
+    renderer.setClearColor(0x000000, 0);
+  };
+  // Pointing at a house lifts it and brightens its windows; clicking flies to it (or back out)
+  const pickAt = (e: PointerEvent | MouseEvent) => {
+    if (!village || zp < 1) return -1;
+    const r = canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), vcam);
+    return village.pick(ray);
+  };
   const apply = () => {
     const shift = closedShift * (1 - EASE_IN_OUT(t / total));
+    // (diving, the dolls stop watching the cursor and the others fade as the camera passes them)
+    const still3 = 1 - seg(zp, [0.02, 0.22]), away = 1 - seg(zp, [0.02, 0.2]);
     dolls.forEach((o, i) => {
       let x = X[0], y = 0;
       for (let r = 1; r <= i; r++) {
@@ -527,7 +773,8 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       const out = i === 0 ? 1 : clamp((t - ((i - 1) * step + lead + HOP * 0.6)) / (HOP * 0.4));
       const g = o.gaze, roll = g.roll * out * 0.3;
       o.group.position.y += Math.abs(Math.sin(roll)) * ROCK_R * S[i];
-      o.group.rotation.set(-g.pitch * out, spin + g.yaw * out, roll);
+      o.group.rotation.set(-g.pitch * out * still3, (spin + g.yaw * out) * still3, roll * still3);
+      if (i !== VILLAGE_DOLL) o.fade(away);
       o.look(g.lx, g.ly, openOf(g, o.hover));
       if (o.lid) {
         poseLid(o.lid, pose);
@@ -542,8 +789,10 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       const w = 168 * S[i];
       o.shadow.position.set(x + shift, 0.5, 0);
       o.shadow.scale.set(w * 1.25 * (1 - y / (heightOf(i) * 1.6)), w * SHADOW_D, 1);
-      (o.shadow.material as THREE.MeshBasicMaterial).opacity = 0.62 * land * clamp(1 - y / (heightOf(i) * 0.9));
+      (o.shadow.material as THREE.MeshBasicMaterial).opacity = 0.62 * land * clamp(1 - y / (heightOf(i) * 0.9)) * (i === VILLAGE_DOLL ? 1 : away);
     });
+    if (belly) belly.setFlat(EASE_IN_OUT(seg(zp, ZOOM.flatten)));
+    flyCamera();
     // The pumpkin: beside the last doll's place, there once that doll has landed (it grows in)
     if (gourd) {
       const j = n - 1, landed = clamp((t - ((j - 1) * step + lead + HOP * 0.7)) / (HOP * 0.5));
@@ -557,13 +806,13 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   // ---------- the loop: runs only while something moves ----------
   let raf = 0, last = 0, live = false, gone = false;
   // (a click's opening holds its pose once played, so it counts as still)
-  const still = () => dir === 0 && dolls.every((o, i) => Math.abs(o.hover - o.hoverTo) < 0.002 && Math.abs(o.peek - peekTo(o, i)) < 0.002 && (o.visit < 0 || o.visit >= 460) && o.play < 0 && gazeStill(o.gaze));
+  const still = () => !(village && (zp > 0 || bellyIn < 1)) && dir === 0 && dolls.every((o, i) => Math.abs(o.hover - o.hoverTo) < 0.002 && Math.abs(o.peek - peekTo(o, i)) < 0.002 && (o.visit < 0 || o.visit >= 460) && o.play < 0 && gazeStill(o.gaze));
   // The gaze: towards the pointer while the set is still, straight ahead while it opens
   let pointer: { x: number; y: number } | null = null;
   const speed = speedo();
   const eye = new THREE.Vector3();
   const aimAll = () => dolls.forEach((o, i) => {
-    if (!pointer || dir !== 0 || !S[i]) return aimGaze(o.gaze, null);
+    if (!pointer || dir !== 0 || !S[i] || zp > 0) return aimGaze(o.gaze, null);
     const e = toPage(camera, canvas, eye.set(o.group.position.x, (FLOOR - EYE_Y) * S[i], 0));
     aimGaze(o.gaze, pointer.x - e.x, e.y - pointer.y, speed.get());
   });
@@ -589,7 +838,17 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       if (o.play >= 0) { o.play += dt; if (o.play > MOVE_MS[MOVES[i]]) o.play = -1; }
     });
     apply();
-    if (live) renderer.render(scene, camera);
+    // (the world fades in once, in the space her curls frame, the first time it's ready)
+    if (belly && bellyIn < 1) { bellyIn = Math.min(1, bellyIn + dt / 700); belly.show(EASE_IN_OUT(bellyIn)); }
+    if (live) {
+      if (village && zp > 0) shootVillage(dt);
+      if (village && zp >= ZOOM.hand[1]) renderVillage();
+      else {
+        // (flying in, the painting is the live village, snow falling and all, so it meets the real one)
+        if (village && (zp > 0 || bellyIn < 1)) paintBelly();
+        renderer.render(scene, camera);
+      }
+    }
     if (still()) { raf = 0; last = 0; } else raf = requestAnimationFrame(frame);
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
@@ -605,6 +864,18 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     gourd = { group: p.object, r: 132 / Math.max(p.size.x, p.size.z) };
     scene.add(p.object); disposables.push(...p.parts); apply(); kick();
   });
+  // His doll (data/me) wears the outfit he published last, as 3D clothes over its painting (Outfit3D);
+  // they arrive when the outfit has loaded, and fade with the doll when the camera flies into the village
+  fetch('/api/outfit').then((r) => r.json()).then(async (d) => {
+    const me = dolls[ME];
+    if (!me || gone || !Array.isArray(d?.current?.outfit) || !d.current.outfit.length) return;
+    const { wearOutfit } = await import('@/app/components/Outfit3D');
+    if (gone) return;
+    const worn = wearOutfit(me, d.current.outfit, true, () => { apply(); kick(); });
+    const fade = me.fade;
+    me.fade = (a: number) => { fade(a); worn.fade(a); };
+    disposables.push(worn); apply(); kick();
+  }).catch(() => undefined);
 
   const go = (open: boolean, s: number, l: number, elapsed = 0) => {
     if (reduce.matches) { t = open ? total : 0; dir = 0; kick(); return; }
@@ -618,6 +889,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   // ---------- hover and clicks ----------
   const setHover = (i: number | null) => {
     if (reduce.matches) return;
+    if (zp > 0) i = null;
     const open = root.classList.contains('is-open');
     dolls.forEach((o, j) => {
       const on = i === j && (open || j === 0);
@@ -638,6 +910,8 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     on(s, 'pointerleave', () => setHover(null));
     on(s, 'click', (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || reduce.matches) return;
+      // (the Work doll, where the zoom runs, flies you into its village instead: VillageZoom)
+      if (i === VILLAGE_DOLL && zoomable()) return;
       dolls[i].visit = 0; dolls[i].play = -1; kick();
     });
   });
@@ -650,16 +924,60 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   window.addEventListener('pageshow', onShow);
   off.push(() => window.removeEventListener('pageshow', onShow));
 
-  const ro = new ResizeObserver(() => { layout(); apply(); if (live) renderer.render(scene, camera); });
+  const ro = new ResizeObserver(() => { layout(); apply(); kick(); });
   ro.observe(root);
+  if (pin) ro.observe(pin);
   layout(); apply();
   // Compile the shaders off the main thread where the browser can and put the paintings on, then draw
   // the first frame
   // (the art list also holds dolls that aren't in the set: only the set's own are painted here)
   const painted = loadArt().then((art) => { if (!gone) dolls.forEach((d, i) => { const a = art[i]; if (a) d.repaint(a); }); });
+  off.push(zoomBus.on((st) => {
+    // (diving, any move a doll is playing stops, and its lid settles back: a lid mid-throw would fly off
+    // with the camera)
+    if (st.p > 0 && zp <= 0) dolls.forEach((o) => { o.play = -1; o.hoverTo = 0; });
+    zp = st.p; focus = st.focus; hoverHouse = st.hover; if (st.p === 0) curSet = false; kick();
+  }));
+  if (stage) {
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
+      const i = pickAt(e);
+      if (i !== hoverHouse) { hoverHouse = i; zoomBus.set({ hover: i }); stage.style.cursor = i >= 0 ? 'pointer' : ''; kick(); }
+    };
+    const click = (e: MouseEvent) => {
+      if (zp < 1) return;
+      const i = pickAt(e);
+      zoomBus.set({ focus: i >= 0 ? i : -1 });
+    };
+    stage.addEventListener('pointermove', move);
+    stage.addEventListener('click', click);
+    off.push(() => { stage.removeEventListener('pointermove', move); stage.removeEventListener('click', click); });
+  }
+  // The village: built once the set is drawn and the page is idle (its models and light load meanwhile),
+  // then painted on the Work doll, where it fades in; from then on a click on that doll flies into it
+  const startVillage = () => {
+    if (!pin || village) return;
+    import('@/app/components/VillageScene').then(({ createVillage }) => createVillage(renderer)).then(async (v) => {
+      if (gone) { v.dispose(); return; }
+      village = v;
+      rt = new THREE.WebGLRenderTarget(1792, Math.round(1792 / PAINTING_ASPECT), { samples: 4, type: THREE.HalfFloatType });
+      disposables.push(rt, { dispose: () => v.dispose() });
+      const mask = await maskTexture();
+      belly = bellyMesh(mask);
+      disposables.push(mask, ...belly.disposables);
+      dolls[VILLAGE_DOLL].group.add(belly.group);
+      paintBelly();
+      belly.paint(rt.texture);
+      pin.parentElement?.classList.add('has-village');
+      window.dispatchEvent(new Event('vz-ready'));
+      kick();
+    }).catch(() => {});
+  };
   const ready = Promise.all([renderer.compileAsync(scene, camera).catch(() => scene), painted]).then(() => {
     if (gone) return;
     live = true; layout(); apply(); renderer.render(scene, camera);
+    if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(startVillage, { timeout: 2000 });
+    else setTimeout(startVillage, 600);
   });
 
   return {

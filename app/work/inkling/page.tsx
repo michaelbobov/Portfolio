@@ -2,7 +2,7 @@ import { CaseHeader, CaseShell, Choice, Choices, NextCase, Outcome, Prose, Quote
 import MotionVideo from '@/app/components/MotionVideo';
 import '../study.css';
 
-// Inkling case study: what it is and the facts, the app in motion, then the problem, the two weeks as
+// Inkling case study: what it is and the facts, the app in motion, then the overview and problem, the two weeks as
 // steps, five decisions with the recordings that show them, and where it stands. Facts come from the
 // earlier Inkling page (written against the app in the author's Xcode sessions), the recordings, and
 // the screens in public/inkling-screens; all of it uses sample data.
@@ -27,29 +27,22 @@ export default function InklingCaseStudy() {
           { label: 'Platform', value: 'macOS 26' },
         ]}
         status="PRE-LAUNCH"
-        note="Recordings and screens show the app with sample data. The top video joins SwiftUI preview renders of the ⌥Space popup, editor and alarm with captures of the Calendar and From Email pages, on macOS’s own wallpaper. The popup’s confirmation is the one the model gave for that note in a recorded run, and the typing is animated in the app’s own font over its empty field. The inbox shows the sample emails as plain cards; each tag is what the email reader returned for that email, and the highlight is the date wording it quoted. The alarm switch and Stop are before and after states, not recorded. I added the camera moves, step labels and cursor in the edit."
+        note="All recordings and screens use sample data. The top video joins SwiftUI preview renders of the ⌥Space popup, editor and alarm with captures of the Calendar and From Email pages. The popup’s confirmation comes from a recorded run, the typing is animated, and each inbox tag and highlighted date is what the email reader returned. The alarm switch and Stop are before and after states, not recorded; I added the camera moves, step labels and cursor in the edit."
         media={video('tour', 'Inkling demo: a note typed into the ⌥Space popup becomes a lunch and its to-do, the lunch on the calendar, an alarm turned on that later rings on the Mac and is stopped, and the email reader going through a sample inbox, quoting a reservation’s date, and adding it to the calendar', [2100, 900])}
       />
 
       <Section n={1} id="overview" title="Overview">
         <Prose>
-          <p>Inkling is a Mac app for the things you’d normally text yourself. You type or say a thought the way you’d text a friend, and an on-device model works out what it is. Events go to Calendar and to-dos to Reminders, so they reach your iPhone, while ideas and notes get their own lists in the app.</p>
+          <p>I text myself plans, errands and half-formed business ideas, then never see them again. The text doesn’t know it’s a dentist appointment, nothing reminds me, and the good ideas sink under the grocery lists. Every app I tried wanted me to decide where a thought goes before I’d finished having it. My notes look like this:</p>
+        </Prose>
+        <Quote text="dub seminar tmrw 11;30 need gear before then" who="A real note of mine, typed fast" />
+        <Prose>
+          <p>That one line holds an event, a time with a typo in it, and a to-do that has to happen first. Inkling is a Mac app built to read notes like it. You type or say a thought the way you’d text a friend, and an on-device model works out what it is. Events go to Calendar and to-dos to Reminders, so they reach your iPhone, while ideas and notes get their own lists in the app.</p>
           <p>I designed and built it alone in two weeks, writing the code with Claude in Xcode. It works end to end on my Mac and hasn’t launched. On 46 new notes it had never been tuned on, it filed 41 as the right type. All of my testing so far has used my own notes and sample emails.</p>
         </Prose>
       </Section>
 
-      <Section n={2} id="problem" title="The problem">
-        <Prose>
-          <p>I text myself plans, errands and half-formed business ideas, then never see them again. The text doesn’t know it’s a dentist appointment, nothing reminds me, and the good ideas sink under the grocery lists.</p>
-          <p>Every app I tried wanted me to decide where a thought goes before I’d finished having it. My notes look like this:</p>
-        </Prose>
-        <Quote text="dub seminar tmrw 11;30 need gear before then" who="A real note of mine, typed fast" />
-        <Prose>
-          <p>That one line holds an event, a time with a typo in it, and a to-do that has to happen first. Whatever I built had to read notes like it.</p>
-        </Prose>
-      </Section>
-
-      <Section n={3} id="process" title="Process">
+      <Section n={2} id="process" title="Process">
         <Steps>
           <Step
             title="One box, from any app"
@@ -82,7 +75,7 @@ export default function InklingCaseStudy() {
         </Steps>
       </Section>
 
-      <Section n={4} id="decisions" title="Design decisions">
+      <Section n={3} id="decisions" title="Design decisions">
         <Choices>
           <Choice
             n={1}
@@ -111,7 +104,7 @@ export default function InklingCaseStudy() {
             caption="Every item’s alarm starts off. When one rings: Stop, Snooze, and a line saying another alarm is waiting."
           >
             <p>A reminder that only pops up is easy to swipe away, so any item can ring on the Mac like a call. Because that’s intrusive, it’s the person’s choice: nothing rings until you turn it on for that item, and Inkling only asks “Ring as an alarm?” when a note mentions one.</p>
-            <p>The sound starts soft and builds, and stops by itself after a minute by default. Alarms ring one at a time, and snooze works three times. An alarm that comes due in quiet hours, or while the Mac was asleep, shows without sound. Ringing on the iPhone needs the iPhone app; until then the phone gets a standard alert.</p>
+            <p>The sound starts soft and builds, and stops by itself after a minute by default. An alarm that comes due in quiet hours, or while the Mac was asleep, shows without sound.</p>
           </Choice>
           <Choice
             n={4}
@@ -135,7 +128,7 @@ export default function InklingCaseStudy() {
       </Section>
 
       <Outcome
-        n={5}
+        n={4}
         shippedLabel="Working now"
         shipped={[
           'Capture from any app with ⌥Space, typed or spoken',

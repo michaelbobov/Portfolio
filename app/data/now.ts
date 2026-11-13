@@ -22,7 +22,8 @@ const WORDS: [number, string][] = [
 export async function getWeather(): Promise<{ temp: number; words: string } | null> {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${NOW.lat}&longitude=${NOW.lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=auto`;
-    const res = await fetch(url, { next: { revalidate: 1800 } });
+    // (never holds the page up: if Open-Meteo is slow or down, the sentence just goes without the weather)
+    const res = await fetch(url, { next: { revalidate: 1800 }, signal: AbortSignal.timeout(2500) });
     if (!res.ok) return null;
     const j = await res.json();
     const t = j?.current?.temperature_2m, c = j?.current?.weather_code;

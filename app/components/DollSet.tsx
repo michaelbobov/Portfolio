@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DOLL_INTRO } from '@/app/data/intro';
 import { DOLLS, DOLL_ART, SET_SIZE } from '@/app/data/dolls';
+import { VILLAGE_DOLL } from '@/app/data/village';
 import { DollInside, FLAT_AFTER, FlatDoll, canWebGL } from '@/app/components/FlatDoll';
 import type { DollScene as DollSceneT } from '@/app/components/DollScene';
 
@@ -160,6 +161,13 @@ export default function DollSet() {
   // the page. New-tab clicks and reduced motion go straight there.
   const visit = (e: MouseEvent<HTMLAnchorElement>, i: number) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    // The Side projects doll, on the homepage, flies you into the village painted on her belly instead,
+    // once that's there (VillageZoom); until then it goes to the Side projects page
+    if (i === VILLAGE_DOLL && ref.current?.closest('.hz.has-village')) {
+      e.preventDefault();
+      window.dispatchEvent(new Event('hz-dive'));
+      return;
+    }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     e.preventDefault();
     const slot = e.currentTarget;

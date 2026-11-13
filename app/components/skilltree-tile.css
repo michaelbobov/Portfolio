@@ -1,0 +1,19 @@
+/* SkillTree's tile in the side-projects bento: full width and white, the real Skill Tree tilted off
+   the right edge, like the other product tiles' pictures. Kept out of hp.css on purpose. */
+.sx-skilltree { grid-column: span 12; min-height: 460px; background: #ffffff; }
+.sx-skilltree .sx-words { max-width: 40%; }
+.sx-skilltree .sx-status, .sx-skilltree .sx-tag { background: var(--hp-inner); }
+.sx-skilltree .sx-name { font-size: var(--t-head); letter-spacing: -0.025em; }
+.sx-skilltree .sx-shot { right: -5%; top: 56px; width: 56%; aspect-ratio: 2480 / 1520; border-radius: 12px; rotate: -3deg; }
+
+@media (max-width: 999px) {
+  .sx-skilltree { grid-column: span 2; }
+  .sx-skilltree .sx-words { max-width: 46%; }
+}
+
+@media (max-width: 599px) {
+  .sx-skilltree { grid-column: auto; }
+  .sx-skilltree .sx-words { max-width: none; }
+  .sx-skilltree .sx-media { position: relative; inset: auto; height: 260px; margin: 18px -22px -22px; }
+  .sx-skilltree .sx-shot { left: 22px; right: auto; top: 12%; width: 130%; }
+}

@@ -7,8 +7,7 @@
   phrase per heading (the <em> in each). Small labels are sentence case, never tracked caps.
   Depth is tone, with a soft shadow only under the product screens.
   Motion, each with a job: the name rises in; the one hero doll opens into the set
-  and nests back (interruptible transitions, staggered out and reversed in); the rings close in on
-  code as they scroll in, outside first; cards rise in as they arrive; the About doll twists open
+  and nests back (interruptible transitions, staggered out and reversed in); cards rise in as they arrive; the About doll twists open
   before it leaves the page. Strong ease-out curves, press feedback on everything pressable, hover
   only on fine pointers, transform and opacity only, and a reduced-motion fallback that keeps every
   state but drops the travel.
@@ -176,9 +175,11 @@ html[data-snow="on"] .hp-home .hp-title { cursor: inherit; }
 .hp-clipdef { position: absolute; width: 0; height: 0; overflow: hidden; }
 .hp-shine, .hp-window { position: absolute; left: 0; top: 0; overflow: hidden; pointer-events: none; -webkit-clip-path: url(#hp-name-clip); clip-path: url(#hp-name-clip); visibility: hidden; }
 .hp-title-wrap.is-ready :is(.hp-shine, .hp-window) { visibility: visible; }
-/* The band of light: slides across the letters every few seconds (a transform, so nothing is redrawn) */
-.hp-shine > i { position: absolute; top: 0; bottom: 0; left: 0; width: 26%; background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0) 100%); transform: translate3d(-110%, 0, 0); will-change: transform; animation: hp-shine 8s ease-in-out 2.6s infinite; }
-@keyframes hp-shine { 0%, 62% { transform: translate3d(-110%, 0, 0); } 100% { transform: translate3d(400%, 0, 0); } }
+/* The band of light: slides across the letters every few seconds (a transform, so nothing is redrawn). Its
+   gradient runs straight across and the slant is a skew, so both its edges stay clear however tall the name
+   is (an angled gradient on the two-line phone name was cut off bright at the band's sides) */
+.hp-shine > i { position: absolute; top: 0; bottom: 0; left: 0; width: 26%; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0) 100%); transform: translate3d(-150%, 0, 0) skewX(-15deg); will-change: transform; animation: hp-shine 8s ease-in-out 2.6s infinite; }
+@keyframes hp-shine { 0%, 62% { transform: translate3d(-150%, 0, 0) skewX(-15deg); } 100% { transform: translate3d(450%, 0, 0) skewX(-15deg); } }
 /* The window: a soft circle (the lens) round the cursor, moved, never redrawn; in it the scene, slid the
    other way so it stays fixed to the screen: the winter picture (fetched the first time you point at the
    name) with the page's own snow falling in it, which runs only while you look. Leaving fades it out. */
@@ -187,7 +188,7 @@ html[data-snow="on"] .hp-home .hp-title { cursor: inherit; }
 .hp-title-wrap.is-peeking .hp-lens { opacity: 1; transition-duration: 160ms; }
 .hp-scene { position: absolute; left: 0; top: 0; width: 100vw; height: max(100svh, 640px); will-change: transform; }
 .hp-scene-pic { position: absolute; inset: 0; }
-.hp-title-wrap.was-peeked .hp-scene-pic { background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 30%), url(/snow/backdrop.webp) 50% calc(-0.43 * 56.28vw) / 100vw auto no-repeat; }
+.hp-title-wrap.was-peeked .hp-scene-pic { background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 30%), url(/snow/backdrop.webp) 50% calc(var(--scene-y, -0.43) * 56.28vw) / 100vw auto no-repeat; }
 .hp-title-wrap:not(.is-peeking) .hp-scene .hp-flakes > i { animation-play-state: paused; }
 /* With snow on, the other way round: through the letters, the plain page, no snow */
 html[data-snow="on"] .hp-title-wrap.was-peeked .hp-scene-pic { background: linear-gradient(180deg, #fafbfd, #dfe8f3); }
@@ -202,9 +203,50 @@ html[data-snow="on"] .hp-scene .hp-flakes { display: none; }
 @media (max-width: 599px) {
   .hp-stage { --name: 25vw; padding-bottom: 9svh; }
   .hp-title { line-height: 0.82; }
-  .hp-title > span { display: block; }
+  /* (each line gets its own frost, white at the top of its letters to cool grey at their feet, as the one
+     line has on wider screens; padded so the tall letters' tops are inside what's painted) */
+  .hp-title { background: none; }
+  .hp-title > span { display: block; margin: -0.08em -0.1em; padding: 0.08em 0.1em; background: linear-gradient(180deg, #ffffff 10%, #eef3fa 34%, #c6d2e4 60%, #aebfd8 80%); -webkit-background-clip: text; background-clip: text; }
   .hp-name + .hp-set { margin-top: calc(-0.12 * var(--name)); }
 }
+/* ---------- the section pages' and About's titles: the name's frosted glass, smaller (GlassName) ---------- */
+/* (The case studies keep their name in Geist, study.css.) Each of these pages opens the way the homepage does: its title in the same glass, with the same band of light and,
+   under a mouse, the same window onto the snow. Smaller than the name, and allowed to wrap, so each word
+   carries its own frost (white at the top of its letters to cool grey at their feet) and a second line
+   looks like the first; padded so the tall letters' tops and the tails of g, j and p are inside what's painted. Tracked a little
+   looser than the name, whose tightness is for its size: smaller, the letters would touch and their rims
+   cross. */
+.hp-title:is(.gt-page, .gt-about) { --name: clamp(60px, 9vw, 148px); font-size: var(--name); line-height: 0.92; letter-spacing: -0.03em; white-space: normal; text-wrap: balance; background: none; }
+.hp-title:is(.gt-page, .gt-about) .hp-word { display: inline-block; margin: -0.08em -0.1em -0.16em; padding: 0.08em 0.1em 0.16em; background: linear-gradient(180deg, #ffffff 10%, #eef3fa 34%, #c6d2e4 60%, #aebfd8 80%); -webkit-background-clip: text; background-clip: text; }
+/* About: left, over the copy, at the size its column takes */
+.hp-title.gt-about { --name: clamp(52px, 6.6vw, 104px); text-align: left; }
+.ab-copy .hp-title-wrap { margin-top: 12px; }
+/* (these titles sit higher on the screen than the name, so the window's picture is laid higher too, and
+   what shows through them is still the snowfield) */
+:is(.sp-head, .ab-copy) { --scene-y: -0.5; }
+@media (max-width: 599px) {
+  .hp-title.gt-page { --name: 15vw; }
+  .hp-title.gt-about { --name: 13vw; }
+}
+
+/* ---------- snow on the other pages (Site.tsx, PageWinter) ---------- */
+/* With the snow on, the homepage's winter rises behind the top of the page, the picture with its snow
+   falling, and fades out into the page before the content starts, so the reading stays on the plain
+   ground. The page is its own layer stack, so the winter sits over its ground and under everything else. */
+:is(.hp, .st):has(> .pg-winter) { position: relative; isolation: isolate; }
+.pg-winter { display: none; position: absolute; inset: 0 0 auto; z-index: -1; height: clamp(620px, 92svh, 900px); overflow: hidden; pointer-events: none;
+  -webkit-mask: linear-gradient(180deg, #000 0 56%, transparent 100%); mask: linear-gradient(180deg, #000 0 56%, transparent 100%); }
+html[data-snow="on"] .pg-winter { display: block; animation: hp-fade 700ms ease both; }
+.pg-winter-pic { position: absolute; inset: 0; background: url(/snow/backdrop.webp) 50% 78% / cover no-repeat; }
+@media (orientation: portrait) { .pg-winter-pic { background-image: url(/snow/backdrop-tall.webp); background-position: 50% 60%; } }
+/* The switch in the bar, with the links (on phones, the switch alone; its word stays for screen readers) */
+.sb-snow { display: flex; }
+.sb .hp-snow-switch { position: relative; top: auto; left: auto; z-index: auto; padding-block: 0; }
+@media (max-width: 599px) { .sb .hp-snow-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+/* About: while it snows, the doll's half-round frame looks out on the same winter, the doll standing in its
+   snowfield */
+html[data-snow="on"] .ad-frame { background: url(/snow/backdrop-tall.webp) 50% 39% / cover no-repeat #c9d7ee; }
+
 /* The credit for the December hats' model (CC BY 3.0): tiny, in the first screen's bottom corner, only
    in December (data/season.ts) */
 .hp-credit { display: none; position: absolute; right: clamp(16px, 3.4vw, 48px); bottom: 14px; z-index: 31; margin: 0; font-size: 11px; color: var(--hp-muted); opacity: 0.8; }
@@ -223,11 +265,10 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
    dolls sit inside the big one and the row is shifted so the big one stands in the middle; open,
    each stands in its own place. These are only the two resting states (CSS arithmetic, right from
    the first frame); the hops between them are Web Animations. */
-/* --mid: the set is shifted left by this much, so once it's open the middle doll stands on the page's
-   centre line, under the name (the dolls shrink to the right, so the box's centre isn't the middle doll's);
-   closed, the track makes up for it, so the one doll stands centred too. Not on phones, where the open set
-   fills the width. */
-.ds { --h: clamp(200px, 21vw, 320px); --g: clamp(12px, 1.6vw, 24px); --mid: calc(0.184615 * var(--h)); translate: calc(-1 * var(--mid)) 0; position: relative; display: block; width: calc(1.723077 * var(--h) + 2 * var(--g)); height: var(--h); padding-bottom: 80px; box-sizing: content-box; -webkit-tap-highlight-color: transparent; }
+/* --mid: how far the set is shifted left. 0 since 2026-11-12: the open set is centred as a whole under the
+   name (with the middle doll on the centre line instead, the big doll pulled the set left of centre).
+   Closed, the track still brings the one doll to the centre. */
+.ds { --h: clamp(200px, 21vw, 320px); --g: clamp(12px, 1.6vw, 24px); --mid: 0px; translate: calc(-1 * var(--mid)) 0; position: relative; display: block; width: calc(1.723077 * var(--h) + 2 * var(--g)); height: var(--h); padding-bottom: 80px; box-sizing: content-box; -webkit-tap-highlight-color: transparent; }
 @media (max-width: 899px) { .ds { --h: min(38vw, 240px); --g: 10px; } }
 /* Phones: the dolls as big as the width allows (the row is 1.723 heights and two gaps wide), so the set
    fills the screen instead of leaving white above and below it */
@@ -301,14 +342,16 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .ad:not(.is-opening):hover .ad-doll :is(.ds-face, .ds-front) { animation: ds-turn-x 640ms 700ms both, ds-turn-w 640ms 700ms both; }
 }
 
-/* The label under each doll, on a pill of clear glass, as it first was: light, mostly see-through, lit
-   along its top edge. The words carry the legibility instead: dark navy, semibold, with a soft white glow
-   behind them, so they stay crisp over the snow. On the small ones it shows once that doll has landed. */
-.ds-cap { position: absolute; left: 50%; top: calc(100% + 22px); translate: -50% 0; padding: 11px 22px; border-radius: 999px; font-size: 15px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; color: #13224a; white-space: nowrap;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.85), 0 0 10px rgba(255, 255, 255, 0.75);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.26)); -webkit-backdrop-filter: blur(12px) saturate(1.6); backdrop-filter: blur(12px) saturate(1.6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px rgba(255, 255, 255, 0.6), inset 0 -10px 18px -12px rgba(110, 140, 195, 0.4), 0 12px 28px -14px rgba(19, 34, 74, 0.4);
-  transition: color 200ms ease, background-color 200ms ease; }
+/* The label under each doll, in the nav's glass (Dock.tsx, site.css): what's behind blurred and a little
+   richer, a white tint, a line of light along the top, fainter along the bottom and sides, a touch of shade
+   just inside the top, a hairline and a soft shadow. Pointing at the doll raises the nav's bubble inside it.
+   On the small ones it shows once that doll has landed. */
+.ds-cap { position: absolute; left: 50%; top: calc(100% + 22px); translate: -50% 0; isolation: isolate; padding: 11px 22px; border-radius: 999px; font-size: 15px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; color: #13224a; white-space: nowrap;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.24)); -webkit-backdrop-filter: blur(14px) brightness(1.04) saturate(1.7); backdrop-filter: blur(14px) brightness(1.04) saturate(1.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.35), inset 1px 0 0 rgba(255, 255, 255, 0.3), inset -1px 0 0 rgba(255, 255, 255, 0.3), inset 0 3px 8px -4px rgba(19, 34, 74, 0.14), 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 12px 32px -14px rgba(19, 34, 74, 0.4), 0 2px 6px -2px rgba(19, 34, 74, 0.12); }
+/* The bubble, as under the nav's page: a lighter glass raised inside the pill */
+.ds-cap::before { content: ""; position: absolute; inset: 4px; z-index: -1; border-radius: inherit; background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.5)); box-shadow: inset 0 1px 0 #ffffff, inset 0 -1px 0 rgba(255, 255, 255, 0.45), inset 1px 0 0 rgba(255, 255, 255, 0.4), inset -1px 0 0 rgba(255, 255, 255, 0.4), 0 0 0 0.5px rgba(19, 34, 74, 0.08), 0 4px 10px -4px rgba(19, 34, 74, 0.3); opacity: 0; scale: 0.9; transition: opacity 180ms ease, scale 260ms var(--wf-ease-out); }
+.ds-slot:focus-visible .ds-cap::before { opacity: 1; scale: 1; }
 .ds-slot:not(:first-child) .ds-cap { opacity: 0; }
 .ds.is-open .ds-slot .ds-cap { opacity: 1; }
 /* On a phone the four sit close together, so their words go one size down to fit side by side */
@@ -317,24 +360,25 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 /* On the snow the pills would melt into the white: a faint cool tint, a hairline edge and a deeper
    shadow keep them standing off it (where there are pills: not on phones). No blur behind them here:
    with snow moving under them it would be redone every frame */
-@media (min-width: 600px) { html[data-snow="on"] .hp .ds-cap { -webkit-backdrop-filter: none; backdrop-filter: none; background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(236, 243, 252, 0.74)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px rgba(255, 255, 255, 0.6), inset 0 -10px 18px -12px rgba(110, 140, 195, 0.45), 0 0 0 1px rgba(19, 34, 74, 0.1), 0 14px 30px -12px rgba(19, 34, 74, 0.55); } }
+@media (min-width: 600px) { html[data-snow="on"] .hp .ds-cap { -webkit-backdrop-filter: none; backdrop-filter: none; background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(236, 243, 252, 0.74)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.4), inset 0 3px 8px -4px rgba(19, 34, 74, 0.14), 0 0 0 0.5px rgba(19, 34, 74, 0.16), 0 14px 30px -12px rgba(19, 34, 74, 0.55); } }
 /* (on small laptops the two small dolls sit close: slimmer pills keep their labels apart) */
 @media (max-width: 1199px) { .ds-cap { padding: 9px 14px; font-size: 14px; } }
 @media (max-width: 1023px) { .ds-cap { padding: 8px 12px; font-size: 13px; } }
 /* (on a phone the three sit too close for pills: plain words, each free to take two lines) */
-@media (max-width: 599px) { .ds-cap { top: calc(100% + 14px); width: max(100%, 56px); padding: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-size: 12px; white-space: normal; text-align: center; text-wrap: balance; } .ds { padding-bottom: 52px; } }
+@media (max-width: 599px) { .ds-cap::before { display: none; } .ds-cap { top: calc(100% + 14px); width: max(100%, 56px); padding: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-size: 12px; white-space: normal; text-align: center; text-wrap: balance; } .ds { padding-bottom: 52px; } }
 .ds.is-open .ds-track, .ds.is-open .ds-slot > * { transform: none; }
 .ds.is-open .ds-slot .ds-shadow { opacity: 0.45; }
 .ds-doll { display: block; width: auto; overflow: visible; }
 .ds-top, .ds-bot { transform-box: view-box; transform-origin: 100px 150px; transition: transform 360ms var(--wf-ease-out); }
 /* Hover (mouse), only while the set is still: the doll under the pointer lifts a touch and its lid
-   lifts to show it opens (the littlest is solid, so it just lifts), and its word lights up */
+   lifts to show it opens (the littlest is solid, so it just lifts) */
 .ds-slot .ds-doll { scale: 1; transform-origin: 50% 100%; transition: scale 320ms var(--wf-ease-out); }
 .ds-slot:active .ds-doll { scale: 0.97; }
 @media (hover: hover) and (pointer: fine) {
   .ds:not(.is-moving) .ds-slot:hover .ds-doll { scale: 1.04; }
   .ds:not(.is-moving) .ds-slot:hover .ds-doll:not(.is-solid) .ds-top { transform: translate(-6px, -26px) rotate(-9deg); }
-  .ds:not(.is-moving) .ds-slot:hover .ds-cap { color: var(--hp-accent); background-color: rgba(255, 255, 255, 0.4); }
+  /* ...and its label raises the nav's bubble */
+  .ds:not(.is-moving) .ds-slot:hover .ds-cap::before { opacity: 1; scale: 1; }
 }
 
 
@@ -343,41 +387,39 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 @media (max-width: 767px) { .hp-section { padding-top: 104px; } }
 .hp-h2 { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-head); line-height: 1.08; letter-spacing: -0.025em; }
 /* (the accent word stays in the same face, in cobalt) */
-.hp-h2 em, .ab-title em { font: inherit; letter-spacing: inherit; color: var(--hp-accent); }
+.hp-h2 em { font: inherit; letter-spacing: inherit; color: var(--hp-accent); }
 .hp-label { margin: 0; font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); }
 
-/* ---------- project cards: the product on a coloured stage, the words on the dark card below ---------- */
-.pc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; }
-.pc { position: relative; overflow: hidden; border-radius: 30px; background: #ffffff; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.07), 0 24px 48px -32px rgba(19, 34, 74, 0.35); transition: background-color 260ms ease; }
+/* ---------- project cards, one under another: the product on a coloured stage across the top of the
+   card, the words under it, one under the other. The column is held to 1120px, centred under the
+   heading ---------- */
+.pc-list { list-style: none; max-width: 1120px; margin: 0 auto; padding: 0; display: grid; gap: 28px; }
+.pc { position: relative; overflow: hidden; border-radius: 30px; background: #ffffff; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.07), 0 24px 48px -32px rgba(19, 34, 74, 0.35); transition: background-color 260ms ease, scale 120ms ease-out; }
 .pc:has(.pc-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
 @media (hover: hover) and (pointer: fine) { .pc:hover { background: #f8fbff; } }
-.pc:active { transform: scale(0.997); }
-/* The stage: wide, flush to the card's edges, in the project's own cold tone (projects.ts), lit
-   softly from above. Nothing rides on it: the product has the stage to itself. */
-.pc-stage { position: relative; overflow: hidden; aspect-ratio: 21 / 9; background: var(--stage, #2a4fae); }
+.pc:active { scale: 0.995; }
+/* The stage: flush to the card's edges, in the project's own cold tone (projects.ts), lit softly from
+   above: 5:4 on phones, 16:10 on tablets, 21:9 on desktop, the motion pieces' own frame, so they show
+   whole. Nothing rides on it: the product has the stage to itself. */
+.pc-stage { position: relative; overflow: hidden; aspect-ratio: 5 / 4; background: var(--stage, #2a4fae); }
 .pc-stage::before { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 80% at 50% 0%, rgba(255, 255, 255, 0.22), transparent 70%); }
-/* The screens sit on a 21:9 frame as tall as the stage: the stage itself on wide screens; on narrower
-   ones the frame overhangs both sides and is cropped, so the screens keep their size */
+/* The screens sit on a 21:9 frame as tall as the stage: the stage itself on desktop; on narrower ones the
+   frame overhangs both sides and is cropped, so the screens keep their size */
 .pc-shots { position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 21 / 9; translate: -50% 0; }
 .pc-shot { position: absolute; display: block; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.1), 0 30px 60px -24px rgba(19, 34, 74, 0.45); transition: translate 480ms var(--wf-ease-out); transition-delay: calc(var(--k) * 50ms); }
-.pc-shot-browser { border-radius: 10px; }
-.pc-shot-phone { border-radius: 22px; }
+.pc-shot-browser { border-radius: 6px; }
+.pc-shot-phone { border-radius: 14px; }
 .pc-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-/* A motion piece fills the stage (21:9, cropped at the sides on narrower stages, where its action
-   stays in the middle) */
+/* A motion piece fills the stage (cropped at the sides on narrower stages, where its action stays in
+   the middle) */
 .pc-stage .pc-motion { position: absolute; inset: 0; }
-/* A wide subject stays whole on narrower stages: the video sits at the bottom, its top fading into the
-   stage, which is the same colour */
-@media (max-width: 999px) {
-  .pc-motion.is-contain video { object-fit: contain; object-position: bottom; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%); mask-image: linear-gradient(to bottom, transparent, #000 14%); }
-}
 @media (hover: hover) and (pointer: fine) { .pc:hover .pc-shot { translate: 0 -8px; } }
-/* The words, in Geist like the case studies they open: one two-tone headline, the project's name in
-   full ink and its claim in the softer tone at the same size and weight; one sentence; then one plain
-   line, the same four fields on every card (role · platform · year · status), the status with the dot
-   the case study's header uses. The way in sits at the bottom right; no stats */
-.pc-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 64px; align-items: end; padding: 30px 34px 34px; }
-.pc-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; max-width: 20em; margin: 0; font-size: clamp(23px, 2.4vw, 34px); font-weight: 500; line-height: 1.16; letter-spacing: -0.02em; color: var(--hp-muted); text-wrap: balance; }
+/* The words, in the titles' face: one two-tone headline, the project's name in full ink and its claim in
+   the softer tone at the same size and weight; one sentence; then one plain line, the same four fields
+   on every card (role · platform · year · status), the status with the dot the case study's header
+   uses; and the way in. No stats */
+.pc-body { display: grid; gap: 24px; padding: 22px 20px 24px; }
+.pc-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; max-width: 20em; margin: 0; font-size: clamp(23px, 1.95vw, 28px); font-weight: 500; line-height: 1.16; letter-spacing: -0.02em; color: var(--hp-muted); text-wrap: balance; }
 .pc-title { color: var(--hp-text); }
 .pc-meta { margin: 18px 0 0; font-size: 15px; line-height: 1.5; color: #3a4a72; }
 .pc-state { white-space: nowrap; color: var(--hp-text); }
@@ -388,7 +430,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .pc-link:focus-visible { outline: none; }
 .pc-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
 .pc-summary { max-width: 34em; margin: 14px 0 0; font-size: var(--t-body); line-height: 1.5; color: #24345e; text-wrap: pretty; }
-.pc-side { display: grid; justify-items: end; }
+.pc-side { display: grid; justify-items: start; }
 .pc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; }
 .pc-read { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-body); font-weight: 600; color: var(--hp-accent); }
 .pc-read svg { transition: transform 240ms var(--wf-ease-out); }
@@ -397,46 +439,30 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .pc:hover .pc-read svg { transform: translateX(4px); }
   .pc-live:hover { color: var(--hp-text); }
 }
-@media (max-width: 999px) {
+@media (min-width: 600px) {
   .pc-stage { aspect-ratio: 16 / 10; }
-  .pc-body { grid-template-columns: minmax(0, 1fr); }
-  .pc-side { justify-items: start; }
+  .pc-shot-browser { border-radius: 10px; }
+  .pc-shot-phone { border-radius: 22px; }
+  .pc-body { padding: 30px 34px 34px; }
 }
-@media (max-width: 599px) {
-  .pc { border-radius: 24px; }
-  .pc-stage { aspect-ratio: 5 / 4; }
-  .pc-body { padding: 22px 20px 24px; }
-  .pc-shot-phone { border-radius: 14px; }
-  .pc-shot-browser { border-radius: 6px; }
+@media (max-width: 599px) { .pc { border-radius: 24px; } }
+/* Phones and tablets: a wide subject stays whole, at the bottom of the stage, its top fading into the
+   stage, which is the same colour */
+@media (max-width: 999px) {
+  .pc-motion.is-contain video { object-fit: contain; object-position: bottom; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%); mask-image: linear-gradient(to bottom, transparent, #000 14%); }
+}
+/* Desktop: the stage at 21:9 */
+@media (min-width: 1000px) { .pc-stage { aspect-ratio: 21 / 9; } .pc-body { padding: 34px 40px 36px; } }
+@media (prefers-reduced-motion: reduce) {
+  .pc, .pc-shot, .pc-read svg { transition: none; }
+  .pc:active { scale: none; }
+  .pc:hover .pc-shot, .pc:hover .pc-read svg { translate: none; transform: none; }
 }
 
-/* ---------- how I work: rings closing in on code ---------- */
-.hp-how { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px 80px; align-items: center; }
-@media (max-width: 899px) { .hp-how { grid-template-columns: minmax(0, 1fr); } }
-.hp-rings { position: relative; width: 100%; max-width: 440px; aspect-ratio: 1; margin-inline: auto; }
-.hp-ring { position: absolute; left: 50%; top: 50%; width: calc(100% - var(--i) * 22%); aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; }
-.hp-ring:nth-child(1) { background: #e3ebf5; }
-.hp-ring:nth-child(2) { background: #cddaee; }
-.hp-ring:nth-child(3) { background: #a9c0e3; }
-.hp-ring:nth-child(4) { background: #6f8fcf; }
-.hp-ring-name { margin-top: clamp(10px, 2.4%, 16px); font-size: var(--t-small); font-weight: 600; color: var(--hp-muted); }
-/* The two inner rings are darker: their names go to full ink to stay readable */
-.hp-ring:nth-child(n+3) .hp-ring-name { color: var(--hp-text); }
-.hp-ring-core { position: absolute; left: 50%; top: 50%; width: 22%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; background: var(--hp-pale); }
-.hp-ring-core em { font-size: clamp(20px, 2vw, 26px); color: var(--hp-ink); }
-.hp-how-lede { max-width: 32em; margin: 22px 0 0; font-size: var(--t-lead); line-height: 1.45; color: #24345e; }
-.hp-how-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; margin: 36px 0 0; }
-.hp-how-list dt { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-lead); line-height: 1.25; letter-spacing: -0.01em; }
-.hp-how-list dd { margin: 6px 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--hp-muted); }
-@media (max-width: 599px) { .hp-how-list { grid-template-columns: minmax(0, 1fr); } }
-
-/* ---------- section pages (Work, Side projects, How I work): the layer's doll beside its title ---------- */
-/* Set like the case studies' headers (study.css): centered, the title in Geist at the case-study
-   title's size, the note in the case-study subtitle's soft tone */
+/* ---------- section pages (Work, Side projects) ---------- */
+/* Set like the case studies' headers (study.css): centered, the title in the name's frosted glass
+   (.gt-page, below), the note in the case-study subtitle's soft tone */
 .sp-head { display: flex; flex-direction: column; align-items: center; padding-top: 80px; text-align: center; }
-.sp-title { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-size: clamp(44px, 5vw, 68px); font-weight: 500; line-height: 1.04; letter-spacing: -0.03em; color: var(--hp-text); text-wrap: balance; }
-/* (the accent word is part of the sentence here, in the same face) */
-.sp-title em { font: inherit; letter-spacing: inherit; color: inherit; }
 .sp-note { max-width: 30em; margin: 18px auto 0; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.4; letter-spacing: -0.012em; color: var(--hp-muted); text-wrap: balance; }
 .sp-body { padding-top: 48px; }
 
@@ -452,11 +478,9 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
 .sx-tile { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 500px; padding: 28px; border-radius: 28px; background: #ffffff; color: var(--hp-text); box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.07); }
 .sx-tile:active { transform: scale(0.997); }
-.sx-ez-recipe { grid-column: span 7; min-height: 600px; background: #2a4fae; color: #ffffff; }
-.sx-pdf-penguin { grid-column: span 5; min-height: 600px; background: #13224a; color: #ffffff; }
-.sx-note { grid-column: span 4; justify-content: space-between; background: var(--wf-gold); color: #13224a; }
-.sx-about-site { grid-column: span 4; padding: 0; }
-.sx-matryoshka { grid-column: span 4; padding: 0; }
+.sx-ez-recipe { grid-column: span 12; min-height: 560px; background: #2a4fae; color: #ffffff; }
+.sx-about-site { grid-column: span 6; padding: 0; }
+.sx-matryoshka { grid-column: span 6; padding: 0; }
 .sx-words { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; }
 .sx-ez-recipe .sx-words { max-width: 46%; }
 .sx-about-site .sx-words, .sx-matryoshka .sx-words { padding: 22px 26px 26px; }
@@ -467,7 +491,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx-status.is-pre::before { background: var(--wf-gold); box-shadow: 0 0 0 3px rgba(240, 189, 90, 0.24); }
 .sx-about-site .sx-tag, .sx-matryoshka .sx-tag { padding: 0; background: none; color: var(--hp-accent); font-weight: 600; }
 .sx-name { margin: 18px 0 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-quote); line-height: 1.12; letter-spacing: -0.015em; }
-.sx-ez-recipe .sx-name, .sx-pdf-penguin .sx-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-size: var(--t-head); letter-spacing: -0.025em; }
+.sx-ez-recipe .sx-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-size: var(--t-head); letter-spacing: -0.025em; }
 .sx-link { color: inherit; text-decoration: none; }
 .sx-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
 .sx-tile:has(.sx-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
@@ -483,7 +507,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx-ez-recipe .sx-shot { width: 25%; aspect-ratio: 1170 / 2532; border-radius: 22px; }
 .sx-ez-recipe .sx-shot-0 { right: 29%; bottom: -16%; rotate: -6deg; }
 .sx-ez-recipe .sx-shot-1 { right: 5%; bottom: -7%; rotate: 5deg; transition-delay: 50ms; }
-.sx-pdf-penguin .sx-shot { left: 28px; top: 56%; width: 118%; aspect-ratio: 1728 / 1117; border-radius: 12px; rotate: -4deg; }
 /* The experiments: the picture across the top, the words under it */
 .sx-about-site .sx-media, .sx-matryoshka .sx-media { position: relative; order: -1; inset: auto; aspect-ratio: 16 / 10; }
 .sx-about-site .sx-shot, .sx-matryoshka .sx-shot { position: static; width: 100%; height: 100%; box-shadow: none; background: none; }
@@ -501,7 +524,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 }
 @media (max-width: 999px) {
   .sx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sx-ez-recipe, .sx-pdf-penguin, .sx-note { grid-column: span 2; }
+  .sx-ez-recipe { grid-column: span 2; }
   .sx-about-site, .sx-matryoshka { grid-column: span 1; }
   .sx-note { min-height: 260px; }
 }
@@ -512,23 +535,11 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .sx-about-site, .sx-matryoshka { padding: 0; }
   .sx-ez-recipe .sx-words { max-width: none; }
   /* The products' pictures get their own band under the words */
-  .sx-ez-recipe .sx-media, .sx-pdf-penguin .sx-media { position: relative; inset: auto; height: 300px; margin: 18px -22px -22px; }
+  .sx-ez-recipe .sx-media { position: relative; inset: auto; height: 300px; margin: 18px -22px -22px; }
   .sx-ez-recipe .sx-shot { width: 40%; }
   .sx-ez-recipe .sx-shot-0 { right: 46%; bottom: -26%; }
   .sx-ez-recipe .sx-shot-1 { right: 8%; bottom: -14%; }
-  .sx-pdf-penguin .sx-shot { left: 22px; top: 12%; width: 130%; }
 }
-
-/* How I work: each step with an example from the work */
-.hw { list-style: none; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-@media (max-width: 767px) { .hw { grid-template-columns: minmax(0, 1fr); } }
-.hw-step { display: flex; flex-direction: column; gap: 10px; padding: 28px 28px 26px; border-radius: 24px; background: #ffffff; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.07); }
-.hw-name { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-head); line-height: 1.08; letter-spacing: -0.025em; }
-.hw-line { margin: 0; font-size: var(--t-body); line-height: 1.5; color: var(--hp-muted); }
-.hw-example { margin: 8px 0 0; font-size: var(--t-lead); line-height: 1.4; letter-spacing: -0.012em; color: var(--hp-text); text-wrap: pretty; }
-.hw-from { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 14px; font-size: var(--t-body); font-weight: 600; color: var(--hp-accent); text-decoration: none; transition: color 160ms ease; }
-.hw-from svg { transition: transform 200ms var(--wf-ease-out); }
-@media (hover: hover) and (pointer: fine) { .hw-from:hover { color: var(--hp-text); } .hw-from:hover svg { transform: translateX(3px); } }
 
 /* ---------- About: the innermost layer ---------- */
 /* Why the dolls: the homepage's old sentence, in its display type, and what it means */
@@ -536,10 +547,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 @media (max-width: 767px) { .ab-why { padding-top: 88px; } }
 .ab-why-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; text-wrap: balance; }
 .ab-why-title em { font-size: 1.04em; letter-spacing: -0.03em; }
-.ab-why-note { max-width: 36em; margin: 26px auto 0; font-size: var(--t-lead); line-height: 1.45; color: #24345e; text-wrap: pretty; }
-.ab-why-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 22px; font-size: var(--t-body); font-weight: 600; color: var(--hp-accent); text-decoration: none; transition: color 160ms ease; }
-.ab-why-link svg { transition: transform 200ms var(--wf-ease-out); }
-@media (hover: hover) and (pointer: fine) { .ab-why-link:hover { color: var(--hp-text); } .ab-why-link:hover svg { transform: translateX(3px); } }
 .ab { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px 72px; align-items: center; padding-top: 72px; }
 @media (max-width: 899px) { .ab { grid-template-columns: minmax(0, 1fr); padding-top: 48px; } }
 /* The doll in its half-round frame */
@@ -563,7 +570,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .ad.is-3d :is(.ad-cup, .ad-inner, .ad-doll) { visibility: hidden; transition: visibility 0s 320ms; }
 .js .ad:not(.is-3d):not(.is-flat) :is(.ad-cup, .ad-inner, .ad-doll) { visibility: hidden; }
 
-.ab-title { margin: 12px 0 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-display); line-height: 1; letter-spacing: -0.035em; }
 .ab-copy > p:not(.hp-label) { max-width: 34em; margin: 20px 0 0; font-size: var(--t-body); line-height: 1.6; color: #24345e; text-wrap: pretty; }
 .ab-copy > p.ab-lead { font-size: var(--t-lead); line-height: 1.45; color: var(--hp-text); text-wrap: pretty; }
 .ab-copy > p a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
@@ -589,16 +595,9 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 @keyframes hp-stand-set { from { opacity: 0; translate: 0 24px; } }
 @keyframes hp-fade { from { opacity: 0; } }
 @keyframes hp-rise { from { opacity: 0; transform: translateY(28px); } }
-/* Scroll, where view timelines exist: cards and blocks rise in as they arrive; the rings close in
-   on code, outside first, so the diagram reads in the order it describes */
+/* Scroll, where view timelines exist: cards and blocks rise in as they arrive */
 @supports (animation-timeline: view()) {
-  .hp-ring, .hp-ring-core {
-    animation: hp-ring linear both;
-    animation-timeline: view();
-    animation-range: entry calc(5% + var(--i, 4) * 9%) entry calc(40% + var(--i, 4) * 9%);
-  }
-  @keyframes hp-ring { from { opacity: 0; scale: 1.12; } }
-  .pc, .sx-tile, .hw-step, .hp-how > div:last-child, .sc-title {
+  .pc, .sx-tile, .sc-title {
     animation: hp-rise linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 40%;
@@ -607,9 +606,157 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 @media (prefers-reduced-motion: reduce) {
   .wf-intro .hp-rise, .wf-intro .hp-stage .ds-track, .wf-intro .ds.is-3d .ds-3d { animation: hp-fade 400ms ease both; }
   .wf-intro .hp-title { animation: hp-fade 400ms ease both; animation-delay: var(--d); }
-  .pc, .sx-tile, .hw-step, .hp-how > div:last-child, .sc-title, .hp-ring, .hp-ring-core { animation: none !important; }
+  .pc, .sx-tile, .sc-title { animation: none !important; }
   /* The doll still opens and closes, straight to the other state with no travel */
   .ds-top, .ds-bot, .pc-shot, .pc-read svg, .sx-shot, .sx-shot img, .sx-cta svg, .ad-frame, .ad-inner, .ad .ds-top, .pc { transition: none; }
   .ds-slot .ds-doll, .ad .ds-doll, .ds-face, .ds-front { animation: none !important; }
   .ds:hover .ds-top, .pc:hover .pc-shot, .sx-tile:hover .sx-shot, .sx-tile:hover .sx-shot img { transform: none !important; translate: none !important; scale: none !important; }
 }
+
+/* ---------- the dive into the village (VillageZoom, Village, VillageScene, data/village) ---------- */
+/* Clicking the Side projects doll flies into the 3D village painted on her belly. Until that village is
+   ready (or without WebGL / script), the side projects are a plain section of cards under the dolls. */
+.hz { position: relative; }
+html.vz-lock { overflow: hidden; }
+
+/* The plain section (no 3D village) */
+.vz { position: relative; padding: 48px clamp(16px, 3.4vw, 48px) 96px; }
+.vz-stage, .vz-back, .vz-pins, .vz-tour, .vz-close { display: none; }
+.vz-head { display: flex; align-items: baseline; justify-content: center; gap: 18px; margin: 0 auto 28px; }
+.vz-title { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-size: clamp(24px, 2.2vw, 32px); font-weight: 600; letter-spacing: -0.025em; color: var(--hp-text); }
+.vz-all { font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); text-decoration: none; }
+.vz-all::after { content: " \2192"; }
+.vz-cards { display: grid; gap: 24px; max-width: 760px; margin-inline: auto; }
+.vz-credit { display: none; }
+.hz.has-village .vz.is-in .vz-credit { display: block; position: absolute; right: clamp(16px, 3.4vw, 48px); bottom: 14px; z-index: 3; margin: 0; max-width: 260px; font-size: 11px; line-height: 1.35; text-align: right; color: var(--hp-muted); }
+.hz.has-village .vz.has-focus .vz-credit { display: none; }
+@media (max-width: 699px) { .hz.has-village .vz.is-in .vz-credit { left: 16px; right: 16px; bottom: 74px; max-width: none; text-align: center; } }
+
+/* A side project's card: porcelain glass, its pictures on top */
+.vz-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 26px; color: var(--hp-text); background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(246, 249, 253, 0.9)); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 30px 60px -28px rgba(10, 22, 58, 0.55); }
+.vz-card-media { position: relative; display: flex; align-items: center; justify-content: center; gap: 14px; margin: 10px 10px 0; padding: 16px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: radial-gradient(80% 90% at 50% 30%, #f4f7fc, #dfe8f4); box-sizing: border-box; }
+.vz-card-media img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; box-shadow: 0 0 0 0.5px rgba(19, 34, 74, 0.14), 0 14px 30px -14px rgba(19, 34, 74, 0.45); }
+.vz-card-media.is-pair img { max-width: calc(50% - 7px); border-radius: 14px; }
+.vz-card-body { padding: 20px 24px 22px; }
+.vz-card-meta { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 13px; font-weight: 500; color: var(--hp-muted); font-variant-numeric: tabular-nums; }
+.vz-card-status { padding: 3px 9px; border-radius: 999px; background: #e3ebf7; color: #1b3a8f; font-weight: 600; font-size: 12px; }
+.vz-card-title { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-size: clamp(24px, 2vw, 30px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; }
+.vz-card-sum { margin: 8px 0 0; font-size: 16px; font-weight: 500; line-height: 1.45; letter-spacing: -0.005em; text-wrap: pretty; }
+.vz-card-fact { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: var(--hp-muted); text-wrap: pretty; }
+.vz-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 18px; }
+.vz-cta { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; background: #13224a; color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
+.vz-cta::after { content: "\2192"; transition: translate 220ms var(--wf-ease-out); }
+.vz-cta.is-out::after { content: "\2197"; }
+.vz-cta:active { scale: 0.97; }
+@media (hover: hover) and (pointer: fine) {
+  .vz-cta:hover { background: #1b3a8f; } .vz-cta:hover::after { translate: 3px 0; }
+  .vz-all:hover { text-decoration: underline; text-underline-offset: 4px; }
+}
+
+/* ---------- inside the 3D village ---------- */
+.hz.has-village .hz-pin { position: relative; height: 100svh; min-height: 520px; overflow: hidden; }
+.hz.has-village main { position: static; }
+.hz.has-village .vz { position: absolute; inset: 0; z-index: 40; padding: 0; visibility: hidden; pointer-events: none; color: #13224a; }
+.hz.has-village .vz.is-on { visibility: visible; }
+.hz.has-village .vz.is-in { pointer-events: auto; }
+.hz.has-village .vz-stage { display: block; position: absolute; inset: 0; }
+/* The top row: back out, the heading, all work */
+.hz.has-village .vz-head { position: absolute; left: 0; right: 0; top: 0; z-index: 3; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin: 0; padding: clamp(14px, 2.4vh, 24px) clamp(16px, 3.4vw, 48px); pointer-events: none; }
+.hz.has-village .vz-head > * { pointer-events: auto; }
+.hz.has-village .vz-title { grid-column: 2; color: #13224a; text-shadow: 0 1px 14px rgba(255, 255, 255, 0.9); }
+.hz.has-village .vz-all { grid-column: 3; justify-self: end; color: #1b3a8f; }
+.vz-back { display: inline-flex; align-items: center; gap: 6px; justify-self: start; grid-column: 1; grid-row: 1; height: 40px; padding: 0 16px 0 12px; border: 0; border-radius: 999px; font: inherit; font-size: var(--t-small); font-weight: 600; color: #13224a; cursor: pointer; background: rgba(255, 255, 255, 0.7); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 8px 20px -10px rgba(19, 34, 74, 0.4); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
+.hz.has-village .vz-back { display: inline-flex; }
+.vz-back:active { scale: 0.97; }
+@media (hover: hover) and (pointer: fine) { .vz-back:hover { background: rgba(255, 255, 255, 0.92); } }
+
+/* The labels over the houses (placed by DollScene each frame): white glass, centred over the point above
+   the roof, a fine stem down to it */
+.hz.has-village .vz-pins { display: block; position: absolute; inset: 0; z-index: 2; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.vz-pins li { display: contents; }
+.vz-pin { position: absolute; left: 0; top: 0; display: block; opacity: 0; translate: -50% calc(-100% - 14px); padding: 9px 16px 10px; border-radius: 16px; color: #13224a; text-align: center; text-decoration: none; pointer-events: auto; -webkit-tap-highlight-color: transparent; background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.76)); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 12px 28px -12px rgba(8, 18, 48, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: scale 260ms var(--wf-ease-out), box-shadow 220ms ease; }
+.vz-pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 14px; background: linear-gradient(rgba(19, 34, 74, 0.35), rgba(19, 34, 74, 0)); }
+.vz-pin-name, .vz-pin-meta { display: block; white-space: nowrap; }
+.vz-pin-num { position: absolute; left: -9px; top: -9px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #13224a; color: #ffffff; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; box-shadow: 0 0 0 2px #ffffff; }
+.vz-pin-name { font-size: 15px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; }
+.vz-pin-meta { font-size: 12px; font-weight: 500; line-height: 1.2; color: #4f5f86; font-variant-numeric: tabular-nums; }
+.vz-pin.is-hover, .vz-pin:focus-visible { scale: 1.06; box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.16), 0 18px 36px -14px rgba(8, 18, 48, 0.7); }
+@media (hover: hover) and (pointer: fine) { .vz-pin:hover { scale: 1.06; } }
+.vz-pin:active { scale: 0.97; }
+.vz.has-focus .vz-pin { opacity: 0 !important; pointer-events: none; }
+/* (every island's name stays up, so each is read at once; the one you point at, or its step, lifts) */
+.hz.has-village .vz-pin { transition: opacity 200ms ease, scale 260ms var(--wf-ease-out), box-shadow 220ms ease; }
+.hz.has-village .vz.is-in .vz-pin { opacity: 1; }
+.hz.has-village .vz-all { display: none; }
+
+/* The card: beside its house (right), or a sheet from the bottom on a phone */
+.hz.has-village .vz-cards { position: absolute; z-index: 4; top: 50%; right: clamp(16px, 3.4vw, 48px); width: min(440px, 38vw); max-width: none; margin: 0; display: block; translate: 0 -50%; pointer-events: none; }
+.hz.has-village .vz-card { position: absolute; inset: auto 0 auto 0; top: 0; translate: 0 -50%; visibility: hidden; opacity: 0; transform: translate3d(28px, 0, 0); transition: opacity 260ms ease, transform 420ms var(--wf-ease-out), visibility 0s 420ms; pointer-events: auto; max-height: calc(100svh - 140px); overflow: auto; }
+.hz.has-village .vz-card.is-open { visibility: visible; opacity: 1; transform: none; transition: opacity 320ms ease 120ms, transform 520ms var(--wf-ease-out) 80ms, visibility 0s; }
+.vz-close { position: absolute; top: 18px; right: 18px; z-index: 2; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.9); color: var(--hp-text); cursor: pointer; box-shadow: 0 0 0 0.5px rgba(19, 34, 74, 0.14), 0 4px 10px -4px rgba(19, 34, 74, 0.35); transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
+.hz.has-village .vz-close { display: grid; }
+.vz-close:active { scale: 0.92; }
+@media (hover: hover) and (pointer: fine) { .vz-close:hover { background: #ffffff; } }
+
+/* The guided tour: a glass bar of numbered steps along the bottom, the current one filled */
+.hz.has-village .vz-tour { position: absolute; left: 50%; bottom: clamp(14px, 3vh, 28px); z-index: 5; display: flex; align-items: center; gap: 4px; padding: 6px; translate: -50% 0; border-radius: 999px; background: rgba(255, 255, 255, 0.82); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 16px 36px -16px rgba(19, 34, 74, 0.5); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.vz-tour-steps { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.vz-tour-step, .vz-tour-arrow { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 8px; border: 0; border-radius: 999px; background: none; color: var(--hp-muted); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
+.vz-tour-arrow { width: 40px; padding: 0; justify-content: center; color: var(--hp-text); }
+.vz-tour-num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(19, 34, 74, 0.08); color: var(--hp-text); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; transition: background-color 160ms ease, color 160ms ease; }
+.vz-tour-step[aria-current="step"] { background: rgba(19, 34, 74, 0.06); color: var(--hp-text); }
+.vz-tour-step[aria-current="step"] .vz-tour-num { background: #13224a; color: #ffffff; }
+.vz-tour-step.is-hover { color: var(--hp-text); }
+@media (hover: hover) and (pointer: fine) { .vz-tour-step:hover, .vz-tour-arrow:hover { background: rgba(19, 34, 74, 0.06); color: var(--hp-text); } }
+.vz-tour-step:active, .vz-tour-arrow:active { scale: 0.97; }
+/* (the card stays clear of the tour bar) */
+.hz.has-village .vz-card { max-height: calc(100svh - 200px); }
+
+@media (max-width: 699px) {
+  .hz.has-village .vz-head { grid-template-columns: auto 1fr auto; gap: 10px; }
+  .hz.has-village .vz-title { font-size: 20px; text-align: center; }
+  .vz-back { padding: 0 12px 0 10px; font-size: 13px; }
+  .vz-back-more { display: none; }
+  .hz.has-village .vz-cards { inset: auto 10px 74px 10px; top: auto; width: auto; translate: none; }
+  .hz.has-village .vz-tour { bottom: 12px; padding: 4px; }
+  .vz-tour-name { display: none; }
+  .vz-tour-step { padding: 0 8px; }
+  .vz-tour-step[aria-current="step"] .vz-tour-name { display: inline; }
+  .vz-tour-step[aria-current="step"] { padding-right: 12px; }
+  .hz.has-village .vz-card { position: absolute; top: auto; bottom: 0; translate: none; transform: translate3d(0, 32px, 0); max-height: 58svh; border-radius: 24px; }
+  .vz-card-body { padding: 16px 18px 16px; }
+  .vz-card-sum { font-size: 15px; }
+  .vz-card-fact { display: none; }
+  .vz-pin { padding: 7px 12px 8px; }
+  .vz-pin-name { font-size: 13px; }
+  .vz-pin-meta { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hz.has-village .vz-card, .hz.has-village .vz-card.is-open { transform: none; transition: opacity 200ms ease, visibility 0s; }
+}
+
+/* Today's fit (TodaysFit): a quiet line under the About doll, and the card it opens */
+.ab-photo { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.tf-open { padding: 6px 2px; border: 0; background: none; color: #24345e; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(36, 52, 94, 0.25); text-underline-offset: 4px; transition: text-decoration-color 160ms ease; }
+.tf-open span { font-weight: 400; color: #4a5a80; }
+@media (hover: hover) and (pointer: fine) { .tf-open:hover { text-decoration-color: currentColor; } }
+.tf { width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: 24px; background: transparent; color: #13224a; overflow: visible; }
+.tf::backdrop { background: rgba(19, 34, 74, 0.28); backdrop-filter: blur(4px); }
+.tf[open] { animation: tf-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes tf-in { from { opacity: 0; translate: 0 8px; scale: 0.98; } }
+@media (prefers-reduced-motion: reduce) { .tf[open] { animation: none; } }
+.tf-card { display: flex; flex-direction: column; gap: 16px; max-height: calc(100dvh - 32px); overflow: auto; padding: 20px; border-radius: 24px; background: #fafbfd; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.08), 0 24px 60px -20px rgba(19, 34, 74, 0.4); }
+.tf-top { display: flex; align-items: center; justify-content: space-between; }
+.tf-top h2 { margin: 0; font-family: var(--font-title); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+.tf-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(19, 34, 74, 0.06); color: #13224a; font-size: 20px; line-height: 1; cursor: pointer; }
+.tf-pics { display: grid; grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 16px; border-radius: 16px; background: linear-gradient(#f3f6fb, #e4ecf6); }
+.tf-pics.has-photo { grid-template-columns: 1fr 1fr; align-items: center; }
+.tf-doll { display: block; width: 100%; aspect-ratio: 4 / 5; }
+.tf-pics img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; }
+.tf-pieces { margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.5; color: #24345e; }
+.tf-pieces li + li { margin-top: 4px; }
+.tf-nav { display: flex; justify-content: space-between; }
+.tf-nav button { padding: 6px 0; border: 0; background: none; color: #24345e; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.tf-nav button:disabled { opacity: 0.3; cursor: default; }
+.tf-credits { margin: 0; font-size: 12px; line-height: 1.5; color: #6a7898; }
+.tf-credits a { color: inherit; }

@@ -105,18 +105,22 @@ export function Quote({ text, who }: { text: string; who: string }) {
 }
 
 // Pictures under a block of text, wider than the text: one, centered; several square-ish ones side by
-// side; several wide screens stacked. A stacked screen is capped at 620px tall like a single one; the
+// side; two wide screens side by side (they open larger on a click), so a pair costs one row of height;
+// other sets of wide screens stacked. A stacked screen is capped at 620px tall like a single one; the
 // cap goes on its figure, so the screen and its caption stay centered together.
 function Pics({ pics }: { pics: StudyPic[] }) {
   const many = pics.length > 1;
-  const stack = many && pics.every((p) => p.width / p.height > 1.3);
+  const wide = many && pics.every((p) => p.width / p.height > 1.3);
+  const pair = wide && pics.length === 2 && !pics.some((p) => p.size);
+  const stack = wide && !pair;
+  const sizes = pair ? '(min-width: 1180px) 550px, (min-width: 800px) 48vw, 100vw' : many && !stack ? '(min-width: 900px) 330px, 50vw' : '(min-width: 1180px) 1120px, 100vw';
   return (
-    <div className={`st-pics${stack ? ' is-stack' : many ? ' is-many' : ''}`}>
+    <div className={`st-pics${pair ? ' is-pair' : stack ? ' is-stack' : many ? ' is-many' : ''}`}>
       {pics.map((p) => {
         const width = p.size ?? (stack ? Math.round((620 * p.width) / p.height) : undefined);
         return (
           <figure key={p.src} style={width ? { width: `min(100%, ${width}px)` } : undefined}>
-            <Zoom img={p} sizes={p.size ? `${p.size}px` : many && !stack ? '(min-width: 900px) 330px, 50vw' : '(min-width: 1180px) 1120px, 100vw'} fit={width || many ? undefined : 620} />
+            <Zoom img={p} sizes={p.size ? `${p.size}px` : sizes} fit={width || many ? undefined : 620} />
             {p.caption && <figcaption className="st-caption">{p.caption}</figcaption>}
           </figure>
         );
@@ -151,9 +155,9 @@ export function Choices({ children }: { children: ReactNode }) {
   return <div className="st-choices">{children}</div>;
 }
 
-// A design decision, numbered. A recording goes under the text, wider than the column, so a whole app
-// window reads at a real size. Screens sit beside the text, alternating sides from one decision to the
-// next. Without either, the text sits in the reading column.
+// A design decision, numbered. A recording or screens sit beside the text, alternating sides from one
+// decision to the next, so each decision takes about one screen of height. Without either, the text
+// sits in the reading column.
 export function Choice({ n, title, shots, media, caption, children }: { n: number; title: string; shots?: { img: Pic; phone?: boolean }[]; media?: ReactNode; caption?: ReactNode; children: ReactNode }) {
   const phones = shots?.some((x) => x.phone);
   const heading = (
@@ -162,10 +166,11 @@ export function Choice({ n, title, shots, media, caption, children }: { n: numbe
     </h3>
   );
   const figcaption = caption && <figcaption className="st-caption">{caption}</figcaption>;
+  const side = `st-choice is-split${n % 2 === 0 ? ' is-flip' : ''}`;
   if (media) {
     return (
-      <div className="st-choice is-wide">
-        <div className="st-text">
+      <div className={side}>
+        <div className="st-choice-copy">
           {heading}
           <div className="st-prose">{children}</div>
         </div>
@@ -185,7 +190,7 @@ export function Choice({ n, title, shots, media, caption, children }: { n: numbe
     );
   }
   return (
-    <div className={`st-choice is-split${n % 2 === 0 ? ' is-flip' : ''}`}>
+    <div className={side}>
       <div className="st-choice-copy">
         {heading}
         <div className="st-prose">{children}</div>

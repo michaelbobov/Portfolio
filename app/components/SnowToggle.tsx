@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
+import '@/app/hp.css';
 
-// A small switch on the homepage that lets it snow: off by default, remembered once switched. It sets
-// data-snow="on" on <html>, which React never re-renders (layout.tsx restores it before first paint), and
-// hp.css shows the winter (SnowBackdrop). Off, the knob is a bead of ice; switched on it rolls across and
-// packs into a snowball, a frost shimmer runs along the track and a little snow puffs up (hp.css). Only
-// after a click, so a remembered "on" doesn't play on load.
+// A small switch that lets it snow (top left of the homepage, and in the bar on every other page): off by
+// default, remembered once switched. It sets data-snow="on" on <html>, which React never re-renders
+// (layout.tsx restores it before first paint), and hp.css shows the winter (SnowBackdrop on the homepage,
+// the bar's PageWinter elsewhere). Off, the knob is a bead of ice; switched on it rolls across and packs
+// into a snowball, a frost shimmer runs along the track and a little snow puffs up (hp.css). Only after a
+// click, so a remembered "on" doesn't play on load.
 // On hover the switch frosts over like ice, a glint crosses the bead, and a few flakes fall on it.
 const KEY = 'mb-snow';
 // Where each flake of the puff goes: out and up, then down (px), and when it starts (ms)
@@ -41,7 +43,7 @@ export default function SnowToggle() {
         )}
       </span>
       <span className="hp-snow-drift" aria-hidden="true"><i /><i /><i /><i /></span>
-      Snow
+      <span className="hp-snow-label">Snow</span>
     </button>
   );
 }

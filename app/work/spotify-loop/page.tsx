@@ -2,7 +2,7 @@ import { CaseHeader, CaseShell, Choice, Choices, NextCase, Outcome, Prose, Secti
 import MotionVideo from '@/app/components/MotionVideo';
 import '../study.css';
 
-// Spotify Loop case study: what it is and the facts, the feature in motion, then the problem, the week's
+// Spotify Loop case study: what it is and the facts, the feature in motion, then the overview and problem, the week's
 // process, the three decisions and where it stands. Every claim is from the original write-up or its
 // artifacts; unsourced market statistics and the unattributed quote are left out.
 export default function SpotifyLoopCaseStudy() {
@@ -32,13 +32,7 @@ export default function SpotifyLoopCaseStudy() {
 
       <Section n={1} id="overview" title="Overview">
         <Prose>
-          <p>Spotify Loop is a feature concept I designed in a week: a way to loop one section of a song inside Spotify’s mobile player.</p>
-          <p>I worked on it alone, from research to a hi-fi prototype. It hasn’t shipped, and I haven’t tested the hi-fi prototype yet.</p>
-        </Prose>
-      </Section>
-
-      <Section n={2} id="problem" title="The problem">
-        <Prose>
+          <p>Spotify Loop is a feature concept I designed alone in a week: a way to loop one section of a song inside Spotify’s mobile player. I took it from research to a hi-fi prototype. It hasn’t shipped, and I haven’t tested the hi-fi prototype yet.</p>
           <p>Spotify has no way to loop part of a song. People learning a riff or replaying a favorite drop scrub the progress bar back by hand, which is tedious and imprecise on a phone. Or they leave for a tool like PractAid or Moises.ai, which breaks the listening flow.</p>
           <p>
             Spotify’s own community forum has a feature request for it:{' '}
@@ -50,7 +44,7 @@ export default function SpotifyLoopCaseStudy() {
         </Prose>
       </Section>
 
-      <Section n={3} id="process" title="Process">
+      <Section n={2} id="process" title="Process">
         <Steps>
           <Step title="Research">
             <p>I read threads in r/guitar, r/LearnGuitar and r/spotify to see how people work around the gap, and reviewed the looping tools they use instead. None of the tools I reviewed worked inside Spotify’s mobile player, so people had to switch apps or move to a desktop.</p>
@@ -74,7 +68,7 @@ export default function SpotifyLoopCaseStudy() {
         </Steps>
       </Section>
 
-      <Section n={4} id="decisions" title="Design decisions">
+      <Section n={3} id="decisions" title="Design decisions">
         <Choices>
           <Choice
             n={1}
@@ -110,7 +104,7 @@ export default function SpotifyLoopCaseStudy() {
       </Section>
 
       <Outcome
-        n={5}
+        n={4}
         shippedLabel="What I made"
         shipped={['A hi-fi prototype: turn on loop, then drag two handles to the part you want', 'Two ways in: the player and the ⋯ menu', 'A Saved Loops library']}
         next={['User-test the hi-fi prototype', 'Let people share loops as short snippets', 'Add playlists of favorite sections', 'Add “Your most-looped moments” to Spotify Wrapped']}

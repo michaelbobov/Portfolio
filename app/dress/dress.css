@@ -1,0 +1,37 @@
+/* His private outfit page: one narrow column for the phone, in the site's snow colours */
+.dr { --ink: #13224a; --soft: #4a5a80; --line: rgba(19, 34, 74, 0.12); --accent: #2f55b0;
+  min-height: 100dvh; max-width: 520px; margin: 0 auto; padding: 32px 16px 48px; color: var(--ink);
+  background: linear-gradient(#fafbfd, #e9f0f8); font-family: var(--font-title), system-ui, sans-serif; }
+.dr-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.dr-head h1 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+.dr-live { margin: 0; font-size: 14px; color: var(--soft); }
+.dr-card { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255, 255, 255, 0.72); }
+.dr-card p { margin: 0; line-height: 1.5; }
+.dr-note { font-size: 14px; color: var(--soft); }
+.dr-error { margin: 0 0 14px; padding: 10px 14px; border-radius: 12px; background: #fdecec; color: #8a1f1f; font-size: 14px; }
+.dr label { font-size: 13px; font-weight: 600; color: var(--soft); }
+.dr input:not([type]), .dr input[type='password'], .dr select { width: 100%; min-width: 0; height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: inherit; font-size: 16px; }
+.dr-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--ink); color: #fff; font: inherit; font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer; }
+.dr-btn:disabled { opacity: 0.4; cursor: default; }
+.dr-btn.is-quiet { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.dr-link { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--accent); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.dr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dr-photo { width: 100%; max-height: 46dvh; object-fit: contain; border-radius: 14px; background: #dfe7f2; }
+.dr-busy p { display: flex; align-items: center; gap: 10px; color: var(--soft); }
+.dr-spin { width: 16px; height: 16px; border: 2px solid var(--line); border-top-color: var(--ink); border-radius: 50%; animation: dr-spin 800ms linear infinite; }
+@keyframes dr-spin { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .dr-spin { animation-duration: 2.4s; } }
+
+/* The doll in today's clothes, with the photo in a corner to compare */
+.dr-stage { position: relative; border-radius: 16px; background: linear-gradient(#f3f6fb, #dfe8f3); overflow: hidden; }
+.dr-doll { display: block; width: 100%; aspect-ratio: 1; }
+.dr-thumb { position: absolute; left: 10px; bottom: 10px; width: 26%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 10px; box-shadow: 0 0 0 2px #fff, 0 6px 16px -6px rgba(19, 34, 74, 0.4); }
+.dr-open { position: absolute; right: 10px; top: 10px; min-height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.85); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+/* The one button */
+.dr-shoot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56dvh; padding: 24px; border: 0; border-radius: 28px; background: var(--ink); color: #fff; font: inherit; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: scale 160ms ease; }
+.dr-shoot:active { scale: 0.98; }
+.dr-shoot small { font-size: 15px; font-weight: 400; opacity: 0.7; }
+.dr-shoot-icon { width: 64px; height: 64px; margin-bottom: 8px; border: 3px solid #fff; border-radius: 50%; box-shadow: inset 0 0 0 6px var(--ink), inset 0 0 0 40px #fff; }
+.dr-done { font-weight: 600; }
+.dr-wearing { margin: 0; padding: 0 0 0 18px; line-height: 1.6; }

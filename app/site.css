@@ -18,46 +18,48 @@
 .sb { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
 /* Without the signature (the homepage) the links keep to the right */
 .sb:not(:has(.sb-brand)) { justify-content: flex-end; }
-.sb-brand { display: inline-flex; align-items: baseline; gap: 12px; color: var(--wf-ink); text-decoration: none; border-radius: 10px; }
+.sb-brand { display: inline-flex; align-items: center; gap: 12px; color: var(--wf-ink); text-decoration: none; border-radius: 10px; }
 .sb-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-weight: 500; font-size: 19px; letter-spacing: -0.02em; white-space: nowrap; }
-.sb-role { font-size: var(--t-small); font-weight: 500; color: var(--wf-muted); letter-spacing: 0; }
-.sb-brand:active .sb-name { scale: 0.97; }
+/* The MB mark, before the name */
+.sb-mark { flex: none; width: auto; height: 22px; margin-right: -2px; }
+.sb-brand:active .sb-name, .sb-brand:active .sb-mark { scale: 0.97; }
 .sb-end { list-style: none; display: flex; align-items: center; gap: 24px; margin: 0; padding: 0; font-size: var(--t-small); }
 /* An underline that draws in from the left on hover */
 .sb-end a { position: relative; color: var(--wf-muted); text-decoration: none; transition: color 160ms ease; }
 .sb-end a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; border-radius: 1px; background: currentColor; transform: scaleX(0); transform-origin: 0 50%; transition: transform 300ms var(--wf-ease-out); }
 @media (hover: hover) and (pointer: fine) { .sb-end a:hover { color: var(--wf-ink); } .sb-end a:hover::after { transform: scaleX(1); } }
-/* Phones: the role goes, and the name and the links step down so all of it fits on one line, down to
-   320px */
-@media (max-width: 599px) { .sb { gap: 12px; } .sb-name { font-size: 17px; } .sb-end { gap: 14px; font-size: 13px; } .sb-role { display: none; } }
-@media (max-width: 379px) { .sb-name { font-size: 15px; } .sb-end { gap: 10px; font-size: 12px; } }
+/* Phones: the name and the links step down so all of it fits on one line */
+@media (max-width: 599px) { .sb { gap: 12px; } .sb-brand { gap: 10px; } .sb-mark { height: 19px; } .sb-name { font-size: 17px; } .sb-end { gap: 14px; font-size: 13px; } }
+/* Narrow phones: the mark stands in for the name, so the Snow switch and the links keep their room
+   (the link's label still reads the full name) */
+@media (max-width: 479px) { .sb-name { display: none; } .sb-mark { height: 20px; } }
+@media (max-width: 379px) { .sb-end { gap: 10px; font-size: 12px; } }
 
-/* ---------- the nav: a slim pill floating at the bottom of every page ---------- */
-.dock { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 40; translate: -50% 0; }
-/* The homepage labels' glass, lit along its top edge, a touch more frosted since it floats over pictures */
-.dock-pill { position: relative; padding: 5px; border-radius: 999px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.44)); -webkit-backdrop-filter: blur(14px) saturate(1.6); backdrop-filter: blur(14px) saturate(1.6); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px rgba(255, 255, 255, 0.6), inset 0 -10px 18px -12px rgba(110, 140, 195, 0.4), 0 0 0 1px rgba(19, 34, 74, 0.07), 0 14px 32px -14px rgba(19, 34, 74, 0.45); }
-.dock-list { list-style: none; display: flex; margin: 0; padding: 0; }
-/* Dark semibold words with a soft white glow, as on the homepage labels */
-.dock-item { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px 0 11px; border-radius: 999px; font-size: var(--t-small); font-weight: 600; letter-spacing: -0.01em; color: #13224a; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.85), 0 0 10px rgba(255, 255, 255, 0.7); text-decoration: none; white-space: nowrap; transition: color 160ms ease; }
-.dock-mark { display: block; width: 18px; height: 18px; flex: none; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(19, 34, 74, 0.25); transition: transform 300ms var(--wf-ease-out); }
-/* Home: the house alone, in a round button the height of the others */
-.dock-item.is-home { width: 38px; padding: 0; justify-content: center; }
-.dock-home { display: block; width: 16px; height: 16px; flex: none; transition: transform 300ms var(--wf-ease-out); }
-.dock-list:first-child .dock-item:active .dock-home { transform: scale(0.85); }
-.dock-item:focus-visible { outline: 2px solid var(--wf-accent); outline-offset: 2px; }
-.dock-list:first-child .dock-item:active .dock-mark { transform: scale(0.85); }
-/* The lit copy: laid exactly over the list, clipped to one item; the clip glides between items */
-.dock-lit { position: absolute; inset: 5px; pointer-events: none; opacity: 0; transition: clip-path 320ms var(--wf-ease-out), opacity 200ms ease; }
-.dock-lit.is-shown { opacity: 1; }
-/* The page you're on keeps its words in cobalt, even while the bead is off pointing at another item */
-.dock-item.is-here { color: #2a4fae; }
-/* The page you're on (and the item under the pointer): a brighter bead of glass, the words in cobalt */
-.dock-lit .dock-item { background: rgba(255, 255, 255, 0.92); color: #2a4fae; box-shadow: inset 0 1px 0 #ffffff, inset 0 -6px 10px -8px rgba(110, 140, 195, 0.5), 0 2px 8px -2px rgba(19, 34, 74, 0.28); }
-@media (max-width: 599px) { .dock-item { height: 36px; padding: 0 11px 0 9px; gap: 6px; font-size: 13px; } .dock-mark { width: 16px; height: 16px; } .dock-item.is-home { width: 36px; padding: 0; } }
-/* On a phone the words alone (the house stays), so all five fit across */
-@media (max-width: 459px) { .dock-pill { padding: 4px; } .dock-lit { inset: 4px; } .dock-item { padding: 0 10px; } .dock-mark { display: none; } .dock-item.is-home { width: 34px; } }
-@media (max-width: 379px) { .dock-item { height: 34px; padding: 0 8px; font-size: 12px; } .dock-item.is-home { width: 30px; } .dock-home { width: 14px; height: 14px; } }
-@media (max-width: 339px) { .dock-item { padding: 0 6px; } .dock-item.is-home { width: 28px; } }
+/* ---------- the nav: a bar of liquid glass at the bottom of every page but the homepage, with a raised
+   glass bubble under the page you're on (Dock.tsx; the technique is the liquid-glass skill's) ---------- */
+.nb { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 40; translate: -50% 0; }
+.nb-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.nb-pill { position: relative; padding: 5px; border-radius: 999px; box-shadow: 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 12px 32px -14px rgba(19, 34, 74, 0.4), 0 2px 6px -2px rgba(19, 34, 74, 0.12); }
+/* 1. What's behind: blurred, a little brighter and richer; in Chromium also bent at the edges (#nb-glass) */
+.nb-refract { position: absolute; inset: 0; border-radius: inherit; isolation: isolate; -webkit-backdrop-filter: blur(14px) brightness(1.04) saturate(1.7); backdrop-filter: blur(14px) brightness(1.04) saturate(1.7); }
+.nb[data-bend] .nb-refract { -webkit-backdrop-filter: blur(14px) url(#nb-glass) brightness(1.04) saturate(1.7); backdrop-filter: blur(14px) url(#nb-glass) brightness(1.04) saturate(1.7); }
+/* 2 and 3. A white tint, enough to read on the white page, and the rim: a crisp line of light along the
+   top, fainter along the bottom and sides, a touch of shade just inside the top so the bar sits in */
+.nb-tint { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.24)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.35), inset 1px 0 0 rgba(255, 255, 255, 0.3), inset -1px 0 0 rgba(255, 255, 255, 0.3), inset 0 3px 8px -4px rgba(19, 34, 74, 0.14); }
+/* The bubble under the page you're on: a second, lighter glass raised off the bar (Dock.tsx moves it) */
+.nb-thumb { position: absolute; top: 5px; left: 0; height: 40px; border-radius: 999px; -webkit-backdrop-filter: blur(8px) brightness(1.12) saturate(1.3); backdrop-filter: blur(8px) brightness(1.12) saturate(1.3); background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.5)); box-shadow: inset 0 1px 0 #ffffff, inset 0 -1px 0 rgba(255, 255, 255, 0.45), inset 1px 0 0 rgba(255, 255, 255, 0.4), inset -1px 0 0 rgba(255, 255, 255, 0.4), 0 0 0 0.5px rgba(19, 34, 74, 0.08), 0 4px 10px -4px rgba(19, 34, 74, 0.3); }
+/* 4. The words: ink, the others a little quieter, as on Apple's bars */
+.nb-list { position: relative; z-index: 1; display: flex; margin: 0; padding: 0; list-style: none; }
+.nb-item { display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 999px; color: rgba(19, 34, 74, 0.66); font-size: var(--t-small); font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; text-decoration: none; transition: color 160ms ease; }
+.nb-item.is-on { color: #13224a; }
+.nb-item:focus-visible { outline: 2px solid var(--wf-accent); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .nb-item:hover { color: #13224a; } }
+@media (max-width: 459px) {
+  .nb-pill { padding: 4px; }
+  .nb-thumb { top: 4px; height: 38px; }
+  .nb-item { height: 38px; padding: 0 13px; font-size: 13px; }
+}
+@media (max-width: 359px) { .nb-item { padding: 0 10px; } }
 /* Room under every page, so the nav never covers the end of it */
 body { padding-bottom: 96px; }
 /* The homepage has no dock to keep clear of */
@@ -94,5 +96,5 @@ html em.sweep { width: fit-content; padding: 0.06em 0.12em 0.26em 0.04em; margin
 @media (hover: hover) and (pointer: fine) { .sc-row a:hover { color: var(--wf-ink); text-decoration-color: var(--wf-accent); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-btn, .site-btn svg, .sb-end a, .sb-end a::after, .dock-lit, .dock-mark, .dock-home { transition: none; }
+  .site-btn, .site-btn svg, .sb-end a, .sb-end a::after, .nb-item { transition: none; }
 }

@@ -40,12 +40,12 @@ export type Project = {
   live?: string;
 };
 
-// A project card: the product on a coloured stage on top, the words below on the dark card. Below, one
-// two-tone headline (the project's name, then its claim in a softer tone), one sentence, then one plain
-// line with the same four fields on every card, matching the case study's header: role · platform ·
-// year · status. The way in sits at the bottom right. No stats: the details live in the case study. The
-// whole card is one link (a stretched link on the headline); "Live site" sits above it, so no anchors nest. Motion is CSS only (hp.css): on hover
-// the screens rise and the arrow moves.
+// A project card, one under another: the product on a coloured stage across the top, the words under
+// it, one under the other: one two-tone headline (the project's name, then its claim in a softer tone),
+// one sentence, one plain line with the same four fields on every card, matching the case study's
+// header (role · platform · year · status), and the way in. No stats: the details live in the case study.
+// The whole card is one link (a stretched link on the headline); "Live site" sits above it, so no anchors
+// nest. Motion is CSS only (hp.css): on hover the screens rise and the arrow moves.
 export default function FeaturedWork({ projects }: { projects: Project[] }) {
   return (
     <ol className="pc-list">
@@ -71,7 +71,7 @@ export default function FeaturedWork({ projects }: { projects: Project[] }) {
                     className={`pc-shot pc-shot-${s.kind}`}
                     style={{ left: `${s.at[0]}%`, top: `${s.at[1]}%`, width: `${s.at[2]}%`, aspectRatio: `${s.w} / ${s.h}`, '--k': k } as CSSProperties}
                   >
-                    <Image src={s.src} alt="" width={s.w} height={s.h} sizes={`(max-width: 999px) ${Math.round(s.at[2] * 1.75)}vw, ${Math.round(s.at[2] * 0.95)}vw`} quality={90} />
+                    <Image src={s.src} alt="" width={s.w} height={s.h} sizes={`(max-width: 999px) ${Math.round(s.at[2] * 1.75)}vw, ${Math.round(s.at[2] * 0.8)}vw`} quality={90} />
                   </span>
                 ))}
               </div>

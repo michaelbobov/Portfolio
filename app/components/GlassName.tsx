@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
+import '@/app/hp.css';
 
-// The name on the homepage, in frosted glass (hp.css), drawn once and left still. Two things move over it,
+// A title in frosted glass (hp.css): the name on the homepage, and every page's title, so each page opens
+// the way the homepage does. Drawn once and left still. Two things move over it,
 // each clipped to the letters' shapes by an SVG clip path whose text is laid exactly over the real name
 // (measured from it): a band of light that crosses the letters now and then, and, under the pointer, a
 // window: a soft circle following the cursor (easing, not jumping) in which the letters clear and you see
@@ -11,10 +13,11 @@ import type { CSSProperties } from 'react';
 // snow-free page). Everything that moves is moved, not redrawn: the band, the circle, the scene sliding the
 // other way so it stays put on the screen, and the snow. Mouse and trackpad only for the window; with
 // reduced motion the band stays away, the circle doesn't trail and its snow holds still. Purely visual (the
-// h1 is the text).
+// h1 is the text). One per page (the clip path has one id). `className` sizes it (hp.css: gt-page,
+// gt-about); `delay` is the homepage intro's.
 const LENS = 300;
 
-export default function GlassName({ delay }: { delay: number }) {
+export default function GlassName({ words, id, delay, className }: { words: string[]; id: string; delay?: number; className?: string }) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const h1 = useRef<HTMLHeadingElement | null>(null);
   const texts = useRef<(SVGTextElement | null)[]>([]);
@@ -83,12 +86,13 @@ export default function GlassName({ delay }: { delay: number }) {
   const word = (t: string) => <span className="hp-word"><span className="hp-probe" />{t}</span>;
   return (
     <div ref={wrap} className="hp-title-wrap">
-      <h1 ref={h1} id="hero-title" className="hp-title" style={{ '--d': `${delay}ms` } as CSSProperties}>{word('Michael')} {word('Bobov')}</h1>
+      <h1 ref={h1} id={id} className={className ? `hp-title ${className}` : 'hp-title'} style={delay == null ? undefined : ({ '--d': `${delay}ms` } as CSSProperties)}>
+        {words.map((t, i) => <Fragment key={t + i}>{i > 0 && ' '}{word(t)}</Fragment>)}
+      </h1>
       <svg className="hp-clipdef" aria-hidden="true" focusable="false">
         <defs>
           <clipPath id="hp-name-clip" clipPathUnits="userSpaceOnUse">
-            <text ref={(el) => { texts.current[0] = el; }}>Michael</text>
-            <text ref={(el) => { texts.current[1] = el; }}>Bobov</text>
+            {words.map((t, i) => <text key={t + i} ref={(el) => { texts.current[i] = el; }}>{t}</text>)}
           </clipPath>
         </defs>
       </svg>

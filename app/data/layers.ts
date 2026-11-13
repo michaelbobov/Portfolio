@@ -1,6 +1,6 @@
 // How Michael works, as the layers of a matryoshka: outside is what people use, at the core are the
 // people it's for. The hero doll speaks these lines as each layer opens and shows the open layer's
-// name under it; "How I work" near the end of the page lists them all. One entry per doll, biggest
+// name under it. One entry per doll, biggest
 // first; colour is that doll's dress.
 export const LAYERS = [
   { name: 'What ships', skills: 'Frontend dev · AI integration', color: '#ff5d5d', line: 'On the outside: a live product. I build what I design, AI included.' },

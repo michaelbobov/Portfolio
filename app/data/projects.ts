@@ -34,7 +34,7 @@ export const PROJECTS: Project[] = [
     status: 'Pre-launch',
     headline: 'For everything you text yourself and forget.',
     summary: 'A Mac app that files a thought the way you’d text it to yourself, typos and all: an event, a to-do, an idea to develop or a note to keep, with the AI running on the Mac.',
-    stage: '#7f9aa6', // slate teal, like the third doll: the app's white windows and pastel popup stand out on it
+    stage: '#7f9aa6', // slate teal: the app's white windows and pastel popup stand out on it
     shots: [
       { src: '/inkling-today.png', w: 1030, h: 1444, kind: 'browser', at: [10, 12, 30] },
       { src: '/inkling-followup.png', w: 920, h: 380, kind: 'browser', at: [36, 30, 54] },
@@ -65,35 +65,6 @@ export const PROJECTS: Project[] = [
 
 const byId = (ids: string[]) => ids.map((id) => PROJECTS.find((p) => p.id === id) as Project);
 export const WORK = byId(['versum', 'inkling', 'spotify-loop']);
-
-// How he works, outside in: four rings closing in on the smallest doll. Each step has an example
-// from the work or the side projects, with a link to where it comes from.
-export const RINGS = [
-  {
-    name: 'Listen',
-    line: 'Talk with the people who have the problem, on every side of it, before any sketch.',
-    example: 'At Versum I talked with patients and with dental students. A hygienist told me she almost didn’t graduate, and had to pay strangers to take free cleanings.',
-    from: { label: 'Versum Health', href: '/work/versum' },
-  },
-  {
-    name: 'Frame',
-    line: 'Name the real problem, then agree on what better means.',
-    example: 'Trying the PDF tools as a first-time user, extraction wasn’t the hard part; setup was. So PDF Penguin needs none.',
-    from: { label: 'PDF Penguin', href: '/side-projects#pdf-penguin' },
-  },
-  {
-    name: 'Design',
-    line: 'Flows, states and prototypes, put in front of real people.',
-    example: 'For Spotify Loop, friends who tried the lo-fi prototype found the loop button easily next to Bluetooth, so that’s where it went.',
-    from: { label: 'Spotify Loop', href: '/work/spotify-loop' },
-  },
-  {
-    name: 'Build',
-    line: 'Then I ship it myself: React and AI APIs, down to the last detail.',
-    example: 'Real use of the live EZ Recipe showed recipes waited on their picture, so now the recipe comes first and the image loads after.',
-    from: { label: 'EZ Recipe', href: '/side-projects#ez-recipe' },
-  },
-];
 
 // Side projects, behind the second doll: what's built on the side, shown as tiles of different sizes
 // (SideProjects.tsx), not as case studies. Each says where it stands and what it is, in a line or two,
@@ -130,17 +101,6 @@ export const SIDE: SideTile[] = [
     ],
   },
   {
-    id: 'pdf-penguin',
-    name: 'PDF Penguin',
-    status: 'Pre-launch',
-    tag: 'AI developer tool',
-    line: 'Messy PDF in, clean JSON out. Say what you need in plain words, instead of writing parser rules.',
-    fact: 'A working MVP in two weeks, built with React, OCR and the OpenAI API.',
-    shots: [
-      { src: '/highfipengu2.png', w: 1728, h: 1117, alt: 'PDF Penguin: a dropped PDF on the left, the plain-words request below it, and the clean JSON it returns on the right.' },
-    ],
-  },
-  {
     id: 'about-site',
     name: 'about.michaelbobov.com',
     tag: 'Web · Built with Cursor',
@@ -161,6 +121,19 @@ export const SIDE: SideTile[] = [
     cta: 'Open the dolls',
     shots: [
       { src: '/matryoshka-opening.png', w: 1019, h: 570, alt: 'Four lacquered purple matryoshka dolls opening: the third has lifted its lid and the littlest is rising out of it.' },
+    ],
+  },
+  {
+    id: 'skilltree',
+    name: 'SkillTree',
+    status: 'Pre-release',
+    tag: 'VS Code extension',
+    line: 'A map of your Claude Code skills that shows which ones Claude actually uses, with Claude’s recommendations for skills that would serve you better.',
+    fact: 'A free download for VS Code, built with Claude Code.',
+    href: '/side-projects/skilltree',
+    cta: 'See SkillTree',
+    shots: [
+      { src: '/side-projects/skilltree/tree-in-use.png', w: 2480, h: 1520, alt: 'The Skill Tree in VS Code sorted by last use, with recorded use counts on the skills Claude used.' },
     ],
   },
 ];

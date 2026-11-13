@@ -2,7 +2,7 @@ import { CaseHeader, CaseShell, Choice, Choices, NextCase, Outcome, Prose, Quote
 import MotionVideo from '@/app/components/MotionVideo';
 import '../study.css';
 
-// Versum Health case study: what it is and the facts, the live site in motion, then the problem, the
+// Versum Health case study: what it is and the facts, the live site in motion, then the overview and problem, the
 // process, four decisions and where it stands. Every fact is from the author's own write-ups
 // (versum-case-study.md and the earlier page); nothing is measured that wasn't.
 export default function VersumCaseStudy() {
@@ -32,19 +32,12 @@ export default function VersumCaseStudy() {
 
       <Section n={1} id="overview" title="Overview">
         <Prose>
-          <p>Versum Health is a booking marketplace that connects uninsured patients with dental students, who need patients for the supervised procedures they must complete to graduate. Patients get affordable care, students get the cases they need, and supervisors oversee the work.</p>
-          <p>I co-founded Versum with a backend developer. I led the product, designed it and built the frontend. The MVP is live at versumhealth.com with booking, scheduling and messaging. Outreach to dental schools has started, and there’s no usage data yet.</p>
+          <p>Uninsured patients often put off dental care until it becomes an emergency, because they can’t afford it. Dental students need specific procedures to graduate and struggle to find patients for them. The students and patients I talked to had no shared place to find each other.</p>
+          <p>Versum is that place: a booking marketplace where patients get affordable care, students get the cases they need, and supervisors oversee the work. I co-founded it with a backend developer, and led the product, designed it and built the frontend. The MVP is live with booking, scheduling and messaging. Outreach to dental schools has started, and there’s no usage data yet.</p>
         </Prose>
       </Section>
 
-      <Section n={2} id="problem" title="The problem">
-        <Prose>
-          <p>Uninsured patients often put off dental care until it becomes an emergency, because they can’t afford it. Dental students need specific procedures to graduate and struggle to find patients for them.</p>
-          <p>The students and patients I talked to had no shared place to find each other. Versum is meant to be that place, the way ZocDoc is for regular doctors.</p>
-        </Prose>
-      </Section>
-
-      <Section n={3} id="process" title="Process">
+      <Section n={2} id="process" title="Process">
         <Steps>
           <Step title="Talking to both sides">
             <p>I talked with uninsured patients and dental students about how they find each other today. A practicing dental hygienist told me they almost didn’t graduate because they couldn’t find enough patients. One potential patient books through a friend who’s a dental hygienist, and knows most people don’t have that connection.</p>
@@ -82,7 +75,7 @@ export default function VersumCaseStudy() {
         </Steps>
       </Section>
 
-      <Section n={4} id="decisions" title="Design decisions">
+      <Section n={3} id="decisions" title="Design decisions">
         <Choices>
           <Choice n={1} title="Two ways to search: by need or by student">
             <p>Some patients know what they need, like a cleaning; others want to choose a person. The Find tab supports both, so neither group has to work around the other’s way of searching.</p>
@@ -115,7 +108,7 @@ export default function VersumCaseStudy() {
       </Section>
 
       <Outcome
-        n={5}
+        n={4}
         shipped={['Patient search and booking', 'Student scheduling and messaging', 'Live at versumhealth.com']}
         measure={['Time to book a first appointment, aiming for under 5 minutes', 'Task completion, aiming for 90% or more', 'Satisfaction, aiming for 4.5 out of 5', 'No-show rate']}
         next={[

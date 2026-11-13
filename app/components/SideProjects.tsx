@@ -2,22 +2,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from '@/app/components/icons';
 import { SIDE, type SideTile } from '@/app/data/projects';
+import './skilltree-tile.css';
 
 // Side projects as a bento, lighter than the case studies' wide cards: tiles of different sizes, each
-// one colour all over with its words on it, the pictures tilted and running off the edges. The two
-// products first (EZ Recipe the big one), then a gold note and the two experiments. A tile with
-// somewhere to go is one link (stretched on its name); PDF Penguin isn't public yet, so it isn't one.
+// one colour all over with its words on it, the pictures tilted and running off the edges. SkillTree
+// opens the bento as one full-width tile linking to its own page, then EZ Recipe across the width, then
+// the two experiments side by side. Each tile is one link (stretched on its name).
 const tile = (id: string) => SIDE.find((t) => t.id === id) as SideTile;
 
 export default function SideProjects() {
   return (
     <div className="sx">
+      <Tile t={tile('skilltree')} eager />
       <Tile t={tile('ez-recipe')} eager />
-      <Tile t={tile('pdf-penguin')} eager />
-      <div className="sx-tile sx-note">
-        <p className="sx-note-label">One layer led to the next</p>
-        <p className="sx-note-line">PDF Penguin exists because EZ Recipe needed it.</p>
-      </div>
       <Tile t={tile('about-site')} />
       <Tile t={tile('matryoshka')} />
     </div>

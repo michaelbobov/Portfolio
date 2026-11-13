@@ -13,10 +13,12 @@ import { useEffect, useRef } from 'react';
 // The dolls stand in the middle of the picture's snowfield: the picture is laid so the line they stand on
 // falls on the sharpest band of its snow (ground, as a share of the picture's height), scaled up from
 // `cover` only as much as it takes to still fill the screen. CSS can't know where the dolls' feet are on
-// a given screen, so this measures it, and again on a resize or when the snow comes on.
+// a given screen, so this measures it, and again on a resize or when the snow comes on. (The tall picture's
+// out-of-focus foreground was extended downward, so on a phone its snowfield meets the dolls without the
+// picture being blown up to twice the screen.)
 const PICS = {
   wide: { w: 1672, h: 941, ground: 0.79 },
-  tall: { w: 941, h: 1672, ground: 0.84 },
+  tall: { w: 941, h: 2112, ground: 0.665 },
 };
 
 export default function SnowBackdrop() {
