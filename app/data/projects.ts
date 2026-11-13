@@ -1,4 +1,46 @@
-import type { Project } from '@/app/components/FeaturedWork';
+/** One real screen from the project, framed and placed on its stage */
+export type Shot = {
+  src: string;
+  w: number;
+  h: number;
+  kind: 'browser' | 'phone';
+  /** Left, top and width, as % of the stage's wide frame (21:9): left and width of its width, top of its height */
+  at: [number, number, number];
+};
+
+export type Project = {
+  id: string;
+  name: string;
+  /** Role, exactly as the case study's header says it */
+  meta: string;
+  /** Where it runs: Web, Mac, Mobile */
+  platform: string;
+  year: string;
+  /** Where it stands: Live, Live MVP, Pre-launch, Concept */
+  status: string;
+  /** The claim, from the case study: the card's headline */
+  headline: string;
+  /** One sentence more */
+  summary: string;
+  /** The stage: its colour (the purple family, a different tone per project, picked for the app's own
+      colours) and the product's real screens, back to front */
+  stage: string;
+  shots: Shot[];
+  /** A feature overview: a silent 21:9 loop on the stage's own colour, shown in place of the shots.
+      contain keeps all of it in view on narrower stages, for a wide subject like a browser window */
+  motion?: { src: string; poster: string; width: number; height: number; label: string; contain?: boolean };
+  link: string;
+  /** Only for projects with a real live URL (taken from the case study) */
+  live?: string;
+};
+
+// A project card, one under another: the product on a coloured stage across the top, the words under
+// it, one under the other: one two-tone headline (the project's name, then its claim in a softer tone),
+// one sentence, one plain line with the same four fields on every card, matching the case study's
+// header (role · platform · year · status), and the way in. No stats: the details live in the case study.
+// The whole card is one link (a stretched link on the headline); "Live site" sits above it, so no anchors
+// nest. Motion is CSS only (hp.css): on hover the screens rise and the arrow moves.
+
 
 // The case studies, behind the big doll (Work). Every fact comes from the case studies. What's built on
 // the side lives in SIDE, below, behind the second doll.

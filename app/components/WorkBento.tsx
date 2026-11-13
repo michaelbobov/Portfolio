@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import TileVideo from '@/app/components/TileVideo';
 import { ArrowRight } from '@/app/components/icons';
-import type { Project } from '@/app/components/FeaturedWork';
+import type { Project } from '@/app/data/projects';
 import './work-bento.css';
 
 // Work as a bento, in the side projects' tile system (hp.css .sx): Versum, the lead case study, across the

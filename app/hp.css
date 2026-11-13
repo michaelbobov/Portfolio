@@ -376,75 +376,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .hp-h2 em { font: inherit; letter-spacing: inherit; color: var(--hp-accent); }
 .hp-label { margin: 0; font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); }
 
-/* ---------- project cards, one under another: the product on a coloured stage across the top of the
-   card, the words under it, one under the other. The column is held to 1120px, centred under the
-   heading ---------- */
-.pc-list { list-style: none; max-width: 1120px; margin: 0 auto; padding: 0; display: grid; gap: 28px; }
-.pc { position: relative; overflow: hidden; border-radius: 30px; background: #ffffff; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.07), 0 24px 48px -32px rgba(19, 34, 74, 0.35); transition: background-color 260ms ease, scale 120ms ease-out; }
-.pc:has(.pc-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
-@media (hover: hover) and (pointer: fine) { .pc:hover { background: #f8fbff; } }
-.pc:active { scale: 0.995; }
-/* The stage: flush to the card's edges, in the project's own cold tone (projects.ts), lit softly from
-   above: 5:4 on phones, 16:10 on tablets, 21:9 on desktop, the motion pieces' own frame, so they show
-   whole. Nothing rides on it: the product has the stage to itself. */
-.pc-stage { position: relative; overflow: hidden; aspect-ratio: 5 / 4; background: var(--stage, #2a4fae); }
-.pc-stage::before { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 80% at 50% 0%, rgba(255, 255, 255, 0.22), transparent 70%); }
-/* The screens sit on a 21:9 frame as tall as the stage: the stage itself on desktop; on narrower ones the
-   frame overhangs both sides and is cropped, so the screens keep their size */
-.pc-shots { position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 21 / 9; translate: -50% 0; }
-.pc-shot { position: absolute; display: block; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.1), 0 30px 60px -24px rgba(19, 34, 74, 0.45); transition: translate 480ms var(--wf-ease-out); transition-delay: calc(var(--k) * 50ms); }
-.pc-shot-browser { border-radius: 6px; }
-.pc-shot-phone { border-radius: 14px; }
-.pc-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-/* A motion piece fills the stage (cropped at the sides on narrower stages, where its action stays in
-   the middle) */
-.pc-stage .pc-motion { position: absolute; inset: 0; }
-@media (hover: hover) and (pointer: fine) { .pc:hover .pc-shot { translate: 0 -8px; } }
-/* The words, in the titles' face: one two-tone headline, the project's name in full ink and its claim in
-   the softer tone at the same size and weight; one sentence; then one plain line, the same four fields
-   on every card (role · platform · year · status), the status with the dot the case study's header
-   uses; and the way in. No stats */
-.pc-body { display: grid; gap: 24px; padding: 22px 20px 24px; }
-.pc-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; max-width: 20em; margin: 0; font-size: clamp(23px, 1.95vw, 28px); font-weight: 500; line-height: 1.16; letter-spacing: -0.02em; color: var(--hp-muted); text-wrap: balance; }
-.pc-title { color: var(--hp-text); }
-.pc-meta { margin: 18px 0 0; font-size: 15px; line-height: 1.5; color: #3a4a72; }
-.pc-state { white-space: nowrap; color: var(--hp-text); }
-.pc-state::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 7px 1px 0; border-radius: 50%; background: var(--hp-muted); vertical-align: middle; }
-.pc-state.is-live::before { background: #1f9d63; }
-.pc-state.is-pre::before { background: var(--wf-gold); }
-.pc-link { color: inherit; text-decoration: none; }
-.pc-link:focus-visible { outline: none; }
-.pc-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
-.pc-summary { max-width: 34em; margin: 14px 0 0; font-size: var(--t-body); line-height: 1.5; color: #24345e; text-wrap: pretty; }
-.pc-side { display: grid; justify-items: start; }
-.pc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; }
-.pc-read { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-body); font-weight: 600; color: var(--hp-accent); }
-.pc-read svg { transition: transform 240ms var(--wf-ease-out); }
-.pc-live { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 5px; font-size: var(--t-body); font-weight: 500; color: var(--hp-muted); text-decoration: none; transition: color 160ms ease; }
-@media (hover: hover) and (pointer: fine) {
-  .pc:hover .pc-read svg { transform: translateX(4px); }
-  .pc-live:hover { color: var(--hp-text); }
-}
-@media (min-width: 600px) {
-  .pc-stage { aspect-ratio: 16 / 10; }
-  .pc-shot-browser { border-radius: 10px; }
-  .pc-shot-phone { border-radius: 22px; }
-  .pc-body { padding: 30px 34px 34px; }
-}
-@media (max-width: 599px) { .pc { border-radius: 24px; } }
-/* Phones and tablets: a wide subject stays whole, at the bottom of the stage, its top fading into the
-   stage, which is the same colour */
-@media (max-width: 999px) {
-  .pc-motion.is-contain video { object-fit: contain; object-position: bottom; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%); mask-image: linear-gradient(to bottom, transparent, #000 14%); }
-}
-/* Desktop: the stage at 21:9 */
-@media (min-width: 1000px) { .pc-stage { aspect-ratio: 21 / 9; } .pc-body { padding: 34px 40px 36px; } }
-@media (prefers-reduced-motion: reduce) {
-  .pc, .pc-shot, .pc-read svg { transition: none; }
-  .pc:active { scale: none; }
-  .pc:hover .pc-shot, .pc:hover .pc-read svg { translate: none; transform: none; }
-}
-
 /* ---------- section pages (Work, Side projects) ---------- */
 /* Set like the case studies' headers (study.css): centered, the title in the name's frosted glass
    (.gt-page, below), the note in the case-study subtitle's soft tone */
@@ -583,7 +514,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 @keyframes hp-rise { from { opacity: 0; transform: translateY(28px); } }
 /* Scroll, where view timelines exist: cards and blocks rise in as they arrive */
 @supports (animation-timeline: view()) {
-  .pc, .sx-tile, .sc-title {
+  .sx-tile, .sc-title {
     animation: hp-rise linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 40%;
@@ -592,51 +523,11 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 @media (prefers-reduced-motion: reduce) {
   .wf-intro .hp-rise, .wf-intro .hp-stage .ds-track, .wf-intro .ds.is-3d .ds-3d { animation: hp-fade 400ms ease both; }
   .wf-intro .hp-title { animation: hp-fade 400ms ease both; animation-delay: var(--d); }
-  .pc, .sx-tile, .sc-title { animation: none !important; }
+  .sx-tile, .sc-title { animation: none !important; }
   /* The doll still opens and closes, straight to the other state with no travel */
-  .ds-top, .ds-bot, .pc-shot, .pc-read svg, .sx-shot, .sx-shot img, .sx-cta svg, .ad-frame, .ad-inner, .ad .ds-top, .pc { transition: none; }
+  .ds-top, .ds-bot, .sx-shot, .sx-shot img, .sx-cta svg, .ad-frame, .ad-inner, .ad .ds-top { transition: none; }
   .ds-slot .ds-doll, .ad .ds-doll, .ds-face, .ds-front { animation: none !important; }
-  .ds:hover .ds-top, .pc:hover .pc-shot, .sx-tile:hover .sx-shot, .sx-tile:hover .sx-shot img { transform: none !important; translate: none !important; scale: none !important; }
-}
-
-/* ---------- the dive into the village (VillageZoom, Village, VillageScene, data/village) ---------- */
-/* Clicking the Side projects doll flies into the 3D village painted on her belly. Until that village is
-   ready (or without WebGL / script), the side projects are a plain section of cards under the dolls. */
-.hz { position: relative; }
-html.vz-lock { overflow: hidden; }
-
-/* The plain section (no 3D village) */
-.vz { position: relative; padding: 48px clamp(16px, 3.4vw, 48px) 96px; }
-.vz-stage, .vz-back, .vz-pins, .vz-tour, .vz-close { display: none; }
-.vz-head { display: flex; align-items: baseline; justify-content: center; gap: 18px; margin: 0 auto 28px; }
-.vz-title { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-size: clamp(24px, 2.2vw, 32px); font-weight: 600; letter-spacing: -0.025em; color: var(--hp-text); }
-.vz-all { font-size: var(--t-small); font-weight: 600; color: var(--hp-accent); text-decoration: none; }
-.vz-all::after { content: " \2192"; }
-.vz-cards { display: grid; gap: 24px; max-width: 760px; margin-inline: auto; }
-.vz-credit { display: none; }
-.hz.has-village .vz.is-in .vz-credit { display: block; position: absolute; right: clamp(16px, 3.4vw, 48px); bottom: 14px; z-index: 3; margin: 0; max-width: 260px; font-size: 11px; line-height: 1.35; text-align: right; color: var(--hp-muted); }
-.hz.has-village .vz.has-focus .vz-credit { display: none; }
-@media (max-width: 699px) { .hz.has-village .vz.is-in .vz-credit { left: 16px; right: 16px; bottom: 74px; max-width: none; text-align: center; } }
-
-/* A side project's card: porcelain glass, its pictures on top */
-.vz-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 26px; color: var(--hp-text); background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(246, 249, 253, 0.9)); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 30px 60px -28px rgba(10, 22, 58, 0.55); }
-.vz-card-media { position: relative; display: flex; align-items: center; justify-content: center; gap: 14px; margin: 10px 10px 0; padding: 16px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: radial-gradient(80% 90% at 50% 30%, #f4f7fc, #dfe8f4); box-sizing: border-box; }
-.vz-card-media img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; box-shadow: 0 0 0 0.5px rgba(19, 34, 74, 0.14), 0 14px 30px -14px rgba(19, 34, 74, 0.45); }
-.vz-card-media.is-pair img { max-width: calc(50% - 7px); border-radius: 14px; }
-.vz-card-body { padding: 20px 24px 22px; }
-.vz-card-meta { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 13px; font-weight: 500; color: var(--hp-muted); font-variant-numeric: tabular-nums; }
-.vz-card-status { padding: 3px 9px; border-radius: 999px; background: #e3ebf7; color: #1b3a8f; font-weight: 600; font-size: 12px; }
-.vz-card-title { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-size: clamp(24px, 2vw, 30px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; }
-.vz-card-sum { margin: 8px 0 0; font-size: 16px; font-weight: 500; line-height: 1.45; letter-spacing: -0.005em; text-wrap: pretty; }
-.vz-card-fact { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: var(--hp-muted); text-wrap: pretty; }
-.vz-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 18px; }
-.vz-cta { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; background: #13224a; color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
-.vz-cta::after { content: "\2192"; transition: translate 220ms var(--wf-ease-out); }
-.vz-cta.is-out::after { content: "\2197"; }
-.vz-cta:active { scale: 0.97; }
-@media (hover: hover) and (pointer: fine) {
-  .vz-cta:hover { background: #1b3a8f; } .vz-cta:hover::after { translate: 3px 0; }
-  .vz-all:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .ds:hover .ds-top, .sx-tile:hover .sx-shot, .sx-tile:hover .sx-shot img { transform: none !important; translate: none !important; scale: none !important; }
 }
 
 /* ---------- inside the 3D village ---------- */
