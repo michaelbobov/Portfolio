@@ -9,14 +9,12 @@ import './work-bento.css';
 // it, what the product does, my role, and the project's overview recording running off the edge
 // (its play / pause in the tile's corner, clear of the crop); the whole tile is the link to its case study
 // (stretched on its name).
-// (Inkling has no overview on its Work card; its case study's tour is the same 21:9 format)
-const TOUR = { src: '/inkling-tour.mp4', poster: '/inkling-tour.jpg', width: 2100, height: 900, label: 'Inkling: a tour of the app, filing thoughts typed the way you would text them to yourself' };
 
 export default function WorkBento({ projects }: { projects: Project[] }) {
   return (
     <div className="sx wb">
       {projects.map((p) => {
-        const m = p.motion ?? (p.id === 'inkling' ? TOUR : null);
+        const m = p.motion;
         return (
           <article key={p.id} id={p.id} className={`sx-tile is-link wb-tile wb-${p.id}`}>
             <div className="sx-words">
@@ -31,7 +29,7 @@ export default function WorkBento({ projects }: { projects: Project[] }) {
               <p className="sx-fact">{p.meta}</p>
               <span className="sx-cta" aria-hidden="true">Read the case study <ArrowRight size={16} strokeWidth={2.25} /></span>
             </div>
-            {m && <TileVideo src={m.src} poster={m.poster} width={m.width} height={m.height} label={m.label} />}
+            <TileVideo src={m.src} poster={m.poster} width={m.width} height={m.height} label={m.label} />
           </article>
         );
       })}

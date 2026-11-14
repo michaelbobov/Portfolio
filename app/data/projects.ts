@@ -1,13 +1,3 @@
-/** One real screen from the project, framed and placed on its stage */
-export type Shot = {
-  src: string;
-  w: number;
-  h: number;
-  kind: 'browser' | 'phone';
-  /** Left, top and width, as % of the stage's wide frame (21:9): left and width of its width, top of its height */
-  at: [number, number, number];
-};
-
 export type Project = {
   id: string;
   name: string;
@@ -18,28 +8,16 @@ export type Project = {
   year: string;
   /** Where it stands: Live, Live MVP, Pre-launch, Concept */
   status: string;
-  /** The claim, from the case study: the card's headline */
+  /** The claim, from the case study: the tile's headline */
   headline: string;
   /** One sentence more */
   summary: string;
-  /** The stage: its colour (the purple family, a different tone per project, picked for the app's own
-      colours) and the product's real screens, back to front */
-  stage: string;
-  shots: Shot[];
-  /** A feature overview: a silent 21:9 loop on the stage's own colour, shown in place of the shots.
-      contain keeps all of it in view on narrower stages, for a wide subject like a browser window */
-  motion?: { src: string; poster: string; width: number; height: number; label: string; contain?: boolean };
+  /** The project's overview recording: a silent 21:9 loop (WorkBento) */
+  motion: { src: string; poster: string; width: number; height: number; label: string };
   link: string;
   /** Only for projects with a real live URL (taken from the case study) */
   live?: string;
 };
-
-// A project card, one under another: the product on a coloured stage across the top, the words under
-// it, one under the other: one two-tone headline (the project's name, then its claim in a softer tone),
-// one sentence, one plain line with the same four fields on every card, matching the case study's
-// header (role · platform · year · status), and the way in. No stats: the details live in the case study.
-// The whole card is one link (a stretched link on the headline); "Live site" sits above it, so no anchors
-// nest. Motion is CSS only (hp.css): on hover the screens rise and the arrow moves.
 
 
 // The case studies, behind the big doll (Work). Every fact comes from the case studies. What's built on
@@ -54,15 +32,12 @@ export const PROJECTS: Project[] = [
     status: 'Live MVP',
     headline: 'Helping uninsured patients and dental students find each other.',
     summary: 'A booking marketplace where uninsured patients get care from supervised dental students.',
-    stage: '#2a4fae', // Gzhel cobalt: its white screens stand out on it
-    shots: [],
     motion: {
       src: '/versum-overview.mp4',
       poster: '/versum-overview.jpg',
       width: 2100,
       height: 900,
       label: 'Versum feature overview: the live site in English and Spanish, then a student’s dashboard, calendar, time slots and services',
-      contain: true,
     },
     link: '/work/versum',
     live: 'https://versumhealth.com/',
@@ -76,11 +51,14 @@ export const PROJECTS: Project[] = [
     status: 'Pre-launch',
     headline: 'For everything you text yourself and forget.',
     summary: 'A Mac app that files a thought the way you’d text it to yourself, typos and all: an event, a to-do, an idea to develop or a note to keep, with the AI running on the Mac.',
-    stage: '#7f9aa6', // slate teal: the app's white windows and pastel popup stand out on it
-    shots: [
-      { src: '/inkling-today.png', w: 1030, h: 1444, kind: 'browser', at: [10, 12, 30] },
-      { src: '/inkling-followup.png', w: 920, h: 380, kind: 'browser', at: [36, 30, 54] },
-    ],
+    // (the tour from its case study, in the same 21:9 format as the others)
+    motion: {
+      src: '/inkling-tour.mp4',
+      poster: '/inkling-tour.jpg',
+      width: 2100,
+      height: 900,
+      label: 'Inkling: a tour of the app, filing thoughts typed the way you would text them to yourself',
+    },
     link: '/work/inkling',
   },
   {
@@ -92,8 +70,6 @@ export const PROJECTS: Project[] = [
     status: 'Concept',
     headline: 'Replay one part of a song without leaving Spotify.',
     summary: 'A self-initiated concept for looping a section of a song inside Spotify’s player, with a library of saved loops.',
-    stage: '#c9d9ee', // ice: the dark player and its gold album art stand out on it
-    shots: [],
     motion: {
       src: '/spotify-loop-overview.mp4',
       poster: '/spotify-loop-overview.jpg',
