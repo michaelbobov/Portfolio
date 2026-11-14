@@ -403,6 +403,15 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx-name { margin: 18px 0 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-quote); line-height: 1.12; letter-spacing: -0.015em; }
 .sx-ez-recipe .sx-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-size: var(--t-head); letter-spacing: -0.025em; }
 .sx-link { color: inherit; text-decoration: none; }
+/* A tile's actions along its foot: a download button (a link of its own, above the stretched link), then the
+   way in */
+.sx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: auto; padding-top: 22px; }
+.sx-actions .sx-cta { margin-top: 0; padding-top: 0; }
+.sx-download { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px 0 16px; border-radius: 999px; background: #13224a; color: #ffffff; font-size: var(--t-body); font-weight: 600; text-decoration: none; transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
+.sx-download svg { transition: translate 220ms var(--wf-ease-out); }
+.sx-download:active { scale: 0.97; }
+.sx-download:focus-visible { outline: 2px solid var(--hp-accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .sx-download:hover { background: #1b3a8f; } .sx-download:hover svg { translate: 0 2px; } }
 .sx-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
 .sx-tile:has(.sx-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
 .sx-link:focus-visible { outline: none; }

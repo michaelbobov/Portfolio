@@ -99,6 +99,8 @@ export type SideTile = {
   href?: string;
   cta?: string;
   external?: boolean;
+  /** A file to download straight from the tile (a button beside the way in) */
+  download?: { href: string; label: string; note: string };
   /** The tile's picture(s) */
   shots: { src: string; w: number; h: number; alt: string }[];
 };
@@ -150,6 +152,7 @@ export const SIDE: SideTile[] = [
     fact: 'A free download for VS Code, built with Claude Code.',
     href: '/side-projects/skilltree',
     cta: 'See SkillTree',
+    download: { href: '/downloads/skilltree-0.2.0.vsix', label: 'Download', note: '.vsix for VS Code, 1 MB' },
     shots: [
       { src: '/side-projects/skilltree/tree-in-use.png', w: 2480, h: 1520, alt: 'The Skill Tree in VS Code sorted by last use, with recorded use counts on the skills Claude used.' },
     ],

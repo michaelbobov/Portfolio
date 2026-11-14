@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight } from '@/app/components/icons';
+import { ArrowRight, ArrowUpRight, Download } from '@/app/components/icons';
 import { SIDE, type SideTile } from '@/app/data/projects';
 import './skilltree-tile.css';
 
@@ -38,10 +38,21 @@ function Tile({ t, eager = false }: { t: SideTile; eager?: boolean }) {
         <h3 className="sx-name">{name}</h3>
         <p className="sx-line">{t.line}</p>
         {t.fact && <p className="sx-fact">{t.fact}</p>}
-        {t.cta && (
-          <span className="sx-cta" aria-hidden="true">
-            {t.cta} {t.external ? <ArrowUpRight size={15} strokeWidth={2.25} /> : <ArrowRight size={16} strokeWidth={2.25} />}
-          </span>
+        {(t.cta || t.download) && (
+          <div className="sx-actions">
+            {/* (a real link of its own, above the tile's stretched link) */}
+            {t.download && (
+              <a className="sx-download" href={t.download.href} download>
+                <Download size={17} strokeWidth={2.25} /> {t.download.label}
+                <span className="sr-only"> {t.name} ({t.download.note})</span>
+              </a>
+            )}
+            {t.cta && (
+              <span className="sx-cta" aria-hidden="true">
+                {t.cta} {t.external ? <ArrowUpRight size={15} strokeWidth={2.25} /> : <ArrowRight size={16} strokeWidth={2.25} />}
+              </span>
+            )}
+          </div>
         )}
       </div>
       <div className="sx-media">

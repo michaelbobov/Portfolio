@@ -46,6 +46,15 @@ export function ArrowDown({ size = 24, ...props }: IconProps) {
   );
 }
 
+/** A download: an arrow down into a tray */
+export function Download({ size = 24, ...props }: IconProps) {
+  return (
+    <svg {...line(size, props)}>
+      <path d="M12 4v11m-5-5 5 5 5-5M5 19h14" />
+    </svg>
+  );
+}
+
 /** ui/arrow-left.svg */
 export function ArrowLeft({ size = 24, ...props }: IconProps) {
   return (
