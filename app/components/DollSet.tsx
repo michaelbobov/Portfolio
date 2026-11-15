@@ -8,7 +8,8 @@ import { useRouter } from 'next/navigation';
 import { DOLL_INTRO } from '@/app/data/intro';
 import { DOLLS, DOLL_ART, SET_SIZE } from '@/app/data/dolls';
 import { DollInside, FLAT_AFTER, FlatDoll, canWebGL } from '@/app/components/FlatDoll';
-import type { DollScene as DollSceneT } from '@/app/components/DollScene';
+import type { DollScene as DollSceneT, FaceOnScreen } from '@/app/components/DollScene';
+import { faceReveal } from '@/app/components/faceReveal';
 
 // The hero's matryoshka, and a way into the site: three dolls, each a link (Work, Side projects, and the
 // littlest, About me), mirrored by the nav at the bottom of every other page. It starts as
@@ -38,6 +39,71 @@ let autoOpened = false;
 // hydrated. (This code also runs when another page's link prefetches the homepage; then it waits until
 // the set mounts, so other pages never fetch three.js.) Until it's drawn the flat set waits unseen
 // (hp.css), so the flat one never shows first; it shows only if the 3D one is late, or can't run.
+// His photo (public/me.webp: his colour portrait, cut out of its background, 1254 px square), and the
+// circle in it that the doll's face window is painted from (scripts/me-face.py traces this exact crop),
+// as shares of its width: so the painting and the photo match feature for feature
+const ME_PHOTO = { src: '/me.webp', cx: 610 / 1254, cy: 560 / 1254, r: 315 / 1254 };
+const SMOOTH = 'cubic-bezier(0.65, 0, 0.35, 1)';
+/** The painted face turns into him, and the window opens onto the About page. The painting melts off his
+ *  face from the eyes out, his photo lined up with it feature for feature (faceReveal); the screen
+ *  around turns to plain snow and the About page opens beneath; then the round window glides to his
+ *  portrait there and opens out into its panel (.me-face, with .me-photo inside), the photo moving with
+ *  it to its place; then the snow lifts round him. */
+function becomeMe(face: FaceOnScreen, go: () => void) {
+  const veil = document.createElement('div');
+  veil.className = 'me-reveal';
+  veil.setAttribute('aria-hidden', 'true');
+  // the window: a frame round his face, and the photo inside it, both in window px
+  const frame = document.createElement('div');
+  frame.className = 'me-reveal-frame';
+  const img = document.createElement('img');
+  img.src = ME_PHOTO.src; img.alt = '';
+  const w = face.r / ME_PHOTO.r;
+  const f0 = { left: face.x - face.r, top: face.y - face.r, width: 2 * face.r, height: 2 * face.r };
+  const i0 = { left: face.x - ME_PHOTO.cx * w - f0.left, top: face.y - ME_PHOTO.cy * w - f0.top, width: w };
+  Object.assign(frame.style, { left: `${f0.left}px`, top: `${f0.top}px`, width: `${f0.width}px`, height: `${f0.height}px` });
+  Object.assign(img.style, { left: `${i0.left}px`, top: `${i0.top}px`, width: `${i0.width}px` });
+  // (the melt is drawn on a canvas over the window; the photo itself shows once it's done)
+  const drawing = document.createElement('canvas');
+  drawing.className = 'me-reveal-drawing';
+  img.style.visibility = 'hidden';
+  frame.append(img, drawing);
+  veil.append(frame);
+  const done = () => veil.remove();
+  const px = (o: Record<string, number>) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, `${v}px`]));
+  const start = () => {
+    document.body.append(veil);
+    // 1. the painting melts off him
+    faceReveal(drawing, img, i0, f0.width).then(() => {
+      drawing.remove();
+      img.style.visibility = '';
+      // 2. the world goes quiet round his face, and the About page opens beneath (only once the snow has
+      // covered the old one)
+      veil.animate([{ backgroundColor: 'rgba(238, 243, 249, 0)' }, { backgroundColor: 'rgba(238, 243, 249, 1)' }], { duration: 360, easing: 'ease-out', fill: 'forwards' }).finished.then(go, go);
+      // 3. the window glides to his portrait and opens out into it, 4. and the page comes up round him
+      const t0 = performance.now();
+      const land = () => {
+        const panel = document.querySelector<HTMLElement>('.me-face'), photo = panel?.querySelector<HTMLImageElement>('.me-photo');
+        if (!panel || !photo || !photo.complete || performance.now() - t0 < 380) {
+          if (performance.now() - t0 < 4000) requestAnimationFrame(land); else done();
+          return;
+        }
+        const a = panel.getBoundingClientRect(), b = photo.getBoundingClientRect();
+        const timing = { duration: 820, easing: SMOOTH, fill: 'forwards' as const };
+        frame.animate([
+          { ...px(f0), borderRadius: `${face.r}px`, backgroundColor: 'rgba(240, 244, 249, 0)' },
+          { ...px({ left: a.left, top: a.top, width: a.width, height: a.height }), borderRadius: getComputedStyle(panel).borderRadius || '0px', backgroundColor: 'rgba(236, 241, 247, 1)' },
+        ], timing);
+        img.animate([px(i0), px({ left: b.left - a.left, top: b.top - a.top, width: b.width })], timing)
+          .finished.then(() => veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: 'ease-out', fill: 'forwards' }).finished).then(done, done);
+      };
+      requestAnimationFrame(land);
+    }, () => { done(); go(); });
+  };
+  // (it waits for the photo, so it never starts empty)
+  img.decode().then(start, () => { done(); go(); });
+}
+
 let sceneModule: Promise<typeof import('@/app/components/DollScene')> | null = null;
 const loadScene = () => (sceneModule ??= import('@/app/components/DollScene'));
 // The set's paintings are fetched at the same moment, so the 3D set isn't kept waiting for them after.
@@ -157,11 +223,25 @@ export default function DollSet() {
   };
 
   // Following a doll: a quick opening first (its lid lifts; the littlest, which is solid, hops), then
-  // the page. New-tab clicks and reduced motion go straight there.
+  // the page. His doll (About) instead flies you into its face, which turns into his photo, and the
+  // About page opens under it. New-tab clicks and reduced motion go straight there.
   const visit = (e: MouseEvent<HTMLAnchorElement>, i: number) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     e.preventDefault();
+    if (PLACES[i].href === '/about' && in3d && scene.current) {
+      // (once only: a second click while it flies does nothing)
+      if (ref.current?.classList.contains('is-zooming')) return;
+      router.prefetch('/about');
+      // the labels, the name and the rest of the page step aside as the camera flies in (hp.css)
+      ref.current?.classList.add('is-zooming');
+      document.documentElement.classList.add('is-zooming-me');
+      scene.current.zoomTo(i).then((face) => becomeMe(face, () => {
+        router.push('/about');
+        document.documentElement.classList.remove('is-zooming-me');
+      }));
+      return;
+    }
     const slot = e.currentTarget;
     const lid = slot.querySelector<SVGGElement>('.ds-doll:not(.is-solid) .ds-top');
     lid?.animate([{ transform: 'translate(-40px, -66px) rotate(-18deg)' }], { duration: LEAVE_MS, easing: EASE_OUT, fill: 'forwards' });

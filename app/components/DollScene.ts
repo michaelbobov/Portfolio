@@ -68,12 +68,13 @@ function lathe(points: THREE.Vector2[], painted: boolean) {
 }
 
 // ---------- the painting ----------
-// The flat art is drawn at up to 6 px per box unit (fewer for the small dolls, whose textures are
-// smaller), on canvases kept in memory so reading them back is quick, then wrapped
+// The flat art is drawn at up to 6 px per box unit (a painting at its own resolution, the drawn dolls
+// fewer for the small ones), on canvases kept in memory so reading them back is quick, then wrapped
 const ART = 6;
 // (or, for a painted doll, its painting)
-function drawArt(d: Doll, front: boolean, img?: HTMLImageElement) {
-  const art = ART * Math.max(d.size, 0.5);
+// (`scale`: px per box unit, so a doll's back is drawn at its front's, which paint reads them both by)
+function drawArt(d: Doll, front: boolean, img?: HTMLImageElement, scale?: number) {
+  const art = scale ?? (img ? Math.min(ART, img.naturalWidth / 200) : ART * Math.max(d.size, 0.5));
   const c = document.createElement('canvas');
   c.width = Math.round(200 * art); c.height = Math.round(BOX_H * art);
   const x = c.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
@@ -107,10 +108,12 @@ function drawArt(d: Doll, front: boolean, img?: HTMLImageElement) {
 // Wrap the flat art round the doll: a point at angle θ and height y on the body shows what the flat
 // drawing has at x = 100 + r(y)·sin θ (the front drawing on the front half, the back one behind)
 function paint(d: Doll, pic?: Art) {
-  const fr = drawArt(d, true, pic?.front), bk = drawArt(d, false, pic?.back);
+  const fr = drawArt(d, true, pic?.front), bk = drawArt(d, false, pic?.back, fr.width / 200);
   const fd = (fr.getContext('2d') as CanvasRenderingContext2D).getImageData(0, 0, fr.width, fr.height).data;
   const bd = (bk.getContext('2d') as CanvasRenderingContext2D).getImageData(0, 0, bk.width, bk.height).data;
-  const W = Math.max(512, Math.round(1536 * d.size / 256) * 256), H = W / 2;
+  // (round the body, about 1.6 texture px for each px of painting across: a sharper painting, a sharper
+  // doll; his, which the homepage zoom flies right up to, is painted at twice the others' size)
+  const W = Math.max(512, Math.round(1536 * d.size / 256) * 256, Math.round((fr.width * 1.6) / 256) * 256), H = W / 2;
   const out = document.createElement('canvas');
   out.width = W; out.height = H;
   const ox = out.getContext('2d') as CanvasRenderingContext2D;
@@ -441,7 +444,23 @@ function flipAt(tw: number) {
   return { up: 4 * f * (1 - f) * 118, turn: Math.PI * 2 * f };
 }
 
-export type DollScene = { go: (open: boolean, step: number, lead: number, elapsed?: number) => void; ready: Promise<void>; dispose: () => void };
+/** Where a doll's face is on the screen once the camera has flown into it (viewport px): its centre and radius */
+export type FaceOnScreen = { x: number; y: number; r: number };
+export type DollScene = {
+  go: (open: boolean, step: number, lead: number, elapsed?: number) => void;
+  /** Flies the camera into doll i's face; resolves with where the face is on screen when it's there */
+  zoomTo: (i: number) => Promise<FaceOnScreen>;
+  ready: Promise<void>;
+  dispose: () => void;
+};
+
+// The zoom into a doll's face (the About doll: it turns into his photo there, DollSet). The painted face
+// window is a circle FACE_R box units across its radius, centred FACE_Y down the doll; the camera ends
+// straight in front of it, near enough that the face fills ZOOM_FILL of the canvas's height; the other
+// dolls stay where they are and slip out of view as it flies in.
+// (the window as painted: a circle of 92 px at (299.5, 260) on the 600 × 780 painting, 3 px a box unit;
+//  its picture is a crop of his photo, ME_PHOTO in DollSet, so the two match feature for feature)
+const FACE_Y = 260 / 3, FACE_R = 92 / 3, ZOOM_MS = 1100, ZOOM_FILL = 0.34;
 
 export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): DollScene {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -463,7 +482,11 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
 
   // ---------- where the slots are ----------
   let X: number[] = [], S: number[] = [], closedShift = 0, k = 1;
+  // (the flight into a face, while there is one: see zoomTo)
+  let zoom: { i: number; t: number; fov: number; from: THREE.Vector3; look: THREE.Vector3; done: (f: FaceOnScreen) => void } | null = null;
   const layout = () => {
+    // (while flying into a face the camera is the zoom's; a resize then waits)
+    if (zoom) return;
     const W = canvas.clientWidth, Hc = canvas.clientHeight;
     if (!W || !Hc) return;
     renderer.setSize(W, Hc, false);
@@ -554,16 +577,36 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     }
   };
 
+  // ---------- the zoom into a face ----------
+  const facePoint = (i: number) => new THREE.Vector3(dolls[i].group.position.x, dolls[i].group.position.y + (FLOOR - FACE_Y) * S[i], radiusAt(FACE_Y) * S[i]);
+  const stepZoom = (dt: number) => {
+    if (!zoom) return;
+    const z = zoom;
+    z.t = Math.min(z.t + dt, ZOOM_MS);
+    const e = EASE_IN_OUT(z.t / ZOOM_MS), face = facePoint(z.i);
+    const dist = (FACE_R * S[z.i]) / (ZOOM_FILL / 2) / Math.tan(((z.fov / 2) * Math.PI) / 180) / 2;
+    camera.position.lerpVectors(z.from, face.clone().add(new THREE.Vector3(0, 0, dist)), e);
+    camera.lookAt(new THREE.Vector3().lerpVectors(z.look, face, e));
+    camera.updateMatrixWorld();
+    // the doll looks straight at you as you arrive
+    dolls[z.i].group.rotation.set(0, 0, 0);
+    if (z.t >= ZOOM_MS) {
+      const c = toPage(camera, canvas, face.clone()), edge = toPage(camera, canvas, face.clone().add(new THREE.Vector3(FACE_R * S[z.i], 0, 0)));
+      z.done({ x: c.x, y: c.y, r: Math.hypot(edge.x - c.x, edge.y - c.y) });
+      z.done = () => {};
+    }
+  };
+
   // ---------- the loop: runs only while something moves ----------
   let raf = 0, last = 0, live = false, gone = false;
   // (a click's opening holds its pose once played, so it counts as still)
-  const still = () => dir === 0 && dolls.every((o, i) => Math.abs(o.hover - o.hoverTo) < 0.002 && Math.abs(o.peek - peekTo(o, i)) < 0.002 && (o.visit < 0 || o.visit >= 460) && o.play < 0 && gazeStill(o.gaze));
+  const still = () => (!zoom || zoom.t >= ZOOM_MS) && dir === 0 && dolls.every((o, i) => Math.abs(o.hover - o.hoverTo) < 0.002 && Math.abs(o.peek - peekTo(o, i)) < 0.002 && (o.visit < 0 || o.visit >= 460) && o.play < 0 && gazeStill(o.gaze));
   // The gaze: towards the pointer while the set is still, straight ahead while it opens
   let pointer: { x: number; y: number } | null = null;
   const speed = speedo();
   const eye = new THREE.Vector3();
   const aimAll = () => dolls.forEach((o, i) => {
-    if (!pointer || dir !== 0 || !S[i]) return aimGaze(o.gaze, null);
+    if (!pointer || dir !== 0 || zoom || !S[i]) return aimGaze(o.gaze, null);
     const e = toPage(camera, canvas, eye.set(o.group.position.x, (FLOOR - EYE_Y) * S[i], 0));
     aimGaze(o.gaze, pointer.x - e.x, e.y - pointer.y, speed.get());
   });
@@ -589,6 +632,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       if (o.play >= 0) { o.play += dt; if (o.play > MOVE_MS[MOVES[i]]) o.play = -1; }
     });
     apply();
+    stepZoom(dt);
     if (live) renderer.render(scene, camera);
     if (still()) { raf = 0; last = 0; } else raf = requestAnimationFrame(frame);
   };
@@ -662,143 +706,42 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     live = true; layout(); apply(); renderer.render(scene, camera);
   });
 
+  /** The canvas is a box round the set; flying in, the doll would outgrow it and be cut off by its edges.
+   *  So it grows to the whole window first, and the camera's view is widened by the same amount and
+   *  shifted (a view offset) so that everything stays exactly where it was on the screen. */
+  const fillWindow = () => {
+    const r = canvas.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight;
+    const fov = camera.fov, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    Object.assign(canvas.style, { left: `${canvas.offsetLeft - r.left}px`, top: `${canvas.offsetTop - r.top}px`, width: `${vw}px`, height: `${vh}px` });
+    renderer.setSize(vw, vh, false);
+    // the old canvas's view, extended: a virtual view centred where it was, big enough to hold the window
+    const fw = 2 * Math.max(cx, vw - cx), fh = 2 * Math.max(cy, vh - cy);
+    camera.fov = (2 * Math.atan(Math.tan(((fov / 2) * Math.PI) / 180) * (fh / r.height)) * 180) / Math.PI;
+    camera.aspect = fw / fh;
+    camera.setViewOffset(fw, fh, fw / 2 - cx, fh / 2 - cy, vw, vh);
+    camera.updateProjectionMatrix();
+    return fov;
+  };
+
+  const zoomTo = (i: number) => new Promise<FaceOnScreen>((done) => {
+    const o = dolls[i];
+    // no click hop or lid lift on the way in: it closes and faces you
+    o.visit = -1; o.play = -1; o.hoverTo = 0;
+    const fov = fillWindow();
+    zoom = { i, t: 0, fov, from: camera.position.clone(), look: (camera.userData.target as THREE.Vector3 | undefined)?.clone() ?? new THREE.Vector3(), done };
+    renderer.render(scene, camera);
+    kick();
+  });
+
   return {
     go,
+    zoomTo,
     ready,
     dispose: () => {
       gone = true;
       cancelAnimationFrame(raf);
       ro.disconnect();
       off.forEach((f) => f());
-      disposables.forEach((x) => x.dispose());
-    },
-  };
-}
-
-// ---------- the About page's doll ----------
-// The big doll alone in its arch, with the next one inside it. On hover it does the little bounce and
-// a real turn (so you see the back of its scarf). Opening twists the lid off, up and out of the arch,
-// and the next doll rises out of the cup; closing plays it back, so the lid drops back on. The DOM
-// keeps the button and its state (AboutDoll), and the flat doll beneath marks where it stands.
-export type AboutScene = { set: (open: boolean) => void; ready: Promise<void>; dispose: () => void };
-
-const AWAY: Pose = { x: 70, y: 320, tilt: -0.55, lean: 0.25 }; // the lid, gone out of the top of the arch
-const OPEN_MS = 640;
-const RISE_BY = 42; // how far the next doll comes up, box units: head and shoulders, its flower still in the cup
-
-export function createAboutScene(root: HTMLElement, canvas: HTMLCanvasElement): AboutScene {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const { renderer, scene, camera, shadowTex, disposables } = studio(canvas);
-  const outer = buildDoll(DOLLS[0], shadowTex), inner = buildDoll(DOLLS[1], shadowTex);
-  const g = gaze();
-  // The next doll stands on the first one's inner floor, inside it, so it goes wherever that goes
-  inner.group.scale.setScalar(DOLLS[1].size);
-  outer.group.add(inner.group);
-  scene.add(outer.group, outer.shadow);
-  disposables.push(...outer.disposables, ...inner.disposables);
-
-  let S = 1;
-  const layout = () => {
-    const W = canvas.clientWidth, Hc = canvas.clientHeight;
-    const box = root.querySelector<HTMLElement>('.ad-doll');
-    if (!W || !Hc || !box) return;
-    renderer.setSize(W, Hc, false);
-    // Stand where the flat doll stands in the frame
-    const h = box.offsetHeight;
-    const k = aim(camera, W, Hc, box.offsetTop + h - (8 / BOX_H) * h - canvas.offsetTop);
-    S = h / BOX_H / k;
-  };
-
-  let u = root.classList.contains('is-opening') ? OPEN_MS : 0, dir = 0, twirl = -1;
-  const apply = () => {
-    const H = (FLOOR - 8) * S;
-    let y = 0, sx = 1, sy = 1, spin = 0;
-    if (twirl >= 0) ({ y, sx, sy, spin } = moveAt('spin', twirl, H * 0.18));
-    outer.group.position.set(0, y + Math.abs(Math.sin(g.roll)) * ROCK_R * S, 0);
-    outer.group.scale.set(S * sx, S * sy, S * sx);
-    outer.group.rotation.set(-g.pitch, spin + g.yaw, g.roll);
-    outer.look(g.lx, g.ly, openOf(g, sq));
-    inner.look(g.lx, g.ly, openOf(g, sq));
-    // The lid comes straight up first, then swings away on a twist
-    if (outer.lid) {
-      const up = EASE_OUT(clamp(u / 520)), side = EASE_IN_OUT(clamp((u - 60) / 460));
-      poseLid(outer.lid, { x: AWAY.x * side, y: AWAY.y * up, tilt: AWAY.tilt * side, lean: AWAY.lean * side });
-      outer.lid.rotation.y = -0.7 * up;
-    }
-    inner.group.position.y = WALL + RISE_BY * EASE_OUT(clamp((u - 140) / (OPEN_MS - 140)));
-    const w = 168 * S;
-    outer.shadow.position.set(0, 0.5, 0);
-    outer.shadow.scale.set(w * 1.25 * (1 - y / (H * 1.6)), w * SHADOW_D, 1);
-    (outer.shadow.material as THREE.MeshBasicMaterial).opacity = 0.5 * clamp(1 - y / (H * 0.9));
-  };
-
-  let raf = 0, last = 0, live = false, gone = false;
-  let pointer: { x: number; y: number } | null = null, inside = false, sq = 0;
-  const speed = speedo();
-  const eye = new THREE.Vector3();
-  const frame = (now: number) => {
-    const dt = Math.min(48, now - (last || now));
-    last = now;
-    if (dir) {
-      u += dir * dt;
-      if (dir > 0 && u >= OPEN_MS) { u = OPEN_MS; dir = 0; } else if (dir < 0 && u <= 0) { u = 0; dir = 0; }
-    }
-    if (twirl >= 0) { twirl += dt; if (twirl > MOVE_MS.spin) twirl = -1; }
-    // It watches the pointer, except while it opens or turns
-    speed.decay(dt);
-    if (pointer && dir === 0 && twirl < 0 && S) {
-      const e = toPage(camera, canvas, eye.set(0, (FLOOR - EYE_Y) * S, 0));
-      aimGaze(g, pointer.x - e.x, e.y - pointer.y, speed.get());
-    } else aimGaze(g, null);
-    stepGaze(g, dt, 90);
-    // A happy squint while the pointer is on it
-    sq += ((inside ? 1 : 0) - sq) * (1 - Math.exp(-dt / 90));
-    apply();
-    if (live) renderer.render(scene, camera);
-    if (dir === 0 && twirl < 0 && gazeStill(g) && Math.abs((inside ? 1 : 0) - sq) < 0.01) { raf = 0; last = 0; } else raf = requestAnimationFrame(frame);
-  };
-  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
-
-  const set = (open: boolean) => {
-    twirl = -1;
-    if (reduce.matches) { u = open ? OPEN_MS : 0; dir = 0; } else dir = open ? 1 : -1;
-    kick();
-  };
-  // The bounce and turn, only while it's closed and still
-  const enter = (e: PointerEvent) => {
-    if (e.pointerType !== 'mouse' || reduce.matches) return;
-    inside = true; kick();
-    if (dir !== 0 || u > 0 || twirl >= 0) return;
-    twirl = 0; kick();
-  };
-  const leave = () => { inside = false; kick(); };
-  root.addEventListener('pointerenter', enter);
-  root.addEventListener('pointerleave', leave);
-  const stops: Array<() => void> = [];
-  if (!reduce.matches) {
-    stops.push(watchPointer((p) => { pointer = p; if (p) speed.move(p.x, p.t); kick(); }));
-    stops.push(blinker([g], kick));
-  }
-
-  const ro = new ResizeObserver(() => { layout(); apply(); if (live) renderer.render(scene, camera); });
-  ro.observe(root);
-  layout(); apply();
-  const painted = loadArt().then((art) => { if (gone) return; if (art[0]) outer.repaint(art[0]); if (art[1]) inner.repaint(art[1]); });
-  const ready = Promise.all([renderer.compileAsync(scene, camera).catch(() => scene), painted]).then(() => {
-    if (gone) return;
-    live = true; layout(); apply(); renderer.render(scene, camera);
-  });
-
-  return {
-    set,
-    ready,
-    dispose: () => {
-      gone = true;
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      root.removeEventListener('pointerenter', enter);
-      root.removeEventListener('pointerleave', leave);
-      stops.forEach((f) => f());
       disposables.forEach((x) => x.dispose());
     },
   };

@@ -13,8 +13,8 @@ import '@/app/hp.css';
 // snow-free page). Everything that moves is moved, not redrawn: the band, the circle, the scene sliding the
 // other way so it stays put on the screen, and the snow. Mouse and trackpad only for the window; with
 // reduced motion the band stays away, the circle doesn't trail and its snow holds still. Purely visual (the
-// h1 is the text). One per page (the clip path has one id). `className` sizes it (hp.css: gt-page,
-// gt-about); `delay` is the homepage intro's.
+// h1 is the text). One per page (the clip path has one id). `className` sizes it (hp.css: gt-page);
+// `delay` is the homepage intro's.
 const LENS = 300;
 
 export default function GlassName({ words, id, delay, className }: { words: string[]; id: string; delay?: number; className?: string }) {

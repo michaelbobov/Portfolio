@@ -216,17 +216,13 @@ html[data-snow="on"] .hp-scene .hp-flakes { display: none; }
    looks like the first; padded so the tall letters' tops and the tails of g, j and p are inside what's painted. Tracked a little
    looser than the name, whose tightness is for its size: smaller, the letters would touch and their rims
    cross. */
-.hp-title:is(.gt-page, .gt-about) { --name: clamp(60px, 9vw, 148px); font-size: var(--name); line-height: 0.92; letter-spacing: -0.03em; white-space: normal; text-wrap: balance; background: none; }
-.hp-title:is(.gt-page, .gt-about) .hp-word { display: inline-block; margin: -0.08em -0.1em -0.16em; padding: 0.08em 0.1em 0.16em; background: linear-gradient(180deg, #ffffff 10%, #eef3fa 34%, #c6d2e4 60%, #aebfd8 80%); -webkit-background-clip: text; background-clip: text; }
-/* About: left, over the copy, at the size its column takes */
-.hp-title.gt-about { --name: clamp(52px, 6.6vw, 104px); text-align: left; }
-.ab-copy .hp-title-wrap { margin-top: 12px; }
+.hp-title.gt-page { --name: clamp(60px, 9vw, 148px); font-size: var(--name); line-height: 0.92; letter-spacing: -0.03em; white-space: normal; text-wrap: balance; background: none; }
+.hp-title.gt-page .hp-word { display: inline-block; margin: -0.08em -0.1em -0.16em; padding: 0.08em 0.1em 0.16em; background: linear-gradient(180deg, #ffffff 10%, #eef3fa 34%, #c6d2e4 60%, #aebfd8 80%); -webkit-background-clip: text; background-clip: text; }
 /* (these titles sit higher on the screen than the name, so the window's picture is laid higher too, and
    what shows through them is still the snowfield) */
-:is(.sp-head, .ab-copy) { --scene-y: -0.5; }
+.sp-head { --scene-y: -0.5; }
 @media (max-width: 599px) {
   .hp-title.gt-page { --name: 15vw; }
-  .hp-title.gt-about { --name: 13vw; }
 }
 
 /* About: while it snows, the doll's half-round frame looks out on the same winter, the doll standing in its
@@ -322,10 +318,8 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .ds-face { --r: 46px; }
 .ds-front { --r: 70px; }
 @media (hover: hover) and (pointer: fine) {
-  .ds:not(.is-moving) .ds-slot:nth-child(3):hover .ds-doll,
-  .ad:not(.is-opening):hover .ad-doll .ds-doll { animation: ds-bounce 760ms both; }
-  .ds:not(.is-moving) .ds-slot:nth-child(3):hover :is(.ds-face, .ds-front),
-  .ad:not(.is-opening):hover .ad-doll :is(.ds-face, .ds-front) { animation: ds-turn-x 640ms 700ms both, ds-turn-w 640ms 700ms both; }
+  .ds:not(.is-moving) .ds-slot:nth-child(3):hover .ds-doll { animation: ds-bounce 760ms both; }
+  .ds:not(.is-moving) .ds-slot:nth-child(3):hover :is(.ds-face, .ds-front) { animation: ds-turn-x 640ms 700ms both, ds-turn-w 640ms 700ms both; }
 }
 
 /* The label under each doll, in the nav's glass (Dock.tsx, site.css): what's behind blurred and a little
@@ -403,6 +397,12 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx-name { margin: 18px 0 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-weight: 500; font-size: var(--t-quote); line-height: 1.12; letter-spacing: -0.015em; }
 .sx-ez-recipe .sx-name { font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-optical-sizing: auto; font-size: var(--t-head); letter-spacing: -0.025em; }
 .sx-link { color: inherit; text-decoration: none; }
+.sx-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+.sx-tile:has(.sx-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
+.sx-link:focus-visible { outline: none; }
+.sx-line { max-width: 30em; margin: 12px 0 0; font-size: var(--t-body); line-height: 1.5; color: color-mix(in srgb, currentColor 88%, transparent); text-wrap: pretty; }
+.sx-fact { max-width: 30em; margin: 10px 0 0; font-size: var(--t-small); line-height: 1.45; color: color-mix(in srgb, currentColor 70%, transparent); }
+.sx-cta { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 22px; font-size: var(--t-body); font-weight: 600; }
 /* A tile's actions along its foot: a download button (a link of its own, above the stretched link), then the
    way in */
 .sx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: auto; padding-top: 22px; }
@@ -412,12 +412,6 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .sx-download:active { scale: 0.97; }
 .sx-download:focus-visible { outline: 2px solid var(--hp-accent); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) { .sx-download:hover { background: #1b3a8f; } .sx-download:hover svg { translate: 0 2px; } }
-.sx-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
-.sx-tile:has(.sx-link:focus-visible) { outline: 2px solid var(--hp-accent); outline-offset: 4px; }
-.sx-link:focus-visible { outline: none; }
-.sx-line { max-width: 30em; margin: 12px 0 0; font-size: var(--t-body); line-height: 1.5; color: color-mix(in srgb, currentColor 88%, transparent); text-wrap: pretty; }
-.sx-fact { max-width: 30em; margin: 10px 0 0; font-size: var(--t-small); line-height: 1.45; color: color-mix(in srgb, currentColor 70%, transparent); }
-.sx-cta { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 22px; font-size: var(--t-body); font-weight: 600; }
 .sx-cta svg { transition: transform 220ms var(--wf-ease-out); }
 /* The pictures */
 .sx-media { position: absolute; inset: 0; pointer-events: none; }
@@ -459,37 +453,43 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 
 /* ---------- About: the innermost layer ---------- */
 /* Why the dolls: the homepage's old sentence, in its display type, and what it means */
-.ab-why { padding-top: 120px; text-align: center; }
-@media (max-width: 767px) { .ab-why { padding-top: 88px; } }
-.ab-why-title { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; text-wrap: balance; }
-.ab-why-title em { font-size: 1.04em; letter-spacing: -0.03em; }
-.ab { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px 72px; align-items: center; padding-top: 72px; }
-@media (max-width: 899px) { .ab { grid-template-columns: minmax(0, 1fr); padding-top: 48px; } }
-/* The doll in its half-round frame */
-.ab-photo { justify-self: center; }
-.ad { display: block; margin: 0; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 999px 999px 32px 32px; }
-.ad:focus-visible { outline-offset: 8px; }
-.ad-frame { position: relative; display: block; width: clamp(240px, 24vw, 340px); aspect-ratio: 5 / 6; overflow: hidden; border-radius: 999px 999px 32px 32px; background: #d6e2f0; transition: scale 160ms var(--wf-ease-out); }
-.ad:active .ad-frame { scale: 0.97; }
-.ad-doll, .ad-inner, .ad-cup { position: absolute; left: 0; right: 0; bottom: 10%; display: flex; justify-content: center; }
-.ad-doll, .ad-cup { height: 68%; }
-.ad-cup .ds-in { position: static; width: auto; height: 100%; }
-.ad-inner { height: 49%; translate: 0 30%; opacity: 0; transition: translate 420ms var(--wf-ease-out) 140ms, opacity 160ms ease 140ms; }
-.ad .ds-doll { height: 100%; transform-origin: 50% 100%; }
-.ad .ds-top { transition: transform 360ms var(--wf-ease-out), opacity 260ms ease; }
-/* Open: the top twists off and away, and the next doll peeks up out of the bottom half */
-.ad.is-opening .ad-doll .ds-top { transform: translate(24px, -150px) rotate(20deg); opacity: 0; transition: transform 480ms var(--wf-ease-out), opacity 260ms ease 180ms; }
-.ad.is-opening .ad-inner { translate: 0 -24%; opacity: 1; }
-/* The 3D doll (DollScene) over the flat one, which fades out under it */
-.ad-3d { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 320ms ease; }
-.ad.is-3d .ad-3d { opacity: 1; }
-.ad.is-3d :is(.ad-cup, .ad-inner, .ad-doll) { visibility: hidden; transition: visibility 0s 320ms; }
-.js .ad:not(.is-3d):not(.is-flat) :is(.ad-cup, .ad-inner, .ad-doll) { visibility: hidden; }
+/* About: a ruled page, in the site's hairlines. The hero splits in two: the headline and hello on the left;
+   on the right, his portrait (his cut-out, standing on the hero's bottom rule) in a soft porcelain cell the
+   homepage's About doll opens into (DollSet). Under it, a strip of three facts in ruled cells, then his
+   story in parts: a heading on the left, the words on the right. */
+.me { --rule: 1px solid rgba(19, 34, 74, 0.12); max-width: 1200px; margin: clamp(16px, 3svh, 32px) auto 0; border-inline: var(--rule); }
+.me-hero { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); border-block: var(--rule); }
+.me-intro { display: flex; flex-direction: column; justify-content: center; padding: clamp(40px, 7svh, 88px) clamp(24px, 4vw, 64px); }
+.me-title { margin: 14px 0 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-weight: 600; font-size: clamp(44px, 5.4vw, 80px); line-height: 0.98; letter-spacing: -0.035em; color: var(--hp-text); text-wrap: balance; }
+.me-hello { max-width: 30em; margin: 24px 0 0; font-size: var(--t-lead); line-height: 1.45; color: #24345e; text-wrap: pretty; }
+.me-face { position: relative; min-height: clamp(440px, 64svh, 640px); overflow: hidden; border-left: var(--rule); border-radius: 0; background: linear-gradient(180deg, #f6f8fb, #e2e9f2); }
+/* (the square photo, as tall as the cell, its face centred across and its chest on the bottom rule) */
+.me-photo { position: absolute; bottom: 0; left: 50%; height: 104%; width: auto; max-width: none; translate: -48.6% 0; }
+.me-facts { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.5fr) minmax(0, 0.5fr); margin: 0; padding: 0; list-style: none; border-bottom: var(--rule); }
+.me-facts li { padding: 22px clamp(24px, 4vw, 64px) 24px; font-size: 15px; line-height: 1.45; color: var(--hp-text); }
+.me-facts li + li { border-left: var(--rule); }
+.me-facts span { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hp-accent); }
+.me-part { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 24px clamp(32px, 5vw, 80px); padding: clamp(48px, 8svh, 96px) clamp(24px, 4vw, 64px); }
+.me-part + .me-part { border-top: var(--rule); }
+.me-part h2 { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-weight: 600; font-size: clamp(28px, 3vw, 44px); line-height: 1.05; letter-spacing: -0.025em; color: var(--hp-text); text-wrap: balance; }
+.me-part p { max-width: 36em; margin: 0; font-size: var(--t-body); line-height: 1.65; color: #24345e; text-wrap: pretty; }
+.me-part p + p { margin-top: 18px; }
+.me-part strong { font-weight: 600; color: var(--hp-text); }
+/* the site's one sentence, closing why the dolls: in the display face, "one layer" in the blue sweep */
+.me-part p.me-quote { max-width: none; margin-top: clamp(28px, 4svh, 44px); font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(36px, 4.4vw, 64px); line-height: 0.95; letter-spacing: -0.035em; color: var(--hp-text); text-wrap: balance; }
+.me-part p.me-quote em { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; font-size: 1.04em; letter-spacing: -0.03em; }
+:is(.me-part, .me-facts) a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { :is(.me-part, .me-facts) a:hover { color: var(--hp-accent); } }
+@media (max-width: 899px) {
+  .me { border-inline: 0; }
+  .me-hero { grid-template-columns: minmax(0, 1fr); }
+  .me-face { order: -1; min-height: 420px; border-left: 0; border-bottom: var(--rule); }
+  .me-intro { padding-top: 36px; }
+  .me-facts { grid-template-columns: minmax(0, 1fr); }
+  .me-facts li + li { border-left: 0; border-top: var(--rule); }
+  .me-part { grid-template-columns: minmax(0, 1fr); }
+}
 
-.ab-copy > p:not(.hp-label) { max-width: 34em; margin: 20px 0 0; font-size: var(--t-body); line-height: 1.6; color: #24345e; text-wrap: pretty; }
-.ab-copy > p.ab-lead { font-size: var(--t-lead); line-height: 1.45; color: var(--hp-text); text-wrap: pretty; }
-.ab-copy > p a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
-@media (hover: hover) and (pointer: fine) { .ab-copy > p a:hover { color: var(--hp-accent); } }
 .ab-links { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 0; padding: 0; }
 .ab-links a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 999px; background: var(--hp-text); color: var(--hp-ink); font-size: var(--t-body); font-weight: 600; text-decoration: none; transition: transform 160ms var(--wf-ease-out), background-color 160ms ease; }
 .ab-links a.is-quiet { background: transparent; color: var(--hp-text); box-shadow: inset 0 0 0 1.5px rgba(19, 34, 74, 0.35); }
@@ -523,115 +523,17 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .wf-intro .hp-title { animation: hp-fade 400ms ease both; animation-delay: var(--d); }
   .sx-tile, .sc-title { animation: none !important; }
   /* The doll still opens and closes, straight to the other state with no travel */
-  .ds-top, .ds-bot, .sx-shot, .sx-shot img, .sx-cta svg, .ad-frame, .ad-inner, .ad .ds-top { transition: none; }
-  .ds-slot .ds-doll, .ad .ds-doll, .ds-face, .ds-front { animation: none !important; }
+  .ds-top, .ds-bot, .sx-shot, .sx-shot img, .sx-cta svg { transition: none; }
+  .ds-slot .ds-doll, .ds-face, .ds-front { animation: none !important; }
   .ds:hover .ds-top, .sx-tile:hover .sx-shot, .sx-tile:hover .sx-shot img { transform: none !important; translate: none !important; scale: none !important; }
 }
 
-/* ---------- inside the 3D village ---------- */
-.hz.has-village .hz-pin { position: relative; height: 100svh; min-height: 520px; overflow: hidden; }
-.hz.has-village main { position: static; }
-.hz.has-village .vz { position: absolute; inset: 0; z-index: 40; padding: 0; visibility: hidden; pointer-events: none; color: #13224a; }
-.hz.has-village .vz.is-on { visibility: visible; }
-.hz.has-village .vz.is-in { pointer-events: auto; }
-.hz.has-village .vz-stage { display: block; position: absolute; inset: 0; }
-/* The top row: back out, the heading, all work */
-.hz.has-village .vz-head { position: absolute; left: 0; right: 0; top: 0; z-index: 3; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin: 0; padding: clamp(14px, 2.4vh, 24px) clamp(16px, 3.4vw, 48px); pointer-events: none; }
-.hz.has-village .vz-head > * { pointer-events: auto; }
-.hz.has-village .vz-title { grid-column: 2; color: #13224a; text-shadow: 0 1px 14px rgba(255, 255, 255, 0.9); }
-.hz.has-village .vz-all { grid-column: 3; justify-self: end; color: #1b3a8f; }
-.vz-back { display: inline-flex; align-items: center; gap: 6px; justify-self: start; grid-column: 1; grid-row: 1; height: 40px; padding: 0 16px 0 12px; border: 0; border-radius: 999px; font: inherit; font-size: var(--t-small); font-weight: 600; color: #13224a; cursor: pointer; background: rgba(255, 255, 255, 0.7); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 8px 20px -10px rgba(19, 34, 74, 0.4); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
-.hz.has-village .vz-back { display: inline-flex; }
-.vz-back:active { scale: 0.97; }
-@media (hover: hover) and (pointer: fine) { .vz-back:hover { background: rgba(255, 255, 255, 0.92); } }
-
-/* The labels over the houses (placed by DollScene each frame): white glass, centred over the point above
-   the roof, a fine stem down to it */
-.hz.has-village .vz-pins { display: block; position: absolute; inset: 0; z-index: 2; margin: 0; padding: 0; list-style: none; pointer-events: none; }
-.vz-pins li { display: contents; }
-.vz-pin { position: absolute; left: 0; top: 0; display: block; opacity: 0; translate: -50% calc(-100% - 14px); padding: 9px 16px 10px; border-radius: 16px; color: #13224a; text-align: center; text-decoration: none; pointer-events: auto; -webkit-tap-highlight-color: transparent; background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.76)); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 12px 28px -12px rgba(8, 18, 48, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: scale 260ms var(--wf-ease-out), box-shadow 220ms ease; }
-.vz-pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 14px; background: linear-gradient(rgba(19, 34, 74, 0.35), rgba(19, 34, 74, 0)); }
-.vz-pin-name, .vz-pin-meta { display: block; white-space: nowrap; }
-.vz-pin-num { position: absolute; left: -9px; top: -9px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #13224a; color: #ffffff; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; box-shadow: 0 0 0 2px #ffffff; }
-.vz-pin-name { font-size: 15px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; }
-.vz-pin-meta { font-size: 12px; font-weight: 500; line-height: 1.2; color: #4f5f86; font-variant-numeric: tabular-nums; }
-.vz-pin.is-hover, .vz-pin:focus-visible { scale: 1.06; box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.16), 0 18px 36px -14px rgba(8, 18, 48, 0.7); }
-@media (hover: hover) and (pointer: fine) { .vz-pin:hover { scale: 1.06; } }
-.vz-pin:active { scale: 0.97; }
-.vz.has-focus .vz-pin { opacity: 0 !important; pointer-events: none; }
-/* (one navigation: the tour bar; a place's label shows only while you point at it, or at its step) */
-.hz.has-village .vz-pin { transition: opacity 200ms ease, scale 260ms var(--wf-ease-out), box-shadow 220ms ease; }
-.hz.has-village .vz-pin:not(.is-hover):not(:focus-visible) { opacity: 0 !important; pointer-events: none; }
-.hz.has-village .vz-all { display: none; }
-
-/* The card: beside its house (right), or a sheet from the bottom on a phone */
-.hz.has-village .vz-cards { position: absolute; z-index: 4; top: 50%; right: clamp(16px, 3.4vw, 48px); width: min(440px, 38vw); max-width: none; margin: 0; display: block; translate: 0 -50%; pointer-events: none; }
-.hz.has-village .vz-card { position: absolute; inset: auto 0 auto 0; top: 0; translate: 0 -50%; visibility: hidden; opacity: 0; transform: translate3d(28px, 0, 0); transition: opacity 260ms ease, transform 420ms var(--wf-ease-out), visibility 0s 420ms; pointer-events: auto; max-height: calc(100svh - 140px); overflow: auto; }
-.hz.has-village .vz-card.is-open { visibility: visible; opacity: 1; transform: none; transition: opacity 320ms ease 120ms, transform 520ms var(--wf-ease-out) 80ms, visibility 0s; }
-.vz-close { position: absolute; top: 18px; right: 18px; z-index: 2; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.9); color: var(--hp-text); cursor: pointer; box-shadow: 0 0 0 0.5px rgba(19, 34, 74, 0.14), 0 4px 10px -4px rgba(19, 34, 74, 0.35); transition: background-color 160ms ease, scale 160ms var(--wf-ease-out); }
-.hz.has-village .vz-close { display: grid; }
-.vz-close:active { scale: 0.92; }
-@media (hover: hover) and (pointer: fine) { .vz-close:hover { background: #ffffff; } }
-
-/* The guided tour: a glass bar of numbered steps along the bottom, the current one filled */
-.hz.has-village .vz-tour { position: absolute; left: 50%; bottom: clamp(14px, 3vh, 28px); z-index: 5; display: flex; align-items: center; gap: 4px; padding: 6px; translate: -50% 0; border-radius: 999px; background: rgba(255, 255, 255, 0.82); box-shadow: inset 0 1px 0 #ffffff, 0 0 0 0.5px rgba(19, 34, 74, 0.12), 0 16px 36px -16px rgba(19, 34, 74, 0.5); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
-.vz-tour-steps { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
-.vz-tour-step, .vz-tour-arrow { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 8px; border: 0; border-radius: 999px; background: none; color: var(--hp-muted); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.vz-tour-arrow { width: 40px; padding: 0; justify-content: center; color: var(--hp-text); }
-.vz-tour-num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(19, 34, 74, 0.08); color: var(--hp-text); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; transition: background-color 160ms ease, color 160ms ease; }
-.vz-tour-step[aria-current="step"] { background: rgba(19, 34, 74, 0.06); color: var(--hp-text); }
-.vz-tour-step[aria-current="step"] .vz-tour-num { background: #13224a; color: #ffffff; }
-.vz-tour-step.is-hover { color: var(--hp-text); }
-@media (hover: hover) and (pointer: fine) { .vz-tour-step:hover, .vz-tour-arrow:hover { background: rgba(19, 34, 74, 0.06); color: var(--hp-text); } }
-.vz-tour-step:active, .vz-tour-arrow:active { scale: 0.97; }
-/* (the card stays clear of the tour bar) */
-.hz.has-village .vz-card { max-height: calc(100svh - 200px); }
-
-@media (max-width: 699px) {
-  .hz.has-village .vz-head { grid-template-columns: auto 1fr auto; gap: 10px; }
-  .hz.has-village .vz-title { font-size: 20px; text-align: center; }
-  .vz-back { padding: 0 12px 0 10px; font-size: 13px; }
-  .vz-back-more { display: none; }
-  .hz.has-village .vz-cards { inset: auto 10px 74px 10px; top: auto; width: auto; translate: none; }
-  .hz.has-village .vz-tour { bottom: 12px; padding: 4px; }
-  .vz-tour-name { display: none; }
-  .vz-tour-step { padding: 0 8px; }
-  .vz-tour-step[aria-current="step"] .vz-tour-name { display: inline; }
-  .vz-tour-step[aria-current="step"] { padding-right: 12px; }
-  .hz.has-village .vz-card { position: absolute; top: auto; bottom: 0; translate: none; transform: translate3d(0, 32px, 0); max-height: 58svh; border-radius: 24px; }
-  .vz-card-body { padding: 16px 18px 16px; }
-  .vz-card-sum { font-size: 15px; }
-  .vz-card-fact { display: none; }
-  .vz-pin { padding: 7px 12px 8px; }
-  .vz-pin-name { font-size: 13px; }
-  .vz-pin-meta { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hz.has-village .vz-card, .hz.has-village .vz-card.is-open { transform: none; transition: opacity 200ms ease, visibility 0s; }
-}
-
-/* Today's fit (TodaysFit): a quiet line under the About doll, and the card it opens */
-.ab-photo { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.tf-open { padding: 6px 2px; border: 0; background: none; color: #24345e; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(36, 52, 94, 0.25); text-underline-offset: 4px; transition: text-decoration-color 160ms ease; }
-.tf-open span { font-weight: 400; color: #4a5a80; }
-@media (hover: hover) and (pointer: fine) { .tf-open:hover { text-decoration-color: currentColor; } }
-.tf { width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: 24px; background: transparent; color: #13224a; overflow: visible; }
-.tf::backdrop { background: rgba(19, 34, 74, 0.28); backdrop-filter: blur(4px); }
-.tf[open] { animation: tf-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
-@keyframes tf-in { from { opacity: 0; translate: 0 8px; scale: 0.98; } }
-@media (prefers-reduced-motion: reduce) { .tf[open] { animation: none; } }
-.tf-card { display: flex; flex-direction: column; gap: 16px; max-height: calc(100dvh - 32px); overflow: auto; padding: 20px; border-radius: 24px; background: #fafbfd; box-shadow: 0 0 0 1px rgba(19, 34, 74, 0.08), 0 24px 60px -20px rgba(19, 34, 74, 0.4); }
-.tf-top { display: flex; align-items: center; justify-content: space-between; }
-.tf-top h2 { margin: 0; font-family: var(--font-title); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
-.tf-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(19, 34, 74, 0.06); color: #13224a; font-size: 20px; line-height: 1; cursor: pointer; }
-.tf-pics { display: grid; grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 16px; border-radius: 16px; background: linear-gradient(#f3f6fb, #e4ecf6); }
-.tf-pics.has-photo { grid-template-columns: 1fr 1fr; align-items: center; }
-.tf-doll { display: block; width: 100%; aspect-ratio: 1; border-radius: 12px; }
-.tf-pics img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; }
-.tf-pieces { margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.5; color: #24345e; }
-.tf-pieces li + li { margin-top: 4px; }
-.tf-nav { display: flex; justify-content: space-between; }
-.tf-nav button { padding: 6px 0; border: 0; background: none; color: #24345e; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-.tf-nav button:disabled { opacity: 0.3; cursor: default; }
-.tf-credits { margin: 0; font-size: 12px; line-height: 1.5; color: #6a7898; }
-.tf-credits a { color: inherit; }
+/* His doll's face turning into him (DollSet's becomeMe): over everything */
+.me-reveal { position: fixed; inset: 0; z-index: 200; overflow: hidden; pointer-events: none; }
+.me-reveal-frame { position: absolute; overflow: hidden; border-radius: 50%; }
+.me-reveal-drawing { position: absolute; inset: 0; width: 100%; height: 100%; }
+.me-reveal-frame img { position: absolute; max-width: none; height: auto; }
+/* As the camera flies into his doll's face: the labels, the name and the page's other bits step aside (the
+   canvas grows to the whole window then, DollScene's fillWindow, so the doll is never cut off) */
+.ds.is-zooming .ds-cap { opacity: 0 !important; transition: opacity 200ms ease; }
+.is-zooming-me .hp-home :is(.hp-name, .hp-flakes-front, .hp-snow-switch, .sb) { opacity: 0; transition: opacity 320ms ease; }

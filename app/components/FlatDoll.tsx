@@ -1,11 +1,11 @@
 import { SHAPE } from '@/app/data/layers';
 import { DOLLS, DOLL_ART, FRINGE, GOLD, INK, SCARF } from '@/app/data/dolls';
 
-// The flat (SVG) matryoshka: the homepage set before its 3D one is drawn (or without WebGL), the
-// About page's doll, and the doll beside each section title. Plain markup, so it renders on the
+// The flat (SVG) matryoshka: the homepage set before its 3D one is drawn (or without WebGL), and the
+// doll beside each section title. Plain markup, so it renders on the
 // server and pulls in nothing else.
 
-/** How long a flat doll stays hidden waiting for its 3D one (DollSet, AboutDoll) before it shows: long
+/** How long a flat doll stays hidden waiting for its 3D one (DollSet) before it shows: long
  *  enough for a first visit to fetch three.js and the paintings, so the flat set doesn't flash first */
 export const FLAT_AFTER = 4500;
 /** Whether this browser can draw the 3D dolls at all; if not, the flat ones show at once */

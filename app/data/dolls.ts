@@ -18,8 +18,7 @@ export const SET_SIZE = 3;
 export const DOLL_ART: ({ front: string; back: string } | null)[] = [
   { front: '/dolls/doll-1-front.webp', back: '/dolls/doll-1-back.webp' }, // Work: the big flower
   { front: '/dolls/doll-2-front.webp', back: '/dolls/doll-2-back.webp' }, // Side projects: a winter village
-  // About me: him (data/me.ts): his face, painted by scripts/me-doll.py; his hair and clothes are 3D (Outfit3D)
-  { front: '/dolls/me-front.webp', back: '/dolls/me-back.webp' },
+  { front: '/dolls/me-front.webp', back: '/dolls/doll-4-back.webp' }, // About me: him, his face in the window, like his sisters'
 ];
 export const INK = '#1b2740';
 export const SKIN = '#fff8f2';

@@ -17,6 +17,3 @@ yarn-error.log*
 # Claude/Codex review handoff: request and response files, not part of the site
 agent-handoff/*
 !agent-handoff/.gitkeep
-
-# The outfit page's local storage in development (photos, outfits)
-.dress-local/
