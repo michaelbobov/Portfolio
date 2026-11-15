@@ -39,7 +39,7 @@ const VIEWS = [
   {
     id: 'market',
     name: 'The Marketplace',
-    fact: '1,163 public skills from 20 GitHub repositories, each pinned to a commit, with the repository’s stars and license.',
+    fact: 'About 3,000 public skills from 73 GitHub repositories, re-indexed every day, each pinned to a commit, with the repository’s stars and license.',
     src: '/side-projects/skilltree/marketplace.png',
     w: 2560,
     h: 1640,

@@ -240,8 +240,11 @@
 .stx-step-title { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-weight: 500; font-size: clamp(30px, 2.8vw, 40px); line-height: 1.1; letter-spacing: -0.02em; }
 .stx-step-text { max-width: 36ch; margin: 0; font-size: 18px; line-height: 1.5; }
 .stx-step-text a { color: inherit; font-weight: 600; }
-.stx-step-text code, .stx-code code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 0.86em; }
+/* Names of VS Code commands and buttons: plain bold in the panel's colour, not the site's accent italic. */
+.hp .stx-step-text em { font-family: inherit; font-style: normal; font-weight: 600; letter-spacing: normal; color: inherit; }
+.stx-step-text code, .stx-step-text kbd, .stx-code code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 0.86em; }
 .stx-step-text code { padding: 1px 5px; background: rgba(255, 255, 255, 0.14); overflow-wrap: anywhere; }
+.stx-step-text kbd { padding: 1px 5px; background: rgba(255, 255, 255, 0.14); white-space: nowrap; }
 
 /* ---- The close: a full blue field ------------------------------------------------------------- */
 

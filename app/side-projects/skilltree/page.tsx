@@ -11,19 +11,20 @@ import Reveal from './Reveal';
 import '../../hp.css';
 import './skilltree.css';
 
-// SkillTree's page: a VS Code extension for Claude Code skills, with its download. Every number on
+// SkillTree's page: a VS Code extension for Claude Code skills, with its Marketplace link and download. Every number on
 // the page comes from SkillTree's own repository: its catalog, its tests and its measured runs.
 
 export const metadata: Metadata = {
   title: 'SkillTree',
-  description: 'SkillTree is a free VS Code extension that maps your Claude Code skills, shows which ones Claude actually uses, and gets Claude’s recommendations for skills that would serve you better. Download the pre-release.',
+  description: 'SkillTree is a free VS Code extension that maps your Claude Code skills, shows which ones Claude actually uses, and gets Claude’s recommendations for skills that would serve you better. Free on the VS Code Marketplace.',
   alternates: { canonical: '/side-projects/skilltree' },
 };
 
-const VSIX = '/downloads/skilltree-0.1.2.vsix';
+const MARKETPLACE = 'https://marketplace.visualstudio.com/items?itemName=michaelbobov.skilltree';
+const VSIX = '/downloads/skilltree-0.2.0.vsix';
 
 const FACTS = [
-  { fig: '1,163', note: 'skills in the catalog, from 20 GitHub repositories, each pinned to a commit' },
+  { fig: '3,019', note: 'skills in the catalog on Nov 14, 2026, from 73 GitHub repositories, each pinned to a commit and re-indexed daily' },
   { fig: '0', note: 'skill files SkillTree runs. It reads and copies them; it never executes them' },
   { fig: '15 ms', note: 'added to a skill use while tracking is on, measured: the hook writes one line and exits' },
   { fig: '36 s', note: 'to install taste-skill’s 1,631 files, each checked against its commit' },
@@ -44,14 +45,14 @@ export default function SkillTreePage() {
             </h1>
             <p className="stx-lede">SkillTree maps your Claude Code skills, shows which ones Claude actually uses, and gets Claude’s recommendations for skills that would serve you better.</p>
             <div className="stx-actions">
-              <a className="stx-btn" href={VSIX} download>
-                Download for VS Code
+              <a className="stx-btn" href={MARKETPLACE}>
+                Install for VS Code
               </a>
               <a className="stx-textlink" href="#install">
                 How to install <ArrowDown size={16} strokeWidth={2.25} />
               </a>
             </div>
-            <p className="stx-meta">Version 0.1.2, a pre-release · .vsix file, 0.9 MB · VS Code 1.95 or later</p>
+            <p className="stx-meta">Free on the VS Code Marketplace · Version 0.2.0, a preview · VS Code 1.95 or later</p>
           </div>
           <div className="stx-stage">
             <div className="stx-hero-shot">
@@ -108,7 +109,7 @@ export default function SkillTreePage() {
               You need desktop VS Code 1.95 or later. Claude Code is needed for the parts that involve Claude, and Node.js for usage tracking and suggestions. Both of those are off until you turn them on.
             </p>
           </div>
-          <HowSteps vsix={VSIX} />
+          <HowSteps marketplace={MARKETPLACE} vsix={VSIX} />
         </section>
 
         <section className="stx-close" aria-labelledby="stx-close-title">
@@ -121,12 +122,12 @@ export default function SkillTreePage() {
             </p>
           </div>
           <div className="stx-close-panel" data-reveal style={{ ['--i' as string]: 2 }}>
-            <a className="stx-btn is-on-blue" href={VSIX} download>
-              Download skilltree-0.1.2.vsix
+            <a className="stx-btn is-on-blue" href={MARKETPLACE}>
+              Install from the VS Code Marketplace
             </a>
-            <p className="stx-close-or">or, after downloading, in a terminal:</p>
+            <p className="stx-close-or">or in a terminal:</p>
             <pre className="stx-code">
-              <code>code --install-extension skilltree-0.1.2.vsix</code>
+              <code>code --install-extension michaelbobov.skilltree</code>
             </pre>
           </div>
         </section>
