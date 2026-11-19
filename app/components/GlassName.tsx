@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
+import { wantsSnow3D } from '@/app/components/snowFlag';
 import '@/app/hp.css';
 
 // A title in frosted glass (hp.css): the name on the homepage, and every page's title, so each page opens
@@ -25,6 +26,7 @@ export default function GlassName({ words, id, delay, className }: { words: stri
   const shine = useRef<HTMLDivElement | null>(null);
   const lens = useRef<HTMLDivElement | null>(null);
   const scene = useRef<HTMLDivElement | null>(null);
+  const snowCanvas = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const w = wrap.current, h = h1.current, wn = win.current, sh = shine.current, ln = lens.current, sc = scene.current;
@@ -75,12 +77,22 @@ export default function GlassName({ words, id, delay, className }: { words: stri
       const near = e.clientX > b.left + pad && e.clientX < b.right - pad && e.clientY > b.top + pad && e.clientY < b.bottom - pad;
       if (near !== inside) {
         inside = near; w.classList.toggle('is-peeking', near);
-        if (near) w.classList.add('was-peeked'); else placed = false;
+        if (near) { w.classList.add('was-peeked'); snow?.wake(); } else placed = false;
       }
       if (!raf) raf = requestAnimationFrame(step);
     };
     window.addEventListener('pointermove', move, { passive: true });
-    return () => { ro.disconnect(); h.removeEventListener('animationend', measure); window.removeEventListener('pointermove', move); cancelAnimationFrame(raf); };
+
+    // The three.js snow in the window, on trial (snowFlag); otherwise the CSS flakes
+    let snow: { wake: () => void; detach: () => void } | null = null, dead = false;
+    const sc3 = snowCanvas.current;
+    if (sc3 && fine.matches && wantsSnow3D()) {
+      import('@/app/components/Snow3D').then(({ attachLens }) => {
+        if (dead) return;
+        try { snow = attachLens(sc3, () => w.classList.contains('is-peeking')); } catch { /* no WebGL: the CSS snow stays */ }
+      }, () => {});
+    }
+    return () => { dead = true; snow?.detach(); ro.disconnect(); h.removeEventListener('animationend', measure); window.removeEventListener('pointermove', move); cancelAnimationFrame(raf); };
   }, []);
 
   const word = (t: string) => <span className="hp-word"><span className="hp-probe" />{t}</span>;
@@ -103,6 +115,7 @@ export default function GlassName({ words, id, delay, className }: { words: stri
             <div className="hp-scene-pic" />
             <div className="hp-flakes"><i className="is-mid" /><i className="is-front" /></div>
           </div>
+          <canvas ref={snowCanvas} className="hp-lens-snow" />
         </div>
       </div>
     </div>

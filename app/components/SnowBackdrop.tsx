@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { wantsSnow3D } from '@/app/components/snowFlag';
 
 // The homepage's winter, for when the snow is switched on (SnowToggle): a still picture of frosted
 // blue-grey winter with a snowfield (public/snow/backdrop.webp, a portrait one on tall screens), and snow
@@ -50,16 +51,30 @@ export default function SnowBackdrop() {
     portrait.addEventListener('change', place);
     return () => { ro.disconnect(); mo.disconnect(); portrait.removeEventListener('change', place); };
   }, []);
+
+  // The three.js snow, on trial (snowFlag): one canvas in each layer; the CSS flakes step aside once it draws
+  const far = useRef<HTMLCanvasElement | null>(null), between = useRef<HTMLCanvasElement | null>(null), front = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    const box = pic.current?.parentElement, cs = [far.current, between.current, front.current];
+    if (!box || cs.some((c) => !c) || !wantsSnow3D()) return;
+    let detach = () => {}, dead = false;
+    import('@/app/components/Snow3D').then(({ attachLayers }) => {
+      if (dead) return;
+      try { detach = attachLayers(cs as HTMLCanvasElement[], box); } catch { /* no WebGL: the CSS snow stays */ }
+    }, () => {});
+    return () => { dead = true; detach(); };
+  }, []);
+
   return (
     <>
       <div className="hp-winter" aria-hidden="true">
         <div ref={pic} className="hp-backdrop" />
-        <div className="hp-flakes"><i className="is-far" /><i className="is-mid" /></div>
+        <div className="hp-flakes"><i className="is-far" /><i className="is-mid" /><canvas ref={far} className="hp-snow3d" /></div>
       </div>
       {/* Between the name and the dolls: snow drifting over the letters, behind the dolls */}
-      <div className="hp-flakes hp-flakes-between" aria-hidden="true"><i className="is-between" /></div>
+      <div className="hp-flakes hp-flakes-between" aria-hidden="true"><i className="is-between" /><canvas ref={between} className="hp-snow3d" /></div>
       {/* In front of the dolls and the name */}
-      <div className="hp-flakes hp-flakes-front" aria-hidden="true"><i className="is-front" /><i className="is-lens" /></div>
+      <div className="hp-flakes hp-flakes-front" aria-hidden="true"><i className="is-front" /><i className="is-lens" /><canvas ref={front} className="hp-snow3d" /></div>
     </>
   );
 }
