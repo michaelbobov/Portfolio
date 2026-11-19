@@ -11,11 +11,20 @@ type Step = { id: string; name: string; body: React.ReactNode };
 export default function HowSteps({ marketplace, vsix }: { marketplace: string; vsix: string }) {
   const steps: Step[] = [
     {
+      id: 'download',
+      name: 'Download',
+      body: (
+        <>
+          Get <a href={vsix} download>{vsix.split('/').pop()}</a> (1 MB). It goes to your Downloads folder.
+        </>
+      ),
+    },
+    {
       id: 'install',
       name: 'Install',
       body: (
         <>
-          In VS Code, open Extensions (<kbd>⇧⌘X</kbd>, or <kbd>Ctrl+Shift+X</kbd> on Windows and Linux), search for <em>SkillTree</em> by Michael Bobov and click Install. Or open its <a href={marketplace}>Marketplace page</a>.
+          In VS Code, open Extensions (<kbd>⇧⌘X</kbd>, or <kbd>Ctrl+Shift+X</kbd> on Windows and Linux), open the ⋯ menu, choose <em>Install from VSIX…</em> and pick the file. Or search Extensions for <em>SkillTree</em> by Michael Bobov, from the <a href={marketplace}>VS Code Marketplace</a>.
         </>
       ),
     },
@@ -39,15 +48,6 @@ export default function HowSteps({ marketplace, vsix }: { marketplace: string; v
       body: (
         <>
           Run <em>SkillTree: Let Claude Suggest Skills…</em> and click Enable. A skill you don’t have that fits your request then shows up as a suggestion, and Claude can ask for one mid-task. You approve every install.
-        </>
-      ),
-    },
-    {
-      id: 'file',
-      name: 'Or from a file',
-      body: (
-        <>
-          For an editor without the VS Code Marketplace, download <a href={vsix} download>{vsix.split('/').pop()}</a> (1 MB). In Extensions, open the ⋯ menu, choose <em>Install from VSIX…</em> and pick the file.
         </>
       ),
     },

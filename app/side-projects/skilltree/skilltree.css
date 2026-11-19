@@ -43,6 +43,8 @@
 .stx-lede { max-width: 34em; margin: 28px 0 0; font-size: clamp(18px, 1.35vw, 21px); line-height: 1.5; text-wrap: pretty; }
 .stx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: 34px; }
 .stx-meta { margin: 18px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--hp-muted); }
+.stx-meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.stx-meta a:hover { color: var(--hp-text); }
 
 /* One button shape for the page: square and flat. */
 .stx-btn {

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 const MARKETPLACE = 'https://marketplace.visualstudio.com/items?itemName=michaelbobov.skilltree';
-const VSIX = '/downloads/skilltree-0.2.0.vsix';
+const VSIX = '/downloads/skilltree-0.2.1.vsix';
 
 const FACTS = [
   { fig: '3,019', note: 'skills in the catalog on Nov 14, 2026, from 73 GitHub repositories, each pinned to a commit and re-indexed daily' },
@@ -45,14 +45,14 @@ export default function SkillTreePage() {
             </h1>
             <p className="stx-lede">SkillTree maps your Claude Code skills, shows which ones Claude actually uses, and gets Claude’s recommendations for skills that would serve you better.</p>
             <div className="stx-actions">
-              <a className="stx-btn" href={MARKETPLACE}>
-                Install for VS Code
+              <a className="stx-btn" href={VSIX} download>
+                Download for VS Code
               </a>
               <a className="stx-textlink" href="#install">
                 How to install <ArrowDown size={16} strokeWidth={2.25} />
               </a>
             </div>
-            <p className="stx-meta">Free on the VS Code Marketplace · Version 0.2.0, a preview · VS Code 1.95 or later</p>
+            <p className="stx-meta">Free · Version 0.2.1, a preview · .vsix file, 1 MB · VS Code 1.95 or later · Also on the <a href={MARKETPLACE}>VS Code Marketplace</a></p>
           </div>
           <div className="stx-stage">
             <div className="stx-hero-shot">
@@ -122,10 +122,10 @@ export default function SkillTreePage() {
             </p>
           </div>
           <div className="stx-close-panel" data-reveal style={{ ['--i' as string]: 2 }}>
-            <a className="stx-btn is-on-blue" href={MARKETPLACE}>
-              Install from the VS Code Marketplace
+            <a className="stx-btn is-on-blue" href={VSIX} download>
+              Download skilltree-0.2.1.vsix
             </a>
-            <p className="stx-close-or">or in a terminal:</p>
+            <p className="stx-close-or">or install it from the VS Code Marketplace in a terminal:</p>
             <pre className="stx-code">
               <code>code --install-extension michaelbobov.skilltree</code>
             </pre>
