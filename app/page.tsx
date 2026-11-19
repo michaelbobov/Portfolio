@@ -1,47 +1,35 @@
-import type { CSSProperties } from 'react';
-import { SiteBar } from '@/app/components/Site';
 import IntroStage from '@/app/components/IntroStage';
 import DollSet from '@/app/components/DollSet';
-import SnowBackdrop from '@/app/components/SnowBackdrop';
-import SnowToggle from '@/app/components/SnowToggle';
-import SnowballThrow from '@/app/components/SnowballThrow';
-import NowLine from '@/app/components/NowLine';
-import GlassName from '@/app/components/GlassName';
-import { INTRO } from '@/app/data/intro';
-import { getWeather } from '@/app/data/now';
+import Durak from '@/app/components/Durak';
+import PostcardBar from '@/app/components/PostcardBar';
+import Landscape from '@/app/components/Landscape';
+import ProjectStrip from '@/app/components/ProjectStrip';
+import { NOW } from '@/app/data/now';
 import './hp.css';
+import './postcard.css';
 
-// The homepage: the name at the top with a live sentence under it (where he is, the time and weather
-// there, what he's doing), and under
-// it the matryoshka set, painted in Gzhel, which opens into the three ways in (Work, Side projects, and
-// the littlest, About me), each labelled underneath, mirrored by the nav at the bottom. Why the
-// dolls ("Design, one layer deeper.") is told on the About page. Behind it, a cold gradient, or snow if
-// you switch it on (SnowToggle, SnowBackdrop). The
-// bar is the shared one without the name in it, since the name is right here; the shared close is left
-// off.
-const at = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
-
-export default async function Home() {
-  const weather = await getWeather();
+// The homepage, a living postcard: his name huge in an italic serif, set behind four matryoshka dolls
+// (the way in: Projects, About, Play, Contact, the same as the bar on top), a red sun behind the name and,
+// behind it all, a print of where he is (Landscape, data/places.ts), with a little paper label saying so.
+// Straight under it, the work as torn-paper cards (ProjectStrip), with a playing card tucked behind them
+// that deals a game of Durak. Styles: postcard.css (and the dolls' own in hp.css).
+export default function Home() {
   return (
-    <IntroStage className="hp hp-home">
-      <SnowBackdrop />
-      <SiteBar brand={false} />
-      <SnowToggle />
-      <SnowballThrow />
-
+    <IntroStage className="hp hp-home pc">
+      <PostcardBar />
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
-        <section className="hp-wrap hp-stage" aria-labelledby="hero-title">
-          {/* The live sentence, and the name, huge, in frosted glass, behind the dolls (hp.css) */}
-          <header className="hp-name">
-            <GlassName id="hero-title" words={['Michael', 'Bobov']} delay={INTRO.sign} />
-            <NowLine delay={INTRO.role} weather={weather} />
-          </header>
-          <div className="hp-set">
-            <span className="hp-floor" aria-hidden="true" />
+        <section className="pc-hero" aria-labelledby="hero-title">
+          <Landscape initial={NOW.place} />
+          <h1 id="hero-title" className="pc-name">Michael Bobov</h1>
+          <p className="pc-role">Product Designer &amp; Builder</p>
+          <div className="pc-set">
             <DollSet />
           </div>
         </section>
+        <ProjectStrip>
+          {/* (an easter egg: the card tucked behind the projects deals a game of Durak) */}
+          <Durak />
+        </ProjectStrip>
         {/* Credit for the December hats (CC BY 3.0), shown only while they are (hp.css) */}
         <p className="hp-credit">
           Santa hat: <a href="https://poly.pizza/m/84MpXMAPNQ" target="_blank" rel="noopener noreferrer">“Santa Hat” by J-Toastie<span className="sr-only"> (opens in a new tab)</span></a>,{' '}

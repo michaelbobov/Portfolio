@@ -1,8 +1,10 @@
 // Where Michael is and what he's on, for the live line on the homepage (NowLine). Edit this when you
 // travel or move on to something new: the city, its time zone (an IANA name, so the local time is right,
 // daylight saving included), roughly where it is (for the weather there; city-level, a couple of
-// decimals), and a few words on what you're doing, lowercase like the rest of the line.
+// decimals), and a few words on what you're doing, lowercase like the rest of the line. `place` picks the
+// homepage's landscape (data/places.ts). (Later this can come from his phone's location instead of by hand.)
 export const NOW = {
+  place: 'seattle',
   city: 'seattle',
   timeZone: 'America/Los_Angeles',
   lat: 47.61,

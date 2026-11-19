@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 import { DOLL_INTRO } from '@/app/data/intro';
 import { DOLLS, DOLL_ART, SET_SIZE } from '@/app/data/dolls';
 import { DollInside, FLAT_AFTER, FlatDoll, canWebGL } from '@/app/components/FlatDoll';
-import type { DollScene as DollSceneT, FaceOnScreen } from '@/app/components/DollScene';
-import { faceReveal } from '@/app/components/faceReveal';
+import { Crayon, CrayonDefs } from '@/app/components/Crayon';
+import type { DollScene as DollSceneT } from '@/app/components/DollScene';
 
 // The hero's matryoshka, and a way into the site: three dolls, each a link (Work, Side projects, and the
 // littlest, About me), mirrored by the nav at the bottom of every other page. It starts as
@@ -20,12 +20,16 @@ import { faceReveal } from '@/app/components/faceReveal';
 //
 // The dolls' art (colours, scarf, fringe) is shared with the 3D set in data/dolls. The seam at the
 // waist is only a step in tone (the bottom half a shade deeper). The littlest is solid.
-// Where each slot's centre sits relative to the middle of the open row, as (row height × oh) +
-// (gap × og). Each doll is 200/260 as wide as it is tall, so with heights 1, .72, .52 the row is
-// 1.723077 heights plus 2 gaps wide (hp.css). Closed, the small dolls sit over the big one and the row is
-// shifted so the big one stands in the middle: worked out in CSS, so the very first frame is already right.
-const OFFSETS = [[-0.476923, -1], [0.184615, 0], [0.661538, 1]] as const;
 const SET = DOLLS.slice(0, SET_SIZE);
+// Where each slot's centre sits relative to the middle of the open row, as (row height × oh) +
+// (gap × og). Each doll is 200/260 as wide as it is tall, so the row is ROW heights plus n − 1 gaps wide
+// (hp.css reads it as --row). Closed, the small dolls sit over the big one and the row is shifted so the
+// big one stands in the middle: worked out in CSS, so the very first frame is already right.
+const WIDTHS = SET.map((d) => (d.size * 200) / 260);
+const ROW = WIDTHS.reduce((a, b) => a + b, 0);
+const OFFSETS = SET.map((_, i) => [WIDTHS.slice(0, i).reduce((a, b) => a + b, 0) + WIDTHS[i] / 2 - ROW / 2, i - (SET.length - 1) / 2] as const);
+/** The set's geometry for hp.css: its width in heights and gaps, and where the big doll's slot sits */
+export const SET_STYLE = { '--row': ROW, '--gaps': SET.length - 1, '--oh0': OFFSETS[0][0], '--og0': OFFSETS[0][1] } as CSSProperties;
 // The opening runs on the headline's timeline (data/intro)
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 const EASE_IN_OUT = 'cubic-bezier(0.65, 0, 0.35, 1)';
@@ -39,69 +43,163 @@ let autoOpened = false;
 // hydrated. (This code also runs when another page's link prefetches the homepage; then it waits until
 // the set mounts, so other pages never fetch three.js.) Until it's drawn the flat set waits unseen
 // (hp.css), so the flat one never shows first; it shows only if the 3D one is late, or can't run.
-// His photo (public/me.webp: his colour portrait, cut out of its background, 1254 px square), and the
-// circle in it that the doll's face window is painted from (scripts/me-face.py traces this exact crop),
-// as shares of its width: so the painting and the photo match feature for feature
-const ME_PHOTO = { src: '/me.webp', cx: 610 / 1254, cy: 560 / 1254, r: 315 / 1254 };
-const SMOOTH = 'cubic-bezier(0.65, 0, 0.35, 1)';
-/** The painted face turns into him, and the window opens onto the About page. The painting melts off his
- *  face from the eyes out, his photo lined up with it feature for feature (faceReveal); the screen
- *  around turns to plain snow and the About page opens beneath; then the round window glides to his
- *  portrait there and opens out into its panel (.me-face, with .me-photo inside), the photo moving with
- *  it to its place; then the snow lifts round him. */
-function becomeMe(face: FaceOnScreen, go: () => void) {
-  const veil = document.createElement('div');
-  veil.className = 'me-reveal';
-  veil.setAttribute('aria-hidden', 'true');
-  // the window: a frame round his face, and the photo inside it, both in window px
-  const frame = document.createElement('div');
-  frame.className = 'me-reveal-frame';
-  const img = document.createElement('img');
-  img.src = ME_PHOTO.src; img.alt = '';
-  const w = face.r / ME_PHOTO.r;
-  const f0 = { left: face.x - face.r, top: face.y - face.r, width: 2 * face.r, height: 2 * face.r };
-  const i0 = { left: face.x - ME_PHOTO.cx * w - f0.left, top: face.y - ME_PHOTO.cy * w - f0.top, width: w };
-  Object.assign(frame.style, { left: `${f0.left}px`, top: `${f0.top}px`, width: `${f0.width}px`, height: `${f0.height}px` });
-  Object.assign(img.style, { left: `${i0.left}px`, top: `${i0.top}px`, width: `${i0.width}px` });
-  // (the melt is drawn on a canvas over the window; the photo itself shows once it's done)
-  const drawing = document.createElement('canvas');
-  drawing.className = 'me-reveal-drawing';
-  img.style.visibility = 'hidden';
-  frame.append(img, drawing);
-  veil.append(frame);
-  const done = () => veil.remove();
-  const px = (o: Record<string, number>) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, `${v}px`]));
-  const start = () => {
-    document.body.append(veil);
-    // 1. the painting melts off him
-    faceReveal(drawing, img, i0, f0.width).then(() => {
-      drawing.remove();
-      img.style.visibility = '';
-      // 2. the world goes quiet round his face, and the About page opens beneath (only once the snow has
-      // covered the old one)
-      veil.animate([{ backgroundColor: 'rgba(238, 243, 249, 0)' }, { backgroundColor: 'rgba(238, 243, 249, 1)' }], { duration: 360, easing: 'ease-out', fill: 'forwards' }).finished.then(go, go);
-      // 3. the window glides to his portrait and opens out into it, 4. and the page comes up round him
-      const t0 = performance.now();
-      const land = () => {
-        const panel = document.querySelector<HTMLElement>('.me-face'), photo = panel?.querySelector<HTMLImageElement>('.me-photo');
-        if (!panel || !photo || !photo.complete || performance.now() - t0 < 380) {
-          if (performance.now() - t0 < 4000) requestAnimationFrame(land); else done();
-          return;
-        }
-        const a = panel.getBoundingClientRect(), b = photo.getBoundingClientRect();
-        const timing = { duration: 820, easing: SMOOTH, fill: 'forwards' as const };
-        frame.animate([
-          { ...px(f0), borderRadius: `${face.r}px`, backgroundColor: 'rgba(240, 244, 249, 0)' },
-          { ...px({ left: a.left, top: a.top, width: a.width, height: a.height }), borderRadius: getComputedStyle(panel).borderRadius || '0px', backgroundColor: 'rgba(236, 241, 247, 1)' },
-        ], timing);
-        img.animate([px(i0), px({ left: b.left - a.left, top: b.top - a.top, width: b.width })], timing)
-          .finished.then(() => veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: 'ease-out', fill: 'forwards' }).finished).then(done, done);
-      };
-      requestAnimationFrame(land);
-    }, () => { done(); go(); });
+// His photo on the About page (public/me.webp, his cut-out, 1254 px square) and the circle of it the doll's
+// face window becomes, as shares of its width; and the window in his doll's painting (1200 × 1560 px)
+const ME_PHOTO = { src: '/me.webp', cx: 610 / 1254, cy: 560 / 1254, r: 315 / 1254, top: 185 / 1254 };
+const ME_PAINT = { src: '/dolls/me-front.webp', w: 1200, h: 1560, cx: 599.5, cy: 520, r: 174 };
+const MORPH = { ms: 760, ease: 'cubic-bezier(0.65, 0, 0.35, 1)' };
+// He rises out of his doll like the next doll in a set: a quick rise, slowing as he clears the rim
+const RISE_OUT = { ms: 780, delay: 260, ease: 'cubic-bezier(0.22, 1, 0.36, 1)' };
+
+/** How his doll takes you to the About page: it turns round and comes back as him ('turn', the default:
+ *  the littlest doll of a set doesn't open), or it opens and he rises out of it ('open'). Try the other
+ *  with /?reveal=open (kept for the visit). */
+type Reveal = 'open' | 'turn';
+function revealMode(): Reveal {
+  const q = new URLSearchParams(window.location.search).get('reveal');
+  try {
+    if (q === 'open' || q === 'turn') sessionStorage.setItem('me-reveal', q);
+    return sessionStorage.getItem('me-reveal') === 'open' ? 'open' : 'turn';
+  } catch {
+    return q === 'open' ? 'open' : 'turn';
+  }
+}
+
+type Circle = { x: number; y: number; r: number };
+type Rect = { left: number; top: number; width: number; height: number };
+const insetOf = (r: Rect, round: number) =>
+  `inset(${r.top}px ${window.innerWidth - r.left - r.width}px ${window.innerHeight - r.top - r.height}px ${r.left}px round ${round}px)`;
+const loaded = (src: string) => new Promise<HTMLImageElement>((ok, no) => {
+  const im = new Image();
+  im.onload = () => ok(im); im.onerror = no; im.src = src;
+});
+
+/** The moving picture both ways share: a clip (screen coordinates) round content laid out where it starts,
+ *  over a porcelain ground that becomes the portrait's panel */
+function morphLayer() {
+  const morph = document.createElement('div');
+  morph.className = 'me-morph';
+  morph.setAttribute('aria-hidden', 'true');
+  const ground = document.createElement('div');
+  ground.className = 'me-morph-ground';
+  const content = document.createElement('div');
+  content.className = 'me-morph-content';
+  morph.append(ground, content);
+  return { morph, ground, content };
+}
+
+/** The About page in beneath, hidden (me-arriving), then once its portrait is laid out, `glide` carries the
+ *  picture onto it; the page fades in round it as it lands, and its own portrait takes over. */
+function arrive(go: () => void, morph: HTMLElement, glide: (cell: DOMRect, photo: DOMRect, round: number) => void) {
+  const html = document.documentElement;
+  html.classList.add('me-leaving');
+  const done = () => {
+    html.classList.remove('me-leaving', 'me-arriving', 'me-landing', 'me-going');
+    morph.remove();
   };
-  // (it waits for the photo, so it never starts empty)
-  img.decode().then(start, () => { done(); go(); });
+  window.setTimeout(() => {
+    html.classList.add('me-arriving');
+    go();
+    const t0 = performance.now();
+    const land = () => {
+      const cell = document.querySelector<HTMLElement>('.me-face'), img = cell?.querySelector<HTMLImageElement>('.me-photo');
+      if (!cell || !img || !img.complete || !img.naturalWidth) {
+        if (performance.now() - t0 < 5000) requestAnimationFrame(land); else done();
+        return;
+      }
+      glide(cell.getBoundingClientRect(), img.getBoundingClientRect(), parseFloat(getComputedStyle(cell).borderTopLeftRadius) || 0);
+      window.setTimeout(() => html.classList.add('me-landing'), MORPH.ms * 0.45);
+      window.setTimeout(done, MORPH.ms + 30);
+    };
+    requestAnimationFrame(land);
+  }, 240);
+}
+
+/** 'open': his doll's lid is set down aside (DollScene.release) and he rises up out of the cup, the way each
+ *  doll in the set rises out of the one before; risen, he glides into his portrait on the About page while
+ *  the porcelain panel gathers round him. Hidden below the rim while he rises (the clip's bottom edge). */
+function riseToAbout(rim: Circle, go: () => void) {
+  const { morph, ground, content } = morphLayer();
+  const photo = new Image();
+  photo.src = ME_PHOTO.src; photo.alt = '';
+  // his face the size of the doll's painted one; risen to his collar
+  const w = rim.r * 1.7, left = rim.x - ME_PHOTO.cx * w, top = rim.y - w * 0.8;
+  Object.assign(photo.style, { left: `${left}px`, top: `${top}px`, width: `${w}px` });
+  content.append(photo);
+  ground.style.opacity = '0';
+  const H = window.innerHeight, above = `inset(0px 0px ${H - rim.y}px 0px round 0px)`;
+  morph.style.clipPath = above;
+  document.body.append(morph);
+  const rise = photo.animate([{ transform: `translateY(${w * (0.8 - ME_PHOTO.top) + 4}px)` }, { transform: 'none' }], { duration: RISE_OUT.ms, delay: RISE_OUT.delay, easing: RISE_OUT.ease, fill: 'both' });
+  // (the page starts to go once he's mostly out)
+  window.setTimeout(() => arrive(go, morph, (c, b, round) => {
+    const sc = b.width / w, tx = b.left - left * sc, ty = b.top - top * sc;
+    const timing = { duration: MORPH.ms, easing: MORPH.ease, fill: 'forwards' as const };
+    Object.assign(ground.style, { left: `${c.left}px`, top: `${c.top}px`, width: `${c.width}px`, height: `${c.height}px`, borderRadius: `${round}px` });
+    rise.finish();
+    morph.animate([{ clipPath: above }, { clipPath: insetOf(c, round) }], timing);
+    content.animate([{ transform: 'none' }, { transform: `translate(${tx}px, ${ty}px) scale(${sc})` }], timing);
+    ground.animate([{ opacity: 0 }, { opacity: 1 }], { duration: MORPH.ms * 0.5, delay: MORPH.ms * 0.15, easing: 'ease-out', fill: 'forwards' });
+  }), RISE_OUT.delay + RISE_OUT.ms * 0.7);
+}
+
+/** 'turn' (and the plain way): his doll's face window lifts off and opens out into the portrait's panel,
+ *  growing the photo with it. After a turn his photo is already in the window; otherwise the painted face
+ *  turns into the photo on the way. */
+function windowToAbout(face: Circle, go: () => void, photoFirst: boolean) {
+  const { morph, ground, content } = morphLayer();
+  const photo = new Image(), paint = new Image();
+  photo.src = ME_PHOTO.src; paint.src = ME_PAINT.src; photo.alt = paint.alt = '';
+  // both pictures with their circles on the doll's face circle
+  const pw = face.r / ME_PHOTO.r, k = face.r / ME_PAINT.r;
+  Object.assign(photo.style, { left: `${face.x - ME_PHOTO.cx * pw}px`, top: `${face.y - ME_PHOTO.cy * pw}px`, width: `${pw}px` });
+  const circle = { left: face.x - face.r, top: face.y - face.r, width: 2 * face.r, height: 2 * face.r };
+  // (behind the window, the porcelain the doll's window has round his cut-out)
+  Object.assign(ground.style, { left: `${circle.left}px`, top: `${circle.top}px`, width: `${circle.width}px`, height: `${circle.height}px` });
+  content.append(photo);
+  // (the painting only inside its face window: the doll's hood doesn't come along)
+  const paintWin = document.createElement('div');
+  if (!photoFirst) {
+    photo.style.opacity = '0';
+    paintWin.className = 'me-morph-paint';
+    Object.assign(paintWin.style, { left: `${circle.left}px`, top: `${circle.top}px`, width: `${circle.width}px`, height: `${circle.height}px` });
+    Object.assign(paint.style, { left: `${face.r - ME_PAINT.cx * k}px`, top: `${face.r - ME_PAINT.cy * k}px`, width: `${ME_PAINT.w * k}px` });
+    paintWin.append(paint);
+    content.append(paintWin);
+  }
+  morph.style.clipPath = insetOf(circle, face.r);
+  document.body.append(morph);
+  // it lifts off as the homepage goes
+  content.animate([{ transform: 'none' }, { transform: 'translateY(-2px)' }], { duration: 220, easing: 'ease-out', fill: 'forwards' });
+  arrive(go, morph, (c, b, round) => {
+    const to = { x: b.left + ME_PHOTO.cx * b.width, y: b.top + ME_PHOTO.cy * b.width, r: ME_PHOTO.r * b.width };
+    // the content's move: the face circle carried from the doll to the portrait (scaled about the origin)
+    const sc = to.r / face.r, tx = to.x - face.x * sc, ty = to.y - face.y * sc;
+    const timing = { duration: MORPH.ms, easing: MORPH.ease, fill: 'forwards' as const };
+    morph.animate([{ clipPath: insetOf(circle, face.r) }, { clipPath: insetOf(c, round) }], timing);
+    ground.animate([{ left: `${circle.left}px`, top: `${circle.top}px`, width: `${circle.width}px`, height: `${circle.height}px` }, { left: `${c.left}px`, top: `${c.top}px`, width: `${c.width}px`, height: `${c.height}px` }], timing);
+    content.animate([{ transform: 'translate(0px, -2px)' }, { transform: `translate(${tx}px, ${ty}px) scale(${sc})` }], timing);
+    if (!photoFirst) {
+      photo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: MORPH.ms * 0.45, delay: MORPH.ms * 0.08, easing: 'ease-in-out', fill: 'forwards' });
+      paintWin.animate([{ opacity: 1 }, { opacity: 0 }], { duration: MORPH.ms * 0.45, delay: MORPH.ms * 0.16, easing: 'ease-in-out', fill: 'forwards' });
+    }
+  });
+}
+
+/** His doll's front with his photo in its face window, for the turn (DollScene.turn wears it) */
+async function photoFront() {
+  const [paint, photo] = await Promise.all([loaded(ME_PAINT.src), loaded(ME_PHOTO.src)]);
+  const c = document.createElement('canvas');
+  c.width = ME_PAINT.w; c.height = ME_PAINT.h;
+  const x = c.getContext('2d') as CanvasRenderingContext2D;
+  x.drawImage(paint, 0, 0, c.width, c.height);
+  const pw = (ME_PAINT.r / ME_PHOTO.r);
+  x.save();
+  x.beginPath(); x.arc(ME_PAINT.cx, ME_PAINT.cy, ME_PAINT.r, 0, Math.PI * 2); x.clip();
+  x.fillStyle = '#eef2f7'; x.fillRect(ME_PAINT.cx - ME_PAINT.r, ME_PAINT.cy - ME_PAINT.r, 2 * ME_PAINT.r, 2 * ME_PAINT.r);
+  x.drawImage(photo, ME_PAINT.cx - ME_PHOTO.cx * pw, ME_PAINT.cy - ME_PHOTO.cy * pw, pw, pw);
+  x.restore();
+  return c;
 }
 
 let sceneModule: Promise<typeof import('@/app/components/DollScene')> | null = null;
@@ -110,13 +208,15 @@ const loadScene = () => (sceneModule ??= import('@/app/components/DollScene'));
 if (typeof window !== 'undefined' && window.location.pathname === '/') {
   loadScene().catch(() => {});
   DOLL_ART.slice(0, SET_SIZE).forEach((a) => { if (a) [a.front, a.back].forEach((src) => { new Image().src = src; }); });
+  new Image().src = ME_PHOTO.src;
 }
 
-// Where each doll takes you, biggest first. The littlest is Michael.
-const PLACES = [
-  { href: '/work', label: 'Work' },
-  { href: '/side-projects', label: 'Side projects' },
-  { href: '/about', label: 'About me' },
+// Where each doll takes you, biggest first (the top nav lists the same, in the same order). The littlest is
+// Michael: About, which is also how to reach him.
+export const PLACES = [
+  { href: '/work', label: 'Projects' },
+  { href: '/side-projects', label: 'Play' },
+  { href: '/about', label: 'About' },
 ];
 // How long a doll's little opening plays before the page changes
 const LEAVE_MS = 460;
@@ -175,8 +275,9 @@ export default function DollSet() {
           ], { ...span(t, hop), composite: 'add' }));
         });
       }
-      // Doll r's floor shadow and its caption appear as it lands in its own place
-      slots[r].querySelectorAll('.ds-shadow, .ds-cap').forEach((el) => list.push(el.animate([{ opacity: 0 }, { opacity: 1 }], span(t + hop * 0.6, hop * 0.4))));
+      // Doll r's floor shadow appears as it lands in its own place (its label is the stylesheet's: on
+      // hover and focus only, or under it on touch once the set is open)
+      slots[r].querySelectorAll('.ds-shadow').forEach((el) => list.push(el.animate([{ opacity: 0 }, { opacity: 1 }], span(t + hop * 0.6, hop * 0.4))));
       // The lid of the doll it leaves lifts up and aside, holds while it rises out, then settles
       const lid = slots[r - 1].querySelector<SVGGElement>('.ds-doll .ds-top');
       if (lid) {
@@ -223,29 +324,35 @@ export default function DollSet() {
   };
 
   // Following a doll: a quick opening first (its lid lifts; the littlest, which is solid, hops), then
-  // the page. His doll (About) instead flies you into its face, which turns into his photo, and the
-  // About page opens under it. New-tab clicks and reduced motion go straight there.
+  // the page. His doll (About) instead becomes him on the way to the About page: it opens and he rises out
+  // of it, or it turns round as him (revealMode, 'turn' by default). New-tab clicks and reduced motion go straight there.
   const visit = (e: MouseEvent<HTMLAnchorElement>, i: number) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     e.preventDefault();
-    if (PLACES[i].href === '/about' && in3d && scene.current) {
-      // (once only: a second click while it flies does nothing)
-      if (ref.current?.classList.contains('is-zooming')) return;
+    const s = scene.current;
+    if (PLACES[i].href === '/about' && in3d && s) {
+      // (once only: a second click on the way does nothing)
+      const html = document.documentElement;
+      if (html.classList.contains('me-going')) return;
+      html.classList.add('me-going');
       router.prefetch('/about');
-      // the labels, the name and the rest of the page step aside as the camera flies in (hp.css)
-      ref.current?.classList.add('is-zooming');
-      document.documentElement.classList.add('is-zooming-me');
-      scene.current.zoomTo(i).then((face) => becomeMe(face, () => {
-        router.push('/about');
-        document.documentElement.classList.remove('is-zooming-me');
-      }));
+      const to = () => router.push('/about');
+      if (revealMode() === 'open') {
+        s.release(i);
+        riseToAbout(s.rimOf(i), to);
+      } else {
+        photoFront().then((front) => s.turn(i, front)).then(
+          () => window.setTimeout(() => windowToAbout(s.faceOf(i), to, true), 120),
+          () => windowToAbout(s.faceOf(i), to, false),
+        );
+      }
       return;
     }
     const slot = e.currentTarget;
-    const lid = slot.querySelector<SVGGElement>('.ds-doll:not(.is-solid) .ds-top');
+    // (his doll turns instead, above; the littlest never opens: it hops, like a solid doll)
+    const lid = PLACES[i].href === '/about' || i === SET.length - 1 ? null : slot.querySelector<SVGGElement>('.ds-doll:not(.is-solid) .ds-top');
     lid?.animate([{ transform: 'translate(-40px, -66px) rotate(-18deg)' }], { duration: LEAVE_MS, easing: EASE_OUT, fill: 'forwards' });
-    // The littlest is solid: it hops instead
     if (!lid) slot.querySelector('.ds-doll')?.animate([{ translate: '0 0' }, { translate: '0 -22%', offset: 0.45, easing: 'cubic-bezier(0.6, 0, 0.8, 0.4)' }, { translate: '0 0' }], { duration: LEAVE_MS, easing: 'cubic-bezier(0.3, 0.6, 0.4, 1)', composite: 'add' });
     router.prefetch(PLACES[i].href);
     window.setTimeout(() => router.push(PLACES[i].href), LEAVE_MS);
@@ -307,8 +414,10 @@ export default function DollSet() {
     <nav
       ref={ref}
       aria-label="Sections"
+      style={SET_STYLE}
       className={`ds${open ? ' is-open' : ''}${moving ? ' is-moving' : ''}${in3d ? ' is-3d' : ''}${flat ? ' is-flat' : ''}`}
     >
+      <CrayonDefs />
       <canvas ref={canvasRef} className="ds-3d" aria-hidden="true" />
       <span className="ds-track">
         {SET.map((d, i) => (
@@ -322,6 +431,7 @@ export default function DollSet() {
             <span className="ds-shadow" aria-hidden="true" />
             <DollInside i={i} />
             <FlatDoll i={i} prefix="ds" shadow={false} />
+            <Crayon seed={i + 1} size={d.size} />
             <span className="ds-cap">{PLACES[i].label}</span>
           </Link>
         ))}

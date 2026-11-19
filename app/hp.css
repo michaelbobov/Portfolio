@@ -72,6 +72,11 @@ html[data-snow="on"] .hp .hp-flakes-between { display: block; animation: hp-fade
 .hp-flakes .is-between { --t: 560px; --img: url(/snow/flakes-between.png); --fall: 29s; --drift: 8s; opacity: 0.95; }
 .hp-flakes .is-front { --t: 640px; --img: url(/snow/flakes-front.png); --fall: 24s; --drift: 6s; opacity: 0.9; }
 .hp-flakes .is-lens { --t: 1000px; --img: url(/snow/flakes-lens.png); --fall: 30s; --drift: 10s; opacity: 0.6; }
+/* The three.js snow, on trial (Snow3D, ?snow=3d): a canvas in each layer and in the name's window; the CSS
+   flakes step aside once it has drawn its first frame (data-snow3d) */
+.hp-snow3d, .hp-lens-snow { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+html:not([data-snow3d]) :is(.hp-snow3d, .hp-lens-snow), html[data-snow="on"] .hp-lens-snow { display: none; }
+html[data-snow3d] .hp-flakes > i { display: none; }
 @keyframes hp-fall { to { transform: translateY(var(--t)); } }
 @keyframes hp-drift { from { translate: -14px 0; } to { translate: 14px 0; } }
 @media (prefers-reduced-motion: reduce) { .hp-flakes > i { animation: none; } }
@@ -250,11 +255,11 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 /* --mid: how far the set is shifted left. 0 since 2026-11-12: the open set is centred as a whole under the
    name (with the middle doll on the centre line instead, the big doll pulled the set left of centre).
    Closed, the track still brings the one doll to the centre. */
-.ds { --h: clamp(200px, 21vw, 320px); --g: clamp(12px, 1.6vw, 24px); --mid: 0px; translate: calc(-1 * var(--mid)) 0; position: relative; display: block; width: calc(1.723077 * var(--h) + 2 * var(--g)); height: var(--h); padding-bottom: 80px; box-sizing: content-box; -webkit-tap-highlight-color: transparent; }
+.ds { --h: clamp(200px, 21vw, 320px); --g: clamp(12px, 1.6vw, 24px); --mid: 0px; translate: calc(-1 * var(--mid)) 0; position: relative; display: block; width: calc(var(--row, 1.723077) * var(--h) + var(--gaps, 2) * var(--g)); height: var(--h); padding-bottom: 80px; box-sizing: content-box; -webkit-tap-highlight-color: transparent; }
 @media (max-width: 899px) { .ds { --h: min(38vw, 240px); --g: 10px; } }
 /* Phones: the dolls as big as the width allows (the row is 1.723 heights and two gaps wide), so the set
    fills the screen instead of leaving white above and below it */
-@media (max-width: 599px) { .ds { --h: min(calc((100vw - 52px) / 1.723), 220px); --mid: 0px; } }
+@media (max-width: 599px) { .ds { --h: min(calc((100vw - 32px - var(--gaps, 2) * var(--g)) / var(--row, 1.723077)), 220px); --mid: 0px; } }
 /* The real 3D set (DollScene) is drawn on this canvas, which reaches past the row for the hops and
    the lids; once it's ready the flat dolls hide, but their links, captions and hit areas stay */
 .ds-3d { position: absolute; left: calc(-0.42 * var(--h)); top: calc(-0.95 * var(--h)); width: calc(100% + 0.84 * var(--h)); height: calc(2.1 * var(--h)); pointer-events: none; opacity: 0; transition: opacity 480ms ease; }
@@ -264,13 +269,13 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .js .ds:not(.is-3d):not(.is-flat) .ds-slot > :is(.ds-doll, .ds-in, .ds-shadow, .ds-cap) { visibility: hidden; }
 /* The flat set stays under the 3D one while it fades in, then goes */
 .ds.is-3d .ds-slot > :is(.ds-doll, .ds-in, .ds-shadow) { visibility: hidden; transition: visibility 0s 320ms; }
-.ds-track { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: var(--g); height: 100%; transform: translateX(calc(0.476923 * var(--h) + var(--g) + var(--mid))); }
+.ds-track { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: var(--g); height: 100%; transform: translateX(calc(-1 * var(--oh0, -0.476923) * var(--h) - var(--og0, -1) * var(--g) + var(--mid))); }
 /* A slot (a link) holds the layers of one doll, each moved on its own: its floor shadow, its inside
    (the back of the cup) and the doll. They stack across the whole
    set so that every doll sits in front of the inside of the doll it came from and behind that doll's
    front: inside 0 < inside 1 < inside 2 < doll 3 < doll 2 < doll 1 < doll 0. Slots themselves stay
    put, so they don't break that stacking. */
-.ds-slot { position: relative; display: flex; align-items: flex-end; flex: none; color: inherit; text-decoration: none; border-radius: 18px; --closed: calc((-0.476923 - var(--oh)) * var(--h) + (-1 - var(--og)) * var(--g)); }
+.ds-slot { position: relative; display: flex; align-items: flex-end; flex: none; color: inherit; text-decoration: none; border-radius: 18px; --closed: calc((var(--oh0, -0.476923) - var(--oh)) * var(--h) + (var(--og0, -1) - var(--og)) * var(--g)); }
 .ds-slot:focus-visible { outline-offset: 8px; }
 .ds-slot > * { transform: translateX(var(--closed)); }
 /* Packed away or on the move, the small dolls can't be followed (the big one, Work, always can) */
@@ -318,8 +323,8 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .ds-face { --r: 46px; }
 .ds-front { --r: 70px; }
 @media (hover: hover) and (pointer: fine) {
-  .ds:not(.is-moving) .ds-slot:nth-child(3):hover .ds-doll { animation: ds-bounce 760ms both; }
-  .ds:not(.is-moving) .ds-slot:nth-child(3):hover :is(.ds-face, .ds-front) { animation: ds-turn-x 640ms 700ms both, ds-turn-w 640ms 700ms both; }
+  .ds:not(.is-moving) .ds-slot:last-child:hover .ds-doll { animation: ds-bounce 760ms both; }
+  .ds:not(.is-moving) .ds-slot:last-child:hover :is(.ds-face, .ds-front) { animation: ds-turn-x 640ms 700ms both, ds-turn-w 640ms 700ms both; }
 }
 
 /* The label under each doll, in the nav's glass (Dock.tsx, site.css): what's behind blurred and a little
@@ -356,7 +361,7 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .ds-slot:active .ds-doll { scale: 0.97; }
 @media (hover: hover) and (pointer: fine) {
   .ds:not(.is-moving) .ds-slot:hover .ds-doll { scale: 1.04; }
-  .ds:not(.is-moving) .ds-slot:hover .ds-doll:not(.is-solid) .ds-top { transform: translate(-6px, -26px) rotate(-9deg); }
+  .ds:not(.is-moving) .ds-slot:not(:last-child):hover .ds-doll:not(.is-solid) .ds-top { transform: translate(-6px, -26px) rotate(-9deg); }
   /* ...and its label raises the nav's bubble */
   .ds:not(.is-moving) .ds-slot:hover .ds-cap::before { opacity: 1; scale: 1; }
 }
@@ -469,17 +474,31 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
 .me-facts li { padding: 22px clamp(24px, 4vw, 64px) 24px; font-size: 15px; line-height: 1.45; color: var(--hp-text); }
 .me-facts li + li { border-left: var(--rule); }
 .me-facts span { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hp-accent); }
-.me-part { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 24px clamp(32px, 5vw, 80px); padding: clamp(48px, 8svh, 96px) clamp(24px, 4vw, 64px); }
-.me-part + .me-part { border-top: var(--rule); }
-.me-part h2 { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-weight: 600; font-size: clamp(28px, 3vw, 44px); line-height: 1.05; letter-spacing: -0.025em; color: var(--hp-text); text-wrap: balance; }
-.me-part p { max-width: 36em; margin: 0; font-size: var(--t-body); line-height: 1.65; color: #24345e; text-wrap: pretty; }
-.me-part p + p { margin-top: 18px; }
-.me-part strong { font-weight: 600; color: var(--hp-text); }
-/* the site's one sentence, closing why the dolls: in the display face, "one layer" in the blue sweep */
-.me-part p.me-quote { max-width: none; margin-top: clamp(28px, 4svh, 44px); font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(36px, 4.4vw, 64px); line-height: 0.95; letter-spacing: -0.035em; color: var(--hp-text); text-wrap: balance; }
-.me-part p.me-quote em { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; font-size: 1.04em; letter-spacing: -0.03em; }
-:is(.me-part, .me-facts) a { color: var(--hp-text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--hp-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
-@media (hover: hover) and (pointer: fine) { :is(.me-part, .me-facts) a:hover { color: var(--hp-accent); } }
+/* His story as the set: three panels, each nested in the one before like the dolls, each with its doll's
+   colours (the cobalt Work doll, the porcelain Side projects doll, his white one) and its doll beside its
+   heading, smaller each time. The littlest holds the storybook window. */
+.me-layers { padding: clamp(16px, 3vw, 40px); border-bottom: var(--rule); }
+.me-layer { --pad: clamp(24px, 4vw, 64px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); align-items: start; gap: 24px clamp(32px, 5vw, 80px); padding: var(--pad); border-radius: clamp(20px, 2.4vw, 32px); }
+.me-layer > .me-layer { grid-column: 1 / -1; margin-top: clamp(16px, 3svh, 32px); }
+.me-layer.is-outer { background: #2a4fae; --ink: #f6f8fc; --soft: rgba(246, 248, 252, 0.84); --line: #f6f8fc; }
+.me-layer.is-middle { background: #eef2f8; --ink: var(--hp-text); --soft: #24345e; --line: var(--hp-accent); --pad: clamp(20px, 3.4vw, 56px); }
+.me-layer.is-core { background: #fff; box-shadow: 0 0 0 1.5px rgba(42, 79, 174, 0.18); --pad: clamp(20px, 3vw, 48px); }
+.me-layer-head { display: flex; align-items: center; gap: 16px; }
+.me-mark { flex: none; height: 84px; }
+.is-middle > .me-layer-head .me-mark { height: 64px; }
+.is-core .me-mark { height: 48px; }
+.me-layer h2 { margin: 0; font-family: var(--font-title), var(--font-geist-sans), sans-serif; font-weight: 600; font-size: clamp(28px, 3vw, 44px); line-height: 1.05; letter-spacing: -0.025em; color: var(--ink); text-wrap: balance; }
+.me-layer p { max-width: 36em; margin: 0; font-size: var(--t-body); line-height: 1.65; color: var(--soft); text-wrap: pretty; }
+.me-layer p + p { margin-top: 18px; }
+.me-layer strong { font-weight: 600; color: var(--ink); }
+.me-door { grid-column: 1 / -1; width: min(100%, 880px, (100svh - 150px) * 560 / 462); justify-self: center; margin-top: clamp(8px, 2svh, 24px); }
+/* the site's one sentence, at the very end: in the display face, "one layer" in the blue sweep */
+.me-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding: clamp(40px, 7svh, 80px) clamp(24px, 4vw, 64px); padding-bottom: 120px; } /* (clear of the fixed nav) */
+.me-end .ab-links { margin: 0; }
+.me-quote { margin: 0; font-family: var(--font-display), var(--font-geist-sans), sans-serif; font-weight: 800; font-variation-settings: "wdth" 85, "opsz" 96; font-size: clamp(36px, 4.4vw, 64px); line-height: 0.95; letter-spacing: -0.035em; color: var(--hp-text); text-wrap: balance; }
+.me-quote em { font-family: var(--font-serif-accent), Georgia, serif; font-style: italic; font-weight: 400; font-size: 1.04em; letter-spacing: -0.03em; }
+:is(.me-layer, .me-facts) a { color: var(--ink, var(--hp-text)); font-weight: 600; text-decoration: underline; text-decoration-color: var(--line, var(--hp-accent)); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { :is(.me-layer, .me-facts) a:hover { color: var(--hp-accent); } .is-outer > .me-layer-body a:hover { color: #fff; text-decoration-color: #fff; } }
 @media (max-width: 899px) {
   .me { border-inline: 0; }
   .me-hero { grid-template-columns: minmax(0, 1fr); }
@@ -487,7 +506,16 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .me-intro { padding-top: 36px; }
   .me-facts { grid-template-columns: minmax(0, 1fr); }
   .me-facts li + li { border-left: 0; border-top: var(--rule); }
-  .me-part { grid-template-columns: minmax(0, 1fr); }
+  .me-layer { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 599px) {
+  .me-layers { padding: 8px; }
+  .me-layer.is-outer { --pad: 28px 16px; }
+  .me-layer.is-middle, .me-layer.is-core { --pad: 24px 12px; }
+  .me-door { width: auto; margin-inline: -12px; justify-self: stretch; }
+  .me-mark { height: 64px; }
+  .is-middle > .me-layer-head .me-mark { height: 50px; }
+  .is-core .me-mark { height: 38px; }
 }
 
 .ab-links { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 0; padding: 0; }
@@ -528,12 +556,39 @@ html[data-snow="on"] .hp .hp-floor { display: block; animation: hp-fade 700ms ea
   .ds:hover .ds-top, .sx-tile:hover .sx-shot, .sx-tile:hover .sx-shot img { transform: none !important; translate: none !important; scale: none !important; }
 }
 
-/* His doll's face turning into him (DollSet's becomeMe): over everything */
-.me-reveal { position: fixed; inset: 0; z-index: 200; overflow: hidden; pointer-events: none; }
-.me-reveal-frame { position: absolute; overflow: hidden; border-radius: 50%; }
-.me-reveal-drawing { position: absolute; inset: 0; width: 100%; height: 100%; }
-.me-reveal-frame img { position: absolute; max-width: none; height: auto; }
-/* As the camera flies into his doll's face: the labels, the name and the page's other bits step aside (the
-   canvas grows to the whole window then, DollScene's fillWindow, so the doll is never cut off) */
-.ds.is-zooming .ds-cap { opacity: 0 !important; transition: opacity 200ms ease; }
-.is-zooming-me .hp-home :is(.hp-name, .hp-flakes-front, .hp-snow-switch, .sb) { opacity: 0; transition: opacity 320ms ease; }
+/* His doll's face window becoming his portrait (DollSet's comeToAbout). The homepage fades away as it lifts
+   off (me-leaving); the About page opens beneath, hidden (me-arriving), and fades in round the window as it
+   lands (me-landing); its own portrait shows when the window is gone. */
+.me-morph { position: fixed; inset: 0; z-index: 220; pointer-events: none; }
+.me-morph-ground { position: absolute; background: linear-gradient(180deg, #f6f8fb, #e2e9f2); }
+.me-morph-content { position: absolute; inset: 0; transform-origin: 0 0; }
+.me-morph-content img { position: absolute; max-width: none; height: auto; }
+.me-morph-paint { position: absolute; overflow: hidden; border-radius: 50%; }
+html.me-leaving .hp-home { opacity: 0; transition: opacity 240ms ease-out; }
+html.me-arriving :is(.hp > *, .flex-1 ~ :not(.me-morph)), html.me-arriving .me-face { opacity: 0; }
+html.me-arriving.me-landing :is(.hp > *, .flex-1 ~ :not(.me-morph)) { opacity: 1; transition: opacity 420ms cubic-bezier(0.23, 1, 0.32, 1); }
+
+/* About, outside of design: carved Russian windows (Nalichnik) whose shutters swing open onto photos */
+.nl-figure { margin: 0; }
+.nl-figure figcaption { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-top: 10px; font-size: 15px; line-height: 1.5; color: #24345e; text-align: center; text-wrap: pretty; }
+.nl-count { flex: none; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hp-accent); font-variant-numeric: tabular-nums; }
+.nl { position: relative; display: block; width: 100%; aspect-ratio: 560 / 462; margin: 0 auto; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.nl:focus-visible { outline: 2px solid var(--hp-accent); outline-offset: 6px; border-radius: 8px; }
+.nl-flat { position: absolute; inset: 0; }
+.nl-photo, .nl-frame, .nl-shutters { position: absolute; }
+.nl-photo { display: block; object-fit: cover; object-position: 50% 28%; background: #e6ecf4; }
+.nl-frame svg, .nl-face svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.nl-shutters { display: flex; perspective: 700px; transform-style: preserve-3d; }
+.nl-3d { position: absolute; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 300ms ease; }
+.nl.is-3d .nl-3d { opacity: 1; }
+.nl.is-3d .nl-flat { visibility: hidden; transition: visibility 0s 300ms; }
+/* the flat window's shutters: each leaf hinges on its outer edge and swings out towards you */
+.nl-leaf { position: relative; width: 50%; height: 100%; transform-style: preserve-3d; transition: transform 1150ms cubic-bezier(0.34, 1.3, 0.5, 1); }
+.nl-leaf.is-l { transform-origin: 0 50%; }
+.nl-leaf.is-r { transform-origin: 100% 50%; transition-delay: 70ms; }
+.nl.is-open .nl-leaf.is-l { transform: rotateY(-166deg); }
+.nl.is-open .nl-leaf.is-r { transform: rotateY(166deg); }
+.nl-face, .nl-back { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.nl-back { transform: rotateY(180deg); background: #eef1f6; box-shadow: inset 0 0 0 1.6px #2f4f9e, inset 0 0 0 8px #eef1f6, inset 0 0 0 9.4px rgba(47, 79, 158, 0.5); }
+@media (hover: hover) and (pointer: fine) { .nl:not(.is-open):not(.is-3d):hover .nl-leaf.is-l { transform: rotateY(-14deg); } .nl:not(.is-open):not(.is-3d):hover .nl-leaf.is-r { transform: rotateY(14deg); } }
+@media (prefers-reduced-motion: reduce) { .nl-leaf { transition: none; } }

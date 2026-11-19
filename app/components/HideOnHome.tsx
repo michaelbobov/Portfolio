@@ -3,8 +3,9 @@
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
-// Leaves its children off the homepage, which is only the hero: the shared close, and the dock (the
-// dolls are the homepage's navigation)
+// Leaves its children (the shared close, and the dock) off the postcard pages, which have their own bar
+// on top (PostcardBar): the homepage, where the dolls are the navigation, and Contact
+const POSTCARD = new Set(['/', '/contact']);
 export default function HideOnHome({ children }: { children: ReactNode }) {
-  return usePathname() === '/' ? null : <>{children}</>;
+  return POSTCARD.has(usePathname()) ? null : <>{children}</>;
 }

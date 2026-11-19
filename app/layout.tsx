@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Bricolage_Grotesque, DM_Sans, Instrument_Serif } from 'next/font/google'
+import { Bricolage_Grotesque, DM_Sans, IBM_Plex_Mono, Instrument_Serif, Playfair_Display } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import './site.css'
@@ -28,6 +28,21 @@ const instrumentSerif = Instrument_Serif({
   variable: '--font-serif-accent',
   weight: '400',
   style: ['normal', 'italic'],
+  display: 'swap',
+})
+
+// The postcard pages: Playfair Display for the name, the nav and the project names (its italic, high
+// contrast, after his concept), and IBM Plex Mono, tracked out, for the small typed labels
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '500'],
   display: 'swap',
 })
 
@@ -91,7 +106,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');try{if(localStorage.getItem('mb-snow')==='on')document.documentElement.dataset.snow='on'}catch(e){}" + SEASON_SCRIPT }} />
       </head>
-      <body className={`${GeistSans.variable} ${dmSans.variable} ${bricolage.variable} ${instrumentSerif.variable} font-sans h-full flex flex-col`}>
+      <body className={`${GeistSans.variable} ${dmSans.variable} ${bricolage.variable} ${instrumentSerif.variable} ${playfair.variable} ${plexMono.variable} font-sans h-full flex flex-col`}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-wf-sheet focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg text-sm font-medium text-wf-ink focus:outline-none focus:ring-2 focus:ring-wf-ink"

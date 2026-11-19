@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { SHAPE } from '@/app/data/layers';
-import { CHEEK, DOLLS, DOLL_ART, FRINGE, GOLD, INK, SCARF, SET_SIZE, SKIN, WAIST, flowerOf, type Doll } from '@/app/data/dolls';
+import { CHEEK, DOLLS, DOLL_ART, FRINGE, GOLD, INK, ME_DOLL, SCARF, SET_SIZE, SKIN, WAIST, flowerOf, type Doll } from '@/app/data/dolls';
 import { DOLL_INTRO } from '@/app/data/intro';
 import { currentSeason } from '@/app/data/season';
 
@@ -9,7 +9,7 @@ import { currentSeason } from '@/app/data/season';
 // axis (a lathe), cut at the waist into a hollow base and a hollow lid, so a doll put inside another
 // is really inside it. The flat front painting (scarf, face, fringe, apron, flower) is wrapped round
 // the body, so from the front the doll looks exactly like the illustration and from behind you see
-// the back of the scarf. A lacquered clearcoat catches soft studio reflections.
+// the back of the scarf. The finish is satin painted wood (FINISH), soft and nearly matte.
 //
 // The DOM stays in charge (DollSet): the links, captions, hit areas and the open / closed state.
 // This scene only draws: it reads where each doll's slot is, mirrors the opening on the same timeline
@@ -73,8 +73,8 @@ function lathe(points: THREE.Vector2[], painted: boolean) {
 const ART = 6;
 // (or, for a painted doll, its painting)
 // (`scale`: px per box unit, so a doll's back is drawn at its front's, which paint reads them both by)
-function drawArt(d: Doll, front: boolean, img?: HTMLImageElement, scale?: number) {
-  const art = scale ?? (img ? Math.min(ART, img.naturalWidth / 200) : ART * Math.max(d.size, 0.5));
+function drawArt(d: Doll, front: boolean, img?: Pic, scale?: number) {
+  const art = scale ?? (img ? Math.min(ART, (img instanceof HTMLImageElement ? img.naturalWidth : img.width) / 200) : ART * Math.max(d.size, 0.5));
   const c = document.createElement('canvas');
   c.width = Math.round(200 * art); c.height = Math.round(BOX_H * art);
   const x = c.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
@@ -143,7 +143,9 @@ function paint(d: Doll, pic?: Art) {
 
 // The painted dolls' fronts and backs (DOLL_ART), loaded once for every scene; a doll whose pictures
 // fail stays drawn from its colours
-type Art = { front: HTMLImageElement; back: HTMLImageElement };
+// (a picture is a loaded painting, or one drawn on a canvas: his doll's front with his photo in its window)
+type Pic = HTMLImageElement | HTMLCanvasElement;
+type Art = { front: Pic; back: Pic };
 const loadImage = (src: string) => new Promise<HTMLImageElement>((ok, no) => {
   const im = new Image();
   im.decoding = 'async'; im.onload = () => ok(im); im.onerror = no; im.src = src;
@@ -159,8 +161,8 @@ function shadowTexture() {
   c.width = c.height = 128;
   const x = c.getContext('2d') as CanvasRenderingContext2D;
   const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
-  // Deep under the base, a little cool, as on snow
-  g.addColorStop(0, 'rgba(18,28,56,0.75)'); g.addColorStop(0.55, 'rgba(22,34,66,0.32)'); g.addColorStop(1, 'rgba(24,36,72,0)');
+  // Deep under the base, in the cobalt of the print, as on the postcard
+  g.addColorStop(0, 'rgba(16,30,96,0.72)'); g.addColorStop(0.55, 'rgba(24,44,140,0.3)'); g.addColorStop(1, 'rgba(36,69,181,0)');
   x.fillStyle = g; x.fillRect(0, 0, 128, 128);
   return new THREE.CanvasTexture(c);
 }
@@ -193,23 +195,32 @@ const blend = (a: Pose, b: Pose, t: number): Pose => ({ x: mix(a.x, b.x, t), y: 
 
 // ---------- the studio, a doll, a camera: shared by the set and the About page's doll ----------
 // The renderer, its light and the lens
+// The finish: satin painted wood, as the dolls on his postcard (2026-11-18: the gloss lacquer's hot
+// highlights looked like plastic, and the warm light turned the shade side peach). A faint sheen, almost no
+// clearcoat, a frontal key and a lot of soft fill, so the paintings read flat and graphic; neutral light, so
+// the shade goes a cool blue-grey (the cobalt rim and bounce) and the cream stays cream.
+const FINISH = { r: 0.66, cc: 0.15, ccr: 0.4, sh: 0, env: 0.14, key: 1.7, rim: 1.2, hemi: 1.75, exp: 1.0,
+  kp: [-0.3, 0.6, 1], kc: '#fffaf3', hs: '#f2f1ee' };
 function studio(canvas: HTMLCanvasElement) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 0.98;
+  renderer.toneMappingExposure = FINISH.exp;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = env;
-  scene.environmentIntensity = 0.38;
-  const key = new THREE.DirectionalLight('#ffffff', 2.1);
-  key.position.set(-0.55, 0.9, 0.85);
-  const rim = new THREE.DirectionalLight('#cfe0ff', 1.6);
-  rim.position.set(0.9, 0.45, -0.8);
-  scene.add(key, rim, new THREE.HemisphereLight('#f4f8ff', '#4a5d85', 0.55));
+  scene.environmentIntensity = FINISH.env;
+  // A near-white key from the front, a little left and above, as on paper in daylight; the shade side and the underside go cobalt
+  // (a blue rim from behind on the right, and cobalt bounce from below), the blue under-shade the dolls
+  // have on his postcard
+  const key = new THREE.DirectionalLight(FINISH.kc, FINISH.key);
+  key.position.set(FINISH.kp[0], FINISH.kp[1], FINISH.kp[2]);
+  const rim = new THREE.DirectionalLight('#5b7ee6', FINISH.rim);
+  rim.position.set(0.9, 0.35, -0.8);
+  scene.add(key, rim, new THREE.HemisphereLight(FINISH.hs, '#2445b5', FINISH.hemi));
   const camera = new THREE.PerspectiveCamera(16, 1, 1, 20000);
   const shadowTex = shadowTexture();
   const disposables: { dispose: () => void }[] = [renderer, pmrem, env, shadowTex];
@@ -222,6 +233,9 @@ function studio(canvas: HTMLCanvasElement) {
 const LOOK = (4 * Math.PI) / 180;
 // The contact shadow's depth, as a share of its width: deep enough to read from that low
 const SHADOW_D = 0.9;
+// The glaze's tint over the paintings (painted cream and cobalt since 2026-11-18): barely warm, so the
+// cream stays the paper's cream
+const GLAZE = '#fff8ee';
 function aim(camera: THREE.PerspectiveCamera, W: number, Hc: number, floorPx: number) {
   camera.aspect = W / Hc;
   const e = LOOK, D = Hc / 2 / Math.tan(((camera.fov / 2) * Math.PI) / 180);
@@ -290,7 +304,9 @@ function wearHat(head: THREE.Group, hat: SeasonModel) {
 // (the littlest is one solid piece), and a contact shadow to lay on the floor under it
 function buildDoll(d: Doll, shadowTex: THREE.Texture) {
   let map = paint(d);
-  const lacquer = new THREE.MeshPhysicalMaterial({ map, roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.1, sheen: 0.25, sheenColor: new THREE.Color('#ffffff') });
+  // (the paintings' white porcelain reads as warm ivory glaze on the cream paper: the tint multiplies the
+  // painting, so the white goes cream and the cobalt stays cobalt)
+  const lacquer = new THREE.MeshPhysicalMaterial({ map, color: new THREE.Color(GLAZE), roughness: FINISH.r, clearcoat: FINISH.cc, clearcoatRoughness: FINISH.ccr, sheen: FINISH.sh, sheenColor: new THREE.Color('#fff1d8') });
   const inside = new THREE.MeshStandardMaterial({ color: new THREE.Color(d.deep).multiplyScalar(0.55), roughness: 0.85, side: THREE.DoubleSide });
   const group = new THREE.Group();
   let lid: THREE.Group | null = null;
@@ -329,7 +345,7 @@ function buildDoll(d: Doll, shadowTex: THREE.Texture) {
     });
   };
   look(0, 0);
-  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0.6 }));
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0.85 }));
   shadow.rotation.x = -Math.PI / 2;
   // A painted doll takes its painting, eyes and all, so the beads go
   const repaint = (art: Art) => {
@@ -337,8 +353,11 @@ function buildDoll(d: Doll, shadowTex: THREE.Texture) {
     lacquer.map = next; map.dispose(); map = next;
     eyes.forEach((e) => { e.visible = false; });
   };
+  // Another painting, made ahead (it takes a moment) and put on later in one go
+  const paintWith = (art: Art) => paint(d, art);
+  const wear = (tex: THREE.CanvasTexture) => { lacquer.map = tex; map.dispose(); map = tex; };
   const disposables: { dispose: () => void }[] = [{ dispose: () => map.dispose() }, lacquer, inside, eyeGeo, eyeMat, shadow.geometry, shadow.material as THREE.Material, ...geos];
-  return { group, lid, head, shadow, disposables, look, repaint };
+  return { group, lid, head, shadow, disposables, look, repaint, paintWith, wear };
 }
 
 const poseLid = (lid: THREE.Group, pose: Pose) => {
@@ -444,23 +463,31 @@ function flipAt(tw: number) {
   return { up: 4 * f * (1 - f) * 118, turn: Math.PI * 2 * f };
 }
 
-/** Where a doll's face is on the screen once the camera has flown into it (viewport px): its centre and radius */
+/** A doll's face on the screen (viewport px): its centre and radius */
 export type FaceOnScreen = { x: number; y: number; r: number };
 export type DollScene = {
   go: (open: boolean, step: number, lead: number, elapsed?: number) => void;
-  /** Flies the camera into doll i's face; resolves with where the face is on screen when it's there */
-  zoomTo: (i: number) => Promise<FaceOnScreen>;
+  /** Where doll i's face is on the screen now (its painted window: DollSet's About transition starts there) */
+  faceOf: (i: number) => FaceOnScreen;
+  /** Where doll i's cup rim is on the screen (its front edge's middle, and half its width) */
+  rimOf: (i: number) => FaceOnScreen;
+  /** Doll i's lid comes off and is set down aside (he rises out of it, DollSet) */
+  release: (i: number) => void;
+  /** Doll i turns right round and comes back wearing `front` (his photo in its window); resolves when it has */
+  turn: (i: number, front: HTMLCanvasElement) => Promise<void>;
   ready: Promise<void>;
   dispose: () => void;
 };
 
-// The zoom into a doll's face (the About doll: it turns into his photo there, DollSet). The painted face
-// window is a circle FACE_R box units across its radius, centred FACE_Y down the doll; the camera ends
-// straight in front of it, near enough that the face fills ZOOM_FILL of the canvas's height; the other
-// dolls stay where they are and slip out of view as it flies in.
-// (the window as painted: a circle of 92 px at (299.5, 260) on the 600 × 780 painting, 3 px a box unit;
-//  its picture is a crop of his photo, ME_PHOTO in DollSet, so the two match feature for feature)
-const FACE_Y = 260 / 3, FACE_R = 92 / 3, ZOOM_MS = 1100, ZOOM_FILL = 0.34;
+// The About doll's face (it becomes his photo on the About page, DollSet): the painted window is a circle
+// FACE_R box units across its radius, FACE_Y down the doll. (Every doll's face window is FACE_R across; on
+// his 1200 × 1560 painting, 6 px a box unit, it's a circle of 174 px at (599.5, 520).)
+const FACE_Y = 520 / 6, FACE_R = 29;
+// Going to the About page (DollSet), his doll either opens, its lid set down aside so he can rise out of
+// it (release), or turns right round on the spot and comes back with his photo in its window (turn): the
+// painting is swapped halfway, while the face is turned away.
+const RELEASE_MS = 520, TURN_MS = 1100;
+const ASIDE: Pose = { x: 150, y: 40, tilt: -0.5, lean: 0.1 };
 
 export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): DollScene {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -470,10 +497,11 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   const SET = DOLLS.slice(0, SET_SIZE);
   const n = SET.length;
   const dolls = SET.map((d) => {
-    const { group, lid, head, shadow, disposables: own, look, repaint } = buildDoll(d, shadowTex);
+    const { group, lid, head, shadow, disposables: own, look, repaint, paintWith, wear } = buildDoll(d, shadowTex);
     scene.add(group, shadow);
     disposables.push(...own);
-    return { d, group, lid, head, shadow, look, repaint, gaze: gaze(), hover: 0, hoverTo: 0, peek: 0, visit: -1, play: -1 };
+    return { d, group, lid, head, shadow, look, repaint, paintWith, wear, gaze: gaze(), hover: 0, hoverTo: 0, peek: 0, visit: -1, play: -1,
+      release: -1, turn: -1, turnTo: null as THREE.CanvasTexture | null, turned: () => {} };
   });
   // The season's touches (data/season.ts): in December a hat on every doll, in October a pumpkin beside
   // the set, a little in front of the littlest doll. They arrive when their model has loaded.
@@ -482,11 +510,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
 
   // ---------- where the slots are ----------
   let X: number[] = [], S: number[] = [], closedShift = 0, k = 1;
-  // (the flight into a face, while there is one: see zoomTo)
-  let zoom: { i: number; t: number; fov: number; from: THREE.Vector3; look: THREE.Vector3; done: (f: FaceOnScreen) => void } | null = null;
   const layout = () => {
-    // (while flying into a face the camera is the zoom's; a resize then waits)
-    if (zoom) return;
     const W = canvas.clientWidth, Hc = canvas.clientHeight;
     if (!W || !Hc) return;
     renderer.setSize(W, Hc, false);
@@ -508,10 +532,18 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
   let step = DOLL_INTRO.step, lead = DOLL_INTRO.lead, total = (n - 2) * step + lead + HOP, t = root.classList.contains('is-open') ? total : 0, dir = 0;
   const heightOf = (i: number) => (FLOOR - 8) * S[i];
   // Each doll's move, and its jump: about the same few px for all, a touch more for the big ones
-  const MOVES: Move[] = ['hop', 'flip', 'spin'];
-  // How open a doll should be under the pointer: shut while its lid is thrown (it opens once it's back on)
-  const peekTo = (o: { hover: number; play: number }, i: number) => (MOVES[i] === 'flip' && o.play >= 0 ? 0 : o.hover);
+  // Pointing at a doll is the highlight: it hops (the littlest, him, turns right round), shut, so the crayon
+  // line DollSet draws round it fits it the whole time. Opening is for choosing it: the click lifts its lid
+  // (visit, below) before the page changes. ('flip', the thrown lid, is kept for later use.)
+  const MOVES: Move[] = ['hop', 'hop', 'spin'];
+  // How open a doll should be under the pointer: not at all (the highlight keeps it shut; it opens when
+  // chosen). (The littlest never opens: the innermost doll of a set is the one that doesn't.)
+  const peekTo = (_o: { hover: number; play: number }, _i: number) => 0;
   const liftOf = (i: number) => heightOf(n - 1) * 0.18 + (heightOf(i) - heightOf(n - 1)) * 0.05;
+  // Each doll's lift off the floor on the screen, px, for the crayon line round it (DollSet), which rides
+  // along with the hop: written to its slot only when it changes
+  const slotEls = Array.from(root.querySelectorAll<HTMLElement>('.ds-slot'));
+  const lifted: string[] = [];
   const apply = () => {
     const shift = closedShift * (1 - EASE_IN_OUT(t / total));
     dolls.forEach((o, i) => {
@@ -534,7 +566,8 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       if (o.lid) pose = blend(pose, PEEK, o.peek * (pose === SHUT ? 1 : 0));
       if (o.visit >= 0) {
         const v = clamp(o.visit / 460);
-        if (o.lid) pose = blend(pose, LIFTED, EASE_OUT(v));
+        // (the littlest never opens: it hops)
+        if (o.lid && i < n - 1) pose = blend(pose, LIFTED, EASE_OUT(v));
         else y += heightOf(i) * 0.22 * Math.sin(Math.PI * v);
       }
       if (o.play >= 0) {
@@ -542,8 +575,21 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
         y += m.y; sx = m.sx; sy = m.sy; spin = m.spin;
         if (MOVES[i] === 'flip') thrown = flipAt(o.play);
       }
+      // Leaving for the About page: the lid set down aside, or one whole turn on a little hop, lid on
+      if (o.lid && o.release >= 0) pose = blend(pose, ASIDE, LIFT(clamp(o.release / RELEASE_MS)));
+      if (o.turn >= 0) {
+        const u = clamp(o.turn / TURN_MS);
+        // (a lid peeking open under the pointer closes first)
+        pose = blend(pose, SHUT, EASE_OUT(clamp(u / 0.2))); thrown = null;
+        spin = Math.PI * 2 * EASE_IN_OUT(u);
+        y += heightOf(i) * 0.12 * Math.sin(Math.PI * u);
+        const q = u > 0.86 ? 0.05 * Math.sin((Math.PI * (u - 0.86)) / 0.14) : 0;
+        sx = 1 + q; sy = 1 - q;
+      }
       o.group.position.set(x + shift, y, 0);
       o.group.scale.set(S[i] * sx, S[i] * sy, S[i] * sx);
+      const lift = `${(-y * k).toFixed(1)}px`;
+      if (slotEls[i] && lifted[i] !== lift) { lifted[i] = lift; slotEls[i].style.setProperty('--lift', lift); }
       // The gaze, once the doll is out of the set (nested, it would poke through): turned, tilted, and
       // rocked a little onto the corner of its base (lifted so that corner stays on the floor), gently,
       // so the doll still reads as standing on the snow
@@ -565,7 +611,7 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       const w = 168 * S[i];
       o.shadow.position.set(x + shift, 0.5, 0);
       o.shadow.scale.set(w * 1.25 * (1 - y / (heightOf(i) * 1.6)), w * SHADOW_D, 1);
-      (o.shadow.material as THREE.MeshBasicMaterial).opacity = 0.62 * land * clamp(1 - y / (heightOf(i) * 0.9));
+      (o.shadow.material as THREE.MeshBasicMaterial).opacity = 0.85 * land * clamp(1 - y / (heightOf(i) * 0.9));
     });
     // The pumpkin: beside the last doll's place, there once that doll has landed (it grows in)
     if (gourd) {
@@ -577,36 +623,16 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     }
   };
 
-  // ---------- the zoom into a face ----------
-  const facePoint = (i: number) => new THREE.Vector3(dolls[i].group.position.x, dolls[i].group.position.y + (FLOOR - FACE_Y) * S[i], radiusAt(FACE_Y) * S[i]);
-  const stepZoom = (dt: number) => {
-    if (!zoom) return;
-    const z = zoom;
-    z.t = Math.min(z.t + dt, ZOOM_MS);
-    const e = EASE_IN_OUT(z.t / ZOOM_MS), face = facePoint(z.i);
-    const dist = (FACE_R * S[z.i]) / (ZOOM_FILL / 2) / Math.tan(((z.fov / 2) * Math.PI) / 180) / 2;
-    camera.position.lerpVectors(z.from, face.clone().add(new THREE.Vector3(0, 0, dist)), e);
-    camera.lookAt(new THREE.Vector3().lerpVectors(z.look, face, e));
-    camera.updateMatrixWorld();
-    // the doll looks straight at you as you arrive
-    dolls[z.i].group.rotation.set(0, 0, 0);
-    if (z.t >= ZOOM_MS) {
-      const c = toPage(camera, canvas, face.clone()), edge = toPage(camera, canvas, face.clone().add(new THREE.Vector3(FACE_R * S[z.i], 0, 0)));
-      z.done({ x: c.x, y: c.y, r: Math.hypot(edge.x - c.x, edge.y - c.y) });
-      z.done = () => {};
-    }
-  };
-
   // ---------- the loop: runs only while something moves ----------
   let raf = 0, last = 0, live = false, gone = false;
   // (a click's opening holds its pose once played, so it counts as still)
-  const still = () => (!zoom || zoom.t >= ZOOM_MS) && dir === 0 && dolls.every((o, i) => Math.abs(o.hover - o.hoverTo) < 0.002 && Math.abs(o.peek - peekTo(o, i)) < 0.002 && (o.visit < 0 || o.visit >= 460) && o.play < 0 && gazeStill(o.gaze));
+  const still = () => dir === 0 && dolls.every((o, i) => Math.abs(o.hover - o.hoverTo) < 0.002 && Math.abs(o.peek - peekTo(o, i)) < 0.002 && (o.visit < 0 || o.visit >= 460) && o.play < 0 && (o.release < 0 || o.release >= RELEASE_MS) && (o.turn < 0 || o.turn >= TURN_MS) && gazeStill(o.gaze));
   // The gaze: towards the pointer while the set is still, straight ahead while it opens
   let pointer: { x: number; y: number } | null = null;
   const speed = speedo();
   const eye = new THREE.Vector3();
   const aimAll = () => dolls.forEach((o, i) => {
-    if (!pointer || dir !== 0 || zoom || !S[i]) return aimGaze(o.gaze, null);
+    if (!pointer || dir !== 0 || !S[i]) return aimGaze(o.gaze, null);
     const e = toPage(camera, canvas, eye.set(o.group.position.x, (FLOOR - EYE_Y) * S[i], 0));
     aimGaze(o.gaze, pointer.x - e.x, e.y - pointer.y, speed.get());
   });
@@ -630,9 +656,15 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
       o.peek += (peekTo(o, i) - o.peek) * (1 - Math.exp(-dt / 150));
       if (o.visit >= 0) o.visit = Math.min(o.visit + dt, 460);
       if (o.play >= 0) { o.play += dt; if (o.play > MOVE_MS[MOVES[i]]) o.play = -1; }
+      if (o.release >= 0) o.release = Math.min(o.release + dt, RELEASE_MS);
+      if (o.turn >= 0 && o.turn < TURN_MS) {
+        o.turn = Math.min(o.turn + dt, TURN_MS);
+        // (halfway round, its face is at the back: the new painting goes on unseen)
+        if (o.turnTo && o.turn >= TURN_MS / 2) { o.wear(o.turnTo); o.turnTo = null; }
+        if (o.turn >= TURN_MS) o.turned();
+      }
     });
     apply();
-    stepZoom(dt);
     if (live) renderer.render(scene, camera);
     if (still()) { raf = 0; last = 0; } else raf = requestAnimationFrame(frame);
   };
@@ -682,6 +714,8 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     on(s, 'pointerleave', () => setHover(null));
     on(s, 'click', (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || reduce.matches) return;
+      // (his doll's own way out is DollSet's to start: release or turn)
+      if (i === ME_DOLL) return;
       dolls[i].visit = 0; dolls[i].play = -1; kick();
     });
   });
@@ -706,43 +740,57 @@ export function createDollScene(root: HTMLElement, canvas: HTMLCanvasElement): D
     live = true; layout(); apply(); renderer.render(scene, camera);
   });
 
-  /** The canvas is a box round the set; flying in, the doll would outgrow it and be cut off by its edges.
-   *  So it grows to the whole window first, and the camera's view is widened by the same amount and
-   *  shifted (a view offset) so that everything stays exactly where it was on the screen. */
-  const fillWindow = () => {
-    const r = canvas.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight;
-    const fov = camera.fov, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    Object.assign(canvas.style, { left: `${canvas.offsetLeft - r.left}px`, top: `${canvas.offsetTop - r.top}px`, width: `${vw}px`, height: `${vh}px` });
-    renderer.setSize(vw, vh, false);
-    // the old canvas's view, extended: a virtual view centred where it was, big enough to hold the window
-    const fw = 2 * Math.max(cx, vw - cx), fh = 2 * Math.max(cy, vh - cy);
-    camera.fov = (2 * Math.atan(Math.tan(((fov / 2) * Math.PI) / 180) * (fh / r.height)) * 180) / Math.PI;
-    camera.aspect = fw / fh;
-    camera.setViewOffset(fw, fh, fw / 2 - cx, fh / 2 - cy, vw, vh);
-    camera.updateProjectionMatrix();
-    return fov;
+  const faceOf = (i: number): FaceOnScreen => {
+    const g = dolls[i].group;
+    g.updateMatrixWorld();
+    const c = new THREE.Vector3(0, FLOOR - FACE_Y, radiusAt(FACE_Y)).applyMatrix4(g.matrixWorld);
+    const e = new THREE.Vector3(FACE_R, FLOOR - FACE_Y, radiusAt(FACE_Y)).applyMatrix4(g.matrixWorld);
+    const a = toPage(camera, canvas, c), b = toPage(camera, canvas, e);
+    return { x: a.x, y: a.y, r: Math.hypot(b.x - a.x, b.y - a.y) };
   };
 
-  const zoomTo = (i: number) => new Promise<FaceOnScreen>((done) => {
+  // The cup's rim on the screen (viewport px): the middle of its front edge, and half its width
+  const rimOf = (i: number): FaceOnScreen => {
+    const g = dolls[i].group;
+    g.updateMatrixWorld();
+    const y = FLOOR - WAIST;
+    const a = toPage(camera, canvas, new THREE.Vector3(0, y, RW).applyMatrix4(g.matrixWorld));
+    const l = toPage(camera, canvas, new THREE.Vector3(-RW, y, 0).applyMatrix4(g.matrixWorld));
+    const r = toPage(camera, canvas, new THREE.Vector3(RW, y, 0).applyMatrix4(g.matrixWorld));
+    return { x: (l.x + r.x) / 2, y: a.y, r: Math.abs(r.x - l.x) / 2 };
+  };
+  const release = (i: number) => {
+    if (reduce.matches || !dolls[i].lid) return;
     const o = dolls[i];
-    // no click hop or lid lift on the way in: it closes and faces you
-    o.visit = -1; o.play = -1; o.hoverTo = 0;
-    const fov = fillWindow();
-    zoom = { i, t: 0, fov, from: camera.position.clone(), look: (camera.userData.target as THREE.Vector3 | undefined)?.clone() ?? new THREE.Vector3(), done };
-    renderer.render(scene, camera);
-    kick();
+    o.play = -1; o.release = 0; kick();
+  };
+  const turn = (i: number, front: HTMLCanvasElement) => new Promise<void>((done) => {
+    const o = dolls[i];
+    if (reduce.matches) { done(); return; }
+    loadArt().then((art) => {
+      const back = art[i]?.back;
+      if (gone || !back) { done(); return; }
+      o.turnTo = o.paintWith({ front, back });
+      o.play = -1; o.visit = -1; o.turn = 0; o.turned = done;
+      last = 0; kick();
+    }, () => done());
   });
+
+  const dispose = () => {
+    gone = true;
+    cancelAnimationFrame(raf);
+    ro.disconnect();
+    off.forEach((f) => f());
+    disposables.forEach((x) => x.dispose());
+  };
 
   return {
     go,
-    zoomTo,
+    faceOf,
+    rimOf,
+    release,
+    turn,
     ready,
-    dispose: () => {
-      gone = true;
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      off.forEach((f) => f());
-      disposables.forEach((x) => x.dispose());
-    },
+    dispose,
   };
 }

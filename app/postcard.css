@@ -1,0 +1,232 @@
+/*
+  The living postcard (homepage, Contact): cream paper with a fine grain, black ink type, one cobalt ink
+  for the landscape, a red sun, a yellow crayon for what you point at. The landscape and the sun are
+  one-ink prints on white laid on the paper with multiply, so their white is the paper and the inks
+  overprint. Nothing that multiplies may sit inside its own stacking context (a z-index, opacity, a
+  transform on a parent), or it would blend with nothing and show its white: the hero is the one group
+  they blend in. Type: Playfair Display (italic for the name and project names), IBM Plex Mono tracked
+  out for the small typed labels. Motion: the crayon draws in (560 ms), labels and cards ease out
+  (200–260 ms), transform and opacity only, hover only on fine pointers, reduced motion keeps the states
+  without the travel.
+*/
+.pc {
+  --paper: #f3ead9;
+  --ink: #16161a;
+  --cobalt: #2445b5;
+  --poppy: #e2412b;
+  --crayon: #fdbd07;
+  --serif: var(--font-serif), 'Playfair Display', Georgia, serif;
+  --mono: var(--font-mono), 'IBM Plex Mono', ui-monospace, monospace;
+  --gutter: clamp(16px, 3.2vw, 48px);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --wf-accent: var(--cobalt);
+  --hp-accent: var(--cobalt);
+  background: var(--paper) url(/postcard/grain.webp) 0 0 / 512px repeat;
+  color: var(--ink);
+}
+html:has(.pc), html:has(.pc) body { background: var(--paper); }
+html:has(.pc) { scrollbar-color: #c9bb9f var(--paper); }
+.pc ::selection { background: rgba(253, 189, 7, 0.45); color: var(--ink); }
+.pc :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+/* (the snowball cursor belonged to the snow) */
+html[data-snow] .hp-home.pc { cursor: auto; }
+
+/* ---------- the bar ---------- */
+.pc-bar { position: absolute; inset: 0 0 auto; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: clamp(14px, 2.2vw, 26px) var(--gutter); }
+.pc-mark { display: block; flex: none; }
+.pc-mark img { display: block; width: auto; height: clamp(36px, 3.6vw, 48px); }
+.pc-nav { display: flex; align-items: center; gap: clamp(14px, 2.6vw, 44px); margin: 0; padding: 0; list-style: none; font-family: var(--serif); font-size: clamp(16px, 1.55vw, 22px); }
+.pc-nav a:not(.pc-pill) { position: relative; display: block; padding: 6px 0; color: inherit; text-decoration: none; }
+/* the crayon line under a word: wiped in from the left, as if drawn */
+.pc-nav a:not(.pc-pill)::after { content: ""; position: absolute; left: -8%; right: -8%; bottom: -4px; height: 9px; background: url(/postcard/underline.png) center / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); transition: clip-path 340ms cubic-bezier(0.45, 0.1, 0.25, 1); pointer-events: none; }
+.pc-nav a[aria-current="page"]::after { clip-path: inset(0 0 0 0); }
+@media (hover: hover) and (pointer: fine) { .pc-nav a:not(.pc-pill):hover::after { clip-path: inset(0 0 0 0); } }
+.pc-nav a:not(.pc-pill):focus-visible::after { clip-path: inset(0 0 0 0); }
+.pc-pill { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 999px; background: var(--ink) url(/postcard/pill.webp) center / 100% 100% no-repeat; color: var(--paper); font-family: var(--mono); font-size: clamp(13px, 1.05vw, 15px); letter-spacing: 0.02em; text-decoration: none; white-space: nowrap; transition: translate 200ms var(--ease), scale 160ms var(--ease); }
+.pc-pill:active { scale: 0.97; }
+@media (hover: hover) and (pointer: fine) { .pc-pill:hover { translate: 0 -1px; } .pc-pill:hover span { display: inline-block; translate: 1px -1px; } }
+.pc-pill span { transition: translate 200ms var(--ease); }
+@media (max-width: 640px) {
+  .pc-nav { gap: 12px; font-size: 15px; }
+  .pc-pill { padding: 8px 12px; font-size: 12px; }
+}
+@media (max-width: 400px) { .pc-nav { gap: 9px; font-size: 14px; } .pc-pill { padding: 7px 10px; } }
+
+/* ---------- the hero ---------- */
+/* One blending group, on its own paper (the same grain, lined up with the page's) */
+.pc-hero { position: relative; isolation: isolate; height: clamp(560px, calc(100svh - 14vw + 44px), 920px); overflow: clip; background: var(--paper) url(/postcard/grain.webp) 0 0 / 512px repeat; }
+/* The landscape, in two boxes, each the prints' own proportion (2:1), so the Space Needle's tip and the
+   mountain tops always show. The distance (the far print: mountains, water, the sun and the clouds) runs
+   wide across the page, so the left isn't bare paper; its bottom, mist, runs on under the cards. The near
+   print (the landmark, city and trees) is smaller and to the right: its foot (about 12% up from its
+   bottom) sits a little above the dolls' floor, so they stand in front of the city, not in it. Both fade
+   out toward the left edge. The far print is a touch lighter than the near one, as distance is.
+   (Neither box may get a z-index, opacity or transform: the prints in them blend with the hero's paper.) */
+.pc-land { position: absolute; inset: 0; pointer-events: none; }
+/* (its horizon, the shore under the mountains, 64% down the print, is set behind the lower third of the
+   dolls, so they stand in the foreground, not on the mountain's slopes; the water and mist below it fade
+   out) */
+.pc-distance { position: absolute; right: 0; bottom: calc(11% + 0.3 * clamp(200px, min(40svh, 24vw), 380px) - 0.36 * min(44vw, 94svh)); width: min(88vw, 188svh); aspect-ratio: 2; }
+.pc-nearby { position: absolute; right: -2vw; bottom: calc(11% - 0.07 * min(33vw, 72svh)); width: min(66vw, 144svh); aspect-ratio: 2; }
+.pc-far, .pc-near { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; user-select: none;
+  transform: translate3d(calc(var(--dx, 0) * var(--d) * -1px), 0, 0); }
+.pc-far { --d: var(--far); opacity: 0.8; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%), linear-gradient(180deg, #000 66%, transparent 78%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0%, #000 12%), linear-gradient(180deg, #000 66%, transparent 78%); mask-composite: intersect; }
+.pc-near { --d: var(--near); -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%); mask-image: linear-gradient(90deg, transparent 0%, #000 18%); }
+/* The clouds (CloudPrint): a live halftone on a canvas across the sky, its two rows a little lower than the
+   name, over the mountains' shoulders; it multiplies onto the paper like the prints */
+.pc-clouds { position: absolute; left: 0; top: 14%; width: 100%; height: 40%; mix-blend-mode: multiply; pointer-events: none; }
+@media (max-width: 699px) { .pc-clouds { top: 30%; height: 26%; opacity: 0.7; } }
+/* The sun: its own red ink, behind the name and setting behind the mountains (clipped to the sky) */
+.pc-sun { --d: var(--far); position: absolute; left: 0; bottom: 0; width: 100%; height: calc(100% * 1088 / 768); overflow: visible; transform: translate3d(calc(var(--dx, 0) * var(--d) * -1px), 0, 0); }
+/* (a new place fades in over the old: on the pictures themselves, never a box round them, so they keep blending) */
+.pc-near.is-new, .pc-sun.is-new { animation: pc-fade 700ms ease both; }
+.pc-far.is-new { animation: pc-fade-far 700ms ease both; }
+@keyframes pc-fade-far { from { opacity: 0; } to { opacity: 0.8; } }
+@keyframes pc-fade { from { opacity: 0; } }
+/* The name: huge, in front of the sun and the landscape, behind the dolls */
+.pc-name { position: absolute; left: 0; right: 0; top: clamp(64px, 9%, 96px); margin: 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(60px, 15.2vw, 300px); line-height: 1; letter-spacing: -0.035em; text-align: center; white-space: nowrap; color: var(--ink); }
+.pc-role { position: absolute; left: var(--gutter); top: 44%; z-index: 4; margin: 0; font-family: var(--mono); font-size: clamp(12px, 1.05vw, 16px); letter-spacing: 0.3em; }
+.pc-role::after { content: ""; display: block; width: 84px; height: 2px; margin-top: 18px; background: var(--ink); }
+/* "Currently in …", typed on a torn scrap of paper */
+.pc-where { position: absolute; left: calc(var(--gutter) + 1vw); bottom: 16%; z-index: 4; display: inline-flex; align-items: center; gap: 10px; margin: 0; padding: 15px 30px 15px 22px; isolation: isolate; font-family: var(--mono); font-size: clamp(12px, 1.05vw, 15px); letter-spacing: 0.04em; rotate: -1.2deg; }
+.pc-where::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url(/postcard/chip.webp) center / 100% 100% no-repeat; filter: drop-shadow(0 6px 8px rgba(60, 40, 10, 0.16)); }
+.pc-where svg { flex: none; }
+.pc-where-city { animation: pc-fade 500ms ease both; }
+
+/* ---------- the set, in the hero ---------- */
+.pc-set { position: absolute; left: 0; right: 0; bottom: 11%; z-index: 3; display: flex; justify-content: center; pointer-events: none; }
+/* The ground: a halftone patch whose dense middle line is the dolls' floor, wider than the set, moved with it */
+/* (it's the set's own: a layer under its dolls, a bit wider than the row, the bases standing in its upper
+   half, as on the postcard) */
+.pc .ds::before { content: ""; position: absolute; left: -14%; right: -14%; bottom: var(--pad, 0px); height: calc(0.3 * var(--h)); translate: 0 30%; background: url(/postcard/ground.webp) center / 100% 100% no-repeat; opacity: 0.8; pointer-events: none; }
+/* (the set stands a little right of centre, as on the postcard, leaving the left for his title and place) */
+.pc .pc-set .ds { --h: clamp(200px, min(40svh, 24vw), 380px); --g: clamp(8px, 1.2vw, 18px); --mid: -3vw; padding-bottom: 0; pointer-events: auto; }
+.pc .ds-shadow { background: radial-gradient(closest-side, rgba(40, 28, 8, 0.55), rgba(40, 28, 8, 0.2) 60%, rgba(40, 28, 8, 0)); }
+
+/* The label: a little torn paper tag that comes out at the doll's shoulder when you point at it or tab
+   to it, with the place it goes in typed on it. (No glass: the postcard has none.) The paper and its
+   shadow are a layer behind the words: Chrome can drop small rotated text drawn inside a filter beside
+   the 3D canvas, so the words themselves are never filtered. */
+.pc .ds-cap { top: -3%; left: 64%; translate: 0 6px; padding: 9px 16px 8px; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none;
+  font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); rotate: -3deg; z-index: 130; pointer-events: none; transition: opacity 160ms ease, translate 220ms var(--ease); }
+.pc .ds-cap::before, .pc .ds-slot:hover .ds-cap::before, .pc .ds-slot:focus-visible .ds-cap::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 0; background: url(/postcard/tag.webp) center / 100% 100% no-repeat; box-shadow: none; filter: drop-shadow(0 4px 6px rgba(60, 40, 10, 0.2)); opacity: 1; scale: 1; transition: none; }
+.pc .ds.is-open .ds-slot .ds-cap { opacity: 0; }
+.pc .ds-slot:focus-visible { outline: none; }
+.pc .ds.is-open .ds-slot:focus-visible .ds-cap { opacity: 1; translate: 0 0; transition-delay: 120ms; }
+@media (hover: hover) and (pointer: fine) {
+  .pc .ds.is-open:not(.is-moving) .ds-slot:hover .ds-cap { opacity: 1; translate: 0 0; transition-delay: 120ms; }
+}
+/* On touch there's no pointing, so each doll's word sits under it, plainly */
+@media (hover: none), (pointer: coarse) {
+  .pc .pc-set .ds { padding-bottom: 36px; --pad: 36px; }
+  .pc .ds-cap { top: calc(100% + 8px); left: 50%; translate: -50% 0; padding: 6px 9px 5px; rotate: 0deg; font-size: 10px; letter-spacing: 0.1em; }
+  .pc .ds.is-open .ds-slot .ds-cap { opacity: 1; translate: -50% 0; }
+  .pc .ds-cap::before { display: block; }
+}
+
+/* (the flat dolls, if the 3D set can't run, keep shut on hover too: opening is for the click) */
+@media (hover: hover) and (pointer: fine) { .pc .ds:not(.is-moving) .ds-slot:hover .ds-doll .ds-top { transform: none; } }
+
+/* The crayon line round the doll (Crayon.tsx): drawn from the top of the head and round in 560 ms, the
+   shine marks after it, a quick fade on the way out (never drawn backwards). It rides the doll's hop. */
+.ds-crayon-defs { position: absolute; width: 0; height: 0; }
+.ds-crayon { position: absolute; left: 0; bottom: calc(var(--rise) * var(--h)); z-index: 120; width: 100%; height: 100%; overflow: visible; pointer-events: none; translate: 0 var(--lift, 0px); }
+.ds-wax { fill: none; stroke: url(#ds-wax); stroke-width: calc(var(--sw) * 1px); stroke-linecap: round; stroke-linejoin: round; filter: url(#ds-hand); stroke-dasharray: 1 1.2; stroke-dashoffset: 1; opacity: 0; transition: opacity 180ms ease-out, stroke-dashoffset 0s linear 180ms; }
+.ds-wax.is-tick { stroke-width: calc(var(--sw) * 0.85px); }
+.ds { --draw: 560ms; }
+.ds.is-open .ds-slot:focus-visible .ds-wax.is-line { opacity: 1; stroke-dashoffset: 0; transition: stroke-dashoffset var(--draw) cubic-bezier(0.45, 0.1, 0.25, 1), opacity 60ms linear; }
+.ds.is-open .ds-slot:focus-visible .ds-wax.is-tick { opacity: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 150ms cubic-bezier(0.2, 0.8, 0.3, 1) calc(var(--draw) * 0.8 + var(--k) * 55ms), opacity 1ms linear calc(var(--draw) * 0.8 + var(--k) * 55ms); }
+@media (hover: hover) and (pointer: fine) {
+  .ds.is-open:not(.is-moving) .ds-slot:hover .ds-wax.is-line { opacity: 1; stroke-dashoffset: 0; transition: stroke-dashoffset var(--draw) cubic-bezier(0.45, 0.1, 0.25, 1), opacity 60ms linear; }
+  .ds.is-open:not(.is-moving) .ds-slot:hover .ds-wax.is-tick { opacity: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 150ms cubic-bezier(0.2, 0.8, 0.3, 1) calc(var(--draw) * 0.8 + var(--k) * 55ms), opacity 1ms linear calc(var(--draw) * 0.8 + var(--k) * 55ms); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds .ds-slot .ds-wax { transition: opacity 150ms ease !important; }
+  .ds .ds-wax { stroke-dashoffset: 0; }
+  .pc .ds-cap { transition: opacity 150ms ease; }
+}
+
+/* ---------- the projects, under the hero ---------- */
+/* Torn cards in a row that overlaps the foot of the hero, each a little askew, as if laid down by hand */
+.pc-strip { position: relative; z-index: 4; margin-top: clamp(-72px, -5vw, -28px); padding: 0 clamp(8px, 1.6vw, 28px) 12px; }
+/* Paper under the cards, fading in just above them, so no landscape shows through between their torn edges */
+.pc-strip::before { content: ""; position: absolute; inset: -18px 0 0; z-index: -2; background: var(--paper) url(/postcard/grain.webp) 0 0 / 512px repeat; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 58px); mask-image: linear-gradient(180deg, transparent 0, #000 58px); pointer-events: none; }
+.pc-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; max-width: 1720px; margin: 0 auto; padding: 0; list-style: none; }
+/* (the row's box passes pointing through, so the Durak card peeking over it can be reached; the cards themselves take it) */
+.pc-cards, .pc-card { pointer-events: none; }
+.pc-card-in { pointer-events: auto; }
+.pc-card { margin-inline: -1.4%; rotate: var(--tilt, 0deg); }
+.pc-card.is-versum { --tilt: -1.2deg; margin-top: 4px; }
+.pc-card.is-inkling { --tilt: 0.8deg; margin-top: 14px; }
+.pc-card.is-intent-os { --tilt: -0.6deg; margin-top: 8px; }
+.pc-card.is-skilltree { --tilt: 1.1deg; margin-top: 22px; }
+.pc-card-in { position: relative; display: block; color: var(--ink); text-decoration: none; filter: drop-shadow(0 10px 14px rgba(40, 28, 8, 0.16)); transition: translate 260ms var(--ease), filter 260ms ease; }
+.pc-card-in img { display: block; width: 100%; height: auto; }
+.pc-card.is-dark .pc-card-in { color: var(--paper); }
+.pc-card-words { position: absolute; left: 10%; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; gap: 10px; max-width: 48%; }
+.pc-card-name { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(22px, 2.5vw, 42px); line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; }
+.pc-card-arrow { display: inline-block; font-style: normal; font-size: 0.7em; transition: translate 220ms var(--ease); }
+.pc-card-note { font-family: var(--mono); font-size: clamp(10px, 0.8vw, 12px); letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.78; }
+.pc-card-in:active { translate: 0 -2px; }
+a.pc-card-in:focus-visible { outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  a.pc-card-in:hover { translate: 0 -8px; filter: drop-shadow(0 18px 20px rgba(40, 28, 8, 0.22)); }
+  a.pc-card-in:hover .pc-card-arrow { translate: 2px -2px; }
+}
+@media (max-width: 899px) {
+  .pc-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 6px; }
+  .pc-card-name { font-size: clamp(22px, 4.4vw, 36px); }
+  .pc-card-note { font-size: 11px; }
+}
+@media (max-width: 519px) {
+  .pc-strip { padding-inline: 6px; }
+  .pc-cards { row-gap: 2px; }
+  .pc-card-words { left: 9%; gap: 6px; max-width: 52%; }
+  .pc-card-name { font-size: clamp(17px, 5.4vw, 24px); }
+  .pc-card-note { font-size: 8.5px; letter-spacing: 0.1em; }
+}
+@media (prefers-reduced-motion: reduce) { .pc-card-in, .pc-card-arrow { transition: none; } }
+
+/* The Durak card: tucked behind the last project, peeking over it; it rises when you reach for it */
+.pc-strip .dk-egg { --cw: clamp(52px, 4.6vw, 68px); position: absolute; right: clamp(40px, 9vw, 160px); top: clamp(-34px, -2.4vw, -18px); bottom: auto; z-index: -1; }
+.pc-strip .dk-egg .dk-card { transform: translateY(18%) rotate(12deg); }
+.pc-strip .dk-egg:focus-visible .dk-card { transform: translateY(-14%) rotate(6deg); }
+@media (hover: hover) and (pointer: fine) { .pc-strip .dk-egg:hover .dk-card { transform: translateY(-16%) rotate(6deg); } }
+@media (max-width: 519px) { .pc-strip .dk-egg { right: 24px; } }
+
+/* ---------- phones: the hero flows top to bottom (name, title, the dolls, where he is) ---------- */
+@media (max-width: 699px) {
+  .pc-hero { display: flex; flex-direction: column; align-items: center; height: auto; min-height: 0; padding: 92px 0 64px; box-sizing: border-box; }
+  .pc-name, .pc-role, .pc-set, .pc-where { position: relative; inset: auto; }
+  .pc-name { order: 1; } .pc-role { order: 2; } .pc-set { order: 3; } .pc-where { order: 4; }
+  .pc-name { font-size: clamp(56px, 19vw, 120px); line-height: 0.92; white-space: normal; }
+  .pc-role { margin-top: 18px; font-size: 11px; letter-spacing: 0.24em; text-align: center; }
+  .pc-role::after { display: none; }
+  .pc-set { margin-top: 8px; }
+  .pc .pc-set .ds { --h: min(calc((100vw - 32px - var(--gaps) * var(--g)) / var(--row)), 230px); --mid: 0px; }
+  .pc-where { margin-top: 20px; left: auto; bottom: auto; padding: 12px 24px 12px 18px; }
+  .pc-distance, .pc-nearby { top: auto; bottom: 6%; right: -42vw; width: 190vw; }
+  .pc-far, .pc-near { -webkit-mask-image: none; mask-image: none; }
+}
+/* ---------- Contact: a postcard ---------- */
+.pc-page { min-height: 100svh; }
+.pc-page main { display: grid; place-items: center; min-height: 100svh; padding: 120px var(--gutter) 64px; box-sizing: border-box; }
+.pc-postcard { position: relative; display: grid; grid-template-columns: 1.1fr 1px 1fr; gap: clamp(20px, 3vw, 44px); width: min(100%, 980px); padding: clamp(24px, 4vw, 56px); background: #f8f2e6 url(/postcard/grain.webp) 0 0 / 512px; box-shadow: 0 1px 0 rgba(22, 22, 26, 0.06), 0 24px 50px -24px rgba(40, 28, 8, 0.35); rotate: -0.6deg; }
+.pc-postcard::before { content: ""; grid-column: 2; grid-row: 1; background: rgba(22, 22, 26, 0.22); }
+.pc-postcard-note { grid-column: 1; grid-row: 1; align-self: center; }
+.pc-postcard-title { margin: 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(48px, 7vw, 96px); line-height: 1; letter-spacing: -0.03em; }
+.pc-postcard-note p { max-width: 26em; margin: 22px 0 0; font-size: 17px; line-height: 1.55; }
+.pc-postcard-to { grid-column: 3; grid-row: 1; position: relative; padding-top: 128px; }
+.pc-stamp { position: absolute; right: 0; top: 0; width: 96px; height: 96px; padding: 8px; background: #fbf7ef; box-shadow: 0 0 0 1px rgba(22, 22, 26, 0.12); mix-blend-mode: multiply; rotate: 3deg; }
+.pc-postmark { position: absolute; right: 70px; top: 54px; margin: 0; padding: 14px 10px; border: 1.5px solid rgba(36, 69, 181, 0.65); border-radius: 50%; color: rgba(36, 69, 181, 0.8); font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; rotate: -14deg; }
+.pc-lines { margin: 0; padding: 0; list-style: none; font-family: var(--mono); }
+.pc-lines li { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid rgba(22, 22, 26, 0.22); }
+.pc-lines span { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.6; }
+.pc-lines a { color: var(--ink); font-size: clamp(15px, 1.4vw, 18px); text-decoration: none; overflow-wrap: anywhere; }
+@media (hover: hover) and (pointer: fine) { .pc-lines a:hover { text-decoration: underline; text-decoration-color: var(--crayon); text-decoration-thickness: 3px; text-underline-offset: 5px; } }
+@media (max-width: 759px) {
+  .pc-postcard { grid-template-columns: minmax(0, 1fr); rotate: 0deg; }
+  .pc-postcard::before { display: none; }
+  .pc-postcard-note, .pc-postcard-to { grid-column: 1; grid-row: auto; }
+  .pc-postcard-to { padding-top: 112px; }
+}

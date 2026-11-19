@@ -1,8 +1,8 @@
-// The matryoshka dolls' art, shared by the flat (SVG) dolls and the 3D ones, in Gzhel colours after the
-// snow concept, each with a lighter headscarf, a fringe, an apron panel with a folk flower. The first
-// SET_SIZE are the homepage's set, biggest first: Work (cobalt), Side projects (porcelain white) and the
-// littlest, About me (white). Every one opens, the littlest too (it's empty inside). Shapes are in the
-// dolls' 200 × 260 box.
+// The matryoshka dolls' art, shared by the flat (SVG) dolls and the 3D ones, Gzhel colours, each with a
+// lighter headscarf, a fringe, an apron panel with a folk flower. The first SET_SIZE are the homepage's
+// set, biggest first, and its navigation: Projects (the big flower), Play (the winter village) and the
+// littlest, him: About (and the way to reach him). The littlest never opens (the innermost doll of a set
+// doesn't); his turns round as him instead. Shapes are in the dolls' 200 × 260 box.
 /** One doll's colours; a doll without an apron is solid (one piece, no lid) */
 export type Doll = { size: number; body: string; shade: string; scarf: string; apron: string | null; deep: string };
 export const DOLLS: readonly Doll[] = [
@@ -12,13 +12,16 @@ export const DOLLS: readonly Doll[] = [
 ];
 /** How many of DOLLS make the homepage's set */
 export const SET_SIZE = 3;
-/** Painted fronts and backs, by doll: Gzhel, drawn with Codex's image tool after the snow concept and
+/** His doll (About), the littlest: it turns round as him on the way to the About page, instead of opening */
+export const ME_DOLL = 2;
+/** Painted fronts and backs, by doll: Gzhel, cobalt brushwork on cream porcelain (Codex repainted them on
+ *  2026-11-18 after his postcard concept, the faces pasted back from the earlier paintings), drawn with Codex's image tool and
  *  fitted to the outline (a 200 × 260 box at 5 px a unit). The 3D dolls wrap them, the flat ones show the
  *  front; a doll without one is drawn from its colours above. */
 export const DOLL_ART: ({ front: string; back: string } | null)[] = [
-  { front: '/dolls/doll-1-front.webp', back: '/dolls/doll-1-back.webp' }, // Work: the big flower
-  { front: '/dolls/doll-2-front.webp', back: '/dolls/doll-2-back.webp' }, // Side projects: a winter village
-  { front: '/dolls/me-front.webp', back: '/dolls/doll-4-back.webp' }, // About me: him, his face in the window, like his sisters'
+  { front: '/dolls/doll-1-front.webp', back: '/dolls/doll-1-back.webp' }, // Projects: the big flower
+  { front: '/dolls/doll-2-front.webp', back: '/dolls/doll-2-back.webp' }, // Play: a winter village
+  { front: '/dolls/me-front.webp', back: '/dolls/doll-4-back.webp' }, // About: him, painted in his sisters' style
 ];
 export const INK = '#1b2740';
 export const SKIN = '#fff8f2';
