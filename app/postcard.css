@@ -50,7 +50,19 @@ html[data-snow] .hp-home.pc { cursor: auto; }
   .pc-nav { gap: 12px; font-size: 15px; }
   .pc-pill { padding: 8px 12px; font-size: 12px; }
 }
-@media (max-width: 400px) { .pc-nav { gap: 9px; font-size: 14px; } .pc-pill { padding: 7px 10px; } }
+/* (phones: two rows, the mark and the résumé on top, the four ways in spread out under them) */
+@media (max-width: 520px) {
+  .pc-bar { flex-wrap: wrap; row-gap: 6px; }
+  .pc-bar nav, .pc-nav { display: contents; }
+  .pc-nav > li { font-family: var(--serif); font-size: 15px; white-space: nowrap; }
+  .pc-nav > li:last-child { order: 1; margin-left: auto; }
+  .pc-nav > li:not(:last-child) { order: 2; }
+  .pc-nav > li:first-child { margin-left: 0; }
+  .pc-bar::after { content: ""; order: 1; flex-basis: 100%; height: 0; }
+  .pc-nav > li:not(:last-child) { flex: 1 1 0; text-align: center; }
+  .pc-nav > li:nth-child(1) { text-align: left; }
+  .pc-nav > li:nth-child(4) { text-align: right; }
+}
 
 /* ---------- the hero ---------- */
 /* One blending group, on its own paper (the same grain, lined up with the page's) */
@@ -87,14 +99,12 @@ html[data-snow] .hp-home.pc { cursor: auto; }
 .pc-name { position: absolute; left: 0; right: 0; top: clamp(64px, 9%, 96px); margin: 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(60px, 15.2vw, 300px); line-height: 1; letter-spacing: -0.035em; text-align: center; white-space: nowrap; color: var(--ink); }
 .pc-role { position: absolute; left: var(--gutter); top: 44%; z-index: 4; margin: 0; font-family: var(--mono); font-size: clamp(12px, 1.05vw, 16px); letter-spacing: 0.3em; }
 .pc-role::after { content: ""; display: block; width: 84px; height: 2px; margin-top: 18px; background: var(--ink); }
-/* "Currently in …", typed on a torn scrap of paper */
-.pc-where { position: absolute; left: calc(var(--gutter) + 1vw); bottom: 16%; z-index: 4; display: inline-flex; align-items: center; gap: 10px; margin: 0; padding: 15px 30px 15px 22px; isolation: isolate; font-family: var(--mono); font-size: clamp(12px, 1.05vw, 15px); letter-spacing: 0.04em; rotate: -1.2deg; }
-.pc-where::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url(/postcard/chip.webp) center / 100% 100% no-repeat; filter: drop-shadow(0 6px 8px rgba(60, 40, 10, 0.16)); }
-.pc-where svg { flex: none; }
+/* "Currently in …": plain typed words under his title's rule; the city changes with the place */
+.pc-where { position: absolute; left: var(--gutter); top: calc(44% + clamp(46px, 3.8vw, 58px)); z-index: 4; margin: 0; font-family: var(--mono); font-size: clamp(11px, 0.85vw, 13px); letter-spacing: 0.14em; color: rgba(22, 22, 26, 0.62); text-shadow: 0 0 4px var(--paper), 0 0 10px var(--paper); }
 .pc-where-city { animation: pc-fade 500ms ease both; }
 
 /* ---------- the set, in the hero ---------- */
-.pc-set { position: absolute; left: 0; right: 0; bottom: 11%; z-index: 3; display: flex; justify-content: center; pointer-events: none; }
+.pc-set { position: absolute; left: 0; right: 0; bottom: calc(11% + 18px); z-index: 3; display: flex; justify-content: center; pointer-events: none; }
 /* The ground: a halftone patch whose dense middle line is the dolls' floor, wider than the set, moved with it */
 /* (it's the set's own: a layer under its dolls, a bit wider than the row, the bases standing in its upper
    half, as on the postcard) */
@@ -103,25 +113,19 @@ html[data-snow] .hp-home.pc { cursor: auto; }
 .pc .pc-set .ds { --h: clamp(200px, min(40svh, 24vw), 380px); --g: clamp(8px, 1.2vw, 18px); --mid: -3vw; padding-bottom: 0; pointer-events: auto; }
 .pc .ds-shadow { background: radial-gradient(closest-side, rgba(40, 28, 8, 0.55), rgba(40, 28, 8, 0.2) 60%, rgba(40, 28, 8, 0)); }
 
-/* The label: a little torn paper tag that comes out at the doll's shoulder when you point at it or tab
-   to it, with the place it goes in typed on it. (No glass: the postcard has none.) The paper and its
-   shadow are a layer behind the words: Chrome can drop small rotated text drawn inside a filter beside
-   the 3D canvas, so the words themselves are never filtered. */
-.pc .ds-cap { top: -3%; left: 64%; translate: 0 6px; padding: 9px 16px 8px; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none;
-  font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); rotate: -3deg; z-index: 130; pointer-events: none; transition: opacity 160ms ease, translate 220ms var(--ease); }
-.pc .ds-cap::before, .pc .ds-slot:hover .ds-cap::before, .pc .ds-slot:focus-visible .ds-cap::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 0; background: url(/postcard/tag.webp) center / 100% 100% no-repeat; box-shadow: none; filter: drop-shadow(0 4px 6px rgba(60, 40, 10, 0.2)); opacity: 1; scale: 1; transition: none; }
-.pc .ds.is-open .ds-slot .ds-cap { opacity: 0; }
+/* The label: the place each doll goes, typed plainly under it and always there (the dolls are the
+   homepage's way in, so a visitor shouldn't have to point to find out). Pointing at a doll or tabbing to
+   it draws the crayon round it (below) and underlines its word. */
+.pc .ds-cap, .pc .ds.is-open .ds-slot .ds-cap, .pc .ds-slot:not(:first-child) .ds-cap { top: calc(100% + 6px); left: 50%; translate: -50% 0; padding: 0; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; opacity: 1;
+  font-family: var(--mono); font-size: clamp(10px, 0.8vw, 12px); font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); rotate: 0deg; z-index: 130; pointer-events: none;
+  text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 3px; text-underline-offset: 6px; text-shadow: 0 0 4px var(--paper), 0 0 10px var(--paper); transition: text-decoration-color 200ms ease; }
+.pc .ds-cap::before, .pc .ds-slot:hover .ds-cap::before, .pc .ds-slot:focus-visible .ds-cap::before { display: none; }
 .pc .ds-slot:focus-visible { outline: none; }
-.pc .ds.is-open .ds-slot:focus-visible .ds-cap { opacity: 1; translate: 0 0; transition-delay: 120ms; }
-@media (hover: hover) and (pointer: fine) {
-  .pc .ds.is-open:not(.is-moving) .ds-slot:hover .ds-cap { opacity: 1; translate: 0 0; transition-delay: 120ms; }
-}
-/* On touch there's no pointing, so each doll's word sits under it, plainly */
+.pc .ds-slot:focus-visible .ds-cap { text-decoration-color: var(--crayon); }
+@media (hover: hover) and (pointer: fine) { .pc .ds:not(.is-moving) .ds-slot:hover .ds-cap { text-decoration-color: var(--crayon); } }
 @media (hover: none), (pointer: coarse) {
-  .pc .pc-set .ds { padding-bottom: 36px; --pad: 36px; }
-  .pc .ds-cap { top: calc(100% + 8px); left: 50%; translate: -50% 0; padding: 6px 9px 5px; rotate: 0deg; font-size: 10px; letter-spacing: 0.1em; }
-  .pc .ds.is-open .ds-slot .ds-cap { opacity: 1; translate: -50% 0; }
-  .pc .ds-cap::before { display: block; }
+  .pc .pc-set .ds { padding-bottom: 30px; --pad: 30px; }
+  .pc .ds-cap, .pc .ds.is-open .ds-slot .ds-cap { top: calc(100% + 8px); font-size: 10px; letter-spacing: 0.14em; }
 }
 
 /* (the flat dolls, if the 3D set can't run, keep shut on hover too: opening is for the click) */
@@ -149,6 +153,8 @@ html[data-snow] .hp-home.pc { cursor: auto; }
 /* ---------- the projects, under the hero ---------- */
 /* Torn cards in a row that overlaps the foot of the hero, each a little askew, as if laid down by hand */
 .pc-strip { position: relative; z-index: 4; margin-top: clamp(-72px, -5vw, -28px); padding: 0 clamp(8px, 1.6vw, 28px) 12px; }
+/* (its heading, small, just over the cards' left end) */
+.pc-strip-title { position: absolute; left: var(--gutter); top: -26px; margin: 0; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; }
 /* Paper under the cards, fading in just above them, so no landscape shows through between their torn edges */
 .pc-strip::before { content: ""; position: absolute; inset: -18px 0 0; z-index: -2; background: var(--paper) url(/postcard/grain.webp) 0 0 / 512px repeat; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 58px); mask-image: linear-gradient(180deg, transparent 0, #000 58px); pointer-events: none; }
 .pc-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; max-width: 1720px; margin: 0 auto; padding: 0; list-style: none; }
@@ -196,15 +202,17 @@ a.pc-card-in:focus-visible { outline-offset: 2px; }
 
 /* ---------- phones: the hero flows top to bottom (name, title, the dolls, where he is) ---------- */
 @media (max-width: 699px) {
-  .pc-hero { display: flex; flex-direction: column; align-items: center; height: auto; min-height: 0; padding: 92px 0 64px; box-sizing: border-box; }
+  .pc-hero { display: flex; flex-direction: column; align-items: center; height: auto; min-height: 0; padding: 92px 0 18px; box-sizing: border-box; }
+  .pc-strip { margin-top: 0; }
   .pc-name, .pc-role, .pc-set, .pc-where { position: relative; inset: auto; }
-  .pc-name { order: 1; } .pc-role { order: 2; } .pc-set { order: 3; } .pc-where { order: 4; }
+  .pc-name { order: 1; } .pc-role { order: 2; } .pc-where { order: 3; } .pc-set { order: 4; }
   .pc-name { font-size: clamp(56px, 19vw, 120px); line-height: 0.92; white-space: normal; }
   .pc-role { margin-top: 18px; font-size: 11px; letter-spacing: 0.24em; text-align: center; }
   .pc-role::after { display: none; }
   .pc-set { margin-top: 8px; }
   .pc .pc-set .ds { --h: min(calc((100vw - 32px - var(--gaps) * var(--g)) / var(--row)), 230px); --mid: 0px; }
-  .pc-where { margin-top: 20px; left: auto; bottom: auto; padding: 12px 24px 12px 18px; }
+  .pc-where { margin-top: 10px; left: auto; top: auto; padding: 3px 8px; background: rgba(243, 234, 217, 0.88); font-size: 10px; text-align: center; }
+  .pc-strip-title { position: static; margin: 16px 0 10px 10px; font-size: 10px; }
   .pc-distance, .pc-nearby { top: auto; bottom: 6%; right: -42vw; width: 190vw; }
   .pc-far, .pc-near { -webkit-mask-image: none; mask-image: none; }
 }
@@ -230,3 +238,18 @@ a.pc-card-in:focus-visible { outline-offset: 2px; }
   .pc-postcard-note, .pc-postcard-to { grid-column: 1; grid-row: auto; }
   .pc-postcard-to { padding-top: 112px; }
 }
+
+/* ---------- the close of the inner pages (PostcardClose) ---------- */
+.pc-close { width: min(calc(100% - 2 * var(--gutter)), 1320px); margin: clamp(120px, 13vw, 200px) auto 0; padding-bottom: 28px; }
+.pc-close-title { margin: 0 0 clamp(28px, 4vw, 56px); font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(56px, 9vw, 144px); line-height: 1; letter-spacing: -0.035em; }
+.pc-close-title a { position: relative; color: inherit; text-decoration: none; }
+.pc-close-title a span { display: inline-block; margin-left: 0.12em; font-size: 0.55em; font-style: normal; vertical-align: 0.2em; transition: translate 320ms var(--ease); }
+.pc-close-title a::after { content: ""; position: absolute; left: -2%; right: -2%; bottom: -0.06em; height: 0.18em; background: url(/postcard/underline.png) center / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); transition: clip-path 420ms cubic-bezier(0.45, 0.1, 0.25, 1); pointer-events: none; }
+.pc-close-title a:focus-visible::after { clip-path: inset(0 0 0 0); }
+@media (hover: hover) and (pointer: fine) { .pc-close-title a:hover::after { clip-path: inset(0 0 0 0); } .pc-close-title a:hover span { translate: 8px 0; } }
+.pc-close-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 18px; border-top: 1px solid rgba(22, 22, 26, 0.22); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+.pc-close-row p { margin: 0; }
+.pc-close-row ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+.pc-close-row a { color: inherit; text-decoration: none; }
+@media (hover: hover) and (pointer: fine) { .pc-close-row a:hover { text-decoration: underline; text-decoration-color: var(--crayon); text-decoration-thickness: 3px; text-underline-offset: 5px; } }
+@media (prefers-reduced-motion: reduce) { .pc-close-title a::after, .pc-close-title a span { transition: none; } }

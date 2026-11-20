@@ -1,0 +1,257 @@
+/*
+  The homepage (page.tsx → HomeShell, HomeDock), after Dia's: a painted sky of where he is at its real time of
+  day (four paintings crossfaded over 1.6 s as the sun moves; drag across the sky to run the day, it glides
+  back); what he does, where he is and the time there, small, then his name large; under it a window onto
+  the current thing, standing in a dome of liquid glass that bends what's behind its rim; the current
+  tab's apps on the rim, glass tiles, with arrows at the ends; the black pill into the current thing under
+  them; his doll in the corner. Tokens from postcard.css (.pc). The window, the dome and the dock are placed
+  from a few lengths on .hm-hero, so it all fits one screen at any laptop size.
+  Liquid glass (the liquid-glass skill's four layers): a backdrop with blur and an SVG displacement map
+  (#hm-glass-dome, #hm-glass-tile in HomeDock; Chromium bends, other browsers frost), a tint, a specular rim,
+  the content. Nothing above a glass layer may have a filter or opacity, or it stops seeing the page.
+  Motion: the window rises out of the dome on load (1000 ms) and dips at each change (HomeDock); a new tab's
+  icons come in from the side they were called from (420 ms, staggered 40 ms); the icons magnify under the
+  pointer. Hover effects on fine pointers only; reduced motion keeps the states without the travel.
+*/
+.hm { position: relative; isolation: isolate; color: var(--ink); background: #d9d1e4; }
+html:has(.hm), html:has(.hm) body { background: #d9d1e4; }
+.hm .pc-bar { z-index: 30; }
+
+/* ---------- the sky ---------- */
+.hm-sky { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+.hm-sky > div { position: absolute; inset: 0; background: center 62% / cover no-repeat; transition: opacity 1600ms ease; }
+.hm-sky-day { z-index: 1; } .hm-sky-golden { z-index: 2; } .hm-sky-dusk { z-index: 3; } .hm-sky-night { z-index: 4; }
+/* (while the sky is dragged it follows the pointer at once: no fades on the paintings or the words) */
+.hm[data-scrub] .hm-sky > div, .hm[data-scrub] .hm-wisps { transition: none !important; }
+/* (no picture on the page can be picked up and dragged: that left a ghost rectangle following the pointer) */
+.hm img, .hm video { -webkit-user-drag: none; user-select: none; }
+/* the mist drifting over the sea of clouds (public/home/wisps.webp, white on black, screened onto the
+   painting): two layers, the far one smaller, higher and slower, the near one lower and quicker, both moved
+   by the compositor alone. Fainter at night. */
+.hm-wisps { position: absolute; z-index: 6; left: 0; width: 200%; background: url(/home/wisps.webp) 0 50% / 50% 100% repeat-x; mix-blend-mode: screen; pointer-events: none; will-change: transform; animation: hm-drift linear infinite; transition: opacity 1600ms ease; }
+.hm-wisps.is-far { top: 52%; height: 15%; opacity: 0.5; animation-duration: 170s; }
+.hm-wisps.is-near { top: 58%; height: 26%; opacity: 0.55; animation-duration: 95s; animation-direction: reverse; background-size: 50% 100%; }
+@keyframes hm-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.hm.is-night .hm-wisps.is-far { opacity: 0.22; }
+.hm.is-night .hm-wisps.is-near { opacity: 0.26; }
+@media (max-width: 899px) { .hm-wisps.is-far { top: 44%; height: 9%; } .hm-wisps.is-near { top: 48%; height: 14%; width: 400%; background-size: 25% 100%; } }
+
+/* the weather (WeatherLayer): rain and snow on a canvas, fog and overcast as veils, all behind the window */
+.hm-weather { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+.hm-weather canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hm-veil { position: absolute; inset: 0; transition: opacity 1600ms ease; }
+.hm-weather.is-cloudy .hm-veil { background: linear-gradient(180deg, rgba(120, 124, 146, 0.42), rgba(150, 152, 170, 0.28) 55%, rgba(170, 172, 188, 0.1)); mix-blend-mode: multiply; }
+.hm-weather.is-rain .hm-veil { background: linear-gradient(180deg, rgba(92, 100, 128, 0.5), rgba(120, 128, 152, 0.34) 60%, rgba(150, 156, 176, 0.14)); mix-blend-mode: multiply; }
+.hm-weather.is-snow .hm-veil { background: linear-gradient(180deg, rgba(150, 160, 186, 0.36), rgba(180, 186, 204, 0.2) 60%, transparent); mix-blend-mode: multiply; }
+.hm-weather.is-fog .hm-veil { background: linear-gradient(180deg, rgba(236, 236, 242, 0.32), rgba(240, 240, 246, 0.6) 48%, rgba(244, 244, 248, 0.78) 72%, rgba(246, 246, 250, 0.5)); }
+.hm:has(.hm-weather.is-fog) .hm-wisps { opacity: 0.9; }
+.hm:has(.hm-weather.is-cloudy) .hm-wisps, .hm:has(.hm-weather.is-rain) .hm-wisps { opacity: 0.7; }
+.hm-clock { position: fixed; z-index: 60; translate: 16px calc(-100% - 10px); padding: 6px 11px; border-radius: 999px; background: rgba(22, 22, 26, 0.82); color: #fff; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; white-space: nowrap; pointer-events: none; }
+
+/* from dusk into night the words turn from ink to cream (--nt, 0 → 1, HomeShell): the name, the top line,
+   the mark and the résumé pill, in a half-second fade once the sky is half dark, during a drag too */
+.hm { --cream: #f6efe5; --nt: 0; }
+.hm .hm-intro { color: color-mix(in srgb, var(--cream) calc(var(--nt) * 100%), var(--ink)); transition: color 520ms ease; }
+.hm .pc-mark img { filter: invert(var(--nt)) brightness(calc(1 + var(--nt) * 0.15)); transition: filter 520ms ease; }
+.hm .pc-pill { background: color-mix(in srgb, #f3ead9 calc(var(--nt) * 100%), var(--ink)); color: color-mix(in srgb, var(--ink) calc(var(--nt) * 100%), var(--paper)); transition: background-color 520ms ease, color 520ms ease; }
+
+/* the bar's words are the dock's tabs here: buttons, set like the bar's links, the current one underlined */
+.pc-tabword { position: relative; display: block; padding: 6px 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.pc-tabword::after { content: ""; position: absolute; left: -8%; right: -8%; bottom: -4px; height: 9px; background: url(/postcard/underline.png) center / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); transition: clip-path 340ms cubic-bezier(0.45, 0.1, 0.25, 1); pointer-events: none; }
+.pc-tabword.is-on::after, .pc-tabword:focus-visible::after { clip-path: inset(0 0 0 0); }
+@media (hover: hover) and (pointer: fine) { .pc-tabword:hover::after { clip-path: inset(0 0 0 0); } }
+
+.hm-hero {
+  /* (the dome's rim sits low, the icons on it and the pill under them; the window stands in the dome,
+     its foot inside it, as large as fits under his name) */
+  --H: max(100svh, 640px);
+  --top: clamp(92px, 11.5svh, 118px);
+  --name: clamp(64px, min(11vw, 19svh), 190px);
+  --icon: clamp(58px, 5.3vw, 80px);
+  --rim-y: calc(var(--H) - var(--icon) * 0.5 - 146px);
+  --name-foot: calc(var(--top) + 30px + var(--name) * 0.92);
+  /* (the window's foot goes below the rim by as much as the dome falls away at the window's corners, about
+     a tenth of its width, so the whole foot is inside the curve; it's as wide as fits under his name) */
+  --win-w: min(64vw, 1000px, calc((var(--rim-y) - var(--name-foot) - 60px) / 0.3286));
+  --win-h: calc(var(--win-w) * 9 / 21 + 46px);
+  --win-top: calc(var(--rim-y) + var(--win-w) * 0.1 + 10px - var(--win-h));
+  position: relative; height: 100svh; min-height: 640px; overflow: clip;
+}
+/* the sky's cursor: a sun with arrows says it can be dragged; while dragging, a sun at full strength */
+.hm-hero.is-timed { cursor: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2732%27 height=%2732%27 viewBox=%270 0 32 32%27%3E%3Cg fill=%27none%27 stroke=%27%2316161a%27 stroke-width=%273.6%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 opacity=%27.35%27%3E%3Ccircle cx=%2716%27 cy=%2713%27 r=%274.2%27/%3E%3Cpath d=%27M16 4.5v1.8M16 19.7v1.8M7.5 13h1.8M22.7 13h1.8M10 7l1.3 1.3M20.7 17.7L22 19M10 19l1.3-1.3M20.7 8.3L22 7M6 27l-3-2.6 3-2.6M26 27l3-2.6-3-2.6%27/%3E%3C/g%3E%3Cg fill=%27none%27 stroke=%27%23fff%27 stroke-width=%271.8%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Ccircle cx=%2716%27 cy=%2713%27 r=%274.2%27/%3E%3Cpath d=%27M16 4.5v1.8M16 19.7v1.8M7.5 13h1.8M22.7 13h1.8M10 7l1.3 1.3M20.7 17.7L22 19M10 19l1.3-1.3M20.7 8.3L22 7M6 27l-3-2.6 3-2.6M26 27l3-2.6-3-2.6%27/%3E%3C/g%3E%3C/svg%3E") 16 13, grab; }
+.hm-hero.is-dragging, .hm-hero.is-dragging * { cursor: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2732%27 height=%2732%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277.5%27 fill=%27%23fdbd07%27 stroke=%27%2316161a%27 stroke-width=%271.6%27/%3E%3Cg stroke=%27%2316161a%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M16 3v3M16 26v3M3 16h3M26 16h3M6.8 6.8l2.1 2.1M23.1 23.1l2.1 2.1M6.8 25.2l2.1-2.1M23.1 8.9l2.1-2.1%27/%3E%3C/g%3E%3C/svg%3E") 16 16, grabbing !important; user-select: none; }
+.hm-hero :is(.hm-win, .hm-dock, .nb) { cursor: auto; }
+.hm-hero .hm-win.is-open-able { cursor: pointer; }
+
+/* ---------- what he does, where he is, his name ---------- */
+.hm-intro { position: absolute; z-index: 2; left: 0; right: 0; top: var(--top); text-align: center; }
+.hm-role { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px 22px; margin: 0; font-family: var(--mono); font-size: clamp(11px, 0.85vw, 13px); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; }
+.hm-where { display: inline-flex; align-items: center; gap: 7px; }
+.hm-where svg { translate: 0 -1px; }
+.hm-time { white-space: pre; }
+/* (its letters' hit area reaches well above its box at this size: the top line sits over it, z-index) */
+.hm-name { margin: 14px 0 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: var(--name); line-height: 0.9; letter-spacing: -0.035em; white-space: nowrap; }
+
+/* ---------- the window ---------- */
+.hm-stage { position: absolute; inset: 0; }
+.hm-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.hm-win { position: absolute; z-index: 4; left: 50%; top: var(--win-top); width: var(--win-w); translate: -50% 0; transition: translate 520ms cubic-bezier(0.2, 0.9, 0.3, 1); animation: hm-rise 1000ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both; overflow: hidden; border-radius: 18px; background: rgba(255, 253, 250, 0.6); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 40px 80px -36px rgba(60, 40, 100, 0.55), 0 12px 30px -18px rgba(60, 40, 100, 0.35); -webkit-backdrop-filter: blur(24px) saturate(1.15); backdrop-filter: blur(24px) saturate(1.15); }
+.hm-chrome { display: flex; align-items: center; gap: 16px; height: 46px; padding: 0 16px; box-sizing: border-box; border-bottom: 1px solid rgba(40, 30, 70, 0.08); }
+.hm-dots { display: flex; gap: 7px; }
+.hm-dots { align-items: center; }
+.hm-dots i, .hm-green { width: 11px; height: 11px; border-radius: 50%; background: #f26b5f; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
+.hm-dots i:nth-child(2) { background: #f5bf4f; }
+.hm-green { position: relative; display: grid; place-items: center; padding: 0; border: 0; background: #61c554; color: rgba(0, 60, 0, 0.75); cursor: pointer; }
+/* (a bigger target than the dot, the way the Mac's are easy to hit) */
+.hm-green::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; }
+.hm-green svg { opacity: 0; transition: opacity 120ms ease; }
+.hm-win:hover .hm-green:not(:disabled) svg, .hm-green:focus-visible svg { opacity: 1; }
+.hm-green:disabled { background: #c9c4cc; cursor: default; }
+.hm-green:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.hm-tab { display: inline-flex; align-items: center; gap: 9px; min-width: 0; padding: 5px 14px 5px 8px; border-radius: 10px; background: rgba(255, 255, 255, 0.85); box-shadow: 0 1px 2px rgba(40, 30, 70, 0.08); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; color: var(--ink); animation: hm-in 260ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+.hm-tab .di { flex: none; width: 20px; height: 20px; }
+.hm-tab-name { font-size: 13.5px; font-weight: 500; white-space: nowrap; }
+.hm-tab-meta { font-size: 12.5px; color: rgba(22, 22, 26, 0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@keyframes hm-in { from { opacity: 0; translate: 0 6px; } }
+/* (pointing at the dock or the window lifts it a little further out of the dome) */
+.hm-stage.is-peek .hm-win { translate: -50% calc(-1 * clamp(24px, 4.4svh, 44px)); }
+/* (coming up out of the dome when the page opens) */
+@keyframes hm-rise { from { transform: translateY(46%); } }
+.hm-media { position: relative; aspect-ratio: 21 / 9; background: #eee8f1; }
+.hm-m { position: absolute; inset: 0; opacity: 0; transition: opacity 380ms ease; }
+.hm-m.is-on { opacity: 1; }
+.hm-m img, .hm-m video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hm-m video { opacity: 0; transition: opacity 300ms ease; }
+.hm-m.is-on video[src] { opacity: 1; }
+/* (pictures that aren't a screen recording sit on a soft ground, whole) */
+.hm-m.is-contain, .hm-m.is-note { background: linear-gradient(160deg, #fbf4ea, #efe5f3); }
+.hm-m.is-contain img { inset: 8%; width: 84%; height: 84%; object-fit: contain; }
+.hm-m.is-ez-recipe img { filter: drop-shadow(0 14px 22px rgba(40, 30, 60, 0.28)); }
+.hm-m.is-about-me img { inset: 6% 0 0; width: 100%; height: 94%; object-position: 50% 100%; }
+.hm-m.is-resume { background: #ece6ef; }
+.hm-m.is-resume img { inset: 7% 22% auto; width: 56%; height: auto; box-shadow: 0 18px 40px -16px rgba(40, 30, 70, 0.45); }
+.hm-note { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; color: var(--ink); text-align: center; }
+.hm-note-title { margin: 0 0 6px; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(36px, 4.6vw, 64px); line-height: 1; letter-spacing: -0.03em; }
+.hm-note-line { margin: 0; font-family: var(--mono); font-size: clamp(12px, 1vw, 15px); letter-spacing: 0.04em; color: rgba(22, 22, 26, 0.72); }
+
+/* ---------- the dock: a dome of liquid glass, the apps on its rim, the arrows, the way in ---------- */
+.hm-dock { position: absolute; z-index: 5; left: 0; right: 0; top: var(--rim-y); bottom: 0; }
+.hm-dome { position: absolute; left: 50%; top: 0; width: calc(2 * var(--R, 1400px)); aspect-ratio: 1; translate: -50% 0; overflow: hidden; border-radius: 50%; box-shadow: 0 -18px 50px -20px rgba(255, 238, 224, 0.9); }
+.hm-dome > span { position: absolute; inset: 0; border-radius: inherit; }
+.hm-dome-refract { isolation: isolate; -webkit-backdrop-filter: blur(9px) brightness(1.07) saturate(1.4); backdrop-filter: blur(9px) brightness(1.07) saturate(1.4); }
+/* (the rim's bending: a lens over just the curve on screen, HomeDock; under the tint and the lit rim) */
+.hm-lens { position: absolute; z-index: 0; left: 50%; top: 0; translate: -50% 0; pointer-events: none; -webkit-backdrop-filter: url(#hm-glass-dome); backdrop-filter: url(#hm-glass-dome); }
+/* (clear at the rim, so the bending shows; milkier further in, so the words under the icons read) */
+.hm-dome-tint { background: linear-gradient(180deg, rgba(255, 253, 251, 0.2), rgba(255, 252, 249, 0.5) 90px, rgba(255, 251, 248, 0.72) 190px, rgba(255, 251, 248, 0.8) 320px); transition: background 900ms ease; }
+.hm-dome-rim { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 16px 24px -16px rgba(255, 255, 255, 0.85), inset 0 -2px 0 rgba(255, 255, 255, 0.2); }
+.hm.is-night .hm-dome-tint { background: linear-gradient(180deg, rgba(222, 226, 248, 0.16), rgba(226, 230, 250, 0.46) 90px, rgba(232, 235, 251, 0.7) 190px, rgba(236, 238, 252, 0.8) 320px); }
+
+.hm-icons { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+/* (the layer lets clicks through to the arrows; only the icons take them) */
+.hm-icon { position: absolute; width: var(--icon); height: var(--icon); translate: -50% -50%; rotate: var(--rot, 0rad); pointer-events: auto; }
+.hm-hit { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; color: var(--ink); text-decoration: none; cursor: pointer; }
+.hm-tile { position: absolute; inset: 0; display: block; transform-origin: 50% 100%; transform: translateY(calc(-1 * var(--lift, 0px))) scale(var(--s, 1)); }
+.hm-tile .di { position: relative; display: block; width: 100%; height: 100%; }
+/* a tile of liquid glass: the backdrop bent at its edges, tinted with its project's colour, a lit rim */
+.hm-glass { position: absolute; inset: 0; border-radius: 25%; isolation: isolate; background: linear-gradient(170deg, color-mix(in srgb, var(--t1, #c9c3dc) 84%, transparent), color-mix(in srgb, var(--t2, #9d95bd) 92%, transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(255, 255, 255, 0.14), 0 8px 18px -8px rgba(60, 45, 100, 0.34); -webkit-backdrop-filter: blur(7px) url(#hm-glass-tile) brightness(1.08) saturate(1.5); backdrop-filter: blur(7px) url(#hm-glass-tile) brightness(1.08) saturate(1.5); }
+.hm-tile .di-tile { fill: none; }
+.hm-tile .di-glyph { filter: drop-shadow(0 1px 1.2px rgba(30, 20, 60, 0.28)); }
+
+/* the icons (DockIcon): a soft gradient of each project's colour, dusty to sit with the painted sky, and a
+   white symbol with its details cut through. On the dome the gradient is the tint of the glass tile. */
+.di-t1 { stop-color: var(--t1, #c9c3dc); }
+.di-t2 { stop-color: var(--t2, #9d95bd); }
+.di-g1 { stop-color: #ffffff; }
+.di-g2 { stop-color: rgba(255, 255, 255, 0.86); }
+.di .di-mask .f { fill: #fff; }
+.di .di-mask .s { fill: none; stroke: #fff; }
+.di .di-mask .c { fill: #000; }
+.di .di-mask .c-s { fill: none; stroke: #000; }
+.is-versum { --t1: #8ba3ec; --t2: #5774d6; }
+.is-inkling { --t1: #b2a0ee; --t2: #7f67d8; }
+.is-spotify-loop { --t1: #f1a0b2; --t2: #d76c88; }
+.is-intent-os { --t1: #f5ad91; --t2: #e17760; }
+.is-skilltree { --t1: #f0ca74; --t2: #d99a3a; }
+.is-ez-recipe { --t1: #f0b787; --t2: #d68653; }
+.is-about-site { --t1: #86c6cb; --t2: #4f97a5; }
+.is-resume { --t1: #b0b5cf; --t2: #7a82a8; }
+.is-about-me { --t1: #97bdea; --t2: #5c8bd1; }
+.is-contact { --t1: #f2b0a2; --t2: #d97f74; }
+
+/* (the name over the icon, as the Mac dock shows it) */
+.hm-tip { position: absolute; z-index: 3; left: 50%; bottom: calc(100% + 12px + var(--lift, 0px) * 2.4); translate: -50% 0; rotate: calc(-1 * var(--rot, 0rad)); padding: 5px 11px; border-radius: 8px; background: rgba(28, 26, 34, 0.84); color: #fff; font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: 12.5px; font-weight: 500; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 120ms ease; }
+.hm-hit:focus-visible .hm-tip { opacity: 1; }
+/* (the current one: a dot under it, as the Mac dock marks an open app) */
+.hm-icon.is-active .hm-hit::after { content: ""; position: absolute; left: 50%; top: calc(100% + 7px); width: 5px; height: 5px; translate: -50% 0; border-radius: 50%; background: var(--ink); opacity: 0.75; }
+.hm-hit:focus-visible { outline: none; }
+.hm-hit:focus-visible .hm-tile { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 25%; }
+
+/* a new tab's apps come in from the side the arrow pointed */
+.hm-icons.from-right .hm-icon, .hm-icons.from-left .hm-icon { animation: hm-icon-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1) both; animation-delay: calc(var(--i) * 40ms); }
+.hm-icons.from-right { --from: 46px; }
+.hm-icons.from-left { --from: -46px; }
+@keyframes hm-icon-in { from { opacity: 0; transform: translateX(var(--from)) scale(0.6); } }
+
+/* the arrows at the rim's ends: small round glass */
+.hm-arrow { position: absolute; z-index: 2; width: 44px; height: 44px; translate: -50% -50%; rotate: var(--rot, 0rad); display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--ink); cursor: pointer; transition: scale 160ms var(--ease); }
+.hm-arrow .hm-glass { border-radius: 50%; background: rgba(255, 255, 255, 0.4); -webkit-backdrop-filter: blur(8px) brightness(1.06) saturate(1.4); backdrop-filter: blur(8px) brightness(1.06) saturate(1.4); }
+.hm-arrow svg { position: relative; }
+.hm-arrow .hm-tip { bottom: calc(100% + 10px); }
+.hm-arrow:active { scale: 0.92; }
+.hm-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.hm-arrow:focus-visible .hm-tip { opacity: 1; }
+
+.hm-go { position: absolute; left: 50%; top: calc(var(--icon) * 0.5 + 26px); translate: -50% 0; display: flex; flex-direction: column; align-items: center; width: min(92vw, 820px); text-align: center; animation: hm-in 260ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+.hm-cta { display: inline-flex; align-items: center; gap: 6px; padding: 13px 26px; border-radius: 999px; background: var(--ink); color: var(--paper); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: 15px; font-weight: 500; text-decoration: none; box-shadow: 0 10px 24px -12px rgba(22, 22, 26, 0.6); transition: translate 200ms var(--ease), background-color 160ms ease; }
+.hm-cta.is-soon { background: rgba(22, 22, 26, 0.12); color: rgba(22, 22, 26, 0.6); box-shadow: none; }
+a.hm-cta:active { translate: 0 1px; }
+a.hm-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.hm-go-line { margin: 0; font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: 13.5px; line-height: 1.45; color: rgba(22, 22, 26, 0.66); text-wrap: balance; }
+.hm-more { color: var(--ink); white-space: nowrap; text-decoration: underline; text-decoration-color: rgba(22, 22, 26, 0.3); text-underline-offset: 3px; }
+
+/* ---------- the glass bar at the bottom (Dock's GlassTabs, site.css): the dock's tabs here ---------- */
+.hm-tabs .nb-item { color: rgba(22, 22, 26, 0.62); }
+.hm-tabs .nb-item.is-on { color: var(--ink); }
+
+/* the window grows to fill the screen on the way into a page (HomeDock) */
+.hm-zoom { position: fixed; z-index: 90; border-radius: 18px; background: #f6f3f8; box-shadow: 0 40px 80px -36px rgba(60, 40, 100, 0.55); pointer-events: none; animation: hm-zoom 430ms cubic-bezier(0.3, 0.8, 0.2, 1) forwards; }
+@keyframes hm-zoom { to { left: 0; top: 0; width: 100vw; height: 100vh; border-radius: 0; } }
+
+/* the weather, in the top line: a button that tries the other weathers in turn */
+.hm-wx { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px 4px 11px; border: 1px solid currentColor; border-radius: 999px; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; opacity: 0.85; transition: opacity 160ms ease, background-color 160ms ease; }
+.hm-wx.is-tried { background: rgba(255, 255, 255, 0.35); opacity: 1; }
+.hm-wx:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.hm-wx svg { flex: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  a.hm-cta:hover { translate: 0 -1px; background: #000; }
+  .hm-hit:hover .hm-tip, .hm-arrow:hover .hm-tip { opacity: 1; }
+  .hm-arrow:hover .hm-glass { background: rgba(255, 255, 255, 0.62); }
+  .hm-more:hover { text-decoration-color: var(--ink); }
+  .hm-wx:hover { opacity: 1; background: rgba(255, 255, 255, 0.28); }
+  .hm-green:not(:disabled):hover svg { opacity: 1; }
+}
+
+/* ---------- tablets and phones: top to bottom ---------- */
+@media (max-width: 899px) {
+  .hm-hero { --name: clamp(48px, 13.5vw, 112px); --icon: min(calc((100vw - 2 * var(--gutter) - 120px) / 4.6), 64px); height: auto; min-height: 100svh; display: flex; flex-direction: column; padding: 112px var(--gutter) 96px; box-sizing: border-box; cursor: auto; }
+  .hm-intro { position: relative; top: auto; }
+  .hm-name { white-space: normal; }
+  .hm-stage { position: relative; inset: auto; display: flex; flex-direction: column; flex: 1; margin-top: 20px; }
+  .hm-win, .hm-stage.is-peek .hm-win { position: relative; left: auto; top: auto; translate: none; width: 100%; max-width: 640px; align-self: center; border-radius: 14px; animation-name: hm-rise-sm; }
+  .hm-chrome { height: 40px; padding: 0 12px; gap: 10px; }
+  .hm-tab-meta { display: none; }
+  .hm-media { aspect-ratio: 16 / 10; }
+  .hm-dock { position: relative; inset: auto; flex: none; height: calc(var(--icon) + 150px); margin: -64px calc(-1 * var(--gutter)) 0; }
+  .hm-arrow { width: 38px; height: 38px; }
+  .hm-tip { display: none; }
+}
+
+@keyframes hm-rise-sm { from { transform: translateY(30%); } }
+@media (prefers-reduced-motion: reduce) {
+  .hm-tab, .hm-go, .hm-win, .hm-icons .hm-icon { animation: none !important; }
+  .hm-m, .hm-m video, .hm-cta, .hm-tip, .hm-sky > div, .hm-win { transition: none; }
+  .hm-wisps { animation: none; }
+}
+/* (fog at night: a blue-grey haze, so his name, cream at night, still reads) */
+.hm.is-night .hm-weather.is-fog .hm-veil { background: linear-gradient(180deg, rgba(60, 68, 100, 0.18), rgba(96, 104, 136, 0.42) 50%, rgba(130, 136, 164, 0.6) 75%, rgba(150, 156, 180, 0.4)); }

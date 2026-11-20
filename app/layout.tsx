@@ -117,7 +117,7 @@ export default function RootLayout({
           {children}
         </div>
         <HideOnHome><SiteClose /></HideOnHome>
-        <HideOnHome><Dock /></HideOnHome>
+        <HideOnHome on={['/']}><Dock /></HideOnHome>
       </body>
     </html>
   )

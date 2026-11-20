@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { placeOf, type Place } from '@/app/data/places';
+import { ABOVE, placeOf, SUN, type Place } from '@/app/data/places';
 import CloudPrint from '@/app/components/CloudPrint';
 
 // The homepage's landscape for where Michael is (data/places.ts), and the little paper label saying so.
@@ -12,10 +12,7 @@ import CloudPrint from '@/app/components/CloudPrint';
 // reduced motion, and never on touch. ?place=japan previews another place.
 
 const FADE_MS = 700;
-// The sun, in the far print's own units (1536 × 768): its centre and radius. It rises above the prints' top
-// edge (the svg reaches ABOVE units higher) and sets behind the far print's ridge. ?sun=off leaves it out.
-const SUN = { cx: 860, cy: 150, r: 150 };
-const ABOVE = 320;
+// (The sun's place, SUN and ABOVE, is in data/places.ts.) ?sun=off leaves it out.
 // The most each layer drifts, px, at the edge of the screen
 const DRIFT = { far: 4, near: 9 };
 
@@ -85,13 +82,8 @@ export default function Landscape({ initial }: { initial: string }) {
           {places.map((p, i) => <img key={`n-${p.id}`} className={`pc-near${i > 0 ? ' is-new' : ''}`} src={p.near} alt="" width={1536} height={768} decoding="async" />)}
         </div>
       </div>
-      <p className="pc-where">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
-          <path d="M12 21.5s-6.5-6.2-6.5-11.3a6.5 6.5 0 0 1 13 0c0 5.1-6.5 11.3-6.5 11.3Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-          <circle cx="12" cy="10.2" r="2.3" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        </svg>
-        <span>Currently in <span key={current.id} className="pc-where-city">{current.caption}</span></span>
-      </p>
+      {/* (where he is, in plain typed words under his title; it changes with the place) */}
+      <p className="pc-where">Currently in <span key={current.id} className="pc-where-city">{current.caption}</span></p>
     </>
   );
 }

@@ -16,6 +16,9 @@ export type Place = {
   sky: string;
   /** What the landscape shows, for the description of the picture */
   alt: string;
+  /** The homepage's painted sky of the place (public/home): dusk always; day, golden hour and night too
+   *  where they've been painted, and then the sky follows the time of day there */
+  scenes?: { dusk: string; day?: string; golden?: string; night?: string };
 };
 
 export const PLACES: Record<string, Place> = {
@@ -26,6 +29,7 @@ export const PLACES: Record<string, Place> = {
     near: '/postcard/seattle-near.webp',
     sky: '/postcard/seattle-sky.png',
     alt: 'Seattle printed in blue ink: Mount Rainier over Puget Sound, the Space Needle and downtown, and fir trees',
+    scenes: { dusk: '/home/scene-seattle.webp', day: '/home/scene-seattle-day.webp', golden: '/home/scene-seattle-golden.webp', night: '/home/scene-seattle-night.webp' },
   },
   japan: {
     id: 'japan',
@@ -34,8 +38,14 @@ export const PLACES: Record<string, Place> = {
     near: '/postcard/japan-near.webp',
     sky: '/postcard/japan-sky.png',
     alt: 'Japan printed in blue ink: Mount Fuji over a lake, the Chureito pagoda among pines and cherry trees',
+    scenes: { dusk: '/home/scene-japan.webp' },
   },
 };
+
+/** The sun, in the far print's own units (1536 × 768): its centre and radius. It rises above the prints' top
+ *  edge (its svg reaches ABOVE units higher) and sets behind the far print's ridge (the sky mask). */
+export const SUN = { cx: 860, cy: 150, r: 150 };
+export const ABOVE = 320;
 
 /** Where a place is missing or its prints fail */
 export const FALLBACK = PLACES.seattle;

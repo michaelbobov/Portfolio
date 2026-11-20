@@ -4,18 +4,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-// The site's navigation on every page but the homepage (where the dolls are the way in): a bar of liquid
-// glass at the bottom, after Apple's, with a raised glass bubble under the page you're on. The bar is four
-// layers (the liquid-glass skill's): what's behind, blurred, richer and, in Chromium, bent at the edges by
-// an SVG displacement map the size of the bar; a white tint; a rim of light, bright along the top; and the
-// words. Point at another word and the bubble springs over to it, stretching a little toward where it's
-// going. Styles: site.css.
-const SECTIONS = [
-  { href: '/', label: 'Home', on: (p: string) => p === '/' },
-  { href: '/work', label: 'Work', on: (p: string) => p === '/work' || p.startsWith('/work/') },
-  { href: '/side-projects', label: 'Side projects', on: (p: string) => p === '/side-projects' || p.startsWith('/side-projects/') },
-  { href: '/about', label: 'About', on: (p: string) => p === '/about' },
-];
+// The site's navigation, the same on every page: a bar of liquid glass at the bottom of the screen, after
+// Apple's, with a raised glass bubble under where you are. On the inner pages its words are links (Dock,
+// below); on the homepage they're the tabs of the dock on the dome (HomeShell passes `onPick`), so the one
+// bar is the way round everywhere, in the same place. The bar is four layers (the liquid-glass skill's):
+// what's behind, blurred, richer and, in Chromium, bent at the edges by an SVG displacement map the size of
+// the bar; a white tint; a rim of light, bright along the top; and the words. Point at another word and the
+// bubble springs over to it, stretching a little toward where it's going. Styles: site.css.
+export type TabItem = { key: string; label: string; href?: string };
 
 // The displacement map: an image the size of the bar whose red and green say how far to shift what's
 // behind, sideways and up or down. Two gradients, then a blurred neutral grey over the middle, so only
@@ -30,9 +26,7 @@ const bendsBackdrop = () => /Chrome\//.test(navigator.userAgent);
 
 type Box = { x: number; w: number };
 
-export default function Dock() {
-  const path = usePathname() ?? '/';
-  const here = SECTIONS.findIndex((s) => s.on(path));
+export function GlassTabs({ items, here, onPick, label = 'Sections', className = '' }: { items: TabItem[]; here: number; onPick?: (i: number) => void; label?: string; className?: string }) {
   const [over, setOver] = useState<number | null>(null);
   const target = over ?? here;
   const [boxes, setBoxes] = useState<Box[]>([]);
@@ -40,9 +34,10 @@ export default function Dock() {
   const [bend, setBend] = useState(false);
   const pillRef = useRef<HTMLDivElement | null>(null);
   const thumbRef = useRef<HTMLSpanElement | null>(null);
-  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const itemRefs = useRef<(HTMLElement | null)[]>([]);
   // The bubble's spring: where it is, how wide, how fast
   const spring = useRef({ x: 0, v: 0, w: 0, wv: 0, raf: 0, placed: false });
+  const fid = `nb-glass-${label.replace(/\W+/g, '-').toLowerCase()}`;
 
   // Measure the bar and its items (again when it changes size, e.g. once the font arrives)
   useLayoutEffect(() => {
@@ -58,7 +53,7 @@ export default function Dock() {
     const ro = new ResizeObserver(measure);
     ro.observe(pill);
     return () => ro.disconnect();
-  }, []);
+  }, [items.length]);
 
   useEffect(() => { setBend(bendsBackdrop()); }, []);
 
@@ -97,37 +92,53 @@ export default function Dock() {
   }, [target, boxes]);
 
   return (
-    <nav className="nb" aria-label="Sections" data-bend={bend && bar ? '' : undefined} onPointerLeave={() => setOver(null)}>
+    <nav className={`nb ${className}`} aria-label={label} data-bend={bend && bar ? '' : undefined} onPointerLeave={() => setOver(null)}>
       {bend && bar && (
         <svg className="nb-defs" width="0" height="0" aria-hidden="true" focusable="false">
-          <filter id="nb-glass" colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+          <filter id={fid} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
             <feImage result="map" x={0} y={0} width={bar.w} height={bar.h} preserveAspectRatio="none" href={glassMap(bar.w, bar.h, bar.h / 2)} />
             <feDisplacementMap in="SourceGraphic" in2="map" scale={-28} xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </svg>
       )}
-      <div ref={pillRef} className="nb-pill">
+      <div ref={pillRef} className="nb-pill" style={{ '--nb-filter': `url(#${fid})` } as React.CSSProperties}>
         <span className="nb-refract" aria-hidden="true" />
         <span className="nb-tint" aria-hidden="true" />
         <span ref={thumbRef} className="nb-thumb" aria-hidden="true" />
         <ul className="nb-list">
-          {SECTIONS.map((s, i) => (
-            <li key={s.href}>
-              <Link
-                ref={(el) => { itemRefs.current[i] = el; }}
-                href={s.href}
-                className={`nb-item${i === target ? ' is-on' : ''}`}
-                aria-current={i === here ? 'page' : undefined}
-                onPointerEnter={(e) => { if (e.pointerType === 'mouse') setOver(i); }}
-                onFocus={() => setOver(i)}
-                onBlur={() => setOver(null)}
-              >
-                {s.label}
-              </Link>
-            </li>
-          ))}
+          {items.map((s, i) => {
+            const common = {
+              ref: (el: HTMLElement | null) => { itemRefs.current[i] = el; },
+              className: `nb-item${i === target ? ' is-on' : ''}`,
+              onPointerEnter: (e: React.PointerEvent) => { if (e.pointerType === 'mouse') setOver(i); },
+              onFocus: () => setOver(i),
+              onBlur: () => setOver(null),
+            };
+            return (
+              <li key={s.key}>
+                {onPick ? (
+                  <button type="button" {...common} aria-pressed={i === here} onClick={() => onPick(i)}>{s.label}</button>
+                ) : (
+                  <Link {...common} href={s.href ?? '/'} aria-current={i === here ? 'page' : undefined}>{s.label}</Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </nav>
   );
+}
+
+// The inner pages' bar: links, the page you're on under the bubble
+const SECTIONS = [
+  { key: 'home', href: '/', label: 'Home', on: (p: string) => p === '/' },
+  { key: 'work', href: '/work', label: 'Work', on: (p: string) => p === '/work' || p.startsWith('/work/') },
+  { key: 'side', href: '/side-projects', label: 'Side Projects', on: (p: string) => p === '/side-projects' || p.startsWith('/side-projects/') },
+  { key: 'about', href: '/about', label: 'About', on: (p: string) => p === '/about' || p === '/contact' },
+];
+
+export default function Dock() {
+  const path = usePathname() ?? '/';
+  return <GlassTabs items={SECTIONS} here={SECTIONS.findIndex((s) => s.on(path))} />;
 }

@@ -1,41 +1,28 @@
-import IntroStage from '@/app/components/IntroStage';
-import DollSet from '@/app/components/DollSet';
-import Durak from '@/app/components/Durak';
-import PostcardBar from '@/app/components/PostcardBar';
-import Landscape from '@/app/components/Landscape';
-import ProjectStrip from '@/app/components/ProjectStrip';
-import { NOW } from '@/app/data/now';
-import './hp.css';
+import HomeShell, { type Scenes } from '@/app/components/HomeShell';
+import type { Weather } from '@/app/components/WeatherLayer';
+import { getWeather, NOW } from '@/app/data/now';
+import { placeOf } from '@/app/data/places';
+import { skyPhase, sunElevation } from '@/app/data/sun';
 import './postcard.css';
+import './home.css';
 
-// The homepage, a living postcard: his name huge in an italic serif, set behind four matryoshka dolls
-// (the way in: Projects, About, Play, Contact, the same as the bar on top), a red sun behind the name and,
-// behind it all, a print of where he is (Landscape, data/places.ts), with a little paper label saying so.
-// Straight under it, the work as torn-paper cards (ProjectStrip), with a playing card tucked behind them
-// that deals a game of Durak. Styles: postcard.css (and the dolls' own in hp.css).
-export default function Home() {
-  return (
-    <IntroStage className="hp hp-home pc">
-      <PostcardBar />
-      <main id="main-content" tabIndex={-1} className="focus:outline-none">
-        <section className="pc-hero" aria-labelledby="hero-title">
-          <Landscape initial={NOW.place} />
-          <h1 id="hero-title" className="pc-name">Michael Bobov</h1>
-          <p className="pc-role">Product Designer &amp; Builder</p>
-          <div className="pc-set">
-            <DollSet />
-          </div>
-        </section>
-        <ProjectStrip>
-          {/* (an easter egg: the card tucked behind the projects deals a game of Durak) */}
-          <Durak />
-        </ProjectStrip>
-        {/* Credit for the December hats (CC BY 3.0), shown only while they are (hp.css) */}
-        <p className="hp-credit">
-          Santa hat: <a href="https://poly.pizza/m/84MpXMAPNQ" target="_blank" rel="noopener noreferrer">“Santa Hat” by J-Toastie<span className="sr-only"> (opens in a new tab)</span></a>,{' '}
-          <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0<span className="sr-only"> (opens in a new tab)</span></a>
-        </p>
-      </main>
-    </IntroStage>
-  );
+// The homepage, after Dia's: a painted sky of where Michael is, at its real time of day (data/places.ts,
+// NOW.place; ?place= previews another), his name, a window onto his work standing in a dome of liquid glass,
+// the work as apps on the dome's rim in tabs (Work, Side Projects, About). All of it is in HomeShell; this
+// works out, on the server, which place, which sky and what weather to start with.
+export const dynamic = 'force-dynamic';
+
+export default async function Home({ searchParams }: { searchParams?: Record<string, string | string[] | undefined> }) {
+  const asked = typeof searchParams?.place === 'string' ? searchParams.place : null;
+  const place = placeOf(asked ?? NOW.place);
+  const fallback = placeOf(null);
+  const scenes: Scenes = place.scenes ?? fallback.scenes ?? { dusk: '' };
+  // The real weather there (Open-Meteo, fetched at most every 30 minutes; none if it can't be had). Previews:
+  // ?weather=clear|cloudy|rain|snow|fog tries one; ?hour=21 starts the sky at that hour there
+  const live = await getWeather();
+  const w = typeof searchParams?.weather === 'string' ? searchParams.weather : '';
+  const weather: Weather | undefined = (['clear', 'cloudy', 'fog', 'rain', 'snow'] as string[]).includes(w) ? (w as Weather) : undefined;
+  const hour = typeof searchParams?.hour === 'string' && /^\d{1,2}(\.\d+)?$/.test(searchParams.hour) ? Number(searchParams.hour) : undefined;
+  const phase0 = skyPhase(sunElevation(new Date(), NOW.lat, NOW.lon));
+  return <HomeShell caption={place.caption} timeZone={NOW.timeZone} lat={NOW.lat} lon={NOW.lon} scenes={scenes} phase0={phase0} live={live} weather={weather} hour={hour} />;
 }
