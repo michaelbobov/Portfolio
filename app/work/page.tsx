@@ -58,6 +58,7 @@ type Row = { id: string; name: string; note: string; line?: string; href?: strin
 const ez = side('ez-recipe'), ab = side('about-site');
 const MORE: Row[] = [
   { id: 'intent-os', name: 'Intent OS', note: 'Case study soon', art: '/projects/thumb-intent.webp' },
+  { id: 'orbit', name: 'Orbit', note: 'Case study soon', art: '/projects/thumb-orbit.webp' },
   { id: 'ez-recipe', name: ez.name, note: `${ez.status} · ${ez.tag}`, line: firstPart(ez.line), href: ez.href, external: true, art: '/projects/thumb-ezrecipe.webp' },
   { id: 'about-site', name: ab.name, note: ab.tag, line: `${ab.line.split(', a retro')[0]}.`, href: ab.href, external: true, art: '/projects/thumb-about-site.webp' },
 ];

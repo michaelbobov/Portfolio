@@ -9,7 +9,9 @@ import { PROJECTS, SIDE, type Project } from '@/app/data/projects';
 export type DockMedia =
   | { kind: 'video'; src: string; poster: string; label: string; position?: string }
   | { kind: 'image'; src: string; alt: string; fit?: 'cover' | 'contain'; position?: string }
-  | { kind: 'note'; title: string; lines: string[] };
+  | { kind: 'note'; title: string; lines: string[] }
+  /** The start page's painting: his studio, its light following the sky's time of day (HomeDock, home.css) */
+  | { kind: 'scene'; day: string; golden: string; night: string; alt: string; view: [string, string, string, string] };
 export type DockItem = {
   id: string;
   name: string;
@@ -49,6 +51,8 @@ export const TABS: DockTab[] = [
       study('spotify-loop', '50% 45%'),
       { id: 'intent-os', name: 'Intent OS', meta: 'In progress', line: 'The case study is on its way.', cta: 'Case study soon',
         media: { kind: 'image', src: '/projects/thumb-intent.webp', alt: '', fit: 'contain' } },
+      { id: 'orbit', name: 'Orbit', meta: 'In progress', line: 'The case study is on its way.', cta: 'Case study soon',
+        media: { kind: 'image', src: '/projects/thumb-orbit.webp', alt: '', fit: 'contain' } },
     ],
   },
   {
@@ -75,4 +79,31 @@ export const TABS: DockTab[] = [
   },
 ];
 
-export const ALL_ITEMS = TABS.flatMap((t) => t.items);
+// What the window opens on, before any app is pointed at: a Welcome tab with a painting of his studio in
+// Seattle, the same mountain and sky out of its window as the page around it, and his doll on the desk.
+// Its light follows the page's sky (time of day, and the sky being dragged). It belongs to no section.
+export const START: DockItem = {
+  id: 'start', name: 'Welcome', meta: '', line: '', cta: '',
+  media: { kind: 'scene', day: '/home/studio-day.webp', golden: '/home/studio-golden.webp', night: '/home/studio-night.webp', alt: 'A painting of a calm studio in Seattle: a desk with sketches of app screens and a small Gzhel matryoshka doll, Mount Rainier above the clouds outside the window.',
+    // (the view through its panes when the window is full screen: the page's sky paintings, framed on the mountain)
+    view: ['/home/scene-seattle-day.webp', '/home/scene-seattle-golden.webp', '/home/scene-seattle.webp', '/home/scene-seattle-night.webp'] },
+};
+
+export const ALL_ITEMS = [START, ...TABS.flatMap((t) => t.items)];
+
+// What this visitor has opened this session (sessionStorage), so the homepage's window keeps a tab for each
+// project they've been into when they come back; pointing at an app never adds one. Closing its tab (or its
+// window of its own, or the whole window) forgets it again, so a closed tab never comes back.
+const VISITED = 'hm-visited';
+export const visited = (): string[] => {
+  try { return JSON.parse(window.sessionStorage.getItem(VISITED) || '[]').filter((id: unknown) => typeof id === 'string' && ALL_ITEMS.some((d) => d.id === id)); } catch { return []; }
+};
+export const rememberVisit = (id: string) => {
+  try { const v = visited().filter((x) => x !== id); v.push(id); window.sessionStorage.setItem(VISITED, JSON.stringify(v.slice(-4))); } catch { /* not remembered */ }
+};
+export const forgetVisit = (id?: string) => {
+  try {
+    if (!id) { window.sessionStorage.removeItem(VISITED); return; }
+    window.sessionStorage.setItem(VISITED, JSON.stringify(visited().filter((x) => x !== id)));
+  } catch { /* nothing to forget */ }
+};

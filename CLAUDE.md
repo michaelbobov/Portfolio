@@ -39,3 +39,7 @@ These apply whenever Claude writes or edits case-study content. For larger draft
 - **Writing and type skills.** For a prose pass on case-study text, use the `humanizer` skill (AI writing patterns, from Wikipedia's "Signs of AI writing") and `copy-editing` for clarity and specificity; skip its marketing-only sweeps (heightened emotion, urgency), since case studies have to stay factual. Use `web-typography` for type decisions (hierarchy, measure, line height, font loading).
 - **Build before finishing.** Before the final response on a case-study task, run `node scripts/case-study-check.mjs --build`. It builds in a temporary copy, so a running `next dev` keeps its `.next` folder. Then run the Codex review loop above. Report the check, build and review results as they came out.
 - **MCP servers:** none are needed for this workflow; the checks are local scripts. Add one only with the user's approval.
+
+# Homepage direction
+
+The homepage is Michael's own operating-system-like portfolio (desktop sky, liquid-glass dock, movable windows, the Welcome studio). Read `OS-PORTFOLIO.md` before changing the homepage, and keep new work inside that system and its principles.

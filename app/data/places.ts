@@ -18,7 +18,7 @@ export type Place = {
   alt: string;
   /** The homepage's painted sky of the place (public/home): dusk always; day, golden hour and night too
    *  where they've been painted, and then the sky follows the time of day there */
-  scenes?: { dusk: string; day?: string; golden?: string; night?: string };
+  scenes?: { dusk: string; day?: string; golden?: string; night?: string; flow?: string[] };
 };
 
 export const PLACES: Record<string, Place> = {
@@ -29,7 +29,10 @@ export const PLACES: Record<string, Place> = {
     near: '/postcard/seattle-near.webp',
     sky: '/postcard/seattle-sky.png',
     alt: 'Seattle printed in blue ink: Mount Rainier over Puget Sound, the Space Needle and downtown, and fir trees',
-    scenes: { dusk: '/home/scene-seattle.webp', day: '/home/scene-seattle-day.webp', golden: '/home/scene-seattle-golden.webp', night: '/home/scene-seattle-night.webp' },
+    scenes: { dusk: '/home/scene-seattle.webp', day: '/home/scene-seattle-day.webp', golden: '/home/scene-seattle-golden.webp', night: '/home/scene-seattle-night.webp',
+      // (the same four for the moving sky, with the painted sun and moon taken out: SkyFlow draws its own,
+      // which travel; made by ~/Projects/references/home-assets/inpaint-sun-moon.mjs)
+      flow: ['/home/scene-seattle-day.webp', '/home/scene-seattle-golden-clear.webp', '/home/scene-seattle.webp', '/home/scene-seattle-night-clear.webp'] },
   },
   japan: {
     id: 'japan',

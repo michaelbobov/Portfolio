@@ -2,7 +2,8 @@
 
 import { useId, type ReactElement } from 'react';
 
-// The dock's app icons, after Apple's newest: a tile of tinted glass in a soft gradient of its own colour,
+// The dock's app icons, after Apple's newest: a round badge of tinted glass in a soft gradient of its own colour
+// (round, as visionOS's are, echoing the dome; he chose it over the squircle, a doll silhouette and no tile),
 // and one white symbol on it, its details cut clean through (an SVG mask, so the tile shows in the holes),
 // lit only by a faint shadow under it (home.css). No gloss, no 3D. Colours are CSS (home.css: --t1/--t2 per
 // project), so the set is one place to change. 64 × 64 units, symbols in the middle ~38.
@@ -13,6 +14,18 @@ const GLYPHS: Record<string, ReactElement> = {
     <g>
       {[45, 135, 225, 315].map((a) => <path key={a} className="f" d="M32 32 C24.4 27.4 23.4 17.8 30 13.9 C31.3 13.2 32.7 13.2 34 13.9 C40.6 17.8 39.6 27.4 32 32 Z" transform={`rotate(${a} 32 32)`} />)}
       <circle className="c" cx="32" cy="32" r="3" />
+    </g>
+  ),
+  // Orbit: a ringed planet, the ring passing in front of it, a moon on the ring (from the name only; the
+  // project itself isn't written up yet)
+  orbit: (
+    <g transform="rotate(-20 32 32)">
+      <path className="s" d="M9 32 A23 8 0 0 1 55 32" strokeWidth="3.2" strokeLinecap="round" />
+      <circle className="f" cx="32" cy="32" r="11" />
+      <path className="c-s" d="M19 38.6 A23 8 0 0 0 45 38.6" strokeWidth="8" />
+      <path className="s" d="M9 32 A23 8 0 0 0 55 32" strokeWidth="3.2" strokeLinecap="round" />
+      <circle className="c" cx="50.8" cy="36.6" r="5.6" />
+      <circle className="f" cx="50.8" cy="36.6" r="3.4" />
     </g>
   ),
   // SkillTree: a little tree of skills, a root and three branches, each ending in a node
@@ -106,7 +119,7 @@ export default function DockIcon({ id, className = '' }: { id: string; className
         <linearGradient id={`g${u}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" className="di-g1" /><stop offset="1" className="di-g2" /></linearGradient>
         <mask id={`m${u}`} className="di-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">{GLYPHS[id]}</mask>
       </defs>
-      <rect className="di-tile" x="1.5" y="1.5" width="61" height="61" rx="16" fill={`url(#t${u})`} />
+      <rect className="di-tile" x="1.5" y="1.5" width="61" height="61" rx="30.5" fill={`url(#t${u})`} />
       <rect className="di-glyph" x="0" y="0" width="64" height="64" fill={`url(#g${u})`} mask={`url(#m${u})`} />
     </svg>
   );

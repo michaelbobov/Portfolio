@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { SiteBar } from '@/app/components/Site';
 import { ArrowLeft, ArrowRight } from '@/app/components/icons';
 import Zoom, { type Pic } from '@/app/components/case/StudyZoom';
+import { ReadFull, VersionSwitch } from '@/app/components/case/Versions';
 
 // Building blocks for the Versum, Inkling and Spotify Loop case studies, laid out like a well-made
 // article. A centered header (name, one line, the facts), the work in motion, then
 // numbered sections in one centered reading column. Pictures break out wider than the text; design
 // decisions alternate picture and text; the page ends on a card for the next project, with its picture.
-// Pictures open larger in place. One typeface, Geist. Styles: app/work/study.css.
+// Pictures open larger in place. Each comes in two lengths (Versions.tsx): a short version on one screen,
+// and the full case study. One typeface, Geist. Styles: app/work/study.css.
 
 export type Status = 'LIVE' | 'LIVE MVP' | 'PRE-LAUNCH' | 'CONCEPT';
 
@@ -34,6 +36,7 @@ export function CaseHeader({
   link,
   note,
   media,
+  versions,
 }: {
   name: string;
   subtitle: string;
@@ -43,6 +46,8 @@ export function CaseHeader({
   /** Small print under the facts */
   note?: ReactNode;
   media: ReactNode;
+  /** The switch between the short version and the full case study, above the hero (inside Versions) */
+  versions?: boolean;
 }) {
   const { label, tone } = STATUS[status];
   return (
@@ -72,8 +77,34 @@ export function CaseHeader({
         )}
       </dl>
       {note && <p className="st-note">{note}</p>}
+      {versions && <VersionSwitch />}
       <div className="st-frame st-motion st-hero">{media}</div>
     </header>
+  );
+}
+
+// The short version: the whole case study on one screen, each line taken from the full one. The problem,
+// what I did, the design decisions by name, where it stands, and what I learned; then the way into the
+// full case study.
+export function ShortVersion({ problem, did, decisions, stands, learned }: { problem: ReactNode; did: ReactNode; decisions: string[]; stands: ReactNode; learned?: ReactNode }) {
+  const row = (label: string, body: ReactNode) => (
+    <div>
+      <dt>{label}</dt>
+      <dd>{body}</dd>
+    </div>
+  );
+  return (
+    <section className="st-short st-text" aria-labelledby="st-short-title">
+      <h2 id="st-short-title" className="sr-only">The short version</h2>
+      <dl className="st-short-list">
+        {row('The problem', problem)}
+        {row('What I did', did)}
+        {row('Decisions', <ol className="st-short-decisions">{decisions.map((d) => <li key={d}>{d}</li>)}</ol>)}
+        {row('Where it stands', stands)}
+        {learned && row('What I learned', learned)}
+      </dl>
+      <ReadFull />
+    </section>
   );
 }
 
