@@ -64,7 +64,13 @@ const lensMap = (W: number, h: number, R: number, band: number) => {
   return c.toDataURL('image/png');
 };
 
-type Props = { tab: number; onTab: (i: number, dir: number) => void; active: string; onActive: (id: string) => void; dir: number; weather: Weather };
+// (row: the dock as one row of his work, the case studies then the side projects, each group named under it,
+// with no arrows and no sections (?dock=row, to compare); otherwise the sections, Work, Side Projects and
+// About, one at a time, the arrows going between them and the section's name under the row)
+type Props = { tab: number; onTab: (i: number, dir: number) => void; active: string; onActive: (id: string) => void; dir: number; weather: Weather; row?: boolean };
+const SECTION_NAME: Record<string, string> = { work: 'Case studies', side: 'Side projects', about: 'About me' };
+const SPLIT = TABS[0].items.length;
+const ROW_ITEMS = [...TABS[0].items, ...TABS[1].items];
 type Float = { key: number; id: string; x: number; y: number; z: number };
 type Drag = { mode: 'tab' | 'icon' | 'win'; id: string; key: number; x0: number; y0: number; ox: number; oy: number; x: number; y: number };
 const MAX_TABS = 4;
@@ -78,8 +84,13 @@ const keep = (list: string[], id: string) => {
   while (n.length > MAX_TABS) n.splice(n.findIndex((x) => x !== id), 1);
   return n;
 };
-const greenIcon = <svg viewBox="0 0 12 12" width="8" height="8" aria-hidden="true"><path d="M3.2 6.8V8.8H5.2M8.8 5.2V3.2H6.8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>;
-const crossIcon = <svg viewBox="0 0 12 12" width="8" height="8" aria-hidden="true"><path d="M3.8 3.8l4.4 4.4M8.2 3.8l-4.4 4.4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>;
+// (the windows' own buttons, his rather than a Mac's three coloured dots: one capsule of glass with a close
+// and an enlarge, drawn in ink, always shown)
+const greenIcon = <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.6 6.6V9.4H5.4M9.4 5.4V2.6H6.6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+const crossIcon = <svg viewBox="0 0 12 12" width="9" height="9" aria-hidden="true"><path d="M3.6 3.6l4.8 4.8M8.4 3.6l-4.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>;
+// (what a project is, for the title bar: its kind and the first part of its line)
+const kindOf = (d: DockItem) => { const s = sectionOf(d.id); return s === 0 ? (d.href ? 'Case study' : 'Case study, soon') : s === 1 ? 'Side project' : ''; };
+const shortLine = (d: DockItem) => { const t = d.line.split(':')[0].trim(); return /[.!?]$/.test(t) ? t : `${t}.`; };
 
 // The studio's desk: each object is its own cut-out over the painting of the empty desk (public/home/desk/,
 // made from the paintings, in all three lights), placed where it was painted (percent of the painting,
@@ -171,7 +182,7 @@ function Media({ d, on, vid, weather = 'clear', onSpot }: { d: DockItem; on: boo
   );
 }
 
-function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
+function HomeDock({ tab, onTab, active, onActive, dir, weather, row = false }: Props) {
   const stage = useRef<HTMLDivElement | null>(null);
   const dock = useRef<HTMLDivElement | null>(null);
   const icons = useRef<(HTMLElement | null)[]>([]);
@@ -186,7 +197,9 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
   const tabRef = useRef(tab);
   tabRef.current = tab;
   const T = TABS[tab];
-  const items = T.items;
+  const items = row ? ROW_ITEMS : T.items;
+  const secId = row ? 'row' : T.id;
+  const secLabels = useRef<(HTMLSpanElement | null)[]>([]);
   const item = byId(active);
   // (the media of everything shown so far stays in the window, so going back to one is instant; a section's
   // stills load as soon as the pointer comes to the dock or the section opens, so pointing never waits)
@@ -382,6 +395,23 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
   const scale = useRef<number[]>([]);
   const target = useRef<number[]>([]);
   const raf = useRef(0);
+  // (the magnet: each icon's spring, how big it is and how far it has been pulled, in the dock's own px, and
+  // where the pointer wants it)
+  type Spring = { s: number; vs: number; x: number; vx: number; y: number; vy: number };
+  const spr = useRef<Spring[]>([]);
+  const want = useRef<{ s: number; x: number; y: number }[]>([]);
+  const lastTick = useRef(0);
+  // The dock's hover is his own, not the Mac's magnifying: the icons are magnetic. Near the pointer each one
+  // is pulled toward it on a spring, reaching for it (stretched a little its way) and growing, the nearest most;
+  // let go, they spring back with a little overshoot. (Other hovers, to compare, ?hover=: mag, the Mac dock's
+  // magnifying as it was; a, the tile lifts and casts its shadow where the real sun puts it; b, it turns toward
+  // the pointer as the light slides across it; c, nothing moves and the light catches its rim. Styles: home.css.)
+  const [trial, setTrial] = useState<'a' | 'b' | 'c' | 'mag' | null>(null);
+  const trialRef = useRef<typeof trial>(null);
+  useEffect(() => {
+    const h = new URLSearchParams(window.location.search).get('hover');
+    if (h === 'a' || h === 'b' || h === 'c' || h === 'mag') { trialRef.current = h; setTrial(h); }
+  }, []);
 
   // ---------- the arc: where each icon and the two arrows sit on the rim ----------
   const layout = useCallback(() => {
@@ -390,29 +420,47 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
     const W = d.clientWidth;
     const size = icons.current[0]?.offsetWidth || 76;
     const narrow = W < 900;
-    const R = narrow ? W * 1.3 : Math.max(W * 0.95, 900);
-    const L = narrow ? Math.min((W - 110) / (items.length + 0.4), size * 1.32) : size * 1.42;
-    const cx = W / 2, cy = R, mid = (items.length - 1) / 2;
+    // (in the row the rim is flatter, so eight apps sit on it without the ends dropping away; a phone shows the
+    // case studies only, and the two groups stand a little apart)
+    const R = narrow ? W * 1.3 : row ? Math.max(W * 1.5, 1400) : Math.max(W * 0.95, 900);
+    const n = row && narrow ? SPLIT : items.length, gap = row && !narrow ? 0.75 : 0;
+    const L = narrow ? Math.min((W - (row ? 40 : 110)) / (n + 0.4), size * 1.32) : size * 1.42;
+    const cx = W / 2, cy = R, mid = (n - 1 + (row && !narrow ? gap : 0)) / 2;
     const at = (k: number) => { const th = ((k - mid) * L) / R; return { x: cx + R * Math.sin(th), y: cy - R * Math.cos(th), rot: th }; };
-    geo.current = items.map((_, i) => at(i));
+    geo.current = items.map((_, i) => (i >= n ? { x: -1e5, y: -1e5, rot: 0 } : at(i + (row && i >= SPLIT ? gap : 0))));
     const place = (el: HTMLElement | null, g: { x: number; y: number; rot: number }) => {
       if (!el) return;
       el.style.left = `${g.x}px`; el.style.top = `${g.y}px`; el.style.setProperty('--rot', `${g.rot}rad`);
     };
     geo.current.forEach((g, i) => place(icons.current[i], g));
     place(arrows.current[0], at(-0.95 - (narrow ? 0.05 : 0.15)));
-    place(arrows.current[1], at(items.length - 1 + 0.95 + (narrow ? 0.05 : 0.15)));
+    place(arrows.current[1], at(n - 1 + 0.95 + (narrow ? 0.05 : 0.15)));
+    // (the name of what's on the row, under the middle of it: one for the section, or one under each group in
+    // the row; just below the middle app's name)
+    const groups = row && !narrow ? [[0, SPLIT], [SPLIT, n]] : [[0, n]];
+    secLabels.current.forEach((el, gi) => {
+      if (!el) return;
+      const gr = groups[gi];
+      if (!gr) { el.style.display = 'none'; return; }
+      el.style.display = '';
+      const gs = geo.current.slice(gr[0], gr[1]), x = gs.reduce((a, g) => a + g.x, 0) / gs.length;
+      // (below the names of the group's middle apps, whichever of them sits lowest on the rim)
+      const m = Math.floor(gs.length / 2), low = Math.max(...gs.slice(Math.max(0, m - 1), m + 2).map((g) => g.y));
+      // (never below the dock's foot, where the screen ends)
+      el.style.left = `${x}px`; el.style.top = `${Math.min(low + size * 0.5 + (narrow ? 40 : 30), d.clientHeight - 26)}px`;
+    });
     d.style.setProperty('--R', `${R}px`);
     const S = Math.round(2 * R);
     // (a thick edge: the band that bends is over half an icon deep)
     const band = Math.max(34, size * 0.58);
     const h = Math.round(R - Math.sqrt(Math.max(0, R * R - (W / 2) * (W / 2))) + band + 12);
     setDome((o) => (o.S === S && o.W === W && o.tile === size ? o : { S, R, W, h, href: lensMap(W, h, R, band), tile: size }));
-  }, [items]);
+  }, [items, row]);
 
   useEffect(() => {
     motionOK.current = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     scale.current = items.map(() => 1); target.current = items.map(() => 1);
+    spr.current = items.map(() => ({ s: 1, vs: 0, x: 0, vx: 0, y: 0, vy: 0 })); want.current = items.map(() => ({ s: 1, x: 0, y: 0 }));
     layout();
     const ro = new ResizeObserver(layout);
     if (dock.current) ro.observe(dock.current);
@@ -420,35 +468,109 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
     return () => { ro.disconnect(); cancelAnimationFrame(raf.current); raf.current = 0; };
   }, [layout, items]);
 
-  // ---------- the Mac dock's magnifying ----------
-  const tick = () => {
+  // ---------- the magnet (or, ?hover=mag, the Mac dock's magnifying) ----------
+  const tick = (now: number) => {
     let moving = false;
-    items.forEach((_, i) => {
-      const s = ease(scale.current[i] ?? 1, target.current[i] ?? 1, 0.22);
-      if (Math.abs(s - (target.current[i] ?? 1)) > 0.002) moving = true;
-      scale.current[i] = s;
-      const el = icons.current[i];
-      if (el) { el.style.setProperty('--s', s.toFixed(3)); el.style.setProperty('--lift', `${((s - 1) * 26).toFixed(1)}px`); }
-    });
+    if (trialRef.current === 'mag') {
+      items.forEach((_, i) => {
+        const s = ease(scale.current[i] ?? 1, target.current[i] ?? 1, 0.22);
+        if (Math.abs(s - (target.current[i] ?? 1)) > 0.002) moving = true;
+        scale.current[i] = s;
+        const el = icons.current[i];
+        if (el) { el.style.setProperty('--s', s.toFixed(3)); el.style.setProperty('--lift', `${((s - 1) * 26).toFixed(1)}px`); }
+      });
+    } else {
+      // (a spring for each: pulled toward where it's wanted, its speed damped each frame; stepped in 60ths of a
+      // second whatever the screen's rate, so it feels the same on a 120 Hz screen)
+      const steps = lastTick.current ? Math.min(4, Math.max(1, Math.round((now - lastTick.current) / 16.7))) : 1;
+      lastTick.current = now;
+      const size = icons.current[0]?.offsetWidth || 76;
+      items.forEach((_, i) => {
+        const p = spr.current[i], w = want.current[i], g = geo.current[i], el = icons.current[i];
+        if (!p || !w || !g) return;
+        for (let k = 0; k < steps; k++) {
+          p.vs = p.vs * 0.72 + (w.s - p.s) * 0.16; p.s += p.vs;
+          p.vx = p.vx * 0.72 + (w.x - p.x) * 0.16; p.x += p.vx;
+          p.vy = p.vy * 0.72 + (w.y - p.y) * 0.16; p.y += p.vy;
+        }
+        if (Math.abs(p.vs) > 0.0004 || Math.abs(w.s - p.s) > 0.001 || Math.abs(p.vx) + Math.abs(p.vy) > 0.03 || Math.abs(w.x - p.x) + Math.abs(w.y - p.y) > 0.05) moving = true;
+        if (!el) return;
+        // (into the icon's own frame, turned with the rim: how far it has moved, how fast, and which way it
+        // reaches. It stretches with its speed as much as its pull, so it's elastic on the way and round again
+        // once it has arrived; the glint on its glass slides to the side the pointer is on)
+        const c = Math.cos(g.rot), sn = Math.sin(g.rot), lx = p.x * c + p.y * sn, ly = -p.x * sn + p.y * c;
+        const lvx = p.vx * c + p.vy * sn, lvy = -p.vx * sn + p.vy * c;
+        const reach = 1 + Math.min(0.13, (Math.hypot(lx, ly) / size) * 0.2 + (Math.hypot(lvx, lvy) / size) * 1.4);
+        const toward = (v: number) => Math.max(-1, Math.min(1, v / (size * 0.22))).toFixed(3);
+        el.style.setProperty('--s', p.s.toFixed(3));
+        el.style.setProperty('--mx', `${lx.toFixed(2)}px`); el.style.setProperty('--my', `${ly.toFixed(2)}px`);
+        el.style.setProperty('--ra', `${Math.atan2(ly + lvy * 4, lx + lvx * 4).toFixed(3)}rad`); el.style.setProperty('--st', reach.toFixed(3));
+        el.style.setProperty('--hx', toward(lx)); el.style.setProperty('--hy', toward(ly));
+        el.style.setProperty('--hl', Math.max(0, Math.min(1, (p.s - 1) / 0.2)).toFixed(3));
+      });
+    }
+    if (!moving) lastTick.current = 0;
     raf.current = moving ? requestAnimationFrame(tick) : 0;
   };
   const kick = () => { if (!raf.current) raf.current = requestAnimationFrame(tick); };
-  const onLeave = () => { target.current = items.map(() => 1); kick(); };
-  // (only near the icons: below them, on the way to the bar at the bottom, nothing grows and the window
-  // doesn't lift; the magnifying fades with the distance from the row, up and down as well as across)
+  const onLeave = () => {
+    target.current = items.map(() => 1);
+    want.current = items.map(() => ({ s: 1, x: 0, y: 0 }));
+    kick();
+    if (trialRef.current === 'b') icons.current.forEach((el) => { el?.style.setProperty('--px', '0'); el?.style.setProperty('--py', '0'); });
+  };
+  // (the Mac's magnifying acts only near the row)
   const onMove = (e: React.PointerEvent) => {
     if (e.pointerType !== 'mouse' || !dock.current) return;
     const r = dock.current.getBoundingClientRect(), size = icons.current[0]?.offsetWidth || 76;
     const x = e.clientX - r.left, y = e.clientY - r.top;
-    let near = Infinity;
     geo.current.forEach((g, i) => {
       const dx = (x - g.x) / (size * 1.3), dy = Math.max(0, Math.abs(y - g.y) - size * 0.5) / (size * 0.6);
-      near = Math.min(near, Math.abs(y - g.y));
-      target.current[i] = motionOK.current ? 1 + 0.4 * Math.exp(-dx * dx - dy * dy) : 1;
+      target.current[i] = motionOK.current && trialRef.current === 'mag' ? 1 + 0.4 * Math.exp(-dx * dx - dy * dy) : 1;
+      // (trial b: where on its tile the pointer is, -1 to 1 each way; 0 for the tiles it isn't over)
+      if (trialRef.current === 'b') {
+        const px = (x - g.x) / (size / 2), py = (y - g.y) / (size / 2), over = px * px + py * py < 1.5;
+        const el = icons.current[i], cl = (v: number) => (over ? Math.max(-1, Math.min(1, v)) : 0).toFixed(2);
+        el?.style.setProperty('--px', cl(px)); el?.style.setProperty('--py', cl(py));
+      }
     });
-    if (near < size * 0.9) peekOn(e); else peekOff(e);
+    // (the window no longer lifts as the pointer nears the row: with the icons reaching for it, they are the one
+    // thing that answers there; pointing at the window itself still lifts it)
     kick();
   };
+
+  // The magnet listens around the dock and a little above it (over the window's foot too), so an icon can reach
+  // up for a pointer on its way down. Each icon's pull fades with its distance from the pointer; the nearest
+  // wins it (the pull is shared out by nearness), so two icons never lunge into each other, and right under the
+  // pointer the pull eases, so the icon comes to meet it rather than chase it.
+  const kickRef = useRef(kick);
+  kickRef.current = kick;
+  useEffect(() => {
+    let inside = false;
+    const rest = () => { want.current = want.current.map(() => ({ s: 1, x: 0, y: 0 })); kickRef.current(); };
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' || !motionOK.current || trialRef.current || closedRef.current || drag.current) { if (inside) { inside = false; rest(); } return; }
+      const d = dock.current, size = icons.current[0]?.offsetWidth || 76;
+      if (!d) return;
+      const r = d.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top, g0 = geo.current;
+      if (!g0.length) return;
+      const top = Math.min(...g0.map((g) => g.y)) - size * 1.9, bot = Math.max(...g0.map((g) => g.y)) + size * 1.1;
+      const left = g0[0].x - size * 1.2, right = g0[g0.length - 1].x + size * 1.2;
+      if (x < left || x > right || y < top || y > bot) { if (inside) { inside = false; rest(); } return; }
+      inside = true;
+      const fs = g0.map((g) => Math.exp(-((Math.hypot(x - g.x, y - g.y) / (size * 1.1)) ** 2)));
+      const total = fs.reduce((a, b) => a + b, 0) || 1;
+      want.current = g0.map((g, i) => {
+        const ex = x - g.x, ey = y - g.y, dist = Math.hypot(ex, ey) || 1, f = fs[i], share = f / total;
+        const pull = f * share * Math.min(dist * 0.45, size * 0.28);
+        return { s: 1 + 0.26 * f * (0.45 + 0.55 * share), x: (ex / dist) * pull, y: (ey / dist) * pull };
+      });
+      kickRef.current();
+    };
+    window.addEventListener('pointermove', move, { passive: true });
+    return () => window.removeEventListener('pointermove', move);
+  }, []);
 
   // ---------- playing: only the window in front plays its recording (if motion is welcome) ----------
   const frontFloat = floats.find((f) => f.key === front);
@@ -647,25 +769,25 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
     e.preventDefault();
     const step = e.key === 'ArrowRight' ? 1 : -1;
     const j = i + step;
-    if (j < 0 || j >= items.length) { focusNext.current = step > 0 ? 'first' : 'last'; go(step); return; }
+    if (j < 0 || j >= items.length) { if (!row) { focusNext.current = step > 0 ? 'first' : 'last'; go(step); } return; }
     icons.current[j]?.querySelector<HTMLElement>('a, button')?.focus();
   };
 
   // ---------- changing section: the old apps slide out toward where the arrow points away from (180 ms),
   // as the new ones slide in from the other side; their stills load at once ----------
-  const prevSec = useRef({ id: T.id, items });
+  const prevSec = useRef({ id: secId, items });
   const [leaving, setLeaving] = useState<{ key: string; to: number; icons: { id: string; x: number; y: number; rot: number }[] } | null>(null);
   useLayoutEffect(() => {
     const was = prevSec.current;
-    if (was.id === T.id) return;
+    if (was.id === secId) return;
     // (geo still holds the old row here: the new one is laid out in an effect, after this)
     const g = geo.current;
     if (motionOK.current) setLeaving({ key: was.id, to: dir >= 0 ? -1 : 1, icons: was.items.map((d, i) => ({ id: d.id, ...(g[i] ?? { x: 0, y: 0, rot: 0 }) })) });
-    prevSec.current = { id: T.id, items };
+    prevSec.current = { id: secId, items };
     preload(items.map((d) => d.id));
     const t = window.setTimeout(() => setLeaving(null), 200);
     return () => window.clearTimeout(t);
-  }, [T.id, items, dir, preload]);
+  }, [secId, items, dir, preload]);
 
 
   return (
@@ -695,14 +817,13 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
         onClick={onWinClick}
       >
         <div className="hm-chrome" onPointerDown={onChromeDown} onDoubleClick={(e) => { if (!(e.target as HTMLElement).closest('button, a')) goHome(); }} title={moved ? 'Double-click to put the window back' : undefined}>
-          <span className="hm-dots">
-            <button type="button" className="hm-red" onClick={closeWin} aria-label="Close the window" tabIndex={closed ? -1 : undefined}>{crossIcon}</button>
-            <i aria-hidden="true" />
-            <button type="button" className="hm-green" onClick={() => (item.id === START.id ? toggleFull() : open(item, win.current))} disabled={!item.href && item.id !== START.id} aria-label={item.id === START.id ? (full ? 'Exit full screen' : 'Enter full screen') : item.href ? `Open ${item.name}${item.external ? ' (opens in a new tab)' : ''}` : `${item.name}: coming soon`} aria-pressed={item.id === START.id ? full : undefined}>
+          <span className="hm-dots os-ctl">
+            <button type="button" className="hm-red os-ctl-b" onClick={closeWin} aria-label="Close the window" tabIndex={closed ? -1 : undefined}>{crossIcon}</button>
+            <button type="button" className="hm-green os-ctl-b" onClick={() => (item.id === START.id ? toggleFull() : open(item, win.current))} disabled={!item.href && item.id !== START.id} aria-label={item.id === START.id ? (full ? 'Exit full screen' : 'Enter full screen') : item.href ? `Open ${item.name}${item.external ? ' (opens in a new tab)' : ''}` : `${item.name}: coming soon`} aria-pressed={item.id === START.id ? full : undefined}>
               {greenIcon}
             </button>
           </span>
-          <div ref={strip} className="hm-ctabs" role="tablist" aria-label="Open tabs" onKeyDown={onTabKey}>
+          <div ref={strip} className="hm-ctabs" role="tablist" aria-label="Open tabs" onKeyDown={onTabKey} style={{ '--tn': tabIds.length } as CSSProperties}>
             {tabIds.map((id, i) => {
               const d = byId(id);
               return (
@@ -727,7 +848,8 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
               );
             })}
           </div>
-          {item.meta && <span className="hm-meta" key={`m-${item.id}`}>{item.meta}</span>}
+          {/* (what the project shown is, so a name alone never has to explain itself) */}
+          {item.id !== START.id && <span className="hm-meta" key={`m-${item.id}`}>{kindOf(item) && <b>{kindOf(item)}</b>}{shortLine(item)}</span>}
         </div>
         <div className="hm-media" id="hm-media">
           {ALL_ITEMS.filter((d) => seen.includes(d.id)).map((d) => (
@@ -749,10 +871,9 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
             onPointerDown={() => { if (f.key !== front) toFront(f.key); }}
           >
             <div className="hm-chrome hm-fchrome" onPointerDown={(e) => { if (!(e.target as HTMLElement).closest('button')) startDrag(e, 'win', f.id, f.key); }}>
-              <span className="hm-dots">
-                <button type="button" className="hm-red" onClick={() => closeFloat(f.key)} aria-label={`Close ${d.name}'s window`}>{crossIcon}</button>
-                <i aria-hidden="true" />
-                <button type="button" className="hm-green" onClick={(e) => open(d, e.currentTarget.closest('.hm-float'))} disabled={!d.href} aria-label={d.href ? `Open ${d.name}${d.external ? ' (opens in a new tab)' : ''}` : `${d.name}: coming soon`}>
+              <span className="hm-dots os-ctl">
+                <button type="button" className="hm-red os-ctl-b" onClick={() => closeFloat(f.key)} aria-label={`Close ${d.name}'s window`}>{crossIcon}</button>
+                <button type="button" className="hm-green os-ctl-b" onClick={(e) => open(d, e.currentTarget.closest('.hm-float'))} disabled={!d.href} aria-label={d.href ? `Open ${d.name}${d.external ? ' (opens in a new tab)' : ''}` : `${d.name}: coming soon`}>
                   {greenIcon}
                 </button>
               </span>
@@ -776,19 +897,27 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
         </div>
         {/* the bending, only along the rim on screen: a lens cut to the dome's circle */}
         {dome.href && <span className="hm-lens" aria-hidden="true" style={{ width: dome.W, height: dome.h, clipPath: `circle(${dome.R}px at 50% ${dome.R}px)` }} />}
-        {/* the arrows at the rim's ends change the dock's section: Work, Side Projects, About */}
-        <button type="button" ref={(el) => { arrows.current[0] = el; }} className="hm-arrow is-prev" onClick={() => go(-1)} aria-label={`Previous: ${prev.label}`}>
-          <span className="hm-glass" aria-hidden="true" />
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M14.5 6 L8.5 12 L14.5 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          <span className="hm-tip" aria-hidden="true">{prev.label}</span>
-        </button>
-        <button type="button" ref={(el) => { arrows.current[1] = el; }} className="hm-arrow is-next" onClick={() => go(1)} aria-label={`Next: ${next.label}`}>
-          <span className="hm-glass" aria-hidden="true" />
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9.5 6 L15.5 12 L9.5 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          <span className="hm-tip" aria-hidden="true">{next.label}</span>
-        </button>
-        <nav aria-label={T.label} onKeyDown={onKey}>
-          <ul className={`hm-icons ${dir < 0 ? 'from-left' : dir > 0 ? 'from-right' : ''}`} key={T.id} style={{ '--n': items.length } as CSSProperties}>
+        {/* the arrows at the rim's ends change the dock's section: Work, Side Projects, About (not in the row) */}
+        {!row && (
+          <>
+            <button type="button" ref={(el) => { arrows.current[0] = el; }} className="hm-arrow is-prev" onClick={() => go(-1)} aria-label={`Previous: ${prev.label}`}>
+              <span className="hm-glass" aria-hidden="true" />
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M14.5 6 L8.5 12 L14.5 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span className="hm-tip" aria-hidden="true">{prev.label}</span>
+            </button>
+            <button type="button" ref={(el) => { arrows.current[1] = el; }} className="hm-arrow is-next" onClick={() => go(1)} aria-label={`Next: ${next.label}`}>
+              <span className="hm-glass" aria-hidden="true" />
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9.5 6 L15.5 12 L9.5 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span className="hm-tip" aria-hidden="true">{next.label}</span>
+            </button>
+          </>
+        )}
+        {/* (what's on the row, said once, quietly: the section's name, or each group's in the row) */}
+        {(row ? ['Case studies', 'Side projects'] : [SECTION_NAME[T.id] ?? T.label]).map((name, gi) => (
+          <span key={`${secId}-${gi}`} ref={(el) => { secLabels.current[gi] = el; }} className="hm-sec" aria-hidden="true">{name}</span>
+        ))}
+        <nav aria-label={row ? 'Work and side projects' : T.label} onKeyDown={onKey}>
+          <ul className={`hm-icons ${dir < 0 ? 'from-left' : dir > 0 ? 'from-right' : ''}`} key={secId} style={{ '--n': items.length } as CSSProperties} data-row={row ? '' : undefined} data-hover={trial && trial !== 'mag' ? trial : undefined} data-pull={trial ? undefined : ''}>
             {items.map((d, i) => {
               const body = (
                 <>
@@ -796,13 +925,13 @@ function HomeDock({ tab, onTab, active, onActive, dir, weather }: Props) {
                     <span className="hm-glass" aria-hidden="true" />
                     <DockIcon id={d.id} />
                   </span>
-                  <span className="hm-label" aria-hidden="true">{d.label ?? d.name}</span>
+                  <span className="hm-label" aria-hidden="true">{d.label ?? d.name}{!d.href && <span className="hm-soon">soon</span>}</span>
                   <span className="sr-only">{d.name}: {d.line}{d.external ? ' (opens in a new tab)' : ''}</span>
                 </>
               );
               const props = { className: 'hm-hit', draggable: false, onPointerEnter: (e: React.PointerEvent) => { if (e.pointerType === 'mouse' && !drag.current?.key) pointAt(d.id); }, onPointerLeave: pointOff, onPointerDown: (e: React.PointerEvent) => onIconDown(e, d), onFocus: () => { if (!closedRef.current) pick(d.id); } };
               return (
-                <li key={d.id} ref={(el) => { icons.current[i] = el; }} className={`hm-icon${d.id === active ? ' is-active' : ''}`} style={{ '--s': 1, '--lift': '0px', '--i': i } as CSSProperties}>
+                <li key={d.id} ref={(el) => { icons.current[i] = el; }} className={`hm-icon${d.id === active ? ' is-active' : ''}${row && i >= SPLIT ? ' is-side' : ''}`} style={{ '--s': 1, '--lift': '0px', '--i': i } as CSSProperties}>
                   {!d.href ? <button type="button" {...props}>{body}</button>
                     : d.external ? <a href={d.href} target="_blank" rel="noopener noreferrer" {...props} onClick={(e) => onIconClick(e, d)}>{body}</a>
                     : <Link href={d.href} {...props} onClick={(e) => onIconClick(e, d)}>{body}</Link>}

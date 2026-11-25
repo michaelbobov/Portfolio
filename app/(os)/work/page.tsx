@@ -1,21 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ClickCard from '@/app/components/ClickCard';
-import PostcardBar from '@/app/components/PostcardBar';
-import PostcardClose from '@/app/components/PostcardClose';
 import ProjectTile, { type Tile } from '@/app/components/ProjectTile';
 import { PROJECTS, SIDE, type Project } from '@/app/data/projects';
-import '../hp.css';
-import '../postcard.css';
-import './projects.css';
+import '@/app/hp.css';
+import '@/app/work/projects.css';
 
-// Projects, behind the biggest doll: the quiet page after the expressive homepage. A nearly empty hero; the
-// four projects with something real to show, two by two, each led by its own poster or screenshot in full
+// Work, a window on MichaelOS's desktop ((os)/layout.tsx, HomeShell's PageWindow): a header in the system's
+// type (a mono label, the title in the serif italic of his name); the four projects with something real to
+// show, two by two, each led by its own poster or screenshot in full
 // colour (the work gives the page its colour), crossfading into its muted overview loop when you point at
 // it (ProjectTile); then the rest as ruled rows, each with a small one-ink print. Every fact comes from the
 // project data (data/projects.ts); what has no case study yet says so.
 export const metadata: Metadata = {
-  title: 'Projects',
+  title: 'Work',
   description: 'Selected work by Michael Bobov: Versum Health, a healthcare marketplace he co-founded; Inkling, a Mac app; the Spotify Loop concept; SkillTree, a VS Code extension; and smaller projects.',
   alternates: { canonical: '/work' },
 };
@@ -65,43 +63,40 @@ const MORE: Row[] = [
 
 export default function ProjectsPage() {
   return (
-    <div className="hp pc pc-inner">
-      <PostcardBar current="/work" />
-      <main id="main-content" tabIndex={-1} className="focus:outline-none" aria-labelledby="pj-title">
-        <header className="pj-hero">
-          <h1 id="pj-title" className="pj-title">Selected Work</h1>
-          <p className="pj-sub">Product design, interactive systems, and experiments.</p>
-        </header>
+    <div className="os-doc os-work">
+      <header className="os-doc-head">
+        <p className="os-doc-kicker">Work</p>
+        <h1 id="pj-title" className="os-doc-title">Selected work</h1>
+        <p className="os-doc-sub">Product design, interactive systems, and experiments.</p>
+      </header>
 
-        <ul className="pt-grid">
-          {TILES.map((t, i) => <li key={t.id} id={t.id}><ProjectTile t={t} eager={i < 2} /></li>)}
+      <ul className="pt-grid">
+        {TILES.map((t, i) => <li key={t.id} id={t.id}><ProjectTile t={t} eager={i < 2} /></li>)}
+      </ul>
+
+      <section className="pj-more" aria-labelledby="pj-more-title">
+        <h2 id="pj-more-title" className="pj-more-title">More work</h2>
+        <ul className="pr-list">
+          {MORE.map((s) => (
+            <li key={s.id} className={`pr${s.href ? '' : ' is-soon'}`}>
+              <ClickCard className="pr-in">
+                <span className="pr-art" aria-hidden="true">{s.art && <img src={s.art} alt="" width={720} height={480} loading="lazy" decoding="async" />}</span>
+                <div className="pr-words">
+                  <h3 className="pr-name">
+                    {!s.href ? s.name : s.external
+                      ? <a href={s.href} target="_blank" rel="noopener noreferrer" data-main="">{s.name}<span className="sr-only"> (opens in a new tab)</span></a>
+                      : <Link href={s.href} data-main="">{s.name}</Link>}
+                  </h3>
+                  {s.line && <p className="pr-line">{s.line}</p>}
+                </div>
+                <p className="pr-note">{s.note}</p>
+                <span className="pr-arrow" aria-hidden="true">{s.href ? '↗' : ''}</span>
+              </ClickCard>
+            </li>
+          ))}
         </ul>
-
-        <section className="pj-more" aria-labelledby="pj-more-title">
-          <h2 id="pj-more-title" className="pj-more-title">More work</h2>
-          <ul className="pr-list">
-            {MORE.map((s) => (
-              <li key={s.id} className={`pr${s.href ? '' : ' is-soon'}`}>
-                <ClickCard className="pr-in">
-                  <span className="pr-art" aria-hidden="true">{s.art && <img src={s.art} alt="" width={720} height={480} loading="lazy" decoding="async" />}</span>
-                  <div className="pr-words">
-                    <h3 className="pr-name">
-                      {!s.href ? s.name : s.external
-                        ? <a href={s.href} target="_blank" rel="noopener noreferrer" data-main="">{s.name}<span className="sr-only"> (opens in a new tab)</span></a>
-                        : <Link href={s.href} data-main="">{s.name}</Link>}
-                    </h3>
-                    {s.line && <p className="pr-line">{s.line}</p>}
-                  </div>
-                  <p className="pr-note">{s.note}</p>
-                  <span className="pr-arrow" aria-hidden="true">{s.href ? '↗' : ''}</span>
-                </ClickCard>
-              </li>
-            ))}
-          </ul>
-          <p className="pj-side">More of what I build on the side is in <Link href="/side-projects">Play</Link>.</p>
-        </section>
-      </main>
-      <PostcardClose />
+        <p className="pj-side">More of what I build on the side is in <Link href="/side-projects">Side projects</Link>.</p>
+      </section>
     </div>
   );
 }

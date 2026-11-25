@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SiteBar } from '@/app/components/Site';
+import OsFrame from '@/app/components/OsFrame';
 import { ArrowDown, ArrowLeft } from '@/app/components/icons';
 import SkillFinder from './SkillFinder';
 import Views from './Views';
@@ -34,8 +34,8 @@ const FACTS = [
 
 export default function SkillTreePage() {
   return (
-    <div className="hp stx">
-      <SiteBar />
+    <div className="hp stx os-frame">
+      <OsFrame current="/side-projects" />
       <Reveal />
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <section className="stx-hero" aria-labelledby="stx-title">

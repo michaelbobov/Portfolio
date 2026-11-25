@@ -2,15 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import HomeDock from '@/app/components/HomeDock';
-import { AboutPanel, DesktopMenu, MissionControl, Spotlight, type Found, type MenuItem } from '@/app/components/HomeOS';
+import { AboutPanel, BarMenu, DeskIcons, DesktopMenu, Folder, MissionControl, PageWindow, SkyPanel, Spotlight, SunDial, type Found, type MenuItem, type SkyFacts } from '@/app/components/HomeOS';
 import SkyFlow from '@/app/components/SkyFlow';
 import WeatherLayer, { type Weather } from '@/app/components/WeatherLayer';
 import { RESUME } from '@/app/components/Site';
 import { ALL_ITEMS, START, TABS, rememberVisit, type DockItem } from '@/app/data/dock';
-import { skyPhase, sunElevation } from '@/app/data/sun';
+import { moonPhase, skyBodies, skyPhase, sunElevation } from '@/app/data/sun';
 
 // The homepage (page.tsx hands it where he is and the weather there), as a desktop (OS-PORTFOLIO.md): the
 // sky of that place at its real time of day and in its real weather, with a menu bar across the top (his
@@ -28,7 +28,12 @@ import { skyPhase, sunElevation } from '@/app/data/sun';
 // screensaver runs the day by on its own until anything moves. Styles: home.css (.os-bar for the menu bar).
 export type Scenes = { dusk: string; day?: string; golden?: string; night?: string; flow?: string[] };
 type Live = { temp: number; words: string; kind: Weather; hours?: { t: number; kind: Weather; temp: number }[] } | null;
-type Props = { caption: string; timeZone: string; lat: number; lon: number; scenes: Scenes; phase0: number; live: Live; weather?: Weather; hour?: number };
+// (three ways round the projects, to compare, ?nav=: the dock, its arrows saying where they go ("dock", the
+// default); the menu bar's sections as menus ("menus"); the sections as folders on the desktop ("folders"))
+export type Nav = 'dock' | 'menus' | 'folders';
+type Props = { caption: string; timeZone: string; lat: number; lon: number; scenes: Scenes; phase0: number; live: Live; children?: ReactNode };
+// (the pages that open as windows on the desktop, and what each window is called)
+const PAGES: Record<string, string> = { '/work': 'Work', '/side-projects': 'Side projects', '/about': 'About me' };
 // (the weather button in the top line steps through these, then back to the real weather)
 const STATES: Weather[] = ['clear', 'cloudy', 'rain', 'snow', 'fog'];
 const SAY: Record<Weather, string> = { clear: 'clear', cloudy: 'cloudy', fog: 'foggy', rain: 'raining', snow: 'snowing' };
@@ -49,7 +54,20 @@ const glyph = (w: Weather, night: boolean) => {
 };
 const H = 3600000;
 
-export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0, live, weather: asked, hour }: Props) {
+export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0, live, children }: Props) {
+  // (the previews, from the address: ?weather= tries one; ?hour=21 starts the sky at that hour there; ?nav=menus
+  // or folders tries another way round the projects; ?dock=row the dock as one row of the work)
+  const sp = useSearchParams();
+  const w = sp?.get('weather') ?? '';
+  const asked: Weather | undefined = (['clear', 'cloudy', 'fog', 'rain', 'snow'] as string[]).includes(w) ? (w as Weather) : undefined;
+  const hs = sp?.get('hour') ?? '';
+  const hour = /^\d{1,2}(\.\d+)?$/.test(hs) ? Number(hs) : undefined;
+  const nv = sp?.get('nav');
+  const nav: Nav = nv === 'menus' || nv === 'folders' ? nv : 'dock';
+  const row = sp?.get('dock') === 'row';
+  // (the page open as a window over the desktop, if any)
+  const pathname = usePathname() ?? '/';
+  const pageTitle = PAGES[pathname];
   // ---------- the weather: the real one there, or one being tried (the button in the top line) ----------
   const [tried, setTried] = useState<Weather | null>(asked ?? null);
   // (while the sky is dragged: the weather of the hour dragged to, or the one chosen by dragging up/down)
@@ -80,7 +98,16 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
   const day = useCallback((d: Date) => new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone }).format(d).replace(',', ''), [timeZone]);
   const hm = useCallback((d: Date) => new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone }).format(d), [timeZone]);
   const at = useCallback(() => new Date(Date.now() + offset.current * H), []);
-  const update = useCallback(() => { if (timed) setPhase(skyPhase(sunElevation(at(), lat, lon))); }, [timed, at, lat, lon]);
+  // (where the sun is, or the moon by night: for the sun dial, and for the windows' shadows, which fall away
+  // from it, longer as it gets lower, softer by moonlight)
+  const [sky, setSky] = useState({ p: 0.5, up: true, f: 0.5, at: 0, lx: 0, ly: 30, ls: 1 });
+  const update = useCallback(() => {
+    if (!timed) return;
+    const d = at();
+    setPhase(skyPhase(sunElevation(d, lat, lon)));
+    const b = skyBodies(d, lat, lon), l = b.up ? b.sun : b.moon;
+    setSky({ p: b.up ? b.day : b.night, up: b.up, f: moonPhase(d), at: d.getTime(), lx: Math.max(-40, Math.min(40, (0.5 - l.x) * 72)), ly: 16 + Math.max(0, Math.min(0.7, l.y)) * 42, ls: b.up ? 1 : 0.6 });
+  }, [timed, at, lat, lon]);
   useEffect(() => {
     if (hour !== undefined) {
       const h = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone }).format(new Date())) + new Date().getMinutes() / 60;
@@ -130,7 +157,7 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
   };
   const onDown = (e: React.PointerEvent<HTMLElement>) => {
     if (!timed || e.button !== 0) return;
-    if ((e.target as HTMLElement).closest('a, button, .hm-dock, .hm-win, .hm-float, .os-bar')) return;
+    if ((e.target as HTMLElement).closest('a, button, .hm-dock, .hm-win, .hm-float, .os-bar, .os-desk, .os-folder')) return;
     drag.current = { x: e.clientX, y: e.clientY, base: offset.current, id: e.pointerId, on: false, w0: STATES.indexOf(tried ?? live?.kind ?? 'clear'), host: e.currentTarget };
   };
   const onMove = (e: React.PointerEvent<HTMLElement>) => {
@@ -175,11 +202,12 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
   const router = useRouter();
   const [aboutOpen, setAboutOpen] = useState(false);
   const [menuAt, setMenuAt] = useState<{ x: number; y: number } | null>(null);
+  // (the same menu, opened from the sky by a right-click, or from his mark as the system's menu)
+  const [menuKind, setMenuKind] = useState<'desk' | 'system'>('desk');
   const [spot, setSpot] = useState(false);
   const [saver, setSaver] = useState(false);
   // Mission Control: every project at once (the button at the dock's right end, F3, ⌃↑, or the menu)
   const [mc, setMc] = useState(false);
-  const openMc = useCallback(() => setMc(true), []);
   const openSpot = useCallback(() => setSpot(true), []);
   const pickFromMc = (d: DockItem) => {
     setMc(false);
@@ -200,10 +228,59 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
   const showTime = (h: number) => { window.clearTimeout(glideWait.current); cancelAnimationFrame(glide.current); base.current = offset.current = h; update(); setTime(fmt(at())); setPreviewing(true); };
   const backToLive = () => { base.current = offset.current = 0; update(); setTime(fmt(at())); setPreviewing(false); };
   const onContext = (e: React.MouseEvent<HTMLElement>) => {
-    if ((e.target as HTMLElement).closest('a, button, input, .hm-win, .hm-dock, .hm-float, .os-bar')) return;
+    if ((e.target as HTMLElement).closest('a, button, input, .hm-win, .hm-dock, .hm-float, .os-bar, .os-desk, .os-folder')) return;
     e.preventDefault();
+    setMenuKind('desk');
     setMenuAt({ x: e.clientX, y: e.clientY });
   };
+  // (the Sky panel: open, folding back into the signature for a moment, or closed)
+  const [skyState, setSkyState] = useState<'closed' | 'open' | 'closing'>('closed');
+  const skyOpen = skyState === 'open';
+  const skyT = useRef(0);
+  const closeSky = useCallback(() => {
+    setSkyState((st) => (st === 'open' ? 'closing' : st));
+    window.clearTimeout(skyT.current);
+    skyT.current = window.setTimeout(() => setSkyState((st) => (st === 'closing' ? 'closed' : st)), 190);
+  }, []);
+  // Play the day: the whole day goes by as a time-lapse, twenty-four hours in nine seconds, the clouds racing,
+  // the sun and the moon crossing, the clock in the menu bar running; then it's back where it was. Anything
+  // pressed stops it. (With reduced motion, it doesn't run.)
+  const [playing, setPlaying] = useState(false);
+  const playDay = useCallback(() => {
+    if (!timed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    window.clearTimeout(glideWait.current); cancelAnimationFrame(glide.current);
+    closeSky(); setPlaying(true);
+    root.current?.setAttribute('data-scrub', '');
+    const from = base.current, t0 = performance.now(), ms = 9000;
+    let raf = 0;
+    const end = () => {
+      cancelAnimationFrame(raf); window.removeEventListener('pointerdown', end, true); window.removeEventListener('keydown', end, true);
+      offset.current = from; update(); setScrubbed(null); setPlaying(false);
+      root.current?.removeAttribute('data-scrub');
+    };
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / ms), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      offset.current = from + 24 * e;
+      boost.current = Math.max(boost.current, 2 + 7 * Math.sin(Math.PI * k));
+      update();
+      setScrubbed(hourWeather(at().getTime()));
+      if (k < 1) raf = requestAnimationFrame(step); else end();
+    };
+    raf = requestAnimationFrame(step);
+    window.addEventListener('pointerdown', end, true); window.addEventListener('keydown', end, true);
+  }, [timed, update, at, hourWeather, closeSky]);
+  // (the system's menu, from his mark: the machine's own things)
+  const system: MenuItem[] = [
+    { label: 'About MichaelOS', run: () => setAboutOpen(true) },
+    'sep',
+    { label: 'Find', hint: '/', run: () => setSpot(true) },
+    { label: 'All work', hint: 'F3', run: () => setMc(true) },
+    'sep',
+    ...(timed ? [{ label: 'Play the day', run: playDay }] : []),
+    { label: 'Start screensaver', run: () => setSaver(true) },
+    'sep',
+    { label: 'Copy link to this page', run: () => { navigator.clipboard?.writeText(window.location.origin).catch(() => {}); } },
+  ];
   const menu: MenuItem[] = [
     ...(timed ? [
       { label: 'Daytime', run: () => showTime(findPhase(0)) },
@@ -213,17 +290,20 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
     ] : []),
     ...(previewing ? [{ label: 'Back to the live sky', run: backToLive }] : []),
     'sep',
-    { label: 'Mission Control', hint: 'F3', run: () => setMc(true) },
+    { label: 'All work', hint: 'F3', run: () => setMc(true) },
+    ...(timed ? [{ label: 'Play the day', run: playDay }] : []),
     { label: 'Start screensaver', run: () => setSaver(true) },
-    { label: 'Spotlight', hint: '/', run: () => setSpot(true) },
+    { label: 'Find', hint: '/', run: () => setSpot(true) },
     { label: 'Copy link to this page', run: () => { navigator.clipboard?.writeText(window.location.origin).catch(() => {}); } },
     'sep',
-    { label: 'About this desktop', run: () => setAboutOpen(true) },
+    { label: 'About MichaelOS', run: () => setAboutOpen(true) },
   ];
   // Spotlight: the projects, then the pages
   const found: Found[] = [
     ...ALL_ITEMS.filter((d) => d.id !== START.id).map((d) => ({
-      id: d.id, name: d.name, kind: d.href ? (d.external ? 'Website' : d.cta.includes('case study') ? 'Case study' : 'Page') : 'Coming soon', icon: d.id,
+      // (what each is, by its section: a case study, a side project, or one of his pages)
+      id: d.id, name: d.name, icon: d.id,
+      kind: TABS[0].items.includes(d) ? (d.href ? 'Case study' : 'Case study, soon') : TABS[1].items.includes(d) ? 'Side project' : d.id === 'resume' ? 'PDF' : 'Page',
       open: () => {
         if (d.href) rememberVisit(d.id);
         if (d.href && d.external) window.open(d.href, '_blank', 'noopener');
@@ -286,13 +366,42 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
   const sg = timed ? Math.min(1, Math.max(0, (phase - 0.3) / 0.7)) : 1;
   const sn = timed ? Math.min(1, Math.max(0, (phase - 1.8) / 1)) : 0;
 
-  // (the clock in the menu bar runs with the drag, the glide back and the screensaver)
-  const shown = clock ? at() : null;
+  // (the menus way round: which section's menu is open, and where; the folders way round: which folder)
+  const [drop, setDrop] = useState<{ i: number; left: number } | null>(null);
+  const [folder, setFolder] = useState<number | null>(null);
+  const closeDrop = useCallback(() => setDrop(null), []);
+  const closeFolder = useCallback(() => setFolder(null), []);
+  const openDrop = (i: number, el: HTMLElement) => setDrop({ i, left: el.offsetLeft });
+
+  // (the clock in the menu bar runs with the drag, the glide back, the screensaver and the played day)
+  const shown = clock || playing ? at() : null;
   const barTime = shown ? hm(shown) : time ? hm(at()) : '';
   const barDay = shown ? day(shown) : time ? day(at()) : '';
 
+  // (what the Sky panel says: sunrise and sunset there on the day shown, found by walking its hours; the moon
+  // by its phase; the weather as it is, or as it's being tried)
+  const facts: SkyFacts | null = skyState !== 'closed' ? (() => {
+    const d = at(), h = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone }).format(d)) + d.getMinutes() / 60;
+    const start = d.getTime() - h * H;
+    let rise = '', set = '', prev = sunElevation(new Date(start), lat, lon);
+    for (let m = 5; m <= 24 * 60; m += 5) {
+      const t = new Date(start + m * 60000), e = sunElevation(t, lat, lon);
+      if (prev < 0 && e >= 0 && !rise) rise = hm(t);
+      if (prev >= 0 && e < 0 && !set) set = hm(t);
+      prev = e;
+    }
+    const f = moonPhase(d), lit = Math.round(((1 - Math.cos(2 * Math.PI * f)) / 2) * 100);
+    const moon = f < 0.03 || f > 0.97 ? 'New' : f < 0.22 ? 'Waxing crescent' : f < 0.28 ? 'First quarter' : f < 0.47 ? 'Waxing gibbous' : f < 0.53 ? 'Full' : f < 0.72 ? 'Waning gibbous' : f < 0.78 ? 'Last quarter' : 'Waning crescent';
+    return {
+      place: caption, time: hm(d), date: new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone }).format(d),
+      rise: rise || '—', set: set || '—', moon: `${moon}, ${lit}% lit`,
+      weather: tried ? `Trying ${tried}` : live ? `${live.temp}°, ${live.words}` : weather,
+      phase, previewing, tried, current: live?.kind ?? 'clear', kinds: STATES.map((k) => ({ id: k, label: k[0].toUpperCase() + k.slice(1), icon: glyph(k, k === 'clear' && phase > 2.45) })),
+    };
+  })() : null;
+
   return (
-    <div ref={root} className={`pc hm${night ? ' is-night' : ''}${saver ? ' is-saver' : ''}`} style={{ '--nt': nt.toFixed(3), '--sg': sg.toFixed(3), '--sn': sn.toFixed(3), '--o1': opacity(1).toFixed(3), '--o2': opacity(2).toFixed(3), '--o3': opacity(3).toFixed(3) } as CSSProperties}>
+    <div ref={root} className={`pc hm${night ? ' is-night' : ''}${saver ? ' is-saver' : ''}`} style={{ '--nt': nt.toFixed(3), '--sg': sg.toFixed(3), '--sn': sn.toFixed(3), '--o1': opacity(1).toFixed(3), '--o2': opacity(2).toFixed(3), '--o3': opacity(3).toFixed(3), '--lx': `${sky.lx.toFixed(1)}px`, '--ly': `${sky.ly.toFixed(1)}px`, '--ls': sky.ls } as CSSProperties} data-nav={nav}>
       {/* the sky: the place's paintings, crossfaded by the time of day */}
       <div className="hm-sky" aria-hidden="true">
         {ORDER.map((p, j) => scenes[p] && (
@@ -307,36 +416,46 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
         <WeatherLayer weather={weather} night={night} />
       </div>
 
-      {/* the menu bar: his mark (the system's menu, as the Apple is: About this desktop), the site's pages and
-          the résumé; at the right, as a Mac's status items, Search, Mission Control, the weather and the clock */}
+      {/* the menu bar: his mark (the system's menu: About MichaelOS), the site's sections, Contact, the résumé;
+          at the right Find (labelled, so it's found), the weather, and the time there with the sun dial. The bar
+          is the site and the dock below is the work, so nothing here repeats the dock (all the work at once is
+          on F3, the right-click menu and Find). In the menus way round, the sections open as menus */}
       <header className="os-bar">
         <nav className="os-bar-l" aria-label="Main">
-          <button type="button" className="os-mi os-mark" aria-label="About this desktop" aria-haspopup="dialog" onClick={() => setAboutOpen(true)}>
+          <button type="button" className="os-mi os-mark" aria-label="MichaelOS menu" aria-haspopup="menu" aria-expanded={!!menuAt && menuKind === 'system'} onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); setMenuKind('system'); setMenuAt(menuAt && menuKind === 'system' ? null : { x: r.left, y: r.bottom + 3 }); }}>
             <Image src="/mb-mark.png" alt="" width={129} height={160} priority />
           </button>
-          <Link className="os-mi" href="/work">Work</Link>
-          <Link className="os-mi" href="/side-projects">Side Projects</Link>
-          <Link className="os-mi" href="/about">About</Link>
+          {TABS.map((t, ti) => (nav === 'menus' ? (
+            <button key={t.id} type="button" className={`os-mi${drop?.i === ti ? ' is-open' : ''}`} aria-haspopup="menu" aria-expanded={drop?.i === ti}
+              onClick={(e) => (drop?.i === ti ? closeDrop() : openDrop(ti, e.currentTarget))}
+              onPointerEnter={(e) => { if (drop && drop.i !== ti) openDrop(ti, e.currentTarget); }}>{t.label}</button>
+          ) : <Link key={t.id} className="os-mi" href={t.href} aria-current={pathname === t.href ? 'page' : undefined}>{t.label}</Link>))}
+          <Link className="os-mi" href="/about#contact" onClick={(e) => {
+            // (About already open: its window scrolls to Contact instead of the page reloading)
+            if (pathname !== '/about') return;
+            e.preventDefault(); window.history.replaceState(null, '', '/about#contact');
+            window.dispatchEvent(new CustomEvent('os:part', { detail: 'contact' }));
+          }}>Contact</Link>
           <a className="os-mi" href={RESUME} target="_blank" rel="noopener noreferrer">Résumé<span className="os-out" aria-hidden="true">↗</span><span className="sr-only"> (PDF, opens in a new tab)</span></a>
         </nav>
         <div className="os-bar-r">
-          <button type="button" className="os-mi is-icon is-wide" onClick={openSpot} aria-label="Search projects (/)" title="Search (/)">
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M15 15 L19.5 19.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
-          </button>
-          <button type="button" className="os-mi is-icon is-wide" onClick={openMc} aria-label="Show all work (F3)" title="All work (F3)">
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3.5" y="5" width="7.5" height="6" rx="1.6" fill="none" stroke="currentColor" strokeWidth="1.9" /><rect x="13" y="5" width="7.5" height="6" rx="1.6" fill="none" stroke="currentColor" strokeWidth="1.9" /><rect x="3.5" y="13" width="7.5" height="6" rx="1.6" fill="none" stroke="currentColor" strokeWidth="1.9" /><rect x="13" y="13" width="7.5" height="6" rx="1.6" fill="none" stroke="currentColor" strokeWidth="1.9" /></svg>
+          <button type="button" className="os-mi os-find" onClick={openSpot} aria-label="Find a project" aria-keyshortcuts="/" title="Find a project or page (/)">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M15 15 L19.5 19.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            <span className="os-find-t" aria-hidden="true">Find</span>
           </button>
           <button type="button" className={`os-mi os-wx is-wide${tried ? ' is-tried' : ''}`} onClick={nextWeather} title={tried ? 'Trying another weather: click for the next' : 'The weather in Seattle: click to try another'} aria-label={`Weather: ${tried ? `trying ${SAY[weather]}` : live ? `${live.temp}°, ${live.words}` : 'clear'}. Show another weather`}>
-            {glyph(weather, night)}<span aria-hidden="true">{tried ? SAY[weather] : live ? `${live.temp}°` : ''}</span>
+            <span className="os-wx-g" key={`${weather}-${night}`}>{glyph(weather, night)}</span><span aria-hidden="true">{tried ? SAY[weather] : live ? `${live.temp}°` : ''}</span>
           </button>
-          <span className={`os-mi os-clock${previewing || clock ? ' is-away' : ''}`} title={previewing ? 'Showing another time: right-click the sky to go back to now' : `The time in ${caption}`}>
-            <span className="os-day">{barDay} </span>{barTime}
-          </span>
         </div>
+        {/* his signature, in the middle of the bar: where the sun (or the moon) is on its way across the sky, and
+            the time there; it opens the Sky panel */}
+        <button type="button" className={`os-mi os-sig is-wide${previewing || clock || playing ? ' is-away' : ''}${skyOpen ? ' is-open' : ''}`} aria-haspopup="dialog" aria-expanded={skyOpen} onClick={() => (skyOpen ? closeSky() : setSkyState('open'))} title={previewing ? 'Showing another time' : `The time in ${caption}, and where the ${sky.up ? 'sun' : 'moon'} is`}>
+          {timed && <SunDial p={sky.p} up={sky.up} f={sky.f} onLight={!night} />}<span className="os-day">{barDay} </span>{barTime}
+        </button>
       </header>
 
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
-        <section className={`hm-hero${timed ? ' is-timed' : ''}`} aria-labelledby="hero-title" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onContextMenu={onContext}>
+        <section className={`hm-hero${timed ? ' is-timed' : ''}`} aria-labelledby={pageTitle ? undefined : 'hero-title'} aria-label={pageTitle ? 'Desktop' : undefined} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onContextMenu={onContext}>
           <div className="hm-intro">
             <p className="hm-role">
               <span>Product Designer &amp; Builder</span>
@@ -348,15 +467,25 @@ export default function HomeShell({ caption, timeZone, lat, lon, scenes, phase0,
                 <span className="sr-only">Currently in </span>{caption}
               </span>
             </p>
-            <h1 id="hero-title" className="hm-name">Michael Bobov</h1>
+            {/* (his name is the page's heading on the desktop; with a page window up, the window's is) */}
+            {pageTitle ? <p className="hm-name">Michael Bobov</p> : <h1 id="hero-title" className="hm-name">Michael Bobov</h1>}
           </div>
-          <HomeDock tab={tab} onTab={onTab} active={active} onActive={setActive} dir={dir} weather={weather} />
+          <HomeDock tab={tab} onTab={onTab} active={active} onActive={setActive} dir={dir} weather={weather} row={row} />
+          {nav === 'folders' && <DeskIcons tabs={TABS} resume={RESUME} onOpen={(fi) => setFolder(fi)} />}
           {clock && <span className={`hm-clock${saver ? ' is-saver' : ''}`} style={{ left: clock.x, top: clock.y } as CSSProperties} aria-hidden="true">{clock.text}</span>}
         </section>
+        {/* a page, open as a window over the desktop */}
+        {pageTitle && <PageWindow title={pageTitle} path={pathname}>{children}</PageWindow>}
       </main>
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
-      <DesktopMenu at={menuAt} items={menu} onClose={() => setMenuAt(null)} />
+      <DesktopMenu at={menuAt} items={menuKind === 'system' ? system : menu} onClose={() => setMenuAt(null)} />
+      {facts && <SkyPanel open={skyOpen} closing={skyState === 'closing'} facts={facts} p={sky.p} up={sky.up} f={sky.f} at={sky.at || Date.now()} timeZone={timeZone} lat={lat} lon={lon}
+        onDay={(ms) => showTime((ms - Date.now()) / H)} onClose={closeSky}
+        onPhase={(n) => showTime(findPhase(n))} onWeather={(k) => setTried(k === (live?.kind ?? 'clear') ? null : (k as Weather))}
+        onPlay={playDay} onLive={() => { backToLive(); setTried(null); }} />}
       <Spotlight open={spot} items={found} onClose={() => setSpot(false)} />
+      <BarMenu tab={drop ? TABS[drop.i] : null} left={drop?.left ?? 0} onPick={pickFromMc} onClose={closeDrop} />
+      <Folder tab={folder === null ? null : TABS[folder]} title={folder === null ? '' : ['Case studies', 'Side projects', 'About me'][folder]} onPick={(d) => { setFolder(null); pickFromMc(d); }} onClose={closeFolder} />
       <MissionControl open={mc} sections={TABS.map((t) => ({ id: t.id, label: t.label, items: t.items }))} onPick={pickFromMc} onClose={() => setMc(false)} />
     </div>
   );

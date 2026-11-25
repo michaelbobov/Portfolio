@@ -37,7 +37,9 @@ export function skyBodies(date: Date, lat: number, lon: number) {
   const at = (p: number, el: number) => ({ x: 0.554 - (1 - p) * 0.62, y: 0.664 - 0.5 * (1 - Math.exp(-el / 18)) });
   const day = (hourAngle + h0) / (2 * h0);
   const mh = Math.atan2(Math.sin(hourAngle - Math.PI), Math.cos(hourAngle - Math.PI)), m0 = Math.PI - h0;
-  return { sun: at(day, elevation), moon: at((mh + m0) / (2 * m0), -elevation), elevation };
+  const night = (mh + m0) / (2 * m0);
+  // (day and night: how far through each, 0 at its start, 1 at its end, for the menu bar's sun dial)
+  return { sun: at(day, elevation), moon: at(night, -elevation), elevation, up: elevation > -0.8, day, night };
 }
 
 // How much of the moon is lit, as the fraction of its month gone by: 0 new, 0.5 full, waxing before that

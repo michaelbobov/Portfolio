@@ -117,7 +117,7 @@ export default function RootLayout({
           {children}
         </div>
         <HideOnHome><SiteClose /></HideOnHome>
-        <HideOnHome on={['/']}><Dock /></HideOnHome>
+        <HideOnHome under={['/work/', '/side-projects/']}><Dock /></HideOnHome>
       </body>
     </html>
   )

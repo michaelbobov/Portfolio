@@ -1,19 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { SiteBar, EMAIL, RESUME } from '@/app/components/Site';
+import { EMAIL, RESUME } from '@/app/components/Site';
+import { NOW } from '@/app/data/now';
+import { placeOf } from '@/app/data/places';
 import { ArrowUpRight } from '@/app/components/icons';
 import Nalichnik, { type Picture } from '@/app/components/Nalichnik';
 import { FlatDoll } from '@/app/components/FlatDoll';
-import '../hp.css';
+import '@/app/hp.css';
 
-// Me, behind the littlest doll. The homepage's About doll turns round as him, and its face window opens
-// out into the portrait here (DollSet). A ruled page: the headline and hello on the left, him standing on
+// About me, a window on MichaelOS's desktop ((os)/layout.tsx, HomeShell's PageWindow). A ruled page: the headline and hello on the left, him standing on
 // the hero's bottom rule on the right; a strip of where he is now; then his story as the set itself, three
 // panels nested one inside the other, each marked with its doll. The littlest holds a carved storybook
-// window: each time its shutters open there's another picture behind them.
+// window: each time its shutters open there's another picture behind them. Contact is its last part
+// (#contact; /contact comes here): the ways to reach him, as the Contact page had them.
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Michael Bobov, a Russian-American product designer in Seattle who builds what he designs.',
+  description: 'Michael Bobov, a Russian-American product designer in Seattle who builds what he designs, and how to reach him.',
   alternates: { canonical: '/about' },
 };
 
@@ -30,9 +32,7 @@ const NewTab = () => <span className="sr-only"> (opens in a new tab)</span>;
 
 export default function AboutPage() {
   return (
-    <div className="hp">
-      <SiteBar />
-      <main id="main-content" tabIndex={-1} className="focus:outline-none" aria-labelledby="me-title">
+    <div className="os-doc os-me">
         <div className="me">
           <section className="me-hero">
             <div className="me-intro">
@@ -123,15 +123,25 @@ export default function AboutPage() {
           </section>
           </div>
 
-          <section className="me-end" aria-label="Say hello">
+          <section className="me-end" aria-label="One layer deeper">
             <p className="me-quote">Design, <em className="sweep">one layer</em> deeper.</p>
-            <ul className="ab-links">
-              <li><a href={EMAIL}>Say hello</a></li>
-              <li><a className="is-quiet" href={LINKEDIN} target="_blank" rel="noopener noreferrer">LinkedIn<NewTab /></a></li>
+          </section>
+
+          {/* Contact: the ways to reach him (the Contact page's, word for word) */}
+          <section id="contact" className="os-contact" aria-labelledby="contact-title">
+            <div className="os-contact-note">
+              <p className="os-doc-kicker">Contact</p>
+              <h2 id="contact-title" className="os-doc-title">Say hello.</h2>
+              <p>I’m a product designer and builder. Write about a role, a project, or something you’re making.</p>
+            </div>
+            <ul className="os-contact-lines">
+              <li><span>Email</span><a href={EMAIL}>michaelbobov@gmail.com</a></li>
+              <li><span>LinkedIn</span><a href={LINKEDIN} target="_blank" rel="noopener noreferrer">michael-bobov<NewTab /></a></li>
+              <li><span>Résumé</span><a href={RESUME} target="_blank" rel="noopener noreferrer">PDF ↗<span className="sr-only"> (opens in a new tab)</span></a></li>
+              <li><span>Based in</span>{placeOf(NOW.place).caption}</li>
             </ul>
           </section>
         </div>
-      </main>
     </div>
   );
 }

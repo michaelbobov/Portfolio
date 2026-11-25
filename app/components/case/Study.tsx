@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SiteBar } from '@/app/components/Site';
+import OsFrame from '@/app/components/OsFrame';
 import { ArrowLeft, ArrowRight } from '@/app/components/icons';
 import Zoom, { type Pic } from '@/app/components/case/StudyZoom';
 import { ReadFull, VersionSwitch } from '@/app/components/case/Versions';
@@ -285,11 +285,12 @@ export function NextCase({ href, name, line, img }: { href: string; name: string
   );
 }
 
-// Page shell: the shared bar, then the article (the skip link's target)
+// Page shell: MichaelOS's frame (its menu bar, and the sky under it: OsFrame), then the article (the skip
+// link's target)
 export function CaseShell({ children }: { children: ReactNode }) {
   return (
-    <main className="st">
-      <SiteBar />
+    <main className="st os-frame">
+      <OsFrame current="/work" />
       <article id="main-content" tabIndex={-1} className="site-wrap focus:outline-none">
         {children}
       </article>

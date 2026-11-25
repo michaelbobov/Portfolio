@@ -94,8 +94,9 @@ html:has(.hm), html:has(.hm) body { background: #d9d1e4; }
 /* ---------- the window ---------- */
 .hm-stage { position: absolute; inset: 0; }
 .hm-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.hm-win { position: absolute; z-index: 4; left: 50%; top: var(--win-top); width: var(--win-w); translate: calc(-50% + var(--wx, 0px)) var(--wy, 0px); transition: translate 520ms cubic-bezier(0.2, 0.9, 0.3, 1); animation: hm-rise 1000ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both; overflow: hidden; border-radius: calc(18 * var(--s)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 40px 80px -36px rgba(60, 40, 100, 0.55), 0 12px 30px -18px rgba(60, 40, 100, 0.35); }
-/* (the frosted glass is the title bar's: the window's body is clear, so the studio's panes are see-through) */
+.hm-win { position: absolute; z-index: 4; left: 50%; top: var(--win-top); width: var(--win-w); translate: calc(-50% + var(--wx, 0px)) var(--wy, 0px); transition: translate 520ms cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 900ms ease; animation: hm-rise 1000ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both; overflow: hidden; border-radius: calc(18 * var(--s)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), var(--lx, 0px) calc(var(--ly, 30px) + 10px) 80px -36px rgba(60, 40, 100, calc(0.55 * var(--ls, 1))), calc(var(--lx, 0px) * 0.35) 12px 30px -18px rgba(60, 40, 100, calc(0.35 * var(--ls, 1))); }
+/* (the frosted glass is the title bar's: the window's body is clear, so the studio's panes are see-through.
+   A porcelain-cream title bar with a cobalt tab was tried on 2026-11-24 and turned down) */
 .hm-chrome { position: relative; z-index: 2; display: flex; align-items: center; gap: calc(16 * var(--s)); height: var(--chrome); padding: 0 calc(16 * var(--s)); box-sizing: border-box; border-bottom: 1px solid rgba(40, 30, 70, 0.08); background: rgba(255, 253, 250, 0.6); -webkit-backdrop-filter: blur(24px) saturate(1.15); backdrop-filter: blur(24px) saturate(1.15); }
 .hm-win .hm-chrome { cursor: grab; }
 /* (moved by its title bar: it follows the pointer exactly, and stops lifting at the dock) */
@@ -105,22 +106,18 @@ html:has(.hm), html:has(.hm) body { background: #d9d1e4; }
 @keyframes hm-sink { from { visibility: visible; transform: none; } 18% { transform: translateY(-2.5%) scale(1.006); } to { transform: translateY(105vh) scale(0.94); visibility: hidden; } }
 .hm-win.is-back { animation: hm-back 760ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 @keyframes hm-back { from { transform: translateY(70%) scale(0.96); } }
-.hm-win:hover .hm-red svg { opacity: 1; }
-.hm-dots { display: flex; gap: 7px; }
-.hm-dots { align-items: center; }
-.hm-dots { gap: calc(7 * var(--s)); }
-.hm-dots i, .hm-green, .hm-red { width: calc(11 * var(--s)); height: calc(11 * var(--s)); border-radius: 50%; background: #f26b5f; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
-.hm-dots i:nth-child(2) { background: #f5bf4f; }
-.hm-green { position: relative; display: grid; place-items: center; padding: 0; border: 0; background: #61c554; color: rgba(0, 60, 0, 0.75); cursor: pointer; }
-/* (a bigger target than the dot, the way the Mac's are easy to hit) */
-.hm-green::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; }
-.hm-green svg { opacity: 0; transition: opacity 120ms ease; }
-.hm-win:hover .hm-green:not(:disabled) svg, .hm-green:focus-visible svg { opacity: 1; }
-.hm-green:disabled { background: #c9c4cc; cursor: default; }
-.hm-green:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* the windows' own buttons (HomeDock): one capsule of glass, a close and an enlarge drawn in ink, always shown */
+.hm-dots { display: flex; align-items: center; }
+.os-ctl { display: inline-flex; align-items: center; flex: none; gap: 1px; height: calc(26 * var(--s)); padding: 0 calc(3 * var(--s)); border-radius: 999px; background: rgba(255, 255, 255, 0.55); box-shadow: inset 0 0 0 1px rgba(22, 22, 26, 0.07); }
+.os-ctl-b { position: relative; display: grid; place-items: center; width: calc(26 * var(--s)); height: calc(20 * var(--s)); padding: 0; border: 0; border-radius: 999px; background: none; color: rgba(22, 22, 26, 0.62); cursor: pointer; transition: background-color 120ms ease, color 120ms ease; }
+.os-ctl-b::before { content: ""; position: absolute; inset: -4px -1px; }
+.os-ctl-b:disabled { color: rgba(22, 22, 26, 0.22); cursor: default; }
+.os-ctl-b:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+@media (hover: hover) and (pointer: fine) { .os-ctl-b:not(:disabled):hover { background: rgba(22, 22, 26, 0.08); color: var(--ink); } }
 /* the window's tabs, as a browser's: the one shown raised and white; a passing one (being pointed at, not yet
    kept) in italics; each closes with its ×; when there are many they share the width, as Safari's do */
-.hm-ctabs { flex: 1 1 auto; display: flex; align-items: center; gap: calc(4 * var(--s)); min-width: 0; height: calc(36 * var(--s)); padding: 0 calc(2 * var(--s)); border-radius: calc(11 * var(--s)); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; transition: background-color 160ms ease, box-shadow 160ms ease; }
+/* (the tabs ask for their full width first; the line on what the project is gets what's left) */
+.hm-ctabs { flex: 0 1 calc(var(--tn, 2) * 192 * var(--s)); display: flex; align-items: center; gap: calc(4 * var(--s)); min-width: 0; height: calc(36 * var(--s)); padding: 0 calc(2 * var(--s)); border-radius: calc(11 * var(--s)); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; transition: background-color 160ms ease, box-shadow 160ms ease; }
 .hm-ctab { position: relative; flex: 0 1 calc(188 * var(--s)); min-width: calc(46 * var(--s)); display: flex; align-items: center; height: calc(32 * var(--s)); border-radius: calc(9 * var(--s)); color: rgba(22, 22, 26, 0.68); user-select: none; transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease; animation: hm-ctab-in 260ms var(--ease) both; }
 .hm-ctab-main { flex: 1 1 auto; display: flex; align-items: center; gap: calc(8 * var(--s)); min-width: 0; height: 100%; padding: 0 calc(4 * var(--s)) 0 calc(9 * var(--s)); border: 0; border-radius: inherit; background: none; color: inherit; font: inherit; font-size: calc(13.5 * var(--s)); font-weight: 500; text-align: left; cursor: pointer; }
 .hm-ctab-main .di { flex: none; width: calc(19 * var(--s)); height: calc(19 * var(--s)); }
@@ -140,14 +137,15 @@ html:has(.hm), html:has(.hm) body { background: #d9d1e4; }
 /* (a window being dragged over the tabs: they light up to say it can go back in there) */
 .hm-ctabs.is-drop { background: rgba(36, 69, 181, 0.1); box-shadow: inset 0 0 0 1.5px rgba(36, 69, 181, 0.42); }
 /* what it is, at the end of the title bar (its words fade, so pointing along the dock doesn't jolt them) */
-.hm-meta { flex: none; margin-left: auto; font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: calc(12.5 * var(--s)); color: rgba(22, 22, 26, 0.55); white-space: nowrap; animation: hm-fade 160ms ease both; }
+.hm-meta { flex: 1 1 0; min-width: 0; margin-left: auto; text-align: right; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: calc(13 * var(--s)); color: rgba(22, 22, 26, 0.8); white-space: nowrap; animation: hm-fade 160ms ease both; }
+.hm-meta b { margin-right: 0.5em; font-weight: 600; color: var(--ink); }
 @keyframes hm-fade { from { opacity: 0; } }
 .hm-win { container: hm-win / inline-size; }
-@container hm-win (max-width: 860px) { .hm-meta { display: none; } }
+@container hm-win (max-width: 640px) { .hm-meta { display: none; } }
 @container hm-win (max-width: 560px) { .hm-ctab:not(.is-on) { flex: none; } .hm-ctab:not(.is-on) .hm-ctab-name, .hm-ctab:not(.is-on) .hm-ctab-x { display: none; } .hm-ctab:not(.is-on) .hm-ctab-main { padding: 0 calc(8 * var(--s)); } }
 /* (the window behind another: its title bar greys, as a Mac's does) */
 .hm-win:not(.is-front) .hm-chrome, .hm-float:not(.is-front) .hm-fchrome { background: rgba(236, 233, 240, 0.6); }
-.hm-win:not(.is-front) .hm-dots :is(i, button), .hm-float:not(.is-front) .hm-dots :is(i, button) { background: #cfcbd3; }
+.hm-win:not(.is-front) .os-ctl, .hm-float:not(.is-front) .os-ctl { background: rgba(255, 255, 255, 0.3); }
 @keyframes hm-in { from { opacity: 0; translate: 0 6px; } }
 /* (pointing at the dock or the window lifts it a little further out of the dome) */
 .hm-stage.is-peek .hm-win:not(.is-moved) { translate: -50% calc(-1 * clamp(24px, 4.4svh, calc(44 * var(--s)))); }
@@ -250,6 +248,19 @@ button.hm-obj { cursor: pointer; pointer-events: auto; }
 .hm-icon { position: absolute; width: var(--icon); height: var(--icon); translate: -50% -50%; rotate: var(--rot, 0rad); pointer-events: auto; }
 .hm-hit { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; color: var(--ink); text-decoration: none; cursor: pointer; }
 .hm-tile { position: absolute; inset: 0; display: block; transform-origin: 50% 100%; transform: translateY(calc(-1 * var(--lift, 0px))) scale(var(--s, 1)); }
+/* the magnet (HomeDock): pulled toward the pointer, stretched a little the way it reaches and a little narrower
+   across, grown from its middle; its name follows part of the way, and moves down as the icon grows */
+.hm-icons[data-pull] .hm-tile { transform-origin: 50% 50%; transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(var(--ra, 0rad)) scale(var(--st, 1), calc(2 - var(--st, 1))) rotate(calc(-1 * var(--ra, 0rad))) scale(var(--s, 1)); }
+.hm-icons[data-pull] .hm-label { translate: calc(-50% + var(--mx, 0px) * 0.5) calc(var(--my, 0px) * 0.5 + (var(--s, 1) - 1) * var(--icon) * 0.5); }
+/* (depth: the glyph inside reaches further than its glass; a glint slides to the side the pointer is on; the
+   icon's shadow on the dome stays where it was, shrinking and fading as the icon lifts off toward the pointer;
+   a press squeezes it a little) */
+.hm-icons[data-pull] .hm-tile .di { translate: calc(var(--mx, 0px) * 0.32) calc(var(--my, 0px) * 0.32); }
+.hm-icons[data-pull] .hm-glass { overflow: hidden; }
+.hm-icons[data-pull] .hm-glass::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.12) 34%, rgba(255, 255, 255, 0) 50%); translate: calc(var(--hx, 0) * 30%) calc(var(--hy, 0) * 30%); opacity: var(--hl, 0); }
+.hm-icons[data-pull] .hm-hit::before { content: ""; position: absolute; left: 50%; top: 84%; width: 76%; height: 22%; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 30, 80, 0.26), rgba(40, 30, 80, 0)); opacity: calc(1 - var(--hl, 0) * 0.55); scale: calc(1 - var(--hl, 0) * 0.22); pointer-events: none; }
+.hm-icons[data-pull] .hm-hit .hm-tile { transition: scale 140ms var(--ease); }
+.hm-icons[data-pull] .hm-hit:active .hm-tile { scale: 0.92; }
 .hm-tile .di { position: relative; display: block; width: 100%; height: 100%; }
 /* (round badges: the symbol a touch smaller, so it sits inside the circle) */
 .hm-tile .di { scale: 0.9; }
@@ -287,11 +298,31 @@ button.hm-obj { cursor: pointer; pointer-events: auto; }
 .hm-icon.is-active .hm-hit::after { content: none; }
 /* (each app's name, always under it, level however the rim turns it; the one shown in the window darker and
    bold, where a Mac's dock puts its dot) */
-.hm-label { position: absolute; left: 50%; top: calc(100% + 5 * var(--u)); translate: -50% 0; rotate: calc(-1 * var(--rot, 0rad)); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: calc(11.5 * var(--u)); font-weight: 500; line-height: 1.2; white-space: nowrap; color: rgba(22, 22, 26, 0.62); pointer-events: none; transition: color 160ms ease; }
+.hm-label { position: absolute; left: 50%; top: calc(100% + 5 * var(--u)); translate: -50% 0; rotate: calc(-1 * var(--rot, 0rad)); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: calc(12.5 * var(--u)); font-weight: 500; line-height: 1.2; white-space: nowrap; color: rgba(22, 22, 26, 0.8); text-shadow: 0 0 2px rgba(255, 255, 255, 0.9), 0 0 9px rgba(255, 255, 255, 0.85); pointer-events: none; transition: color 160ms ease; }
 .hm-icon.is-active .hm-label { color: var(--ink); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) { .hm-hit:hover .hm-label { color: var(--ink); } }
 .hm-hit:focus-visible { outline: none; }
 .hm-hit:focus-visible .hm-tile { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 50%; }
+
+/* ---------- hover trials (?hover=a|b|c, HomeDock): MichaelOS's own answer to the pointer, in place of the Mac
+   dock's magnifying. Only the tile pointed at (or focused) answers; its neighbours stay put. Fine pointers only;
+   reduced motion keeps the light and the shadow without the travel. ---------- */
+.hm-icons[data-hover] .hm-tile { transition: transform 280ms var(--ease); }
+.hm-icons[data-hover] .hm-glass { transition: box-shadow 280ms ease; }
+.hm-icons[data-hover] .hm-glass::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity 220ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  /* a: the tile lifts off the dome and casts its shadow on the glass where the real sun puts it (--lx/--ly, HomeShell) */
+  .hm-icons[data-hover="a"] .hm-hit:is(:hover, :focus-visible) .hm-tile { transform: translateY(-8px); }
+  .hm-icons[data-hover="a"] .hm-hit:is(:hover, :focus-visible) .hm-glass { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(255, 255, 255, 0.14), calc(var(--lx, 0px) * 0.3) calc(var(--ly, 30px) * 0.4 + 6px) 14px -4px rgba(40, 30, 80, calc(0.42 * var(--ls, 1))); }
+  /* b: the tile turns toward the pointer like a glass bead in the hand, and the light slides across it */
+  .hm-icons[data-hover="b"] .hm-tile { transform: perspective(240px) rotateY(calc(var(--px, 0) * 12deg)) rotateX(calc(var(--py, 0) * -12deg)); transition: transform 160ms var(--ease); }
+  .hm-icons[data-hover="b"] .hm-glass::after { background: radial-gradient(circle at calc(50% + var(--px, 0) * 28%) calc(50% + var(--py, 0) * 28%), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 60%); }
+  .hm-icons[data-hover="b"] .hm-hit:is(:hover, :focus-visible) .hm-glass::after { opacity: 1; }
+  /* c: nothing moves; the light catches the glass, a bright rim and a soft glow round it */
+  .hm-icons[data-hover="c"] .hm-glass::after { background: linear-gradient(160deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0) 46%); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 0 0 3px rgba(255, 255, 255, 0.3), 0 0 22px 2px rgba(255, 255, 255, 0.5); }
+  .hm-icons[data-hover="c"] .hm-hit:is(:hover, :focus-visible) .hm-glass::after { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .hm-icons[data-hover] .hm-tile { transform: none !important; } }
 
 /* a new tab's apps come in from the side the arrow pointed */
 /* (the new ones a beat after the old start leaving, 340 ms, 30 ms apart; the old ones go in 180 ms) */
@@ -325,7 +356,7 @@ a.hm-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .hm-more { color: var(--ink); white-space: nowrap; text-decoration: underline; text-decoration-color: rgba(22, 22, 26, 0.3); text-underline-offset: 3px; }
 
 /* ---------- windows of their own: a tab or an icon dropped on the page (HomeDock) ---------- */
-.hm-float { position: absolute; left: 0; top: 0; width: clamp(300px, 28vw, calc(460 * var(--s))); overflow: hidden; border-radius: calc(14 * var(--s)); background: rgba(255, 253, 250, 0.95); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 30px 60px -28px rgba(60, 40, 100, 0.6), 0 10px 24px -14px rgba(60, 40, 100, 0.4); will-change: transform; animation: hm-pop 240ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.hm-float { position: absolute; left: 0; top: 0; width: clamp(300px, 28vw, calc(460 * var(--s))); overflow: hidden; border-radius: calc(14 * var(--s)); background: rgba(255, 253, 250, 0.95); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), calc(var(--lx, 0px) * 0.8) calc(var(--ly, 30px)) 60px -28px rgba(60, 40, 100, calc(0.6 * var(--ls, 1))), calc(var(--lx, 0px) * 0.3) 10px 24px -14px rgba(60, 40, 100, calc(0.4 * var(--ls, 1))); will-change: transform; animation: hm-pop 240ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
 @keyframes hm-pop { from { opacity: 0; scale: 0.92; } }
 .hm-fchrome { height: calc(38 * var(--s)); gap: calc(12 * var(--s)); padding: 0 calc(12 * var(--s)); cursor: grab; user-select: none; touch-action: none; }
 .hm-hero .hm-float .hm-fchrome { cursor: grab; }
@@ -333,11 +364,6 @@ a.hm-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .hm-float .hm-media.is-open-able { cursor: pointer; }
 .hm-ftitle { display: inline-flex; align-items: center; gap: calc(7 * var(--s)); min-width: 0; font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: calc(13 * var(--s)); font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hm-ftitle .di { flex: none; width: calc(17 * var(--s)); height: calc(17 * var(--s)); }
-.hm-red { position: relative; display: grid; place-items: center; padding: 0; border: 0; color: rgba(90, 0, 0, 0.75); cursor: pointer; }
-.hm-red::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; }
-.hm-red svg { opacity: 0; transition: opacity 120ms ease; }
-.hm-float:hover .hm-red svg, .hm-float:hover .hm-green:not(:disabled) svg, .hm-red:focus-visible svg { opacity: 1; }
-.hm-red:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 html.hm-moving, html.hm-moving * { cursor: grabbing !important; user-select: none !important; }
 
 /* the window grows to fill the screen on the way into a page (HomeDock) */
@@ -349,11 +375,10 @@ html.hm-moving, html.hm-moving * { cursor: grabbing !important; user-select: non
   .hm-hit:hover .hm-tip, .hm-arrow:hover .hm-tip { opacity: 1; }
   .hm-arrow:hover .hm-glass { background: rgba(255, 255, 255, 0.62); }
   .hm-more:hover { text-decoration-color: var(--ink); }
-  .hm-green:not(:disabled):hover svg { opacity: 1; }
   .hm-obj:hover .hm-spot-tip { opacity: 1; translate: -50% 0; }
   .hm-obj:hover .hm-obj-art { transform: translateY(-4%); }
   .hm-obj:hover .hm-obj-shadow { scale: 0.85; opacity: 0.7; }
-  .hm-obj.is-mug:hover   .hm-desk:has(.hm-obj.is-sketchbook:hover)   .hm-ctab:not(.is-on):hover { background: rgba(255, 255, 255, 0.5); color: var(--ink); }
+  .hm-ctab:not(.is-on):hover { background: rgba(255, 255, 255, 0.5); color: var(--ink); }
   .hm-ctab:hover .hm-ctab-x { opacity: 1; }
   .hm-ctab-x:hover { background: rgba(22, 22, 26, 0.08); color: var(--ink); }
 }
@@ -372,7 +397,7 @@ html.hm-moving, html.hm-moving * { cursor: grabbing !important; user-select: non
   .hm-media { aspect-ratio: 4 / 3; }
   .hm-float { display: none; }
   .hm-dock { position: relative; inset: auto; flex: none; height: calc(var(--icon) + 150px); margin: -30px calc(-1 * var(--gutter)) 0; }
-  .hm-label { width: calc(100% + 2px); white-space: normal; text-align: center; font-size: 9.5px; line-height: 1.15; }
+  .hm-label { width: calc(100% + 10px); white-space: normal; text-align: center; font-size: 11px; line-height: 1.15; }
   .hm-go { top: calc(var(--icon) * 0.5 + 40px); }
   .hm-arrow { width: 38px; height: 38px; }
   .hm-tip { display: none; }
@@ -401,20 +426,23 @@ html.hm-moving, html.hm-moving * { cursor: grabbing !important; user-select: non
 .os-scrim.is-light { background: rgba(20, 22, 40, 0.08); }
 @keyframes os-fade { from { opacity: 0; } }
 @keyframes os-pop { from { opacity: 0; scale: 0.96; translate: 0 6px; } }
-.os-about { position: relative; box-sizing: border-box; width: min(340px, 100%); padding: 20px 24px 22px; border-radius: 16px; background: rgba(252, 250, 246, 0.88); -webkit-backdrop-filter: blur(30px) saturate(1.3); backdrop-filter: blur(30px) saturate(1.3); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 30px 70px -20px rgba(30, 30, 70, 0.45); color: var(--ink); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; text-align: center; outline: none; animation: os-pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1.15) both; }
-.os-about-bar { position: absolute; top: 13px; left: 14px; }
-.os-close { position: relative; width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; background: #f26b5f; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12); cursor: pointer; }
-.os-close::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; }
-.os-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.os-about-mark { display: block; width: 58px; height: auto; margin: 8px auto 8px; }
-.os-about-title { margin: 0; font-family: var(--serif); font-size: 30px; font-style: italic; font-weight: 500; letter-spacing: -0.02em; }
-.os-about-ver { margin: 2px 0 14px; font-size: 12.5px; color: rgba(22, 22, 26, 0.55); }
-.os-about-specs { display: grid; gap: 4px; width: fit-content; margin: 0 auto 14px; font-size: 13px; text-align: left; }
-.os-about-specs div { display: grid; grid-template-columns: 70px auto; gap: 10px; }
-.os-about-specs dt { color: rgba(22, 22, 26, 0.55); text-align: right; }
+/* About MichaelOS: the maker's mark on the base of a piece of porcelain. A cobalt stamp (his mark, the edition
+   lettered round it), the name beside it, the maker's details in a ruled band, a line, two ways on. */
+.os-about { position: relative; box-sizing: border-box; width: min(380px, 100%); padding: 46px 24px 22px; border-radius: 16px; background: rgba(252, 250, 246, 0.97); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 30px 70px -20px rgba(30, 30, 70, 0.45); color: var(--ink); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; text-align: left; outline: none; animation: os-pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1.15) both; }
+.os-about-ctl { --s: 1px; position: absolute; top: 12px; left: 12px; }
+.os-about-head { display: flex; align-items: center; gap: 16px; }
+.os-stamp { position: relative; flex: none; width: 88px; height: 88px; color: var(--cobalt); }
+.os-stamp svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.os-stamp-text { fill: currentColor; font-family: var(--mono); font-size: 9.5px; font-weight: 500; }
+.os-stamp-mark { position: absolute; left: 50%; top: 50%; width: 30px; height: 37px; translate: -50% -50%; background: currentColor; -webkit-mask: url(/mb-mark.png) center / contain no-repeat; mask: url(/mb-mark.png) center / contain no-repeat; }
+.os-about-title { margin: 0; font-family: var(--serif); font-size: 32px; font-style: italic; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.os-about-ver { margin: 8px 0 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(22, 22, 26, 0.6); }
+.os-about-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin: 18px 0 16px; padding: 14px 0; border-block: 1px solid rgba(22, 22, 26, 0.12); font-size: 13.5px; }
+.os-about-specs .is-wide { grid-column: 1 / -1; }
+.os-about-specs dt { margin-bottom: 3px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(22, 22, 26, 0.6); }
 .os-about-specs dd { margin: 0; }
-.os-about-why { margin: 0 0 16px; font-size: 13px; line-height: 1.5; color: rgba(22, 22, 26, 0.72); text-wrap: balance; }
-.os-about-actions { display: flex; justify-content: center; gap: 8px; }
+.os-about-why { margin: 0 0 18px; font-size: 13.5px; line-height: 1.5; color: rgba(22, 22, 26, 0.75); }
+.os-about-actions { display: flex; gap: 8px; }
 .os-btn { padding: 6px 14px; border-radius: 8px; background: rgba(22, 22, 26, 0.06); box-shadow: inset 0 0 0 0.5px rgba(22, 22, 26, 0.14); color: var(--ink); font-size: 13px; font-weight: 500; text-decoration: none; }
 .os-btn.is-primary { background: #2445b5; box-shadow: none; color: #fff; }
 .os-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -423,7 +451,7 @@ html.hm-moving, html.hm-moving * { cursor: grabbing !important; user-select: non
 .os-item:hover, .os-item:focus-visible { background: #2445b5; color: #fff; outline: none; }
 .os-hint { opacity: 0.55; }
 .os-sep { height: 1px; margin: 5px 8px; background: rgba(22, 22, 26, 0.12); }
-.os-spot { width: min(600px, 100%); overflow: hidden; border-radius: 16px; background: rgba(250, 249, 252, 0.86); -webkit-backdrop-filter: blur(30px) saturate(1.4); backdrop-filter: blur(30px) saturate(1.4); box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.8), 0 30px 70px -20px rgba(20, 20, 60, 0.5); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; animation: os-pop 200ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
+.os-spot { width: min(600px, 100%); overflow: hidden; border-radius: 16px; background: rgba(250, 249, 252, 0.95); -webkit-backdrop-filter: blur(30px) saturate(1.4); backdrop-filter: blur(30px) saturate(1.4); box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.8), 0 30px 70px -20px rgba(20, 20, 60, 0.5); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; animation: os-pop 200ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
 .os-spot-field { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid rgba(22, 22, 26, 0.08); color: rgba(22, 22, 26, 0.5); }
 .os-spot-field input { flex: 1; min-width: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 20px; outline: none; }
 .os-spot-list { max-height: min(50vh, 380px); margin: 0; padding: 6px; overflow-y: auto; list-style: none; }
@@ -476,33 +504,107 @@ html.hm-moving, html.hm-moving * { cursor: grabbing !important; user-select: non
 .hm-reopen { padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-decoration: underline; text-decoration-color: rgba(22, 22, 26, 0.35); text-underline-offset: 3px; cursor: pointer; }
 .hm-reopen:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 3px; }
 /* Search and Mission Control at the top right, as a menu bar's status icons (HomeShell) */
-/* ---------- the menu bar (HomeShell): a strip of glass across the top, as a Mac's, in the words' colour
-   (ink by day, cream by night); its items light up under the pointer as a menu bar's do ---------- */
-.os-bar { position: absolute; z-index: 30; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 34px; padding: 0 8px; box-sizing: border-box; background: color-mix(in srgb, rgba(14, 16, 32, 0.3) calc(var(--nt) * 100%), rgba(255, 255, 255, 0.3)); -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6); box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.3); color: color-mix(in srgb, var(--cream) calc(var(--nt) * 100%), var(--ink)); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: 13.5px; font-weight: 500; }
-.os-bar-l, .os-bar-r { display: flex; align-items: center; gap: 2px; min-width: 0; }
-.os-mi { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 9px; border: 0; border-radius: 7px; background: none; color: inherit; font: inherit; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color 120ms ease; }
-.os-mi:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
-.os-mi:active { background: rgba(255, 255, 255, 0.5); }
-.os-mi.is-icon { width: 32px; padding: 0; justify-content: center; }
-.os-mark { padding: 0 10px; }
-.os-mark img { display: block; width: auto; height: 20px; filter: invert(var(--nt)) brightness(calc(1 + var(--nt) * 0.15)); transition: filter 520ms ease; }
-.os-out { margin-left: -2px; font-size: 0.85em; opacity: 0.55; }
-.os-wx { gap: 5px; font-variant-numeric: tabular-nums; }
-.os-clock { cursor: default; font-variant-numeric: tabular-nums; }
-.os-day { white-space: pre; margin-right: 0.3em; }
-/* (another time showing, dragged to or chosen: the clock is lit, as is a weather being tried) */
-.os-wx.is-tried, .os-clock.is-away { background: rgba(255, 255, 255, 0.42); }
-.hm.is-night .os-wx.is-tried, .hm.is-night .os-clock.is-away, .hm.is-night .os-mi:active { background: rgba(255, 255, 255, 0.16); }
-@media (hover: hover) and (pointer: fine) {
-  a.os-mi:hover, button.os-mi:hover { background: rgba(255, 255, 255, 0.42); }
-  .hm.is-night a.os-mi:hover, .hm.is-night button.os-mi:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* ---------- what's on the dock, said once (HomeDock): the section's name under the middle of the row, or
+   each group's in the row (?dock=row); set like the line above his name ---------- */
+.hm-sec { position: absolute; z-index: 2; translate: -50% 0; font-family: var(--mono); font-size: calc(12 * var(--s)); font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; color: rgba(22, 22, 26, 0.86); text-shadow: 0 0 2px rgba(255, 255, 255, 0.95), 0 0 10px rgba(255, 255, 255, 0.9); pointer-events: none; animation: hm-fade 220ms ease both; }
+@media (max-width: 899px) {
+  .hm-sec { font-size: 11px; }
+  .hm-icon.is-side { display: none; }
+  /* (the row on a phone: the five case studies, with no arrows to leave room for) */
+  .hm-icons[data-row] .hm-icon { width: min(var(--icon), calc((100vw - 40px) / 5.4 / 1.15)); height: min(var(--icon), calc((100vw - 40px) / 5.4 / 1.15)); }
 }
-/* (on a phone: the pages, the résumé and the time; Search, Mission Control and the weather wait for a wider screen) */
-@media (max-width: 560px) {
-  .os-bar { height: 38px; padding: 0 4px; gap: 4px; font-size: 13px; }
-  .os-mi { padding: 0 6px; }
-  .os-mark { padding: 0 6px 0 8px; }
-  .os-mark img { height: 19px; }
-  .os-bar .is-wide, .os-day, .os-out { display: none; }
+/* (a project whose case study isn't out yet says so under its name) */
+.hm-soon { margin-left: 0.45em; font-family: var(--mono); font-size: 0.8em; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(22, 22, 26, 0.68); }
+@media (max-width: 899px) { .hm-soon { display: block; margin: 1px 0 0; } }
+@media (max-width: 380px) { .hm-label { width: calc(100% + 4px); font-size: 10px; } }
+
+/* ---------- the menus way round (?nav=menus, HomeOS BarMenu): a section's projects, from the menu bar ---------- */
+.os-mi.is-open { background: rgba(255, 255, 255, 0.5); }
+.hm.is-night .os-mi.is-open { background: rgba(255, 255, 255, 0.18); }
+.os-drop { position: absolute; z-index: 40; top: 37px; min-width: 400px; padding: 6px; border-radius: 12px; background: rgba(252, 250, 252, 0.88); -webkit-backdrop-filter: blur(26px) saturate(1.6); backdrop-filter: blur(26px) saturate(1.6); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 24px 48px -20px rgba(40, 30, 80, 0.45), 0 0 0 0.5px rgba(22, 22, 26, 0.12); color: var(--ink); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; animation: os-pop 140ms cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+.os-drop-row, .os-fold-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 7px 10px; border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+.os-drop-row .di, .os-fold-row .di { flex: none; width: 30px; height: 30px; }
+.os-drop-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.os-drop-name { font-size: 14px; font-weight: 600; }
+.os-drop-line { max-width: 34ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; color: rgba(22, 22, 26, 0.62); }
+.os-drop-meta { flex: none; font-size: 12px; color: rgba(22, 22, 26, 0.5); }
+.os-drop-row.is-more { justify-content: space-between; font-size: 13.5px; font-weight: 500; }
+.os-drop-row:focus-visible, .os-fold-row:focus-visible { outline: 2px solid #2445b5; outline-offset: -2px; }
+@media (hover: hover) and (pointer: fine) { .os-drop-row:hover, .os-fold-row:hover, .os-folder-more:hover { background: rgba(22, 22, 26, 0.06); } }
+@media (max-width: 560px) { .os-drop { left: 6px !important; right: 6px; min-width: 0; } }
+
+/* ---------- the folders way round (?nav=folders, HomeOS DeskIcons, Folder): the sections as folders on the
+   desktop, frosted like the rest of the system; one opens as a window listing its projects ---------- */
+.os-desk { position: absolute; z-index: 3; top: 56px; right: clamp(10px, 1.6vw, 28px); display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.os-desk-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 96px; padding: 8px 4px 6px; border: 0; border-radius: 12px; background: none; color: var(--ink); font: inherit; text-decoration: none; cursor: pointer; transition: background-color 140ms ease; }
+.os-desk-item:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.os-fold-art { filter: drop-shadow(0 6px 10px rgba(40, 30, 80, 0.22)); }
+.os-fold-back { fill: rgba(255, 255, 255, 0.5); stroke: rgba(22, 22, 26, 0.18); }
+.os-fold-front { fill: rgba(255, 255, 255, 0.82); stroke: rgba(22, 22, 26, 0.16); }
+.os-file { fill: rgba(255, 255, 255, 0.92); stroke: rgba(22, 22, 26, 0.18); }
+.os-file-fold { fill: rgba(22, 22, 26, 0.06); stroke: rgba(22, 22, 26, 0.18); }
+.os-file-tag { fill: #16161a; }
+.os-file-tagt { fill: #fff; font: 700 7px var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.04em; }
+.os-desk-name { padding: 2px 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: 12.5px; font-weight: 500; white-space: nowrap; }
+.hm.is-night .os-desk-name { background: rgba(14, 16, 32, 0.45); color: var(--cream); }
+@media (hover: hover) and (pointer: fine) { .os-desk-item:hover { background: rgba(255, 255, 255, 0.22); } }
+@media (max-width: 899px) { .os-desk { display: none; } }
+.os-folder { position: fixed; z-index: 50; left: 50%; top: max(64px, 12vh); width: min(580px, 92vw); translate: -50% 0; overflow: hidden; border-radius: 14px; background: rgba(253, 251, 250, 0.9); -webkit-backdrop-filter: blur(28px) saturate(1.5); backdrop-filter: blur(28px) saturate(1.5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), var(--lx, 0px) calc(var(--ly, 30px) + 10px) 80px -30px rgba(40, 30, 80, calc(0.55 * var(--ls, 1))); color: var(--ink); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; animation: os-pop 180ms cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+.os-folder-bar { display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-bottom: 1px solid rgba(22, 22, 26, 0.08); }
+.os-folder .os-ctl { --s: 1px; }
+.os-folder-title { font-size: 14px; font-weight: 600; }
+.os-folder-count { margin-left: auto; font-size: 12.5px; color: rgba(22, 22, 26, 0.5); }
+.os-folder-list { margin: 0; padding: 6px; list-style: none; }
+.os-fold-meta { flex: none; font-size: 12px; color: rgba(22, 22, 26, 0.5); }
+.os-folder-more { display: block; padding: 12px 20px; border-top: 1px solid rgba(22, 22, 26, 0.08); color: var(--ink); font-size: 13.5px; font-weight: 500; text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .os-drop, .os-folder { animation: none; } }
+
+/* ---------- a page open as a window over the desktop (HomeOS PageWindow): Work, Side Projects, About ----------
+   A big window, the same frosted title bar and its own buttons as the desktop's; its foot stands behind the
+   dome, so the dock stays in front and in reach. It rises in (460 ms); its close sinks it behind the dome
+   (300 ms) on the way home; its enlarge fills the screen under the menu bar. The body scrolls, and its own
+   colours are the old pages' (--hp-*), on paper white, so their parts read as they did. */
+.hm-page { position: fixed; z-index: 4; left: 50%; top: 48px; bottom: calc(84 * var(--s, 1px) + 20px); width: min(1180px, 92vw); translate: -50% 0; display: flex; flex-direction: column; overflow: clip; border-radius: calc(16 * var(--s, 1px)); background: #fdfdfc; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), var(--lx, 0px) calc(var(--ly, 30px) + 10px) 80px -36px rgba(60, 40, 100, calc(0.55 * var(--ls, 1))), 0 12px 30px -18px rgba(60, 40, 100, 0.35); animation: hm-page-in 460ms cubic-bezier(0.16, 1, 0.3, 1) backwards; transition: top 360ms var(--ease), bottom 360ms var(--ease), width 360ms var(--ease), border-radius 360ms ease; }
+@keyframes hm-page-in { from { opacity: 0; transform: translateY(36px) scale(0.97); } }
+.hm-page.is-closing { pointer-events: none; animation: hm-page-out 300ms cubic-bezier(0.55, 0, 0.8, 0.3) forwards; }
+@keyframes hm-page-out { to { opacity: 0.6; transform: translateY(70vh) scale(0.94); } }
+.hm-page.is-full { z-index: 9; top: 40px; bottom: 6px; width: calc(100vw - 12px); }
+.hm-page-bar { flex: none; display: flex; align-items: center; gap: 14px; height: 46px; padding: 0 14px; border-bottom: 1px solid rgba(40, 30, 70, 0.08); background: rgba(255, 253, 250, 0.7); -webkit-backdrop-filter: blur(24px) saturate(1.15); backdrop-filter: blur(24px) saturate(1.15); }
+.hm-page-bar .os-ctl { --s: 1px; }
+.hm-page-title { font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); animation: hm-fade 220ms ease both; }
+.hm-page-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; outline: none; animation: hm-fade 260ms ease both; }
+/* (focus is put on the body when a page opens, for the keyboard; it needs no ring) */
+.hm .hm-page-body:focus, .hm .hm-page-body:focus-visible { outline: none; }
+/* (on a phone it's the whole screen under the menu bar, over the dock) */
+@media (max-width: 899px) {
+  .hm-page, .hm-page.is-full { z-index: 9; top: 38px; bottom: 0; width: 100vw; border-radius: 14px 14px 0 0; }
+  .hm-page-bar { height: 42px; }
 }
-@media (max-width: 370px) { .os-bar { font-size: 12px; } .os-mi { padding: 0 4px; } }
+@media (prefers-reduced-motion: reduce) { .hm-page, .hm-page.is-closing, .hm-page-title, .hm-page-body { animation: none; } .hm-page { transition: none; } }
+
+/* the pages' own type, the system's: a mono label, the title in the serif italic of his name, the rest in the
+   sans; the old pages' colours (hp.css) without their own ground */
+.os-doc { --hp-ground: #eef3f9; --hp-card: #ffffff; --hp-inner: #eef2f7; --hp-text: #16161a; --hp-muted: #555a6b; --hp-accent: #2a4fae; --hp-line: rgba(22, 22, 26, 0.1); --hp-pale: #2a4fae; --hp-ink: #ffffff; --wf-bg: var(--hp-ground); --wf-sheet: var(--hp-card); --wf-ink: var(--hp-text); --wf-muted: var(--hp-muted); --wf-line: var(--hp-line); --wf-accent: var(--hp-accent); padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 56px) 170px; color: var(--hp-text); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; }
+.os-doc-head { margin: 0 0 clamp(28px, 3.4vw, 48px); }
+.os-doc-kicker { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(22, 22, 26, 0.62); }
+.os-doc-title { margin: 10px 0 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(40px, 4.6vw, 68px); line-height: 1; letter-spacing: -0.025em; color: var(--ink); }
+.os-doc-sub { max-width: 40em; margin: 16px 0 0; font-size: clamp(16px, 1.2vw, 18px); line-height: 1.5; color: rgba(22, 22, 26, 0.7); }
+/* Work: the gallery and the rows, as before, in the sans */
+.os-work :is(.pt-line, .pt-meta, .pt-preview, .pt-role, .pr-line, .pr-note, .pj-sub) { font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; }
+/* Side projects: the bento without the page's own top space */
+.os-side .sp-body { padding-top: 0; }
+/* About (.os-me, not .os-about, which is the About MichaelOS panel): the ruled page inside the window, its
+   title in the system's serif */
+.os-me { padding-top: clamp(16px, 2vw, 28px); }
+.os-me .me { margin-top: 0; }
+.os-me .me-title { font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: -0.025em; }
+/* Contact, About's last part */
+.os-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: end; max-width: 1200px; margin: clamp(32px, 4vw, 56px) auto 0; padding: clamp(28px, 3vw, 44px); border-radius: 16px; background: #f4f5f8; scroll-margin-top: 16px; }
+.os-contact-note p:last-child { max-width: 28em; margin: 16px 0 0; font-size: 17px; line-height: 1.5; color: rgba(22, 22, 26, 0.75); }
+.os-contact-lines { margin: 0; padding: 0; list-style: none; font-size: 15px; }
+.os-contact-lines li { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid rgba(22, 22, 26, 0.1); }
+.os-contact-lines span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(22, 22, 26, 0.6); padding-top: 2px; }
+.os-contact-lines a { color: var(--ink); text-decoration: underline; text-decoration-color: rgba(22, 22, 26, 0.3); text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .os-contact-lines a:hover { text-decoration-color: var(--ink); } }
+@media (max-width: 760px) { .os-contact { grid-template-columns: 1fr; } }

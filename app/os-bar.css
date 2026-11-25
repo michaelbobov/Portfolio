@@ -1,0 +1,213 @@
+/*
+  MichaelOS's menu bar, its sun dial and signature, and the Sky panel: shared by the desktop ((os)/layout.tsx,
+  HomeShell) and the frame of the pages outside it, the case studies (OsFrame). Its colours read --ink, --mono,
+  --cream and --nt (0 by day, 1 by night): the desktop sets them on .hm; the frame sets them on .os-frame.
+*/
+.os-frame { --ink: #16161a; --cream: #f6efe5; --nt: 0; --mono: var(--font-mono), 'IBM Plex Mono', ui-monospace, monospace; --ease: cubic-bezier(0.23, 1, 0.32, 1); }
+/* ---------- the menu bar (HomeShell): a strip of glass across the top, as a Mac's, in the words' colour
+   (ink by day, cream by night); its items light up under the pointer as a menu bar's do ---------- */
+.os-bar { position: absolute; z-index: 30; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 34px; padding: 0 8px; box-sizing: border-box; background: color-mix(in srgb, rgba(14, 16, 32, 0.3) calc(var(--nt) * 100%), rgba(255, 255, 255, 0.3)); -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6); box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.3); color: color-mix(in srgb, var(--cream) calc(var(--nt) * 100%), var(--ink)); font-family: var(--mono); font-size: 12.5px; font-weight: 500; letter-spacing: 0.01em; }
+.os-bar-l, .os-bar-r { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.os-mi { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 9px; border: 0; border-radius: 7px; background: none; color: inherit; font: inherit; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color 120ms ease; }
+.os-mi:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+.os-mi:active { background: rgba(255, 255, 255, 0.5); }
+.os-mi.is-icon { width: 32px; padding: 0; justify-content: center; }
+.os-mark { padding: 0 10px; }
+.os-mark img { display: block; width: auto; height: 20px; filter: invert(var(--nt)) brightness(calc(1 + var(--nt) * 0.15)); transition: filter 520ms ease; }
+.os-out { margin-left: -2px; font-size: 0.85em; opacity: 0.55; }
+.os-wx { gap: 5px; font-variant-numeric: tabular-nums; }
+.os-day { white-space: pre; margin-right: 0.3em; }
+/* (another time showing, dragged to or chosen: the clock is lit, as is a weather being tried) */
+.os-wx.is-tried { background: rgba(255, 255, 255, 0.42); }
+.hm.is-night .os-wx.is-tried, .hm.is-night .os-mi:active { background: rgba(255, 255, 255, 0.16); }
+@media (hover: hover) and (pointer: fine) {
+  a.os-mi:hover, button.os-mi:hover { background: rgba(255, 255, 255, 0.42); }
+  .hm.is-night a.os-mi:hover, .hm.is-night button.os-mi:hover { background: rgba(255, 255, 255, 0.16); }
+}
+/* Find, labelled as a field so it's found; the sun dial before the time */
+.os-find { gap: 7px; margin-right: 6px; padding: 0 11px 0 10px; background: rgba(255, 255, 255, 0.4); box-shadow: inset 0 0 0 1px rgba(22, 22, 26, 0.08); }
+.os-find-t { opacity: 0.85; }
+.os-find kbd { padding: 1px 6px; border-radius: 5px; background: rgba(22, 22, 26, 0.07); font: inherit; font-size: 11px; }
+.hm.is-night .os-find { background: rgba(255, 255, 255, 0.12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+.hm.is-night .os-find kbd { background: rgba(255, 255, 255, 0.12); }
+.os-dial { flex: none; margin-right: 7px; translate: 0 -1px; overflow: visible; }
+/* (the sun rolls along its arc, turning as it goes, and glides to a new place; during a drag of the sky, the
+   played day or the screensaver it follows exactly) */
+.os-dial-body { transform-box: view-box; transform-origin: 13px 13.5px; transition: transform 1100ms cubic-bezier(0.3, 1.08, 0.4, 1); }
+.os-dial-spin { transform-box: view-box; transform-origin: 3px 13.5px; transition: transform 1100ms cubic-bezier(0.3, 1.08, 0.4, 1); }
+.hm[data-scrub] .os-dial-body, .hm[data-scrub] .os-dial-spin { transition: none; }
+/* (the weather's glyph rolls in when the weather changes) */
+.os-wx-g { display: inline-grid; animation: os-roll-in 560ms cubic-bezier(0.3, 1.35, 0.5, 1) backwards; }
+@keyframes os-roll-in { from { opacity: 0; rotate: -120deg; scale: 0.4; } }
+/* his signature, in the middle of the bar (HomeShell): the sun dial and the time there; it opens the Sky
+   panel. On a narrower screen it moves to the bar's right end, and a phone shows its own clock */
+.os-sig { position: absolute; left: 50%; translate: -50% 0; font-variant-numeric: tabular-nums; }
+.os-sig.is-away, .os-sig.is-open { background: rgba(255, 255, 255, 0.42); }
+.hm.is-night .os-sig.is-away, .hm.is-night .os-sig.is-open { background: rgba(255, 255, 255, 0.16); }
+@media (max-width: 1100px) { .os-sig { position: static; translate: none; } }
+
+/* the Sky panel (HomeOS SkyPanel): MichaelOS's own control, over the world rather than the machine. It opens
+   out of the signature, a circle widening from the sun dial (460 ms), its rows rising in after it 40 ms apart,
+   and folds back into it (180 ms) */
+.os-sky { --sky-ox: 50%; position: absolute; z-index: 45; top: 40px; left: 50%; width: 364px; translate: -50% 0; padding: 16px; box-sizing: border-box; border-radius: 14px; background: rgba(252, 250, 252, 0.95); -webkit-backdrop-filter: blur(26px) saturate(1.5); backdrop-filter: blur(26px) saturate(1.5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 24px 48px -20px rgba(40, 30, 80, 0.45), 0 0 0 0.5px rgba(22, 22, 26, 0.12); color: var(--ink); font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif; animation: os-sky-in 460ms cubic-bezier(0.2, 0.85, 0.25, 1) backwards; }
+@keyframes os-sky-in { from { clip-path: circle(0px at var(--sky-ox) -14px); transform: translateY(-4px); } to { clip-path: circle(140% at var(--sky-ox) -14px); transform: none; } }
+.os-sky.is-closing { pointer-events: none; animation: os-sky-out 180ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+@keyframes os-sky-out { from { clip-path: circle(140% at var(--sky-ox) -14px); } to { clip-path: circle(0px at var(--sky-ox) -14px); opacity: 0.5; } }
+.os-sky > * { animation: os-sky-row 420ms cubic-bezier(0.2, 0.9, 0.3, 1) backwards; }
+.os-sky > :nth-child(1) { animation-delay: 70ms; } .os-sky > :nth-child(2) { animation-delay: 110ms; } .os-sky > :nth-child(3) { animation-delay: 150ms; } .os-sky > :nth-child(4) { animation-delay: 190ms; } .os-sky > :nth-child(5) { animation-delay: 230ms; }
+.os-sky.is-closing > * { animation: none; }
+@keyframes os-sky-row { from { opacity: 0; transform: translateY(10px); } }
+@media (max-width: 1100px) { .os-sky { --sky-ox: calc(100% - 90px); left: auto; right: 8px; translate: none; } }
+.os-sky-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.os-sky-head p { margin: 0; }
+.os-sky-place { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(22, 22, 26, 0.62); }
+.os-sky-time { margin-top: 2px !important; font-family: var(--mono); font-size: 30px; font-weight: 500; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.os-sky-date { display: inline-flex; align-items: center; gap: 5px; margin: 2px 0 0 -6px; padding: 3px 6px; border: 0; border-radius: 6px; background: none; color: rgba(22, 22, 26, 0.72); font: inherit; font-size: 13px; cursor: pointer; transition: background-color 140ms ease, color 140ms ease; }
+.os-sky-date[aria-expanded="true"] { background: rgba(22, 22, 26, 0.07); color: var(--ink); }
+.os-sky-date:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.os-sky-dial { color: var(--ink); padding-bottom: 2px; }
+.os-dial.is-big { display: block; margin: 0; translate: none; }
+/* (at night the panel's dial is a small window of night sky, the moon glowing cream in it, as in the sky) */
+.os-sky-dial { padding: 4px 6px; border-radius: 10px; transition: background-color 500ms ease, color 500ms ease; }
+.os-sky-dial.is-night { background: #1b2442 url(/home/scene-seattle-night-clear.webp) 80% 12% / 700% auto; color: #f6efe5; }
+.os-sky-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin: 14px 0 16px; padding: 12px 0; border-block: 1px solid rgba(22, 22, 26, 0.1); }
+.os-sky-facts dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(22, 22, 26, 0.6); }
+.os-sky-facts dd { margin: 2px 0 0; font-size: 13.5px; }
+/* the time of day: a track with four stops; its sun glides to the one shown on a spring, a moon at night */
+.os-track { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 0 18px; }
+.os-track-line { position: absolute; top: 5.25px; left: 12.5%; right: 12.5%; height: 1.5px; border-radius: 1px; background: rgba(22, 22, 26, 0.18); }
+.os-track-stop { position: relative; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 0 2px 2px; border: 0; background: none; color: rgba(22, 22, 26, 0.6); font: inherit; font-size: 12px; white-space: nowrap; cursor: pointer; transition: color 160ms ease; }
+.os-track-dot { width: 7px; height: 7px; margin-top: 2.5px; border-radius: 50%; background: rgba(22, 22, 26, 0.3); transition: scale 200ms var(--ease); }
+.os-track-stop.is-on { color: var(--ink); font-weight: 600; }
+.os-track-stop:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+.os-track-mark { position: absolute; z-index: 1; top: 6px; left: calc(12.5% + var(--at, 0) * 25%); width: 20px; height: 20px; margin: -10px 0 0 -10px; display: grid; place-items: center; border-radius: 50%; background: #fcfafc; box-shadow: 0 0 0 4px rgba(22, 22, 26, 0.06); color: var(--ink); pointer-events: none; transition: left 600ms cubic-bezier(0.3, 1.35, 0.5, 1); }
+.os-track-mark svg { display: block; overflow: visible; }
+.os-track-mark.is-moon { background: #1b2442; color: #f6efe5; box-shadow: 0 0 0 4px rgba(22, 22, 26, 0.08), 0 0 12px rgba(246, 239, 229, 0.35); }
+/* the weathers: five glyphs; a soft halo slides under the one showing, and the one chosen bounces */
+.os-wxrow { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); margin-bottom: 16px; }
+.os-wxrow-halo { position: absolute; top: 2px; left: calc(10% + var(--at, 0) * 20%); width: 38px; height: 38px; margin-left: -19px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(40, 30, 70, 0.16), inset 0 0 0 1px rgba(22, 22, 26, 0.06); pointer-events: none; transition: left 520ms cubic-bezier(0.3, 1.3, 0.5, 1); }
+.os-wxrow-b { position: relative; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 11px 0 0; border: 0; background: none; color: rgba(22, 22, 26, 0.6); font: inherit; font-size: 11px; cursor: pointer; transition: color 160ms ease; }
+.os-wxrow-b svg { width: 20px; height: 20px; }
+.os-wxrow-b.is-on { color: var(--ink); font-weight: 600; }
+.os-wxrow-b.is-bounce svg { animation: os-bounce 420ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes os-bounce { 35% { transform: scale(0.76) translateY(1px); } 70% { transform: scale(1.18) translateY(-2px); } }
+.os-wxrow-b:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 8px; }
+/* Play the day: a ring, not a filled button; pointed at, a dashed orbit turns round it */
+@keyframes os-orbit { to { rotate: 360deg; } }
+.os-play:focus-visible, .os-sky-live:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.os-sky-live { padding: 0; border: 0; background: none; color: rgba(22, 22, 26, 0.72); font: inherit; font-size: 13px; text-decoration: underline; text-decoration-color: rgba(22, 22, 26, 0.3); text-underline-offset: 3px; cursor: pointer; }
+@media (hover: hover) and (pointer: fine) {
+  .os-track-stop:hover { color: var(--ink); }
+  .os-track-stop:hover .os-track-dot { scale: 1.45; }
+  .os-wxrow-b:hover { color: var(--ink); }
+  .os-sky-live:hover { text-decoration-color: var(--ink); }
+  /* (the signature, pointed at: its sun's path marches along its dashes) */
+  .os-sig:hover .os-dial-arc { animation: os-march 1.4s linear infinite; }
+}
+@keyframes os-march { to { stroke-dashoffset: -6.8; } }
+/* (the system menu's items cascade in, 18 ms apart) */
+.os-menu > * { animation: os-sky-row 240ms cubic-bezier(0.2, 0.9, 0.3, 1) backwards; }
+.os-menu > :nth-child(1) { animation-delay: 0ms; }
+.os-menu > :nth-child(2) { animation-delay: 18ms; }
+.os-menu > :nth-child(3) { animation-delay: 36ms; }
+.os-menu > :nth-child(4) { animation-delay: 54ms; }
+.os-menu > :nth-child(5) { animation-delay: 72ms; }
+.os-menu > :nth-child(6) { animation-delay: 90ms; }
+.os-menu > :nth-child(7) { animation-delay: 108ms; }
+.os-menu > :nth-child(8) { animation-delay: 126ms; }
+.os-menu > :nth-child(9) { animation-delay: 144ms; }
+.os-menu > :nth-child(10) { animation-delay: 162ms; }
+.os-menu > :nth-child(11) { animation-delay: 180ms; }
+.os-menu > :nth-child(12) { animation-delay: 198ms; }
+@media (prefers-reduced-motion: reduce) {
+  .os-sky, .os-sky > *, .os-sky.is-closing, .os-menu > *, .os-wxrow-b.is-bounce svg, .os-play-sun, .os-sig .os-dial path, .os-wx-g, .os-sky-view, .os-alm-day, .os-alm-light, .os-alm-grid, .os-alm-title, .os-alm-info { animation: none !important; }
+  .os-dial-body, .os-dial-spin, .os-track-mark, .os-wxrow-halo { transition: none; }
+}
+/* (on a phone: the sections, Contact, the résumé and Find; the rest waits for a wider screen, and the phone
+   shows its own time) */
+@media (max-width: 560px) {
+  .os-bar { height: 38px; padding: 0 4px; gap: 4px; font-size: 13px; }
+  .os-mi { padding: 0 6px; }
+  .os-mark { padding: 0 6px 0 8px; }
+  .os-mark img { height: 19px; }
+  .os-bar .is-wide, .os-day, .os-out { display: none; }
+  .os-bar { font-size: 11.5px; letter-spacing: 0; }
+  .os-find { min-width: 0; width: 30px; margin: 0; padding: 0; justify-content: center; background: none; box-shadow: none; }
+  .hm.is-night .os-find { background: none; box-shadow: none; }
+  .os-find-t, .os-find kbd { display: none; }
+}
+@media (max-width: 380px) { .os-bar { font-size: 11px; } .os-mi { padding: 0 4.5px; } .os-mark { padding: 0 4px 0 6px; } }
+
+/* ---------- the frame of the pages outside the desktop (OsFrame): the case studies and SkillTree. The menu bar,
+   fixed at the top, and under it a strip of the sky as it is in Seattle now, fading into the page ---------- */
+/* (fixed, so once the page scrolls the bar is over the article and its pictures, not the sky: near-opaque
+   glass, light by day, dark by night, so its words keep their contrast over a pale page or a dark recording) */
+.os-frame .os-bar { position: fixed; background: color-mix(in srgb, rgba(14, 16, 32, 0.86) calc(var(--nt) * 100%), rgba(250, 250, 252, 0.82)); }
+/* (lit items: the section the page belongs to, hover, press; ink-tinted by day, white-tinted by night) */
+.os-frame .os-mi[data-on], .os-frame .os-mi:active { background: color-mix(in srgb, rgba(255, 255, 255, 0.16) calc(var(--nt) * 100%), rgba(22, 22, 26, 0.08)); }
+@media (hover: hover) and (pointer: fine) {
+  .os-frame a.os-mi:hover { background: color-mix(in srgb, rgba(255, 255, 255, 0.16) calc(var(--nt) * 100%), rgba(22, 22, 26, 0.08)); }
+}
+/* (a thin band, gone before the page's own heading starts, so the heading never sits on a dark night sky; it
+   fades in once the browser has worked out the time of day, OsFrameTop) */
+.os-frame-sky { position: absolute; z-index: 0; inset: 0 0 auto; height: clamp(96px, 9vw, 132px); background: center 30% / cover no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent); mask-image: linear-gradient(180deg, #000 40%, transparent); pointer-events: none; opacity: 0; transition: opacity 500ms ease; }
+.os-frame-sky.is-on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .os-frame-sky { transition: none; } }
+.os-frame-top ~ * { position: relative; z-index: 1; }
+.os-mi[aria-current="page"] { background: rgba(255, 255, 255, 0.42); }
+.hm.is-night .os-mi[aria-current="page"] { background: rgba(255, 255, 255, 0.16); }
+
+/* Play the day: a row, not a button-shaped pill. Its little sun runs its arc while it's pointed at */
+.os-play { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 2px; padding: 8px 10px 8px 8px; border: 0; border-radius: 12px; background: rgba(22, 22, 26, 0.045); box-shadow: inset 0 0 0 1px rgba(22, 22, 26, 0.06); color: var(--ink); font: inherit; text-align: left; cursor: pointer; transition: background-color 140ms ease, scale 140ms var(--ease); }
+.os-play-arc { flex: none; overflow: visible; }
+.os-play-sun { transform-box: view-box; transform-origin: 13px 13.5px; transform: rotate(40deg); transition: transform 600ms var(--ease); }
+@keyframes os-play-run { from { transform: rotate(0deg); } to { transform: rotate(180deg); } }
+.os-play-words { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.os-play-name { font-size: 13.5px; font-weight: 600; }
+.os-play-sub { margin-top: 1px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(22, 22, 26, 0.58); }
+.os-play-go { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: #fff; transition: scale 160ms var(--ease); }
+.os-play-go svg { translate: 1px 0; }
+.os-play:active { scale: 0.985; }
+.os-sky-live { margin-top: 10px; }
+@media (hover: hover) and (pointer: fine) {
+  .os-play:hover { background: rgba(22, 22, 26, 0.075); }
+  .os-play:hover .os-play-sun { animation: os-play-run 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+  .os-play:hover .os-play-go { scale: 1.08; }
+}
+
+/* the two views of the panel: the sky now, and the almanac; each slides in as the other goes */
+.os-sky-view { animation: os-view-in 320ms cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+@keyframes os-view-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---------- the almanac (HomeOS Almanac): a month of the sky, each day its moon and its daylight ---------- */
+.os-alm { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(22, 22, 26, 0.1); }
+.os-alm-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.os-alm-title { margin: 0; font-family: var(--serif, Georgia, serif); font-style: italic; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; animation: os-view-in 300ms cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+.os-alm-nav { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: rgba(22, 22, 26, 0.05); color: var(--ink); font: inherit; font-size: 17px; line-height: 1; cursor: pointer; transition: background-color 140ms ease, scale 140ms var(--ease); }
+.os-alm-nav:active { scale: 0.9; }
+.os-alm-week, .os-alm-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.os-alm-week span { padding: 2px 0 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-align: center; color: rgba(22, 22, 26, 0.5); }
+.os-alm-grid.from-right { --from: 18px; } .os-alm-grid.from-left { --from: -18px; }
+/* (each day a little window onto the paintings: the night painting's stars above, the day painting's sea of
+   clouds rising from its foot as far as the day has daylight, the horizon between them lit gold; its number and
+   its night's moon in cream on the stars. Each window looks at another part of the paintings) */
+.os-alm-day { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px; height: 60px; padding: 5px 0 0; overflow: hidden; border: 0; border-radius: 10px; background: #1b2442 url(/home/scene-seattle-night-clear.webp) var(--nx, 30%) 8% / 900% auto no-repeat; color: #f6efe5; font: inherit; cursor: pointer; animation: os-alm-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.1) backwards; animation-delay: calc(var(--w, 0) * 22ms); transition: scale 160ms var(--ease), box-shadow 160ms ease; }
+@keyframes os-alm-in { from { opacity: 0; transform: translateX(var(--from, 0px)) translateY(6px) scale(0.86); } }
+.os-alm-light { position: absolute; inset: 0; background: url(/home/scene-seattle-day.webp) var(--dx, 50%) 80% / 520% auto no-repeat; clip-path: inset(calc((1 - var(--light, 0.4)) * 100%) 0 0 0); animation: os-alm-rise 800ms cubic-bezier(0.2, 0.9, 0.3, 1) backwards; animation-delay: calc(140ms + var(--w, 0) * 22ms); pointer-events: none; }
+.os-alm-light::before { content: ""; position: absolute; left: 0; right: 0; top: calc((1 - var(--light, 0.4)) * 100%); height: 2px; background: linear-gradient(90deg, rgba(253, 189, 7, 0.2), rgba(255, 196, 120, 0.95), rgba(253, 189, 7, 0.2)); }
+@keyframes os-alm-rise { from { clip-path: inset(100% 0 0 0); } }
+.os-alm-num { position: relative; font-family: var(--mono); font-size: 11.5px; font-weight: 500; font-variant-numeric: tabular-nums; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+.os-alm-moon { position: relative; display: block; overflow: visible; color: #f6efe5; filter: drop-shadow(0 0 3px rgba(246, 239, 229, 0.45)); }
+.os-alm-pad { height: 60px; }
+.os-alm-day.is-today { box-shadow: inset 0 0 0 1.5px rgba(246, 239, 229, 0.9); }
+.os-alm-day.is-shown { box-shadow: 0 0 0 2px var(--ink), inset 0 0 0 1.5px #f6efe5; scale: 1.04; z-index: 1; }
+.os-alm-day:focus-visible, .os-alm-nav:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.os-alm-info { min-height: 34px; margin: 10px 0 0; font-size: 12.5px; line-height: 1.4; color: rgba(22, 22, 26, 0.75); animation: hm-fade 200ms ease both; }
+.os-alm-info b { color: var(--ink); font-weight: 600; }
+@media (hover: hover) and (pointer: fine) {
+  .os-alm-day:not(.is-shown):hover { scale: 1.08; z-index: 1; box-shadow: 0 8px 18px -8px rgba(20, 20, 50, 0.55); }
+  .os-alm-day.is-today:not(.is-shown):hover { box-shadow: inset 0 0 0 1.5px rgba(246, 239, 229, 0.9), 0 8px 18px -8px rgba(20, 20, 50, 0.55); }
+  .os-alm-nav:hover { background: rgba(22, 22, 26, 0.1); }
+  .os-sky-date:hover { background: rgba(22, 22, 26, 0.06); color: var(--ink); }
+}
+@keyframes hm-fade { from { opacity: 0; } }
